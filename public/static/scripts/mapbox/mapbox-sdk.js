@@ -1,4 +1,4 @@
-// version 0.6.0
+// version 0.16.2
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -371,163 +371,163 @@
   var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
   function createCommonjsModule(fn, module) {
-    return module = { exports: {} }, fn(module, module.exports), module.exports;
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
   var base64 = createCommonjsModule(function (module, exports) {
   (function(root) {
 
-    // Detect free variables `exports`.
-    var freeExports = exports;
+  	// Detect free variables `exports`.
+  	var freeExports = exports;
 
-    // Detect free variable `module`.
-    var freeModule = module &&
-      module.exports == freeExports && module;
+  	// Detect free variable `module`.
+  	var freeModule = module &&
+  		module.exports == freeExports && module;
 
-    // Detect free variable `global`, from Node.js or Browserified code, and use
-    // it as `root`.
-    var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal;
-    if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
-      root = freeGlobal;
-    }
+  	// Detect free variable `global`, from Node.js or Browserified code, and use
+  	// it as `root`.
+  	var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal;
+  	if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
+  		root = freeGlobal;
+  	}
 
-    /*--------------------------------------------------------------------------*/
+  	/*--------------------------------------------------------------------------*/
 
-    var InvalidCharacterError = function(message) {
-      this.message = message;
-    };
-    InvalidCharacterError.prototype = new Error;
-    InvalidCharacterError.prototype.name = 'InvalidCharacterError';
+  	var InvalidCharacterError = function(message) {
+  		this.message = message;
+  	};
+  	InvalidCharacterError.prototype = new Error;
+  	InvalidCharacterError.prototype.name = 'InvalidCharacterError';
 
-    var error = function(message) {
-      // Note: the error messages used throughout this file match those used by
-      // the native `atob`/`btoa` implementation in Chromium.
-      throw new InvalidCharacterError(message);
-    };
+  	var error = function(message) {
+  		// Note: the error messages used throughout this file match those used by
+  		// the native `atob`/`btoa` implementation in Chromium.
+  		throw new InvalidCharacterError(message);
+  	};
+g
+  	var TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  	// http://whatwg.org/html/common-microsyntaxes.html#space-character
+  	var REGEX_SPACE_CHARACTERS = /[\t\n\f\r ]/g;
 
-    var TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-    // http://whatwg.org/html/common-microsyntaxes.html#space-character
-    var REGEX_SPACE_CHARACTERS = /[\t\n\f\r ]/g;
+  	// `decode` is designed to be fully compatible with `atob` as described in the
+  	// HTML Standard. http://whatwg.org/html/webappapis.html#dom-windowbase64-atob
+  	// The optimized base64-decoding algorithm used is based on @atk’s excellent
+  	// implementation. https://gist.github.com/atk/1020396
+  	var decode = function(input) {
+  		input = String(input)
+  			.replace(REGEX_SPACE_CHARACTERS, '');
+  		var length = input.length;
+  		if (length % 4 == 0) {
+  			input = input.replace(/==?$/, '');
+  			length = input.length;
+  		}
+  		if (
+  			length % 4 == 1 ||
+  			// http://whatwg.org/C#alphanumeric-ascii-characters
+  			/[^+a-zA-Z0-9/]/.test(input)
+  		) {
+  			error(
+  				'Invalid character: the string to be decoded is not correctly encoded.'
+  			);
+  		}
+  		var bitCounter = 0;
+  		var bitStorage;
+  		var buffer;
+  		var output = '';
+  		var position = -1;
+  		while (++position < length) {
+  			buffer = TABLE.indexOf(input.charAt(position));
+  			bitStorage = bitCounter % 4 ? bitStorage * 64 + buffer : buffer;
+  			// Unless this is the first of a group of 4 characters…
+  			if (bitCounter++ % 4) {
+  				// …convert the first 8 bits to a single ASCII character.
+  				output += String.fromCharCode(
+  					0xFF & bitStorage >> (-2 * bitCounter & 6)
+  				);
+  			}
+  		}
+  		return output;
+  	};
 
-    // `decode` is designed to be fully compatible with `atob` as described in the
-    // HTML Standard. http://whatwg.org/html/webappapis.html#dom-windowbase64-atob
-    // The optimized base64-decoding algorithm used is based on @atk’s excellent
-    // implementation. https://gist.github.com/atk/1020396
-    var decode = function(input) {
-      input = String(input)
-        .replace(REGEX_SPACE_CHARACTERS, '');
-      var length = input.length;
-      if (length % 4 == 0) {
-        input = input.replace(/==?$/, '');
-        length = input.length;
-      }
-      if (
-        length % 4 == 1 ||
-        // http://whatwg.org/C#alphanumeric-ascii-characters
-        /[^+a-zA-Z0-9/]/.test(input)
-      ) {
-        error(
-          'Invalid character: the string to be decoded is not correctly encoded.'
-        );
-      }
-      var bitCounter = 0;
-      var bitStorage;
-      var buffer;
-      var output = '';
-      var position = -1;
-      while (++position < length) {
-        buffer = TABLE.indexOf(input.charAt(position));
-        bitStorage = bitCounter % 4 ? bitStorage * 64 + buffer : buffer;
-        // Unless this is the first of a group of 4 characters…
-        if (bitCounter++ % 4) {
-          // …convert the first 8 bits to a single ASCII character.
-          output += String.fromCharCode(
-            0xFF & bitStorage >> (-2 * bitCounter & 6)
-          );
-        }
-      }
-      return output;
-    };
+  	// `encode` is designed to be fully compatible with `btoa` as described in the
+  	// HTML Standard: http://whatwg.org/html/webappapis.html#dom-windowbase64-btoa
+  	var encode = function(input) {
+  		input = String(input);
+  		if (/[^\0-\xFF]/.test(input)) {
+  			// Note: no need to special-case astral symbols here, as surrogates are
+  			// matched, and the input is supposed to only contain ASCII anyway.
+  			error(
+  				'The string to be encoded contains characters outside of the ' +
+  				'Latin1 range.'
+  			);
+  		}
+  		var padding = input.length % 3;
+  		var output = '';
+  		var position = -1;
+  		var a;
+  		var b;
+  		var c;
+  		var buffer;
+  		// Make sure any padding is handled outside of the loop.
+  		var length = input.length - padding;
 
-    // `encode` is designed to be fully compatible with `btoa` as described in the
-    // HTML Standard: http://whatwg.org/html/webappapis.html#dom-windowbase64-btoa
-    var encode = function(input) {
-      input = String(input);
-      if (/[^\0-\xFF]/.test(input)) {
-        // Note: no need to special-case astral symbols here, as surrogates are
-        // matched, and the input is supposed to only contain ASCII anyway.
-        error(
-          'The string to be encoded contains characters outside of the ' +
-          'Latin1 range.'
-        );
-      }
-      var padding = input.length % 3;
-      var output = '';
-      var position = -1;
-      var a;
-      var b;
-      var c;
-      var buffer;
-      // Make sure any padding is handled outside of the loop.
-      var length = input.length - padding;
+  		while (++position < length) {
+  			// Read three bytes, i.e. 24 bits.
+  			a = input.charCodeAt(position) << 16;
+  			b = input.charCodeAt(++position) << 8;
+  			c = input.charCodeAt(++position);
+  			buffer = a + b + c;
+  			// Turn the 24 bits into four chunks of 6 bits each, and append the
+  			// matching character for each of them to the output.
+  			output += (
+  				TABLE.charAt(buffer >> 18 & 0x3F) +
+  				TABLE.charAt(buffer >> 12 & 0x3F) +
+  				TABLE.charAt(buffer >> 6 & 0x3F) +
+  				TABLE.charAt(buffer & 0x3F)
+  			);
+  		}
 
-      while (++position < length) {
-        // Read three bytes, i.e. 24 bits.
-        a = input.charCodeAt(position) << 16;
-        b = input.charCodeAt(++position) << 8;
-        c = input.charCodeAt(++position);
-        buffer = a + b + c;
-        // Turn the 24 bits into four chunks of 6 bits each, and append the
-        // matching character for each of them to the output.
-        output += (
-          TABLE.charAt(buffer >> 18 & 0x3F) +
-          TABLE.charAt(buffer >> 12 & 0x3F) +
-          TABLE.charAt(buffer >> 6 & 0x3F) +
-          TABLE.charAt(buffer & 0x3F)
-        );
-      }
+  		if (padding == 2) {
+  			a = input.charCodeAt(position) << 8;
+  			b = input.charCodeAt(++position);
+  			buffer = a + b;
+  			output += (
+  				TABLE.charAt(buffer >> 10) +
+  				TABLE.charAt((buffer >> 4) & 0x3F) +
+  				TABLE.charAt((buffer << 2) & 0x3F) +
+  				'='
+  			);
+  		} else if (padding == 1) {
+  			buffer = input.charCodeAt(position);
+  			output += (
+  				TABLE.charAt(buffer >> 2) +
+  				TABLE.charAt((buffer << 4) & 0x3F) +
+  				'=='
+  			);
+  		}
 
-      if (padding == 2) {
-        a = input.charCodeAt(position) << 8;
-        b = input.charCodeAt(++position);
-        buffer = a + b;
-        output += (
-          TABLE.charAt(buffer >> 10) +
-          TABLE.charAt((buffer >> 4) & 0x3F) +
-          TABLE.charAt((buffer << 2) & 0x3F) +
-          '='
-        );
-      } else if (padding == 1) {
-        buffer = input.charCodeAt(position);
-        output += (
-          TABLE.charAt(buffer >> 2) +
-          TABLE.charAt((buffer << 4) & 0x3F) +
-          '=='
-        );
-      }
+  		return output;
+  	};
 
-      return output;
-    };
+  	var base64 = {
+  		'encode': encode,
+  		'decode': decode,
+  		'version': '0.1.0'
+  	};
 
-    var base64 = {
-      'encode': encode,
-      'decode': decode,
-      'version': '0.1.0'
-    };
-
-    // Some AMD build optimizers, like r.js, check for specific condition patterns
-    // like the following:
-    if (freeExports && !freeExports.nodeType) {
-      if (freeModule) { // in Node.js or RingoJS v0.8.0+
-        freeModule.exports = base64;
-      } else { // in Narwhal or RingoJS v0.7.0-
-        for (var key in base64) {
-          base64.hasOwnProperty(key) && (freeExports[key] = base64[key]);
-        }
-      }
-    } else { // in Rhino or a web browser
-      root.base64 = base64;
-    }
+  	// Some AMD build optimizers, like r.js, check for specific condition patterns
+  	// like the following:
+  	if (freeExports && !freeExports.nodeType) {
+  		if (freeModule) { // in Node.js or RingoJS v0.8.0+
+  			freeModule.exports = base64;
+  		} else { // in Narwhal or RingoJS v0.7.0-
+  			for (var key in base64) {
+  				base64.hasOwnProperty(key) && (freeExports[key] = base64[key]);
+  			}
+  		}
+  	} else { // in Rhino or a web browser
+  		root.base64 = base64;
+  	}
 
   }(commonjsGlobal));
   });
@@ -993,7 +993,7 @@
       if (Array.isArray(value)) {
         value = value
           .filter(function(v) {
-            return !!v;
+            return v !== null && v !== undefined;
           })
           .join(',');
       }
@@ -1101,7 +1101,7 @@
    *   the Node client accepts strings (filepaths) and ReadStreams.
    * @property {string} encoding - The encoding of the response.
    * @property {string} sendFileAs - The method to send the `file`. Options are
-   * `data` (x-www-form-urlencoded) or `form` (multipart/form-data).
+   *   `data` (x-www-form-urlencoded) or `form` (multipart/form-data).
    */
 
   /**
@@ -1174,9 +1174,11 @@
     var url = urlUtils.prependOrigin(this.path, this.origin);
     url = urlUtils.appendQueryObject(url, this.query);
     var routeParams = this.params;
-    if (accessToken) {
-      url = urlUtils.appendQueryParam(url, 'access_token', accessToken);
-      var accessTokenOwnerId = parseMapboxToken(accessToken).user;
+    var actualAccessToken =
+      accessToken == null ? this.client.accessToken : accessToken;
+    if (actualAccessToken) {
+      url = urlUtils.appendQueryParam(url, 'access_token', actualAccessToken);
+      var accessTokenOwnerId = parseMapboxToken(actualAccessToken).user;
       routeParams = immutable({ ownerId: accessTokenOwnerId }, routeParams);
     }
     url = urlUtils.interpolateRouteParams(url, routeParams);
@@ -1367,8 +1369,8 @@
   var toString = Object.prototype.toString;
 
   var isPlainObj = function (x) {
-    var prototype;
-    return toString.call(x) === '[object Object]' && (prototype = Object.getPrototypeOf(x), prototype === null || prototype === Object.getPrototypeOf({}));
+  	var prototype;
+  	return toString.call(x) === '[object Object]' && (prototype = Object.getPrototypeOf(x), prototype === null || prototype === Object.getPrototypeOf({}));
   };
 
   /**
@@ -1392,10 +1394,6 @@
    */
   v.assert = function(rootValidator, options) {
     options = options || {};
-    if (typeof options === 'string') {
-      options = { description: options };
-    }
-    var description = options.description || options.apiName;
     return function(value) {
       var message = validate(rootValidator, value);
       // all good
@@ -1405,8 +1403,8 @@
 
       var errorMessage = processMessage(message, options);
 
-      if (description) {
-        errorMessage = description + ': ' + errorMessage;
+      if (options.apiName) {
+        errorMessage = options.apiName + ': ' + errorMessage;
       }
 
       throw new Error(errorMessage);
@@ -1442,34 +1440,31 @@
         }
       }
 
-      return renderObjectErrorMessages(errorMessages);
-    };
-  };
+      if (errorMessages.length < 2) {
+        return errorMessages[0];
+      }
 
-  function renderObjectErrorMessages(errorMessages) {
-    if (errorMessages.length < 2) {
-      return errorMessages[0];
-    }
+      // enumerate all the error messages
+      return function(options) {
+        errorMessages = errorMessages.map(function(message) {
+          var key = message[0];
+          var renderedMessage = processMessage(message, options)
+            .split('\n')
+            .join(NEWLINE_INDENT); // indents any inner nesting
+          return '- ' + key + ': ' + renderedMessage;
+        });
 
-    return function(options) {
-      const list = errorMessages.map(function(message) {
-        var key = message[0];
-        var renderedMessage = processMessage(message, options)
-          .split('\n')
-          .join(NEWLINE_INDENT); // indents any inner nesting
-        return '- ' + key + ': ' + renderedMessage;
-      });
+        var objectId = options.path.join('.');
+        var ofPhrase = objectId === DEFAULT_ERROR_PATH ? '' : ' of ' + objectId;
 
-      var objectId = options.path.join('.');
-      var ofPhrase = objectId === DEFAULT_ERROR_PATH ? '' : ' of ' + objectId;
-
-      return (
-        'The following properties' +
-        ofPhrase +
-        ' have invalid values:' +
-        NEWLINE_INDENT +
-        list.join(NEWLINE_INDENT)
-      );
+        return (
+          'The following properties' +
+          ofPhrase +
+          ' have invalid values:' +
+          NEWLINE_INDENT +
+          errorMessages.join(NEWLINE_INDENT)
+        );
+      };
     };
   };
 
@@ -1630,14 +1625,6 @@
     };
   };
 
-  v.instanceOf = function instanceOf(compareWith) {
-    return function instaceOfValidator(value) {
-      if (value instanceof compareWith === false) {
-        return 'instance of ' + (compareWith.name || '<<anonymous>>');
-      }
-    };
-  };
-
   /**
    * Primitive validators
    *
@@ -1659,12 +1646,6 @@
     }
   };
 
-  v.finite = function finite(value) {
-    if (!Number.isFinite(value)) {
-      return 'finite';
-    }
-  };
-
   v.plainArray = function plainArray(value) {
     if (!Array.isArray(value)) {
       return 'array';
@@ -1683,21 +1664,9 @@
     }
   };
 
-  v.nonEmptyString = function nonEmptyString(value) {
-    if (typeof value !== 'string' || value === '') {
-      return 'non-empty string';
-    }
-  };
-
   v.func = function func(value) {
     if (typeof value !== 'function') {
       return 'function';
-    }
-  };
-
-  v.date = function date(value) {
-    if (value instanceof Date === false || value.toString() === 'Invalid Date') {
-      return 'valid date';
     }
   };
 
@@ -1881,15 +1850,17 @@
    * Datasets API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#datasets).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/maps/#datasets).
    */
   var Datasets = {};
 
   /**
    * List datasets in your account.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#list-datasets).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#list-datasets).
    *
+   * @param {Object} [config]
+   * @param {string} [config.sortby=created] - Sort by either `modified` or `created` (default) dates.
    * @return {MapiRequest}
    *
    * @example
@@ -1920,7 +1891,7 @@
   /**
    * Create a new, empty dataset.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#create-a-dataset).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#create-a-dataset).
    *
    * @param {Object} config
    * @param {string} [config.name]
@@ -1953,7 +1924,7 @@
   /**
    * Get metadata about a dataset.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-a-dataset).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-a-dataset).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -1984,7 +1955,7 @@
   /**
    * Update user-defined properties of a dataset's metadata.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#update-a-dataset).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#update-a-dataset).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -2020,7 +1991,7 @@
   /**
    * Delete a dataset, including all features it contains.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#delete-a-dataset).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#delete-a-dataset).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -2053,7 +2024,7 @@
    * This endpoint supports pagination. Use `MapiRequest#eachPage` or manually specify
    * the `limit` and `start` options.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#list-features).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#list-features).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -2089,7 +2060,7 @@
   /**
    * Add a feature to a dataset or update an existing one.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#insert-or-update-a-feature).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#insert-or-update-a-feature).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -2141,7 +2112,7 @@
   /**
    * Get a feature in a dataset.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-a-feature).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-a-feature).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -2174,7 +2145,7 @@
   /**
    * Delete a feature in a dataset.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#delete-a-feature).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#delete-a-feature).
    *
    * @param {Object} config
    * @param {string} config.datasetId
@@ -2241,14 +2212,14 @@
    * Directions API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#directions).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#directions).
    */
   var Directions = {};
 
   /**
    * Get directions.
    *
-   * Please read [the full HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#directions)
+   * Please read [the full HTTP service documentation](https://docs.mapbox.com/api/navigation/#directions)
    * to understand all of the available options.
    *
    * @param {Object} config
@@ -2261,9 +2232,9 @@
    * @param {string} [config.exclude] - Exclude certain road types from routing. See HTTP service documentation for options.
    * @param {'geojson'|'polyline'|'polyline6'} [config.geometries="polyline"] - Format of the returned geometry.
    * @param {string} [config.language="en"] - Language of returned turn-by-turn text instructions.
-   *   See options listed in [the HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#instructions-languages).
+   *   See options listed in [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#instructions-languages).
    * @param {'simplified'|'full'|'false'} [config.overview="simplified"] - Type of returned overview geometry.
-   * @param {boolean} [config.roundaboutExits=false] - Emit insbtructions at roundabout exits.
+   * @param {boolean} [config.roundaboutExits=false] - Emit instructions at roundabout exits.
    * @param {boolean} [config.steps=false] - Whether to return steps and turn-by-turn instructions.
    * @param {boolean} [config.voiceInstructions=false] - Whether or not to return SSML marked-up text for voice guidance along the route.
    * @param {'imperial'|'metric'} [config.voiceUnits="imperial"] - Which type of units to return in the text for voice instructions.
@@ -2481,7 +2452,7 @@
    * Geocoding API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/search/#geocoding).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/search/#geocoding).
    */
   var Geocoding = {};
 
@@ -2501,14 +2472,14 @@
   /**
    * Search for a place.
    *
-   * See the [public documentation](https://www.mapbox.com/api-documentation/search/#forward-geocoding).
+   * See the [public documentation](https://docs.mapbox.com/api/search/#forward-geocoding).
    *
    * @param {Object} config
    * @param {string} config.query - A place name.
    * @param {'mapbox.places'|'mapbox.places-permanent'} [config.mode="mapbox.places"] - Either `mapbox.places` for ephemeral geocoding, or `mapbox.places-permanent` for storing results and batch geocoding.
    * @param {Array<string>} [config.countries] - Limits results to the specified countries.
    *   Each item in the array should be an [ISO 3166 alpha 2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
-   * @param {Coordinates} [config.proximity] - Bias local results based on a provided location.
+   * @param {Coordinates|'ip'} [config.proximity] - Bias local results based on a provided coordinate location or a user's IP address.
    * @param {Array<'country'|'region'|'postcode'|'district'|'place'|'locality'|'neighborhood'|'address'|'poi'|'poi.landmark'>} [config.types] - Filter results by feature types.
    * @param {boolean} [config.autocomplete=true] - Return autocomplete results or not.
    * @param {BoundingBox} [config.bbox] - Limit results to a bounding box.
@@ -2520,7 +2491,6 @@
    * @param {boolean} [config.fuzzyMatch=true] - Specify whether the Geocoding API should attempt approximate, as well as exact, matching.
    * @param {String} [config.worldview="us"] - Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups.
    * @param {String} [config.session_token] - A unique session identifier generated by the client.
-   * 
    * @return {MapiRequest}
    *
    * @example
@@ -2569,7 +2539,7 @@
       query: validator.required(validator.string),
       mode: validator.oneOf('mapbox.places', 'mapbox.places-permanent'),
       countries: validator.arrayOf(validator.string),
-      proximity: validator.coordinates,
+      proximity: validator.oneOf(validator.coordinates, 'ip'),
       types: validator.arrayOf(validator.oneOf(featureTypes)),
       autocomplete: validator.boolean,
       bbox: validator.arrayOf(validator.number),
@@ -2612,7 +2582,7 @@
   /**
    * Search for places near coordinates.
    *
-   * See the [public documentation](https://www.mapbox.com/api-documentation/search/#reverse-geocoding).
+   * See the [public documentation](https://docs.mapbox.com/api/search/#reverse-geocoding).
    *
    * @param {Object} config
    * @param {Coordinates} config.query - Coordinates at which features will be searched.
@@ -2626,12 +2596,14 @@
    *  Options are [IETF language tags](https://en.wikipedia.org/wiki/IETF_language_tag) comprised of a mandatory
    *  [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) and optionally one or more IETF subtags for country or script.
    * @param {'distance'|'score'} [config.reverseMode='distance'] - Set the factors that are used to sort nearby results.
+   * @param {boolean} [config.routing=false] - Specify whether to request additional metadata about the recommended navigation destination. Only applicable for address features.
+   * @param {String} [config.worldview="us"] - Filter results to geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups.
+   * @param {String} [config.session_token] - A unique session identifier generated by the client.
    * @return {MapiRequest}
    *
    * @example
    * geocodingClient.reverseGeocode({
-   *   query: [-95.4431142, 33.6875431],
-   *   limit: 2
+   *   query: [-95.4431142, 33.6875431]
    * })
    *   .send()
    *   .then(response => {
@@ -2666,7 +2638,6 @@
           'limit',
           'language',
           'reverseMode',
-          'reverseMode',
           'routing',
           'worldview',
           'session_token'
@@ -2692,7 +2663,7 @@
    */
   var GeocodingV6 = {};
 
-  var featureTypesV6 = [
+  var featureTypes$1 = [
     'street',
     'country',
     'region',
@@ -2800,7 +2771,7 @@
         mode: validator.oneOf('standard', 'structured'),
         countries: config.mode === 'standard' ? validator.arrayOf(validator.string) : validator.string,
         proximity: validator.oneOf(validator.coordinates, 'ip'),
-        types: validator.arrayOf(validator.oneOf(featureTypesV6)),
+        types: validator.arrayOf(validator.oneOf(featureTypes$1)),
         bbox: validator.arrayOf(validator.number),
         format: validator.oneOf('geojson', 'v5'),
         language: validator.string,
@@ -2861,8 +2832,6 @@
     });
   };
 
-  var geocodingv6 = createServiceFactory_1(GeocodingV6);
-
   /**
    * Search for places near coordinates.
    *
@@ -2900,7 +2869,7 @@
       longitude: validator.required(validator.number),
       latitude: validator.required(validator.number),
       countries: validator.arrayOf(validator.string),
-      types: validator.arrayOf(validator.oneOf(featureTypes)),
+      types: validator.arrayOf(validator.oneOf(featureTypes$1)),
       limit: validator.number,
       language: validator.string,
       worldview: validator.string,
@@ -2931,11 +2900,13 @@
     });
   };
 
+  var geocodingV6 = createServiceFactory_1(GeocodingV6);
+
   /**
    * Map Matching API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#map-matching).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#map-matching).
    */
   var MapMatching = {};
 
@@ -2948,7 +2919,7 @@
    * @param {Array<'duration'|'distance'|'speed'>} [config.annotations] - Specify additional metadata that should be returned.
    * @param {'geojson'|'polyline'|'polyline6'} [config.geometries="polyline"] - Format of the returned geometry.
    * @param {string} [config.language="en"] - Language of returned turn-by-turn text instructions.
-   *   See [supported languages](https://www.mapbox.com/api-documentation/navigation/#instructions-languages).
+   *   See [supported languages](https://docs.mapbox.com/api/navigation/#instructions-languages).
    * @param {'simplified'|'full'|'false'} [config.overview="simplified"] - Type of returned overview geometry.
    * @param {boolean} [config.steps=false] - Whether to return steps and turn-by-turn instructions.
    * @param {boolean} [config.tidy=false] - Whether or not to transparently remove clusters and re-sample traces for improved map matching results.
@@ -3138,7 +3109,7 @@
    * Map Matching API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#matrix).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#matrix).
    */
   var Matrix = {};
 
@@ -3257,25 +3228,25 @@
    * Optimization API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#optimization).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#optimization).
    */
   var Optimization = {};
 
   /**
    * Get a duration-optimized route.
    *
-   * Please read [the full HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#optimization)
+   * Please read [the full HTTP service documentation](https://docs.mapbox.com/api/navigation/#optimization)
    * to understand all of the available options.
    *
    * @param {Object} config
-   * @param {'driving'|'walking'|'cycling'} [config.profile="driving"]
-   * @param {Array<OptimizationWaypoint>} config.waypoints - An ordered array of [`OptimizationWaypoint`](#optimizationwaypoint) objects, between 2 and 12 (inclusive).
+   * @param {'driving'|'driving-traffic'|'walking'|'cycling'} [config.profile="driving"]
+   * @param {Array<OptimizationWaypoint>} config.waypoints - An ordered array of [`OptimizationWaypoint`](#optimizationwaypoint) objects, with at least 2
    * @param {Array<'duration'|'distance'|'speed'>} [config.annotations] - Specify additional metadata that should be returned.
    * @param {'any'|'last'} [config.destination="any"] - Returned route ends at `any` or `last` coordinate.
    * @param {Array<Distribution>} [config.distributions] - An ordered array of [`Distribution`](#distribution) objects, each of which includes a `pickup` and `dropoff` property. `pickup` and `dropoff` properties correspond to an index in the OptimizationWaypoint array.
    * @param {'geojson'|'polyline'|'polyline6'} [config.geometries="polyline"] - Format of the returned geometries.
    * @param {string} [config.language="en"] - Language of returned turn-by-turn text instructions.
-   *   See options listed in [the HTTP service documentation](https://www.mapbox.com/api-documentation/navigation/#instructions-languages).
+   *   See options listed in [the HTTP service documentation](https://docs.mapbox.com/api/navigation/#instructions-languages).
    * @param {'simplified'|'full'|'false'} [config.overview="simplified"] - Type of returned overview geometry.
    * @param {boolean} [config.roundtrip=true] - Specifies whether the trip should complete by returning to the first location.
    * @param {'any'|'first'} [config.source="any"] - To begin the route, start either from the first coordinate or let the Optimization API choose.
@@ -3571,10 +3542,10 @@
   });
 
   /**
-   * Static API service.
+   * Static Images API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#static).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/maps/#static-images).
    */
   var Static = {};
 
@@ -3590,9 +3561,11 @@
    * @param {string} config.styleId - The map's style ID.
    * @param {number} config.width - Width of the image in pixels, between 1 and 1280.
    * @param {number} config.height - Height of the image in pixels, between 1 and 1280.
-   * @param {'auto'|Object} config.position - If `"auto"`, the viewport will fit the
-   *   bounds of the overlay(s). Otherwise, the maps' position is described by an object
-   *   with the following properties:
+   * @param {'auto'|Object} config.position - If `"auto"`, the viewport will fit the bounds of the overlay(s).
+   *  If an object, it could be either a bbox or a coordinate and a zoom as the required parameters.  
+   *  ` bbox` (required): Is an array of coordinate pairs, with the first coordinate pair referring to the southwestern
+   *  corner of the box (the minimum longitude and latitude) and the second referring to the northeastern corner of the box (the maximum longitude and latitude).
+   *  Otherwise the maps' position is described by an object with the following properties:
    *   `coordinates` (required): [`coordinates`](#coordinates) for the center of image.
    *   `zoom` (required): Between 0 and 20.
    *   `bearing` (optional): Between 0 and 360.
@@ -3619,7 +3592,7 @@
    * @param {boolean} [config.logo=true] - Whether there is a Mapbox logo
    *   on the map image.
    * @return {MapiRequest}
-   *
+   *  
    * @example
    * staticClient.getStaticImage({
    *   ownerId: 'mapbox',
@@ -3630,6 +3603,23 @@
    *     coordinates: [12, 13],
    *     zoom: 4
    *   }
+   * })
+   *   .send()
+   *   .then(response => {
+   *     const image = response.body;
+   *   });
+   * 
+   * @example
+   * staticClient.getStaticImage({
+   *   ownerId: 'mapbox',
+   *   styleId: 'streets-v11',
+   *   width: 200,
+   *   height: 300,
+   *   position: {
+   *     // position as a bounding box
+   *     bbox: [-77.04,38.8,-77.02,38.91],
+   *   }, 
+   *  padding: '4'
    * })
    *   .send()
    *   .then(response => {
@@ -3698,7 +3688,8 @@
    *   });
    * const staticImageUrl = request.url();
    * // Now you can open staticImageUrl in a browser.
-   *  * @example
+   *
+   * @example
    * // Filter all buildings that have a height value that is less than 300 meters
    * const request = staticClient
    *   .getStaticImage({
@@ -3733,6 +3724,7 @@
    *   });
    * const staticImageUrl = request.url();
    * // Now you can open staticImageUrl in a browser.
+
    */
   Static.getStaticImage = function(config) {
     validator.assertShape({
@@ -3748,16 +3740,17 @@
             zoom: validator.required(validator.range([0, 20])),
             bearing: validator.range([0, 360]),
             pitch: validator.range([0, 60])
-          })
+          }),
+          validator.strictShape({ bbox: validator.required(validator.arrayOf(validator.number)) })
         )
       ),
       padding: validator.string,
       overlays: validator.arrayOf(validator.plainObject),
       highRes: validator.boolean,
-      before_layer: v.string,
-      addlayer: v.plainObject,
-      setfilter: v.plainArray,
-      layer_id: v.string,
+      before_layer: validator.string,
+      addlayer: validator.plainObject,
+      setfilter: validator.plainArray,
+      layer_id: validator.string,
       attribution: validator.boolean,
       logo: validator.boolean
     })(config);
@@ -3791,9 +3784,6 @@
     if (config.logo !== undefined) {
       query.logo = String(config.logo);
     }
-    if (config.insertOverlayBeforeLayer !== undefined) {
-      query.before_layer = config.insertOverlayBeforeLayer;
-    }
     if (config.before_layer !== undefined) {
       query.before_layer = config.before_layer;
     }
@@ -3809,11 +3799,11 @@
     if (config.padding !== undefined) {
       query.padding = config.padding;
     }
-  
+
     if (config.setfilter !== undefined && config.layer_id === undefined) {
       throw new Error('Must include layer_id in setfilter request');
     }
-  
+
     if (
       (config.setfilter !== undefined || config.addlayer !== undefined) &&
       config.position === 'auto' &&
@@ -3823,13 +3813,13 @@
         'Auto extent cannot be used with style parameters and no overlay'
       );
     }
-  
+
     if (config.addlayer !== undefined && config.setfilter !== undefined) {
       throw new Error(
         'addlayer and setfilter cannot be used in the same request'
       );
     }
-  
+
     if (
       config.padding !== undefined &&
       config.position !== 'auto' &&
@@ -3839,7 +3829,7 @@
         'Padding can only be used with auto or bbox as the position.'
       );
     }
-  
+
     if (config.position.bbox !== undefined && config.position.bbox.length !== 4) {
       throw new Error('bbox must be four coordinates');
     }
@@ -3849,7 +3839,7 @@
       path: '/styles/v1/:ownerId/:styleId/static/' + preEncodedUrlParts,
       params: pick_1(config, ['ownerId', 'styleId']),
       query: query,
-      encoding: 'binary',
+      encoding: 'binary'
     });
   };
 
@@ -3977,7 +3967,7 @@
     }
     // polyline expects each coordinate to be in reversed order: [lat, lng]
     var reversedCoordinates = o.coordinates.map(function(c) {
-      return c.reverse();
+      return [c[1], c[0]];
     });
     var encodedPolyline = polyline_1.encode(reversedCoordinates);
     result += '(' + encodeURIComponent(encodedPolyline) + ')';
@@ -4006,14 +3996,14 @@
    * Styles API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#styles).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/maps/#styles).
    */
   var Styles = {};
 
   /**
    * Get a style.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-a-style).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-a-style).
    *
    * @param {Object} config
    * @param {string} config.styleId
@@ -4051,8 +4041,8 @@
 
     return this.client.createRequest({
       method: 'GET',
-      path: '/styles/v1/:ownerId/:styleId',
-      params: config,
+      path: '/styles/v1/:ownerId/:styleId' + (config.draft ? '/draft' : ''),
+      params: pick_1(config, ['ownerId', 'styleId']),
       query: query
     });
   };
@@ -4060,7 +4050,7 @@
   /**
    * Create a style.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#create-a-style).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#create-a-style).
    *
    * @param {Object} config
    * @param {Object} config.style - Stylesheet JSON object.
@@ -4100,7 +4090,7 @@
   /**
    * Update a style.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#update-a-style).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#update-a-style).
    *
    * @param {Object} config
    * @param {string} config.styleId
@@ -4186,6 +4176,7 @@
    * @param {Object} [config]
    * @param {string} [config.start] - The style ID to start at, for paginated results.
    * @param {string} [config.ownerId]
+   * @param {boolean} [config.fresh=false] - If `true`, will bypass the cached resource. Fresh requests have a lower rate limit than cached requests and may have a higher latency. `fresh=true` should never be used in high concurrency environments.
    * @return {MapiRequest}
    *
    * @example
@@ -4282,7 +4273,7 @@
       styleId: validator.required(validator.string),
       iconId: validator.required(validator.string),
       ownerId: validator.string,
-      draft: v.boolean
+      draft: validator.boolean
     })(config);
 
     return this.client.createRequest({
@@ -4291,14 +4282,14 @@
         '/styles/v1/:ownerId/:styleId' +
         (config.draft ? '/draft' : '') +
         '/sprite/:iconId',
-      params: config
+      params: pick_1(config, ['ownerId', 'styleId', 'iconId'])
     });
   };
 
   /**
    * Get a style sprite's image or JSON document.
    *
-   * See [the corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-a-sprite-image-or-json).
+   * See [the corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-a-sprite-image-or-json).
    *
    * @param {Object} config
    * @param {string} config.styleId
@@ -4320,7 +4311,7 @@
    *   .then(response => {
    *     const sprite = response.body;
    *   });
-   * 
+   *
    * @example
    * stylesClient.getStyleSprite({
    *   format: 'png',
@@ -4344,12 +4335,12 @@
     })(config);
 
     var format = config.format || 'json';
-    var fileName = 'sprite' + (config.highRes ? '@2x' : '') + '.' + format;
+    var fileName = '/sprite' + (config.highRes ? '@2x' : '') + '.' + format;
 
     var query = {};
     if (config.fresh) {
       query.fresh = 'true';
-    }  
+    }
 
     return this.client.createRequest(
       immutable(
@@ -4359,7 +4350,7 @@
             '/styles/v1/:ownerId/:styleId' +
             (config.draft ? '/draft' : '') +
             fileName,
-          params: pick(config, ['ownerId', 'styleId']),
+          params: pick_1(config, ['ownerId', 'styleId']),
           query: query
         },
         format === 'png' ? { encoding: 'binary' } : {}
@@ -4370,7 +4361,7 @@
   /**
    * Get a font glyph range.
    *
-   * See [the corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-font-glyph-ranges).
+   * See [the corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-font-glyph-ranges).
    *
    * @param {Object} config
    * @param {string|Array<string>} config.fonts - An array of font names.
@@ -4415,19 +4406,20 @@
   /**
    * Get embeddable HTML displaying a map.
    *
-   * See [the corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#request-embeddable-html).
+   * See [the corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#request-embeddable-html).
    *
    * @param {Object} config
-   * @param {string} styleId
-   * @param {boolean} [scrollZoom=true] - If `false`, zooming the map by scrolling will
+   * @param {string} config.styleId
+   * @param {boolean} [config.scrollZoom=true] - If `false`, zooming the map by scrolling will
    *   be disabled.
-   * @param {boolean} [title=false] - If `true`, the map's title and owner is displayed
+   * @param {boolean} [config.title=false] - If `true`, the map's title and owner is displayed
    *   in the upper right corner of the map.
    * @param {boolean} [config.fallback=false] - If `true`, serve a fallback raster map.
    * @param {string} [config.mapboxGLVersion] - Specify a version of [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) to use to render the map.
    * @param {string} [config.mapboxGLGeocoderVersion] - Specify a version of the [Mapbox GL geocoder plugin](https://github.com/mapbox/mapbox-gl-geocoder) to use to render the map search box.
    * @param {string} [config.ownerId]
-   * @param {boolean} [config.draft=false] - If `true` will retrieve the draft style, otherwise will retrieve the published style.   */
+   * @param {boolean} [config.draft=false] - If `true` will retrieve the draft style, otherwise will retrieve the published style.
+   */
   Styles.getEmbeddableHtml = function(config) {
     validator.assertShape({
       styleId: validator.required(validator.string),
@@ -4457,7 +4449,6 @@
     if (config.mapboxGLGeocoderVersion !== undefined) {
       query.mapboxGLGeocoderVersion = String(config.mapboxGLGeocoderVersion);
     }
-  
 
     return this.client.createRequest({
       method: 'GET',
@@ -4473,7 +4464,7 @@
    * Tilequery API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#tilequery).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/maps/#tilequery).
    */
   var Tilequery = {};
 
@@ -4530,7 +4521,7 @@
    * Tilesets API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#tilesets).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/maps/#tilesets).
    */
   var Tilesets = {};
 
@@ -4544,11 +4535,11 @@
    * @param {'created'|'modified'} [config.sortBy] - Sort the listings by their `created` or `modified` timestamps.
    * @param {string} [config.start] - The tileset after which to start the listing.
    * @param {'public'|'private'} [config.visibility] - Filter results by visibility, either `public` or `private`
-
    * @return {MapiRequest}
    *
    * @example
    * tilesetsClient.listTilesets()
+   *   .send()
    *   .then(response => {
    *     const tilesets = response.body;
    *   });
@@ -4574,26 +4565,26 @@
       path: '/tilesets/v1/:ownerId',
       params: config ? pick_1(config, ['ownerId']) : {},
       query: config
-      ? pick_1(config, ['limit', 'sortBy', 'start', 'type', 'visibility'])
-      : {}
+        ? pick_1(config, ['limit', 'sortBy', 'start', 'type', 'visibility'])
+        : {}
     });
   };
 
   /**
    * Delete a tileset
-   * 
+   *
    * @param {Object} config
    * @param {string} config.tilesetId ID of the tileset to be deleted in the form `username.tileset_id`.
    * @return {MapiRequest}
-   * 
+   *
    * @example
    * tilesetsClient.deleteTileset({
    *     tilesetId: 'username.tileset_id'
    *   })
-   * .send()
-   * .then(response => {
-   *   const deleted = response.statusCode === 204;
-   * });
+   *   .send()
+   *   .then(response => {
+   *     const deleted = response.statusCode === 204;
+   *   });
    */
   Tilesets.deleteTileset = function(config) {
     validator.assertShape({
@@ -4607,13 +4598,12 @@
     });
   };
 
-
   /**
    * Retrieve metadata about a tileset.
-   * 
+   *
    * @param {Object} [config]
    * @param {string} [config.tilesetId] - Unique identifier for the tileset in the format `username.id`.
-   * 
+   *
    * @return {MapiRequest}
    */
   Tilesets.tileJSONMetadata = function(config) {
@@ -4628,16 +4618,15 @@
     });
   };
 
-
   /**
    * Create a tileset source
-   * 
+   *
    * @param {Object} config
    * @param {string} config.id ID of the tileset source to be created.
    * @param {UploadableFile} config.file Line-delimeted GeoJSON file.
    * @param {string} [config.ownerId]
    * @return {MapiRequest}
-   * 
+   *
    * @example
    * tilesetsClient.createTilesetSource({
    *      id: 'tileset_source_id',
@@ -4726,7 +4715,6 @@
       query: config ? pick_1(config, ['limit', 'start']) : {}
     });
   };
-
 
   /**
    * Delete a tileset source
@@ -4887,7 +4875,7 @@
         : {}
     });
   };
-  
+
   /**
    * Retrieve the status of a tileset
    *
@@ -4915,7 +4903,7 @@
       params: pick_1(config, ['tilesetId'])
     });
   };
-  
+
   /**
    * Retrieve information about a single tileset job
    *
@@ -4946,7 +4934,7 @@
       params: pick_1(config, ['tilesetId', 'jobId'])
     });
   };
-  
+
   /**
    * List information about all jobs for a tileset
    *
@@ -4981,7 +4969,7 @@
       query: pick_1(config, ['stage', 'limit', 'start'])
     });
   };
-  
+
   /**
    * View Tilesets API global queue
    *
@@ -5027,8 +5015,8 @@
    *   });
    */
   Tilesets.validateRecipe = function(config) {
-    v.assertShape({
-      recipe: v.required(v.plainObject)
+    validator.assertShape({
+      recipe: validator.required(validator.plainObject)
     })(config);
 
     return this.client.createRequest({
@@ -5113,14 +5101,14 @@
    * Tokens API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#tokens).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/accounts/#tokens).
    */
   var Tokens = {};
 
   /**
    * List your access tokens.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#list-tokens).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#list-tokens).
    *
    * @return {MapiRequest}
    *
@@ -5141,13 +5129,14 @@
   /**
    * Create a new access token.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#create-a-token).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#create-a-token).
    *
    * @param {Object} [config]
    * @param {string} [config.note]
    * @param {Array<string>} [config.scopes]
    * @param {Array<string>} [config.resources]
    * @param {Array<string>} [config.allowedUrls]
+   * @param {Array<{ platform: string, bundleId: string }>} [config.allowedApplications] This option restricts tokens with an Application Bundle ID. The feature is in beta and is only available to our selected customers.  For more information, please contact sales.
    * @return {MapiRequest}
    *
    * @example
@@ -5166,7 +5155,13 @@
       note: validator.string,
       scopes: validator.arrayOf(validator.string),
       resources: validator.arrayOf(validator.string),
-      allowedUrls: validator.arrayOf(validator.string)
+      allowedUrls: validator.arrayOf(validator.string),
+      allowedApplications: validator.arrayOf(
+        validator.shape({
+          bundleId: validator.string,
+          platform: validator.string
+        })
+      )
     })(config);
 
     var body = {};
@@ -5181,6 +5176,10 @@
       body.allowedUrls = config.allowedUrls;
     }
 
+    if (config.allowedApplications) {
+      body.allowedApplications = config.allowedApplications;
+    }
+
     return this.client.createRequest({
       method: 'POST',
       path: '/tokens/v2/:ownerId',
@@ -5192,7 +5191,7 @@
   /**
    * Create a new temporary access token.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#create-a-temporary-token).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#create-a-temporary-token).
    *
    * @param {Object} config
    * @param {string} config.expires
@@ -5228,14 +5227,15 @@
   /**
    * Update an access token.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#update-a-token).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#update-a-token).
    *
    * @param {Object} config
    * @param {string} config.tokenId
    * @param {string} [config.note]
    * @param {Array<string>} [config.scopes]
    * @param {Array<string>} [config.resources]
-   * @param {Array<string>} [config.allowedUrls]
+   * @param {Array<string> | null} [config.allowedUrls]
+   * @param {Array<{ platform: string, bundleId: string }> | null} [config.allowedApplications] This option restricts tokens with an Application Bundle ID. The feature is in beta and is only available to our selected customers.  For more information, please contact sales.
    * @return {MapiRequest}
    *
    * @example
@@ -5255,7 +5255,13 @@
       note: validator.string,
       scopes: validator.arrayOf(validator.string),
       resources: validator.arrayOf(validator.string),
-      allowedUrls: validator.arrayOf(validator.string)
+      allowedUrls: validator.arrayOf(validator.string),
+      allowedApplications: validator.arrayOf(
+        validator.shape({
+          bundleId: validator.string,
+          platform: validator.string
+        })
+      )
     })(config);
 
     var body = {};
@@ -5272,6 +5278,10 @@
       body.allowedUrls = config.allowedUrls;
     }
 
+    if (config.allowedApplications || config.allowedApplications === null) {
+      body.allowedApplications = config.allowedApplications;
+    }
+
     return this.client.createRequest({
       method: 'PATCH',
       path: '/tokens/v2/:ownerId/:tokenId',
@@ -5283,7 +5293,7 @@
   /**
    * Get data about the client's access token.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#retrieve-a-token).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#retrieve-a-token).
    *
    * @return {MapiRequest}
    *
@@ -5304,7 +5314,7 @@
   /**
    * Delete an access token.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#delete-a-token).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#delete-a-token).
    *
    * @param {Object} config
    * @param {string} config.tokenId
@@ -5335,7 +5345,7 @@
    * List your available scopes. Each item is a metadata
    * object about the scope, not just the string scope.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/accounts/#list-scopes).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/accounts/#list-scopes).
    *
    * @return {MapiRequest}
    *
@@ -5359,14 +5369,14 @@
    * Uploads API service.
    *
    * Learn more about this service and its responses in
-   * [the HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#uploads).
+   * [the HTTP service documentation](https://docs.mapbox.com/api/maps/#uploads).
    */
   var Uploads = {};
 
   /**
    * List the statuses of all recent uploads.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-recent-upload-statuses).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-recent-upload-statuses).
    *
    * @param {Object} [config]
    * @param {boolean} [config.reverse] - List uploads in chronological order, rather than reverse chronological order.
@@ -5394,7 +5404,7 @@
   /**
    * Create S3 credentials.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-s3-credentials).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-s3-credentials).
    *
    * @return {MapiRequest}
    *
@@ -5432,7 +5442,7 @@
   /**
    * Create an upload.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#create-an-upload).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#create-an-upload).
    *
    * @param {Object} config
    * @param {string} config.tileset - The tileset ID to create or replace, in the format `username.nameoftileset`.
@@ -5473,16 +5483,16 @@
     if (!config.tileset && !config.mapId) {
       throw new Error('tileset or mapId must be defined');
     }
-  
+
     if (!config.name && !config.tilesetName) {
       throw new Error('name or tilesetName must be defined');
     }
-  
+
     // Support old mapId option
     if (config.mapId) {
       config.tileset = config.mapId;
     }
-  
+
     // Support old tilesetName option
     if (config.tilesetName) {
       config.name = config.tilesetName;
@@ -5492,14 +5502,13 @@
       method: 'POST',
       path: '/uploads/v1/:ownerId',
       body: pick_1(config, ['tileset', 'url', 'name'])
-
     });
   };
 
   /**
    * Get an upload's status.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#retrieve-upload-status).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#retrieve-upload-status).
    *
    * @param {Object} config
    * @param {string} config.uploadId
@@ -5529,7 +5538,7 @@
   /**
    * Delete an upload.
    *
-   * See the [corresponding HTTP service documentation](https://www.mapbox.com/api-documentation/maps/#remove-an-upload-status).
+   * See the [corresponding HTTP service documentation](https://docs.mapbox.com/api/maps/#remove-an-upload-status).
    *
    * @param {Object} config
    * @param {string} config.uploadId
@@ -5666,7 +5675,7 @@
         profile: config.profile,
         coordinates: config.coordinates.join(',')
       },
-      query: objectClean(query)
+      query: objectClean_1(query)
     });
   };
 
@@ -5678,7 +5687,7 @@
     client.datasets = datasets(client);
     client.directions = directions(client);
     client.geocoding = geocoding(client);
-    client.geocodingV6 = geocodingv6(client);
+    client.geocodingV6 = geocodingV6(client);
     client.mapMatching = mapMatching(client);
     client.matrix = matrix(client);
     client.optimization = optimization(client);
