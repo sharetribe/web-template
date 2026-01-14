@@ -166,7 +166,11 @@ app.use(
       const isChunk = path.match(
         /^\/.*static\/(js|css)\/.*\.[a-z0-9]+\.chunk\.(css|js|css\.map|js\.map)$/g
       );
-      if (isMain || isChunk) {
+      const isMapboxSDK = path.match(
+        /^\/.*static\/scripts\/mapbox\/mapbox-sdk@0.16.2\/mapbox-sdk\.min\.js$/g
+      );
+
+      if (isMain || isChunk || isMapboxSDK) {
         // cache for one year
         res.setHeader('Cache-Control', 'public, max-age=31557600');
       }
