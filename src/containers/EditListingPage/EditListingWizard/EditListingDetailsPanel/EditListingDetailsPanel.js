@@ -9,6 +9,7 @@ import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
 } from '../../../../util/types';
+import { LISTING_PAGE_PARAM_TYPE_NEW } from '../../../../util/urlHelpers';
 import {
   isFieldForCategory,
   isFieldForListingType,
@@ -41,14 +42,26 @@ const getTransactionInfo = props => {
     listingTypes = [],
     existingListingTypeInfo = {},
     includeLabel = false,
+    preselectedListingType = null,
   } = props;
   const { listingType, transactionProcessAlias, unitType } = existingListingTypeInfo;
 
   if (listingType && transactionProcessAlias && unitType) {
     // If listing type has already been set, return the existing listing type info.
     return { listingType, transactionProcessAlias, unitType };
-  } else if (listingTypes.length === 1) {
-    const { listingType: type, label, transactionType } = listingTypes[0];
+  } else if (listingTypes.length === 1 || preselectedListingType) {
+    const listingTypeConfig =
+      listingTypes.length === 1
+        ? listingTypes[0]
+        : preselectedListingType
+        ? listingTypes.find(conf => conf.listingType === preselectedListingType)
+        : {};
+    const { listingType: type, label, transactionType } = listingTypeConfig || {};
+    if (!type) {
+      // If listing type is not found (e.g. preselected listing type is not found among listingTypes),
+      // return empty object.
+      return {};
+    }
     const { alias, unitType: configUnitType } = transactionType;
     const labelMaybe = includeLabel ? { label: label || type } : {};
     return {
@@ -227,7 +240,12 @@ const getInitialValues = (
   categoryKey
 ) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
-  const { listingType } = publicData;
+  // If details panel is accessed via URL like my.domain.com/l/draft/00000000-0000-0000-0000-000000000000/new/details?listingType=sell-bicycles,
+  // we'll pick the preselected listing type from the URL.
+  const preselectedListingType = props.locationSearch?.listingType;
+  // If listing type has already been set, use it.
+  // Otherwise, check if there's a preselected listing type in the URL.
+  const listingType = publicData?.listingType || preselectedListingType;
 
   const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
   // Initial values for the form
@@ -236,7 +254,7 @@ const getInitialValues = (
     description,
     ...nestedCategories,
     // Transaction type info: listingType, transactionProcessAlias, unitType
-    ...getTransactionInfo({ listingTypes, existingListingTypeInfo }),
+    ...getTransactionInfo({ listingTypes, existingListingTypeInfo, preselectedListingType }),
     ...initialValuesForListingFields(
       publicData,
       'public',
@@ -277,6 +295,8 @@ const EditListingDetailsPanel = props => {
   const {
     className,
     rootClassName,
+    params: pathParams,
+    locationSearch,
     listing,
     disabled,
     ready,
@@ -306,6 +326,11 @@ const EditListingDetailsPanel = props => {
       const unitTypesMatch = conf.transactionType?.unitType === existingListingTypeInfo.unitType;
       return listinTypesMatch && unitTypesMatch;
     });
+
+  const validPreselectedListingType =
+    pathParams?.type === LISTING_PAGE_PARAM_TYPE_NEW && !!locationSearch?.listingType
+      ? listingTypes.find(conf => conf.listingType === locationSearch.listingType)
+      : null;
 
   const initialValues = getInitialValues(
     props,
@@ -398,7 +423,6 @@ const EditListingDetailsPanel = props => {
 
             onSubmit(updateValues);
           }}
-          hasExistingListingType={hasExistingListingType}
           selectableListingTypes={listingTypes.map(conf =>
             getTransactionInfo({
               listingTypes: [conf],
@@ -406,6 +430,7 @@ const EditListingDetailsPanel = props => {
               includeLabel: true,
             })
           )}
+          hasPredefinedListingType={hasExistingListingType || !!validPreselectedListingType}
           selectableCategories={listingCategories}
           pickSelectedCategories={values =>
             pickCategoryFields(values, categoryKey, 1, listingCategories)
