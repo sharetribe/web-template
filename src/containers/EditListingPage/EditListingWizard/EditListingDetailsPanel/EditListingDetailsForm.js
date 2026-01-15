@@ -64,7 +64,7 @@ const FieldSelectListingType = props => {
   const {
     name,
     listingTypes,
-    hasExistingListingType,
+    hasPredefinedListingType,
     onListingTypeChange,
     formApi,
     formId,
@@ -86,7 +86,7 @@ const FieldSelectListingType = props => {
     return listingTypeConfig ? listingTypeConfig.label : listingType;
   };
 
-  return hasMultipleListingTypes && !hasExistingListingType ? (
+  return hasMultipleListingTypes && !hasPredefinedListingType ? (
     <>
       <FieldSelect
         id={formId ? `${formId}.${name}` : name}
@@ -113,7 +113,7 @@ const FieldSelectListingType = props => {
       <FieldHidden name="transactionProcessAlias" />
       <FieldHidden name="unitType" />
     </>
-  ) : hasMultipleListingTypes && hasExistingListingType ? (
+  ) : hasMultipleListingTypes && hasPredefinedListingType ? (
     <div className={css.listingTypeSelect}>
       <Heading as="h5" rootClassName={css.selectedLabel}>
         {intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
@@ -292,7 +292,7 @@ const AddListingFields = props => {
  * @param {propTypes.error} [props.fetchErrors.updateListingError] - The update listing error
  * @param {Function} props.pickSelectedCategories - The pick selected categories function
  * @param {Array<Object>} props.selectableListingTypes - The selectable listing types
- * @param {boolean} props.hasExistingListingType - Whether the listing type is existing
+ * @param {boolean} props.hasPredefinedListingType - Whether the listing type is already saved or predefined through URL
  * @param {propTypes.listingFields} props.listingFieldsConfig - The listing fields config
  * @param {string} props.listingCurrency - The listing currency
  * @param {string} props.saveActionMsg - The save action message
@@ -321,7 +321,7 @@ const EditListingDetailsForm = props => (
         marketplaceName,
         selectableListingTypes,
         selectableCategories,
-        hasExistingListingType = false,
+        hasPredefinedListingType = false,
         pickSelectedCategories,
         categoryPrefix,
         saveActionMsg,
@@ -387,7 +387,7 @@ const EditListingDetailsForm = props => (
           <FieldSelectListingType
             name="listingType"
             listingTypes={selectableListingTypes}
-            hasExistingListingType={hasExistingListingType}
+            hasPredefinedListingType={hasPredefinedListingType}
             onListingTypeChange={onListingTypeChange}
             formApi={formApi}
             formId={formId}
