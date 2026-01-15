@@ -71,7 +71,7 @@
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.6",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.11",
     "prettier": "^1.18.2"
   },
   "resolutions": {
