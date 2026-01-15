@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { denormalizeAssetData } from '../util/data';
+import { denormalizeAssetData, limitListingsSections } from '../util/data';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
 
@@ -184,7 +184,8 @@ const fetchPageAssetsPayloadCreator = (arg, thunkAPI) => {
         (collectedAssets, assetEntry, i) => {
           const [name, path] = assetEntry;
           const assetData = denormalizeAssetData(responses[i].data);
-          return { ...collectedAssets, [name]: { path, data: assetData } };
+          const filteredAssetData = limitListingsSections(assetData); // Limit CMS page data to maximum 10 sections with sectionType='listings' for performance optimization
+          return { ...collectedAssets, [name]: { path, data: filteredAssetData } };
         },
         { ...fixedPageAssets, ...pickLatestPageAssetData }
       );
