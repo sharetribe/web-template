@@ -22,6 +22,7 @@ import css from './LinkedLogo.module.css';
  */
 const LinkedLogo = props => {
   const {
+    id,
     className,
     rootClassName,
     logoClassName,
@@ -43,7 +44,7 @@ const LinkedLogo = props => {
       />
     </ExternalLink>
   ) : (
-    <NamedLink className={classes} name="LandingPage" {...rest}>
+    <NamedLink id={id} className={classes} name="LandingPage" {...rest}>
       <Logo
         layout={layout}
         className={logoClassName}

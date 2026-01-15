@@ -146,8 +146,13 @@ const LinksMenu = props => {
         contentPosition="left"
         isOpen={isOpen}
         onToggleActive={setIsOpen}
+        skipFocusOnNavigation={true}
       >
-        <MenuLabel className={css.linkMenuLabel} isOpenClassName={css.linkMenuIsOpen}>
+        <MenuLabel
+          id="links-menu-label"
+          className={css.linkMenuLabel}
+          isOpenClassName={css.linkMenuIsOpen}
+        >
           <MenuLabelContent showMoreLabel={showMoreLabel} isOpen={isOpen} intl={intl} />
         </MenuLabel>
         <MenuContent className={css.linkMenuContent}>

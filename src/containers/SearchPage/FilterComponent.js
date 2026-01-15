@@ -39,9 +39,10 @@ const FilterComponent = props => {
   const name = key.replace(/\s+/g, '-');
   const getAriaLabel = (label, values) => {
     const status = values ? 'active' : 'inactive';
+    const mode = liveEdit ? 'live' : 'normal';
     return intl.formatMessage(
       { id: 'SearchPage.screenreader.openFilterButton' },
-      { label, status, values }
+      { label, status, values, mode }
     );
   };
 

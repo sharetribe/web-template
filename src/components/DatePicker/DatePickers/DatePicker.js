@@ -242,6 +242,7 @@ const CalendarMonth = props => {
                       aria-label={ariaLabel}
                       className={classes}
                       data-date={isoDateString}
+                      data-current={isCurrent && !isDisabled ? 'true' : undefined}
                       key={cellKey}
                       onClick={onClick}
                       onMouseEnter={onMouseEnter}
@@ -467,30 +468,39 @@ const DatePicker = props => {
 
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(getPreviousDay(currentDate));
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(getNextDay(currentDate));
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(subDays(currentDate, 7));
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(addDays(currentDate, 7));
     } else if (event.key === 'PageUp') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(getPreviousMonth(currentDate));
     } else if (event.key === 'PageDown') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(getNextMonth(currentDate));
     } else if (event.key === 'Home') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(getFirstOfMonth(currentDate));
     } else if (event.key === 'End') {
       event.preventDefault();
+      event.stopPropagation();
       updateCurrentDate(getLastOfMonth(currentDate));
     } else if (event.key === 'Space' || event.key === 'Enter') {
       event.preventDefault();
+      event.stopPropagation();
       onSelectDate(currentDate);
     }
   };

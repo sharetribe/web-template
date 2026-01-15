@@ -4,14 +4,56 @@ import classNames from 'classnames';
 import { MenuContent, MenuLabel } from '../../components';
 import css from './Menu.module.css';
 
-const KEY_CODE_ESCAPE = 27;
 const CONTENT_PLACEMENT_OFFSET = 0;
 const CONTENT_TO_LEFT = 'left';
 const CONTENT_TO_RIGHT = 'right';
 const MAX_MOBILE_SCREEN_WIDTH = 767;
+const FOCUSABLE_ELEMENTS = 'a, button, [tabindex], input, select, textarea';
 
 const isControlledMenu = (isOpenProp, onToggleActiveProp) => {
   return isOpenProp !== null && onToggleActiveProp !== null;
+};
+
+const moveFocusToFirstFocusableElement = menuContent => {
+  const focusableElements = menuContent.querySelectorAll(FOCUSABLE_ELEMENTS);
+  if (focusableElements.length > 0) {
+    const firstFocusableElement = Array.from(focusableElements).find(
+      element => !(element.tabIndex < 0 || element.disabled)
+    );
+    firstFocusableElement?.focus();
+  }
+};
+
+const moveFocusToLastFocusableElement = menuContent => {
+  const focusableElements = menuContent.querySelectorAll(FOCUSABLE_ELEMENTS);
+  if (focusableElements.length > 0) {
+    const lastFocusableElement = Array.from(focusableElements)
+      .reverse()
+      .find(element => !(element.tabIndex < 0 || element.disabled));
+    lastFocusableElement?.focus();
+  }
+};
+
+const moveFocusToNextFocusableElement = (menuContent, direction = 'next') => {
+  const focusableElements = Array.from(
+    menuContent.querySelectorAll('a, button, [tabindex], input, select, textarea')
+  ).filter(element => !(element.tabIndex < 0 || element.disabled));
+
+  if (focusableElements.length === 0) {
+    return;
+  }
+
+  const currentIndex = focusableElements.findIndex(element => element === document.activeElement);
+  let targetIndex;
+
+  if (direction === 'next') {
+    targetIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0;
+  } else {
+    // direction === 'previous'
+    targetIndex = currentIndex > 0 ? currentIndex - 1 : focusableElements.length - 1;
+  }
+
+  focusableElements[targetIndex]?.focus();
 };
 
 /**
@@ -60,6 +102,7 @@ class Menu extends Component {
     }
 
     this.onBlur = this.onBlur.bind(this);
+    this.onFocus = this.onFocus.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
     this.prepareChildren = this.prepareChildren.bind(this);
@@ -80,6 +123,10 @@ class Menu extends Component {
     if (!this.menu.contains(event.relatedTarget)) {
       const { isOpen = null, onToggleActive = null } = this.props;
 
+      if (event.relatedTarget !== null) {
+        window.__focusedElementId__ = null;
+      }
+
       if (isControlledMenu(isOpen, onToggleActive)) {
         onToggleActive(false);
       } else {
@@ -88,25 +135,88 @@ class Menu extends Component {
     }
   }
 
-  onKeyDown(e) {
-    // Gather all escape presses to close menu
-    if (e.keyCode === KEY_CODE_ESCAPE) {
-      this.toggleOpen(false);
+  onFocus(event) {
+    const skipFocusOnNavigation = this.props.skipFocusOnNavigation;
+    if (event.currentTarget.contains(event.target) && skipFocusOnNavigation !== true) {
+      window.__focusedElementId__ = event.currentTarget.firstChild?.id;
     }
   }
 
-  toggleOpen(enforcedState) {
+  onKeyDown(e) {
+    // Gather all escape presses to close menu
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      this.menu?.firstChild?.focus();
+      this.toggleOpen({ enforcedState: false });
+    } else if (e.key === 'ArrowDown') {
+      if (e.target === this.menu?.firstChild) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleOpen({ enforcedState: true });
+      } else if (this.menuContent?.contains(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        moveFocusToNextFocusableElement(this.menuContent);
+      }
+    } else if (e.key === 'ArrowUp') {
+      if (e.target === this.menu?.firstChild) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleOpen({ enforcedState: false });
+      } else if (this.menuContent?.contains(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        moveFocusToNextFocusableElement(this.menuContent, 'previous');
+      }
+    } else if (e.key === 'Home') {
+      if (e.target === this.menu?.firstChild) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleOpen({ enforcedState: true });
+      } else if (this.menuContent?.contains(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        moveFocusToFirstFocusableElement(this.menuContent);
+      }
+    } else if (e.key === 'End') {
+      if (e.target === this.menu?.firstChild) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleOpen({ enforcedState: true, moveFocusFn: moveFocusToLastFocusableElement });
+      } else if (this.menuContent?.contains(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        moveFocusToLastFocusableElement(this.menuContent);
+      }
+    }
+  }
+
+  toggleOpen(options = {}) {
+    const { enforcedState, moveFocusFn } = options || {};
+    const moveFocusTo = moveFocusFn || moveFocusToFirstFocusableElement;
+    const delayedMoveFocus = isMenuOpen => {
+      if (isMenuOpen) {
+        setTimeout(() => {
+          moveFocusTo(this.menuContent);
+        }, 100);
+      }
+    };
     // If state is handled outside of Menu component, we call a passed in onToggleActive func
     const { isOpen = null, onToggleActive = null } = this.props;
     if (isControlledMenu(isOpen, onToggleActive)) {
       const isMenuOpen = enforcedState != null ? enforcedState : !isOpen;
       onToggleActive(isMenuOpen);
+      delayedMoveFocus(isMenuOpen);
     } else {
       // If state is handled inside of Menu component, set state
-      this.setState(prevState => {
-        const isMenuOpen = enforcedState != null ? enforcedState : !prevState.isOpen;
-        return { isOpen: isMenuOpen };
-      });
+      this.setState(
+        prevState => {
+          const isMenuOpen = enforcedState != null ? enforcedState : !prevState.isOpen;
+          return { isOpen: isMenuOpen };
+        },
+        () => delayedMoveFocus(this.state.isOpen)
+      );
     }
   }
 
@@ -197,22 +307,21 @@ class Menu extends Component {
   }
 
   render() {
-    const { id, className, rootClassName, ariaLabel } = this.props;
+    const { id, className, rootClassName } = this.props;
     const rootClass = rootClassName || css.root;
     const classes = classNames(rootClass, className);
     const menuChildren = this.state.ready ? this.prepareChildren() : null;
-    const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
     return (
       <div
         id={id}
         className={classes}
         onBlur={this.onBlur}
+        onFocus={this.onFocus}
         onKeyDown={this.onKeyDown}
         ref={c => {
           this.menu = c;
         }}
-        {...ariaLabelMaybe}
       >
         {menuChildren}
       </div>

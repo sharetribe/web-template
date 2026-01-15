@@ -1,3 +1,4 @@
+@import '../../../styles/customMediaQueries.css';
 .root {
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
@@ -11,4 +12,9 @@
 
 .main {
   display: grid;
+  scroll-margin-top: var(--topbarHeight);
+
+  @media (--viewportMedium) {
+    scroll-margin-top: var(--topbarHeightDesktop);
+  }
 }

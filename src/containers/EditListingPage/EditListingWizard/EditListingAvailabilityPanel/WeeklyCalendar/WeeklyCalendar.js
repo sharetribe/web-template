@@ -496,6 +496,10 @@ const WeeklyCalendar = props => {
             showUntilDate={thisWeek}
             startOfPrevRange={getStartOfPrevWeek(currentWeek, timeZone, firstDayOfWeek)}
             size="big"
+            aria-label={intl.formatMessage(
+              { id: 'EditListingAvailabilityPanel.WeeklyCalendar.screenreader.weekNavigation' },
+              { direction: 'previous' }
+            )}
           />
           <Next
             className={css.next}
@@ -503,6 +507,10 @@ const WeeklyCalendar = props => {
             showUntilDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
             startOfNextRange={getStartOfNextWeek(currentWeek, timeZone, firstDayOfWeek)}
             size="big"
+            aria-label={intl.formatMessage(
+              { id: 'EditListingAvailabilityPanel.WeeklyCalendar.screenreader.weekNavigation' },
+              { direction: 'next' }
+            )}
           />
         </div>
       </header>

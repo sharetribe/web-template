@@ -383,7 +383,8 @@ describe('EditListingPage', () => {
 
     // Simulate user selecting subcategory
     await waitFor(() => {
-      const selectSubcategory = screen.getAllByRole('combobox')[1];
+      // first combobox is location searc, second the first category, third the subcategory
+      const selectSubcategory = screen.getAllByRole('combobox')[2];
       userEvent.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
     });
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
@@ -515,7 +516,8 @@ describe('EditListingPage', () => {
 
     // Simulate user interaction and select sub level category
     await waitFor(() => {
-      const selectSubcategory = screen.getAllByRole('combobox')[1];
+      // first combobox is location searc, second the first category, third the subcategory
+      const selectSubcategory = screen.getAllByRole('combobox')[2];
       userEvent.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
     });
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);

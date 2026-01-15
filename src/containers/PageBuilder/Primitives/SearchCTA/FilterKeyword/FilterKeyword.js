@@ -21,6 +21,9 @@ const FilterKeyword = props => {
         placeholder={intl.formatMessage({
           id: 'PageBuilder.SearchCTA.keywordFilterPlaceholder',
         })}
+        aria-label={intl.formatMessage({
+          id: 'PageBuilder.SearchCTA.keywordFilterPlaceholder',
+        })}
       />
     </div>
   );

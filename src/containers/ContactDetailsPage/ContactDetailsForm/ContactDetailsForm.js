@@ -405,6 +405,7 @@ class ContactDetailsFormComponent extends Component {
                   type="password"
                   name="currentPassword"
                   id={formId ? `${formId}.currentPassword` : 'currentPassword'}
+                  disabled={!emailChanged}
                   autoComplete="current-password"
                   label={passwordLabel}
                   placeholder={passwordPlaceholder}

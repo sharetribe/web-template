@@ -143,6 +143,9 @@ const ShowFinishDraftOverlayMaybe = props => {
           className={css.finishListingDraftLink}
           name="EditListingPage"
           params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_DRAFT, tab: 'photos' }}
+          ariaLabel={`${intl.formatMessage({
+            id: 'ManageListingCard.finishListingDraft',
+          })}: ${title}`}
         >
           <FormattedMessage id="ManageListingCard.finishListingDraft" />
         </NamedLink>
@@ -296,6 +299,7 @@ const LinkToStockOrAvailabilityTab = props => {
   const {
     id,
     slug,
+    title,
     editListingLinkType,
     isBookable,
     hasListingType,
@@ -317,6 +321,9 @@ const LinkToStockOrAvailabilityTab = props => {
           className={css.manageLink}
           name="EditListingPage"
           params={{ id, slug, type: editListingLinkType, tab: 'availability' }}
+          ariaLabel={`${intl.formatMessage({
+            id: 'ManageListingCard.manageAvailability',
+          })}: ${title}`}
         >
           <FormattedMessage id="ManageListingCard.manageAvailability" />
         </NamedLink>
@@ -524,7 +531,7 @@ export const ManageListingCard = props => {
           <div className={css.menubarGradient} />
           <div className={css.menubar}>
             <Menu
-              className={classNames(css.menu, { [css.cardIsOpen]: !isClosed })}
+              className={classNames(css.menu, { [css.cardIsOpen]: !(isClosed || isDraft) })}
               contentPlacementOffset={MENU_CONTENT_OFFSET}
               mobileMaxWidth={MOBILE_MAX_WIDTH}
               contentPosition="left"
@@ -642,6 +649,7 @@ export const ManageListingCard = props => {
             className={css.manageLink}
             name="EditListingPage"
             params={{ id, slug, type: editListingLinkType, tab: 'details' }}
+            ariaLabel={`${intl.formatMessage({ id: 'ManageListingCard.editListing' })}: ${title}`}
           >
             <FormattedMessage id="ManageListingCard.editListing" />
           </NamedLink>
@@ -649,6 +657,7 @@ export const ManageListingCard = props => {
           <LinkToStockOrAvailabilityTab
             id={id}
             slug={slug}
+            title={title}
             editListingLinkType={editListingLinkType}
             isBookable={isBookable}
             currentStock={currentStock}

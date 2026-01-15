@@ -27,7 +27,7 @@ import css from './FilterForm.module.css';
  */
 const FilterForm = props => {
   const intl = useIntl();
-  const { liveEdit = false, onChange, onSubmit, onCancel, onClear, ...rest } = props;
+  const { liveEdit = false, onChange, onSubmit, onCancel, onClear, clearButton, ...rest } = props;
 
   if (liveEdit && !onChange) {
     throw new Error('FilterForm: if liveEdit is true you need to provide onChange function');
@@ -45,6 +45,7 @@ const FilterForm = props => {
     }
   };
 
+  const ClearButton = () => (clearButton ? clearButton : null);
   const formCallbacks = liveEdit ? { onSubmit: () => null } : { onSubmit, onCancel, onClear };
   return (
     <FinalForm
@@ -80,7 +81,6 @@ const FilterForm = props => {
             id={id}
             className={classes}
             onSubmit={handleSubmit}
-            tabIndex="0"
             style={{ ...style }}
             role="search"
             aria-label={intl.formatMessage(
@@ -91,7 +91,10 @@ const FilterForm = props => {
             <div className={classNames(paddingClasses || css.contentWrapper)}>{children}</div>
 
             {liveEdit ? (
-              <FormSpy onChange={handleChange} subscription={{ values: true, dirty: true }} />
+              <>
+                <FormSpy onChange={handleChange} subscription={{ values: true, dirty: true }} />
+                <ClearButton />
+              </>
             ) : (
               <div className={css.buttonsWrapper}>
                 <button className={css.clearButton} type="button" onClick={onClear}>

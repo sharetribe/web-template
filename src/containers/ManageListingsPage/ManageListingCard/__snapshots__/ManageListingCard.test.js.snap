@@ -207,6 +207,7 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
       class="manageLinks"
     >
       <a
+        aria-label="ManageListingCard.editListing: listing1 title"
         class="manageLink"
         href="/l/listing1-title/listing1/edit/details"
       >

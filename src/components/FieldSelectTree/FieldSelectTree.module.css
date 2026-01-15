@@ -64,7 +64,6 @@
 }
 
 .optionBtnSelectedLowest {
-  &:focus,
   &:hover {
     color: var(--marketplaceColor);
   }
