@@ -11,6 +11,7 @@ import { Heading } from '../../../components';
 
 import TextMaybe from '../TextMaybe/TextMaybe';
 import css from './Offer.module.css';
+import CustomTransactionFields from '../TransactionPanel/CustomTransactionFields';
 
 const { Money } = sdkTypes;
 
@@ -25,6 +26,7 @@ const Offer = props => {
     isRegularNegotiation,
     isProviderBanned,
     intl,
+    customTransactionFieldProps,
   } = props;
 
   if (!isNegotiationProcess) {
@@ -113,6 +115,8 @@ const Offer = props => {
           />
         </div>
       )}
+
+      <CustomTransactionFields {...customTransactionFieldProps} />
 
       <TextMaybe
         heading={intl.formatMessage({ id: 'TransactionPage.Offer.providerDefaultMessageLabel' })}

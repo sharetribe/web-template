@@ -854,12 +854,159 @@ const validListingTypes = listingTypes => {
   // Check what transaction processes this client app supports
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
+  const mockTransactionFields = [
+    {
+      key: 'fieldText1',
+      label: 'Text field filled by customer',
+      scope: 'protected',
+      schemaType: 'text',
+      showTo: {
+        customer: true,
+        provider: false,
+      },
+      saveConfig: {
+        isRequired: true,
+      },
+    },
+    {
+      enumOptions: [
+        {
+          label: 'North',
+          option: 'north',
+        },
+        {
+          label: 'South',
+          option: 'south',
+        },
+      ],
+      showTo: {
+        customer: true,
+        provider: false,
+      },
+      showConfig: {
+        label: 'Multi-enum for customer',
+        unselectedOptions: false,
+      },
+      scope: 'protected',
+      label: 'Multi-enum for customer',
+      key: 'secondary',
+      schemaType: 'multi-enum',
+    },
+
+    {
+      key: 'fieldNumber1',
+      label: 'Number field filled by customer',
+      scope: 'protected',
+      schemaType: 'long',
+      showTo: {
+        customer: true,
+        provider: false,
+      },
+      saveConfig: {
+        isRequired: true,
+      },
+      numberConfig: {
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+    {
+      key: 'fieldEnum1',
+      label: 'Enum field filled by customer',
+      scope: 'protected',
+      schemaType: 'enum',
+      showTo: {
+        customer: true,
+        provider: false,
+      },
+      saveConfig: {
+        isRequired: false,
+      },
+      enumOptions: [
+        { label: 'First option', option: 'firstOption' },
+        { label: 'Second option', option: 'secondOption' },
+      ],
+    },
+    {
+      key: 'fieldText2',
+      label: 'Text field filled by provider',
+      scope: 'protected',
+      schemaType: 'text',
+      showTo: {
+        customer: false,
+        provider: true,
+      },
+      saveConfig: {
+        isRequired: true,
+      },
+    },
+    {
+      enumOptions: [
+        {
+          label: 'North',
+          option: 'north',
+        },
+        {
+          label: 'South',
+          option: 'south',
+        },
+      ],
+      showTo: {
+        customer: false,
+        provider: true,
+      },
+      showConfig: {
+        label: 'Multi-enum for provider',
+        unselectedOptions: false,
+      },
+      scope: 'protected',
+      label: 'Multi-enum for provider',
+      key: 'secondary',
+      schemaType: 'multi-enum',
+    },
+    {
+      key: 'fieldNumber2',
+      label: 'Number field filled by provider',
+      scope: 'protected',
+      schemaType: 'long',
+      showTo: {
+        customer: false,
+        provider: true,
+      },
+      saveConfig: {
+        isRequired: true,
+      },
+      numberConfig: {
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+    {
+      key: 'fieldEnum2',
+      label: 'Enum field filled by provider',
+      scope: 'protected',
+      schemaType: 'enum',
+      showTo: {
+        customer: false,
+        provider: true,
+      },
+      saveConfig: {
+        isRequired: false,
+      },
+      enumOptions: [
+        { label: 'First option', option: 'firstOption' },
+        { label: 'Second option', option: 'secondOption' },
+      ],
+    },
+  ];
+
   const validTypes = listingTypes.reduce((validConfigs, listingType) => {
     const {
       listingType: type,
       label,
       transactionType,
       priceVariations,
+      transactionFields,
       ...restOfListingType
     } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
@@ -870,6 +1017,11 @@ const validListingTypes = listingTypes => {
 
     const priceVariationTypeMaybe = isBookingProcessAlias(alias)
       ? { priceVariations: { enabled: priceVariations?.enabled } }
+      : {};
+
+    const hasTransactionFields = transactionFields?.length > 0;
+    const validTransactionFieldsMaybe = hasTransactionFields
+      ? { transactionFields: transactionFields.map(restructureTransactionFields) }
       : {};
 
     if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
@@ -884,6 +1036,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
+          ...validTransactionFieldsMaybe,
           ...priceVariationTypeMaybe,
           // e.g. stockType, availabilityType,...
           ...restOfListingType,
@@ -999,6 +1152,53 @@ const restructureListingFields = hostedListingFields => {
         : null;
     }) || []
   );
+};
+
+const restructureTransactionFields = transactionField => {
+  const {
+    key,
+    enumOptions,
+    label,
+    numberConfig = {},
+    saveConfig = {},
+    showConfig = {},
+    schemaType,
+    showTo,
+    ...rest
+  } = transactionField;
+
+  const defaultLabel = label || key;
+  const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+  const numberConfigMaybe = schemaType === 'long' ? { numberConfig } : {};
+  const { required: isRequired, ...restSaveConfig } = saveConfig;
+  // TODO tx-fields: align code and asset showTo data type
+  const showToObject = {
+    customer: showTo === 'customer',
+    provider: showTo === 'provider',
+  };
+
+  return key
+    ? {
+        key,
+        label,
+        scope: 'protected',
+        schemaType,
+        ...enumOptionsMaybe,
+        ...numberConfigMaybe,
+        showConfig: {
+          ...showConfig,
+          unselectedOptions: false,
+          label: showConfig.label || defaultLabel,
+        },
+        saveConfig: {
+          ...restSaveConfig,
+          isRequired,
+          label: saveConfig.label || defaultLabel,
+        },
+        showTo: showToObject,
+        ...rest,
+      }
+    : null;
 };
 
 ///////////////////////////////////////

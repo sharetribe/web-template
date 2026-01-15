@@ -6,7 +6,7 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
-import { NEGOTIATION_PROCESS_NAME } from '../../../transactions/transaction';
+import { isNegotiationProcess, NEGOTIATION_PROCESS_NAME } from '../../../transactions/transaction';
 import { displayPrice } from '../../../util/configHelpers';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
@@ -24,6 +24,7 @@ import BookingLocationMaybe from './BookingLocationMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
+import CustomTransactionFields from './CustomTransactionFields';
 
 import css from './TransactionPanel.module.css';
 
@@ -193,6 +194,7 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      transactionFields = [],
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -233,6 +235,11 @@ export class TransactionPanelComponent extends Component {
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
     const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
+
+    // Negotiation process custom transaction fields are shown in RequestQuote and Offer components,
+    // so we don't show them here
+    const showCustomTransactionFields =
+      transactionFields?.length > 0 && !isNegotiationProcess(stateData.processName);
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
@@ -343,7 +350,15 @@ export class TransactionPanelComponent extends Component {
                 />
               </div>
             ) : null}
-
+            {showCustomTransactionFields ? (
+              <CustomTransactionFields
+                protectedData={protectedData}
+                transactionFieldConfigs={transactionFields}
+                intl={intl}
+                className={css.customFieldsContainer}
+                role={'customer'}
+              />
+            ) : null}
             <FeedSection
               rootClassName={css.feedContainer}
               hasMessages={messages.length > 0}

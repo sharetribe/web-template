@@ -8,6 +8,7 @@ import { Heading } from '../../../components';
 
 import TextMaybe from '../TextMaybe/TextMaybe';
 import css from './RequestQuote.module.css';
+import CustomTransactionFields from '../TransactionPanel/CustomTransactionFields';
 
 // Functional component as a helper to build ActivityFeed section
 const RequestQuote = props => {
@@ -19,6 +20,7 @@ const RequestQuote = props => {
     isNegotiationProcess,
     isCustomerBanned,
     intl,
+    customTransactionFieldProps = {},
   } = props;
 
   if (!isNegotiationProcess) {
@@ -46,6 +48,7 @@ const RequestQuote = props => {
       <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="TransactionPage.RequestQuote.heading" />
       </Heading>
+      <CustomTransactionFields {...customTransactionFieldProps} />
 
       <TextMaybe
         heading={intl.formatMessage({

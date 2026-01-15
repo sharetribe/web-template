@@ -40,6 +40,7 @@ import RequestQuoteForm from './RequestQuoteForm/RequestQuoteForm.js';
 import { requestQuote } from './RequestQuotePage.duck.js';
 
 import css from './RequestQuotePage.module.css';
+import { pickTransactionFieldsData } from '../../util/fieldHelpers.js';
 
 const { UUID } = sdkTypes;
 
@@ -58,7 +59,7 @@ const getTransactionTypeData = (listingType, unitTypeInPublicData, config) => {
   return unitTypeInPublicData ? { unitType: unitTypeInPublicData, ...rest } : {};
 };
 
-const handleSubmit = (submitting, setSubmitting, props) => values => {
+const handleSubmit = (submitting, setSubmitting, props, transactionFields) => values => {
   if (submitting) {
     return;
   }
@@ -68,6 +69,10 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
 
   const { customerDefaultMessage } = values;
 
+  const transactionFieldsProtectedData = {
+    ...pickTransactionFieldsData(values, 'protected', true, transactionFields),
+  };
+
   const { listingType, transactionProcessAlias, unitType } = listing?.attributes?.publicData || {};
 
   // These are the inquiry parameters for the (one and only) transition
@@ -76,6 +81,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     protectedData: {
       ...(customerDefaultMessage ? { customerDefaultMessage } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
+      ...transactionFieldsProtectedData,
     },
   };
 
@@ -112,7 +118,6 @@ const RequestQuotePageComponent = props => {
     requestQuoteError,
   } = props;
 
-  const onSubmit = handleSubmit(submitting, setSubmitting, props);
   const listingTitle = listing?.attributes?.title;
   const { price, publicData } = listing?.attributes || {};
   const firstImage = listing?.images?.length > 0 ? listing.images[0] : null;
@@ -122,6 +127,9 @@ const RequestQuotePageComponent = props => {
   const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(listingTypeConfig);
   const showListingImage = requireListingImage(listingTypeConfig);
+  const { transactionFields } = listingTypeConfig || {};
+
+  const onSubmit = handleSubmit(submitting, setSubmitting, props, transactionFields);
 
   return (
     <Page title={pageTitle} scrollingDisabled={scrollingDisabled}>
@@ -163,6 +171,7 @@ const RequestQuotePageComponent = props => {
               onSubmit={onSubmit}
               errorMessageComponent={ErrorMessage}
               requestQuoteError={requestQuoteError}
+              transactionFields={transactionFields}
             />
           </section>
         </main>
