@@ -77,7 +77,7 @@ const getUpdatedMetadata = (orderData, transition, existingMetadata) => {
 };
 
 module.exports = (req, res) => {
-  const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
+  const { isSpeculative, orderData, bodyParams, queryParams } = req.body || {};
 
   const sdk = getSdk(req, res);
   const transitionName = bodyParams.transition;

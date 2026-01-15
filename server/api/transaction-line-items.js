@@ -3,7 +3,7 @@ const { getSdk, handleError, serialize, fetchCommission } = require('../api-util
 const { constructValidLineItems } = require('../api-util/lineItemHelpers');
 
 module.exports = (req, res) => {
-  const { isOwnListing, listingId, orderData } = req.body;
+  const { isOwnListing, listingId, orderData } = req.body || {};
 
   const sdk = getSdk(req, res);
 
