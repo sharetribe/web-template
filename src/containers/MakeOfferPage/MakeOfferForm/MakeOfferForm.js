@@ -87,13 +87,16 @@ export const MakeOfferForm = props => {
     intl,
     config,
     price,
+    providerDefaultMessage,
     stripeConnected,
     errorMessageComponent: ErrorMessage,
     makeOfferError,
     onSubmit,
   } = props;
 
-  const initialValuesMaybe = price ? { offer: price } : {};
+  const providerDefaultMessageMaybe = providerDefaultMessage ? { providerDefaultMessage } : {};
+  const priceMaybe = price ? { quote: price } : {};
+  const initialValuesMaybe = { ...providerDefaultMessageMaybe, ...priceMaybe };
 
   const marketplaceCurrency = config.currency;
   const priceValidators = getPriceValidators(

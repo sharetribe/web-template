@@ -100,7 +100,7 @@ export const getStateData = (params, process) => {
     //onOpenRequestChangesModal,
     //onOpenMakeCounterOfferModal,
     //onCheckoutRedirect,
-    //onMakeOfferFromRequest,
+    //onMakeOfferRedirect,
   } = params;
   const isCustomer = transactionRole === 'customer';
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
