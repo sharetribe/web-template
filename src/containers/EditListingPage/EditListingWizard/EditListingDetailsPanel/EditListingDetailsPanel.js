@@ -36,15 +36,21 @@ import css from './EditListingDetailsPanel.module.css';
  * @param {Object} existingListingTypeInfo
  * @returns an object containing mainly information that can be stored to publicData.
  */
-const getTransactionInfo = (listingTypes, existingListingTypeInfo = {}, inlcudeLabel = false) => {
+const getTransactionInfo = props => {
+  const {
+    listingTypes = [],
+    existingListingTypeInfo = {},
+    includeLabel = false,
+  } = props;
   const { listingType, transactionProcessAlias, unitType } = existingListingTypeInfo;
 
   if (listingType && transactionProcessAlias && unitType) {
+    // If listing type has already been set, return the existing listing type info.
     return { listingType, transactionProcessAlias, unitType };
   } else if (listingTypes.length === 1) {
     const { listingType: type, label, transactionType } = listingTypes[0];
     const { alias, unitType: configUnitType } = transactionType;
-    const labelMaybe = inlcudeLabel ? { label: label || type } : {};
+    const labelMaybe = includeLabel ? { label: label || type } : {};
     return {
       listingType: type,
       transactionProcessAlias: alias,
@@ -230,7 +236,7 @@ const getInitialValues = (
     description,
     ...nestedCategories,
     // Transaction type info: listingType, transactionProcessAlias, unitType
-    ...getTransactionInfo(listingTypes, existingListingTypeInfo),
+    ...getTransactionInfo({ listingTypes, existingListingTypeInfo }),
     ...initialValuesForListingFields(
       publicData,
       'public',
@@ -392,8 +398,14 @@ const EditListingDetailsPanel = props => {
 
             onSubmit(updateValues);
           }}
-          selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
+          selectableListingTypes={listingTypes.map(conf =>
+            getTransactionInfo({
+              listingTypes: [conf],
+              existingListingTypeInfo: {},
+              includeLabel: true,
+            })
+          )}
           selectableCategories={listingCategories}
           pickSelectedCategories={values =>
             pickCategoryFields(values, categoryKey, 1, listingCategories)
