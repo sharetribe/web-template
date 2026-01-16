@@ -161,10 +161,10 @@ const makeOfferPayloadCreator = (
   { negotiationParams, processAlias, transactionId, isPrivilegedTransition },
   { dispatch, getState, rejectWithValue, extra: sdk }
 ) => {
-  if (!processAlias) {
+  if (!transactionId && !processAlias && negotiationParams?.listingId?.uuid) {
     const error = new Error('No transaction process attached to listing');
     log.error(error, 'listing-process-missing', {
-      listingId: listing?.id?.uuid,
+      listingId: negotiationParams?.listingId?.uuid,
     });
     return rejectWithValue(storableError(error));
   }
