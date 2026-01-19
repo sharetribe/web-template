@@ -85,7 +85,7 @@ const requestQuotePayloadCreator = (
   if (!processAlias) {
     const error = new Error('No transaction process attached to listing');
     log.error(error, 'listing-process-missing', {
-      listingId: listing?.id?.uuid,
+      listingId: params?.listingId?.uuid,
     });
     return rejectWithValue(storableError(error));
   }
