@@ -99,7 +99,6 @@ describe('CheckoutPage', () => {
     onInitiateOrder: noop,
     onRetrievePaymentIntent: noop,
     onSavePaymentMethod: noop,
-    onSendMessage: noop,
     confirmCardPaymentInProgress: false,
     config: getDefaultConfiguration(),
     routeConfiguration,

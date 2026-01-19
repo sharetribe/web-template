@@ -619,7 +619,6 @@ const initialState = {
   totalMessagePages: 0,
   oldestMessagePageFetched: 0,
   messages: [],
-  initialMessageFailedToTransaction: null,
   savePaymentMethodFailed: false,
   sendMessageInProgress: false,
   sendMessageError: null,
@@ -733,7 +732,6 @@ const transactionPageSlice = createSlice({
       .addCase(sendMessageThunk.pending, state => {
         state.sendMessageInProgress = true;
         state.sendMessageError = null;
-        state.initialMessageFailedToTransaction = null;
       })
       .addCase(sendMessageThunk.fulfilled, state => {
         state.sendMessageInProgress = false;
