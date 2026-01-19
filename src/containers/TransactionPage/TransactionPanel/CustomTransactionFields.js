@@ -19,7 +19,14 @@ import CustomExtendedDataSection from '../../../components/CustomExtendedDataSec
  * @returns React.Fragment containing aforementioned components
  */
 const CustomTransactionFields = props => {
-  const { protectedData, transactionFieldConfigs, intl, className, role = 'customer' } = props;
+  const {
+    protectedData,
+    transactionFieldConfigs,
+    intl,
+    className,
+    rowClassName,
+    role = 'customer',
+  } = props;
 
   // TODO move showConfig to configHelpers when asset comes through
   // Split role based configs into customer and provider arrays
@@ -61,19 +68,19 @@ const CustomTransactionFields = props => {
   const propsForProviderCustomFields =
     pickCustomFieldProps({ protectedData }, providerRoleConfigs) || [];
 
-  console.log({ propsForCustomerCustomFields }, { propsForProviderCustomFields });
-
   // Props for details fields (enum, number, boolean)
   const sectionDetailsPropsCustomer = {
     ...props,
     fieldConfigs: customerRoleConfigs,
     className: className,
+    rowClassName: rowClassName,
   };
 
   const sectionDetailsPropsProvider = {
     ...props,
     fieldConfigs: providerRoleConfigs,
     className: className,
+    rowClassName: rowClassName,
   };
 
   const pickExtendedDataFields = (filteredConfigs, config) => {

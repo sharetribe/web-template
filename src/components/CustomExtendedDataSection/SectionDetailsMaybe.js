@@ -8,9 +8,17 @@ import css from './CustomExtendedDataSection.module.css';
 import classNames from 'classnames';
 
 const SectionDetailsMaybe = props => {
-  const { fieldConfigs, pickExtendedDataFields, heading, className, rootClassName } = props;
+  const {
+    fieldConfigs,
+    pickExtendedDataFields,
+    heading,
+    className,
+    rootClassName,
+    rowClassName,
+  } = props;
 
   const classes = classNames(rootClassName || css.sectionDetails, className);
+  const rowClasses = rowClassName ? classNames(rowClassName, css.detailsRow) : css.detailsRow;
 
   if (!fieldConfigs) {
     return null;
@@ -27,7 +35,7 @@ const SectionDetailsMaybe = props => {
       ) : null}
       <ul className={css.details}>
         {existingFields.map(detail => (
-          <li key={detail.key} className={css.detailsRow}>
+          <li key={detail.key} className={rowClasses}>
             <span className={css.detailLabel}>{detail.label}</span>
             <span>{detail.value}</span>
           </li>
