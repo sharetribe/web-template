@@ -659,6 +659,7 @@ export const TransactionPageComponent = props => {
     transactionFieldConfigs: transactionFieldConfigs,
     intl,
     className: css.customFieldsContainer,
+    rowClassName: css.detailsRow,
     role,
   });
 
