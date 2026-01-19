@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] MakeOfferPage.duck.js and RequestQuotePage.duck.js: fix a bug with listingId fetching.
+  [#743](https://github.com/sharetribe/web-template/pull/743)
 - [add] Add currently available translations for DE, ES, FR.
   [#745](https://github.com/sharetribe/web-template/pull/745)
 - [change] Update React Redux from v8.1.2 to v9.2.0 and Redux Toolkit from v2.9.0 to v2.11.2.
