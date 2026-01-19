@@ -13,7 +13,6 @@ const MIN_LENGTH_FOR_LONG_WORDS = 20;
 const TextMaybe = props => {
   const { className, rootClassName, headingClassName, heading, text, showText, isOwn } = props;
   const classes = classNames(rootClassName || css.fieldContainer, className);
-  const fieldMsgClasses = isOwn ? css.ownMessage : css.message;
   const fieldMsgLinkClassMaybe = isOwn ? { linkClass: css.ownMessageContentLink } : {};
 
   if (showText && text) {
@@ -31,7 +30,7 @@ const TextMaybe = props => {
             {heading}
           </Heading>
         ) : null}
-        <p className={fieldMsgClasses}>{textMessage}</p>
+        <p className={css.text}>{textMessage}</p>
       </div>
     );
   }

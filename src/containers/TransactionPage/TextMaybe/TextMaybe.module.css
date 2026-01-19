@@ -15,34 +15,6 @@
   margin-bottom: 16px;
 }
 
-.inquiryMessage,
-.message {
-  /* Preserve newlines, but collapse other whitespace */
-  display: inline-block;
-  margin: 0;
-  padding: 8.5px 14px 8.5px 14px;
-  border-radius: 8px;
-  box-shadow: var(--boxShadow);
-  background-color: var(--colorWhite);
-
-  white-space: pre-line;
-
-  margin-top: 12px;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 8px;
-    padding: 8px 14px 8px 14px;
-  }
-}
-
-.ownInquiryMessage,
-.ownMessage {
-  composes: message;
-  background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
-}
-
 .ownMessageContentLink {
   color: var(--colorWhite);
   text-decoration: underline;
@@ -56,4 +28,18 @@
 .longWord {
   word-break: break-word;
   hyphens: auto;
+}
+
+.text {
+  font-weight: var(--fontWeightRegular);
+  padding: 1px 0 5px 0;
+  margin: 0;
+
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+
+  @media (--viewportMedium) {
+    padding: 3px 0 5px 0;
+    margin: 0;
+  }
 }

@@ -655,10 +655,11 @@ export const TransactionPageComponent = props => {
   const { transactionFields } = foundListingTypeConfig || {};
 
   const customTransactionFieldProps = role => ({
-    protectedData: transaction.attributes.protectedData,
+    protectedData: transaction?.attributes.protectedData,
     transactionFieldConfigs: transactionFields,
     intl,
     className: css.customFieldsContainer,
+    rowClassName: css.detailsRow,
     role,
   });
 
