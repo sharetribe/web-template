@@ -39,7 +39,6 @@ import {
   speculateTransaction,
   stripeCustomer,
   confirmPayment,
-  sendMessage,
   initiateInquiryWithoutPayment,
 } from './CheckoutPage.duck';
 
@@ -259,7 +258,6 @@ const mapDispatchToProps = dispatch => ({
   onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>
     dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
-  onSendMessage: params => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });

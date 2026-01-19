@@ -230,7 +230,6 @@ const getDataValidationResult = (transaction, process) => {
  * @param {propTypes.error} props.fetchMessagesError - The fetch messages error
  * @param {number} props.totalMessagePages - The total message pages
  * @param {number} props.oldestMessagePageFetched - The oldest message page fetched
- * @param {propTypes.uuid} props.initialMessageFailedToTransaction - The initial message failed to be send to transaction
  * @param {boolean} props.sendMessageInProgress - Whether the send message is in progress
  * @param {propTypes.error} props.sendMessageError - The send message error
  * @param {boolean} props.savePaymentMethodFailed - Whether the payment method is saved
@@ -277,7 +276,6 @@ export const TransactionPageComponent = props => {
   const intl = useIntl();
   const {
     currentUser,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed = false,
     fetchMessagesError,
     fetchMessagesInProgress,
@@ -559,11 +557,6 @@ export const TransactionPageComponent = props => {
     </div>
   );
 
-  const initialMessageFailed = !!(
-    initialMessageFailedToTransaction &&
-    initialMessageFailedToTransaction.uuid === transaction?.id?.uuid
-  );
-
   const otherUserDisplayName = isOwnOrder ? (
     <UserDisplayName user={provider} intl={intl} />
   ) : (
@@ -671,9 +664,9 @@ export const TransactionPageComponent = props => {
       customer={customer}
       provider={provider}
       transitions={txTransitions}
+      processName={processName}
       protectedData={transaction?.attributes?.protectedData}
       messages={messages}
-      initialMessageFailed={initialMessageFailed}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
       sendMessageInProgress={sendMessageInProgress}
@@ -908,7 +901,6 @@ const mapStateToProps = state => {
     totalMessagePages,
     oldestMessagePageFetched,
     messages,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed,
     sendMessageInProgress,
     sendMessageError,
@@ -938,7 +930,6 @@ const mapStateToProps = state => {
     totalMessagePages,
     oldestMessagePageFetched,
     messages,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed,
     sendMessageInProgress,
     sendMessageError,

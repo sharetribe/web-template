@@ -1394,6 +1394,7 @@
   "TransactionPanel.default-booking.orderBreakdownTitle": "Booking breakdown",
   "TransactionPanel.default-negotiation.orderBreakdownTitle": "Order breakdown",
   "TransactionPanel.default-purchase.orderBreakdownTitle": "Order breakdown",
+  "TransactionPanel.defaultMessageHeading": "Additional information",
   "TransactionPanel.deletedListingOrderTitle": "a listing",
   "TransactionPanel.deletedListingTitle": "Deleted listing",
   "TransactionPanel.disputeOrder": "Dispute order",
