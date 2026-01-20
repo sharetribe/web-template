@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 
 import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { getFeaturedListingsProps } from '../../util/data';
 
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 const PageBuilder = loadable(() =>
@@ -15,15 +16,7 @@ const PageBuilder = loadable(() =>
 );
 
 export const CMSPageComponent = props => {
-  const {
-    params,
-    pageAssetsData,
-    getListingEntitiesById,
-    onFetchFeaturedListings,
-    featuredListingData,
-    inProgress,
-    error,
-  } = props;
+  const { params, pageAssetsData, inProgress, error } = props;
   const pageId = params.pageId || props.pageId;
 
   if (!inProgress && error?.status === 404) {
@@ -35,10 +28,7 @@ export const CMSPageComponent = props => {
       pageAssetsData={pageAssetsData?.[pageId]?.data}
       inProgress={inProgress}
       schemaType="Article"
-      featuredListingData={featuredListingData[pageId] || {}}
-      parentPage={pageId}
-      onFetchFeaturedListings={onFetchFeaturedListings}
-      getListingEntitiesById={getListingEntitiesById}
+      featuredListings={getFeaturedListingsProps(pageId, props)}
     />
   );
 };
