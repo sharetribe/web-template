@@ -12,20 +12,14 @@ import FallbackPage from './FallbackPage';
 import { ASSET_NAME } from './LandingPage.duck';
 import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { getFeaturedListingsProps } from '../../util/data';
 
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
 );
 
 export const LandingPageComponent = props => {
-  const {
-    pageAssetsData,
-    featuredListingData,
-    onFetchFeaturedListings,
-    getListingEntitiesById,
-    inProgress,
-    error,
-  } = props;
+  const { pageAssetsData, inProgress, error } = props;
 
   return (
     <PageBuilder
@@ -33,10 +27,7 @@ export const LandingPageComponent = props => {
       inProgress={inProgress}
       error={error}
       fallbackPage={<FallbackPage error={error} />}
-      featuredListingData={featuredListingData?.[camelize(ASSET_NAME)] || {}}
-      parentPage={camelize(ASSET_NAME)}
-      onFetchFeaturedListings={onFetchFeaturedListings}
-      getListingEntitiesById={getListingEntitiesById}
+      featuredListings={getFeaturedListingsProps(camelize(ASSET_NAME), props)}
     />
   );
 };

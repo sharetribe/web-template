@@ -184,7 +184,8 @@ const fetchPageAssetsPayloadCreator = (arg, thunkAPI) => {
         (collectedAssets, assetEntry, i) => {
           const [name, path] = assetEntry;
           const assetData = denormalizeAssetData(responses[i].data);
-          const filteredAssetData = limitListingsSections(assetData); // Limit CMS page data to maximum 10 sections with sectionType='listings' for performance optimization
+          // Limit CMS page data to maximum 10 sections with sectionType='listings' for performance optimization
+          const filteredAssetData = limitListingsSections(assetData);
           return { ...collectedAssets, [name]: { path, data: filteredAssetData } };
         },
         { ...fixedPageAssets, ...pickLatestPageAssetData }

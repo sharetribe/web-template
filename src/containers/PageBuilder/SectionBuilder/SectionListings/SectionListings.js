@@ -6,11 +6,10 @@ import { useConfiguration } from '../../../../context/configurationContext';
 import { lazyLoadWithDimensions } from '../../../../util/uiHelpers';
 import { FormattedMessage } from '../../../../util/reactIntl';
 
+import { ListingCard, IconSpinner, ErrorMessage } from '../../../../components';
+
 import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
-import { ListingCard } from '../../../../components';
-import { IconSpinner } from '../../../../components';
-import { ErrorMessage } from '../../../../components';
 
 import css from './SectionListings.module.css';
 
@@ -61,6 +60,11 @@ const isMobileViewport = () => {
  * @returns {number} Calculated height in pixels
  */
 const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = false, error) => {
+  const errorMessageHeight = 250;
+
+  if (error) {
+    return errorMessageHeight;
+  }
   const thumbnailAspectRatio = config.layout.listingImage.aspectRatio;
   const paddingHorizontal = 2 * 32; // 2x32px
   const titleHeightSingleLine = 16;
@@ -90,11 +94,6 @@ const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = f
   const totalCardHeight = cardImageHeight + (isMobile ? cardInfoHeightMobile : cardInfoHeight);
   const totalWithPaddings = totalCardHeight + containerPaddingTop + containerPaddingBottom;
 
-  const errorMessageHeight = 250;
-
-  if (error) {
-    return errorMessageHeight;
-  }
   return Math.ceil(totalWithPaddings);
 };
 
@@ -114,6 +113,7 @@ const ListingCarouselComponent = props => {
     listings,
     sliderId,
     darkMode,
+    featuredListings,
     onFetchFeaturedListings,
     fetched,
     inProgress,
@@ -188,12 +188,16 @@ const SectionListings = props => {
     description,
     callToAction,
     options,
-    onFetchFeaturedListings,
-    getListingEntitiesById,
-    featuredListingData,
-    parentPage,
     allSections,
   } = props;
+
+  const { featuredListings } = options;
+  const {
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+    parentPage,
+    featuredListingData,
+  } = featuredListings;
 
   const listingIds = featuredListingData?.[sectionId]?.listingIds;
   const listingEntities = listingIds ? getListingEntitiesById(listingIds) : [];

@@ -108,10 +108,7 @@ const PageBuilder = props => {
     schemaType,
     options,
     currentPage,
-    featuredListingData,
-    parentPage,
-    onFetchFeaturedListings,
-    getListingEntitiesById,
+    featuredListings,
     ...pageProps
   } = props;
 
@@ -144,14 +141,7 @@ const PageBuilder = props => {
                 {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
-                  <SectionBuilder
-                    sections={sections}
-                    options={options}
-                    featuredListingData={featuredListingData}
-                    parentPage={parentPage}
-                    onFetchFeaturedListings={onFetchFeaturedListings}
-                    getListingEntitiesById={getListingEntitiesById}
-                  />
+                  <SectionBuilder sections={sections} options={{ ...options, featuredListings }} />
                 )}
               </Main>
               <Footer>

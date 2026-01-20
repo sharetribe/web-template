@@ -13,7 +13,7 @@ import { pathByRouteName } from '../../util/routes';
 import { apiBaseUrl } from '../../util/api';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
-import { ensureCurrentUser } from '../../util/data';
+import { ensureCurrentUser, getFeaturedListingsProps } from '../../util/data';
 import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
@@ -23,6 +23,8 @@ import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
+import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
+import { getListingsById } from '../../ducks/marketplaceData.duck';
 
 import {
   Page,
@@ -554,9 +556,9 @@ export const AuthenticationPageComponent = props => {
     sendVerificationEmailError,
     onResendVerificationEmail,
     onManageDisableScrolling,
-    tosAssetsData,
-    tosFetchInProgress,
-    tosFetchError,
+    pageAssetsData,
+    pageAssetsFetchInProgress,
+    pageAssetsFetchError,
   } = props;
 
   // History API has potentially state tied to this route
@@ -703,9 +705,10 @@ export const AuthenticationPageComponent = props => {
       >
         <div className={css.termsWrapper} role="complementary">
           <TermsOfServiceContent
-            inProgress={tosFetchInProgress}
-            error={tosFetchError}
-            data={tosAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
+            featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
           />
         </div>
       </Modal>
@@ -719,9 +722,10 @@ export const AuthenticationPageComponent = props => {
       >
         <div className={css.privacyWrapper} role="complementary">
           <PrivacyPolicyContent
-            inProgress={tosFetchInProgress}
-            error={tosFetchError}
-            data={tosAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
+            featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
           />
         </div>
       </Modal>
@@ -732,13 +736,11 @@ export const AuthenticationPageComponent = props => {
 const mapStateToProps = state => {
   const { isAuthenticated, loginError, signupError, confirmError } = state.auth;
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
-  const {
-    pageAssetsData: privacyAssetsData,
-    inProgress: privacyFetchInProgress,
-    error: privacyFetchError,
-  } = state.hostedAssets || {};
-  const { pageAssetsData: tosAssetsData, inProgress: tosFetchInProgress, error: tosFetchError } =
+  const { pageAssetsData, inProgress: pageAssetsFetchInProgress, error: pageAssetsFetchError } =
     state.hostedAssets || {};
+  const { featuredListingData } = state.featuredListings || {};
+
+  const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
 
   return {
     authInProgress: authenticationInProgress(state),
@@ -750,12 +752,11 @@ const mapStateToProps = state => {
     confirmError,
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
-    privacyAssetsData,
-    privacyFetchInProgress,
-    privacyFetchError,
-    tosAssetsData,
-    tosFetchInProgress,
-    tosFetchError,
+    pageAssetsData,
+    pageAssetsFetchInProgress,
+    pageAssetsFetchError,
+    featuredListingData,
+    getListingEntitiesById,
   };
 };
 
@@ -766,6 +767,8 @@ const mapDispatchToProps = dispatch => ({
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
+  onFetchFeaturedListings: (sectionId, parentPage, listingImageConfig, allSections) =>
+    dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

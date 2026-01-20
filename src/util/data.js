@@ -199,7 +199,7 @@ export const denormalizeAssetData = assetJson => {
 export const limitListingsSections = data => {
   let acc = 0;
   const listingSectionLimit = 10;
-  const filteredData = data.sections.filter(section => {
+  const filteredSections = data.sections.filter(section => {
     if (section.sectionType === 'listings') {
       if (acc < listingSectionLimit) {
         acc++;
@@ -209,7 +209,27 @@ export const limitListingsSections = data => {
     }
     return true;
   });
-  return { meta: data.meta, sections: filteredData };
+  return { ...data, sections: filteredSections };
+};
+
+/**
+ * Create a wrapper object to pass as a prop to PageBuilder.
+ * This helper wraps all the necessary data and functions related to featured listings.
+ *
+ * @param {String} pageId The ID of the current page
+ * @param {Object} props Component props containing featuredListingData, onFetchFeaturedListings, and getListingEntitiesById
+ *
+ * @return {Object} Object wrapper containing listing data and handlers for the specified page
+ */
+export const getFeaturedListingsProps = (pageId, props) => {
+  const { featuredListingData, onFetchFeaturedListings, getListingEntitiesById } = props;
+
+  return {
+    featuredListingData: featuredListingData?.[pageId] || {},
+    parentPage: pageId,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+  };
 };
 
 /**
