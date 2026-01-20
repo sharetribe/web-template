@@ -153,7 +153,7 @@ class Menu extends Component {
       if (e.target === this.menu?.firstChild) {
         e.preventDefault();
         e.stopPropagation();
-        this.toggleOpen({ enforcedState: true });
+        this.toggleOpen({ enforcedState: true, moveFocusFn: moveFocusToFirstFocusableElement });
       } else if (this.menuContent?.contains(e.target)) {
         e.preventDefault();
         e.stopPropagation();
@@ -173,7 +173,7 @@ class Menu extends Component {
       if (e.target === this.menu?.firstChild) {
         e.preventDefault();
         e.stopPropagation();
-        this.toggleOpen({ enforcedState: true });
+        this.toggleOpen({ enforcedState: true, moveFocusFn: moveFocusToFirstFocusableElement });
       } else if (this.menuContent?.contains(e.target)) {
         e.preventDefault();
         e.stopPropagation();
@@ -193,10 +193,9 @@ class Menu extends Component {
   }
 
   toggleOpen(options = {}) {
-    const { enforcedState, moveFocusFn } = options || {};
-    const moveFocusTo = moveFocusFn || moveFocusToFirstFocusableElement;
+    const { enforcedState, moveFocusFn: moveFocusTo } = options || {};
     const delayedMoveFocus = isMenuOpen => {
-      if (isMenuOpen) {
+      if (isMenuOpen && moveFocusTo) {
         setTimeout(() => {
           moveFocusTo(this.menuContent);
         }, 100);
