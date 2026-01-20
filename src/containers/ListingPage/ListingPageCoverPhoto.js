@@ -57,6 +57,7 @@ import {
   NamedRedirect,
   OrderPanel,
   LayoutSingleColumn,
+  SectionTextMaybe,
 } from '../../components';
 
 // Related components and modules
@@ -84,7 +85,6 @@ import {
   priceForSchemaMaybe,
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
-import SectionTextMaybe from './SectionTextMaybe';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
