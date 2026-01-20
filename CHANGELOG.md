@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Menu: fix a bug with focus handling on iOS Safari.
+  [#747](https://github.com/sharetribe/web-template/pull/747)
 - [add] EditListingDetailsPanel: add support for preselected listing type through URLSearchParam:
   listingType. [#748](https://github.com/sharetribe/web-template/pull/748)
 - [fix] Fix incorrect translation keys in default-negotiation transaction process
