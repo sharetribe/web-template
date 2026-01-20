@@ -1,6 +1,6 @@
 import React from 'react';
 
-import css from './ProfilePage.module.css';
+import css from './CustomExtendedDataSection.module.css';
 import classNames from 'classnames';
 
 import { lazyLoadWithDimensions } from '../../util/uiHelpers.js';
@@ -16,6 +16,7 @@ const IFrame = props => {
   const { dimensions, ...rest } = props;
   return <iframe {...dimensions} {...rest} />;
 };
+
 const LazyIFrame = lazyLoadWithDimensions(IFrame);
 
 const YoutubeEmbed = props => {
