@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix incorrect translation keys in default-negotiation transaction process
+  [#746](https://github.com/sharetribe/web-template/pull/746)
 - [fix] MakeOfferPage.duck.js and RequestQuotePage.duck.js: fix a bug with listingId fetching.
   [#743](https://github.com/sharetribe/web-template/pull/743)
 - [add] Add currently available translations for DE, ES, FR.
