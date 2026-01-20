@@ -302,3 +302,39 @@ export const pickTransactionFieldsData = (
     return fields;
   }, {});
 };
+
+/**
+ * Returns a value for an enum, boolean, or long custom extended data field
+ * @param {Array} enumOptions an array of enum options related to the field
+ * @param {String | Number} value field value in extended data
+ * @param {String} schemaType field schema type
+ * @param {String} key field key
+ * @param {*} label field label
+ * @param {*} intl intl
+ * @param {*} page the context where the details is being used
+ * @returns an object with the detail information: key, value, label
+ */
+export const getDetailCustomFieldValue = (
+  enumOptions,
+  value,
+  schemaType,
+  key,
+  label,
+  intl,
+  page
+) => {
+  const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
+  const getBooleanMessage = value =>
+    value
+      ? intl.formatMessage({ id: `${page}.detailYes` })
+      : intl.formatMessage({ id: `${page}.detailNo` });
+  const optionConfig = findSelectedOption(value);
+
+  return schemaType === 'enum'
+    ? { key, value: optionConfig?.label, label }
+    : schemaType === 'boolean'
+    ? { key, value: getBooleanMessage(value), label }
+    : schemaType === 'long'
+    ? { key, value, label }
+    : null;
+};
