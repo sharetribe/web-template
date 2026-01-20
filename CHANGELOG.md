@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.8.0] 2026-01-20
+
 - [fix] Menu: fix a bug with focus handling on iOS Safari.
   [#747](https://github.com/sharetribe/web-template/pull/747)
 - [add] EditListingDetailsPanel: add support for preselected listing type through URLSearchParam:
