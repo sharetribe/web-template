@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import classNames from 'classnames';
 
 // Import util modules
@@ -331,6 +331,15 @@ const EditListingDetailsPanel = props => {
     pathParams?.type === LISTING_PAGE_PARAM_TYPE_NEW && !!locationSearch?.listingType
       ? listingTypes.find(conf => conf.listingType === locationSearch.listingType)
       : null;
+
+  // Call onListingTypeChange with validPreselectedListingType id-string on initialization.
+  // The call selects the correct wizard tabs for the preselected listing type.
+  // Note: it's only called if listing type is not already saved to publicData.
+  useEffect(() => {
+    if (!hasExistingListingType && validPreselectedListingType && onListingTypeChange) {
+      onListingTypeChange(validPreselectedListingType);
+    }
+  }, []);
 
   const initialValues = getInitialValues(
     props,

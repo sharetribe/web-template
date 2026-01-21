@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.8.1] 2026-01-21
+
+- [fix] EditListingDetailsPanel: fix a bug with preselected listing type not being set correctly.
+  [#750](https://github.com/sharetribe/web-template/pull/750)
+
+  [v10.8.1]: https://github.com/sharetribe/web-template/compare/v10.8.0...v10.8.1
+
 ## [v10.8.0] 2026-01-20
 
 - [fix] Menu: fix a bug with focus handling on iOS Safari.
@@ -28,6 +35,8 @@ way to update this template, but currently, we follow a pattern:
   [#745](https://github.com/sharetribe/web-template/pull/745)
 - [change] Update React Redux from v8.1.2 to v9.2.0 and Redux Toolkit from v2.9.0 to v2.11.2.
   [#742](https://github.com/sharetribe/web-template/pull/742)
+
+  [v10.8.0]: https://github.com/sharetribe/web-template/compare/v10.7.0...v10.8.0
 
 ## [v10.7.0] 2026-01-15
 
