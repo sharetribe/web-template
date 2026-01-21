@@ -591,7 +591,7 @@ export const TransactionPageComponent = props => {
           onOpenRequestChangesModal,
           onOpenMakeCounterOfferModal,
           onCheckoutRedirect: handleSubmitOrderRequest,
-          onMakeOfferFromRequest: onMakeOffer,
+          onMakeOfferRedirect: onMakeOffer,
           intl,
         },
         process
@@ -688,10 +688,12 @@ export const TransactionPageComponent = props => {
       actionButtons={containerId => (
         <ActionButtons
           containerId={containerId}
+          listingTypeConfig={foundListingTypeConfig}
           showButtons={stateData.showActionButtons}
           primaryButtonProps={stateData?.primaryButtonProps}
           secondaryButtonProps={stateData?.secondaryButtonProps}
           tertiaryButtonProps={stateData?.tertiaryButtonProps}
+          actionButtonOrder={stateData?.actionButtonOrder}
           isListingDeleted={listingDeleted}
           isProvider={isProviderRole}
           transitions={txTransitions}

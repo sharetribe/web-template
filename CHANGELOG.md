@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add support for provider-driven negotiation loop ("Update offer" loop). With this loop, the
+  provider can update the offer they made on default-negotiation process.
+  [#735](https://github.com/sharetribe/web-template/pull/735)
+
 ## [v10.8.1] 2026-01-21
 
 - [fix] EditListingDetailsPanel: fix a bug with preselected listing type not being set correctly.

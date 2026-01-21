@@ -42,11 +42,19 @@ const getTransitionName = (transactionId, processAlias, state) => {
   const processName = resolveLatestProcessName(processAlias.split('/')[0]);
   const process = getProcess(processName);
   const transitions = process.transitions;
+  const txState = transaction?.attributes?.state;
+  const isProviderUpdateOffer = txState === `state/${process.states.OFFER_PENDING}`;
+  const isProviderUpdateFromUpdatePending = txState === `state/${process.states.UPDATE_PENDING}`;
+  const lastTransition = transaction?.attributes?.lastTransition;
   const transitionName =
-    transaction?.attributes?.lastTransition === transitions.INQUIRE
+    lastTransition === transitions.INQUIRE
       ? transitions.MAKE_OFFER_AFTER_INQUIRY
-      : transaction?.attributes?.lastTransition === transitions.REQUEST_QUOTE
+      : lastTransition === transitions.REQUEST_QUOTE
       ? transitions.MAKE_OFFER_FROM_REQUEST
+      : isProviderUpdateOffer
+      ? transitions.UPDATE_OFFER
+      : isProviderUpdateFromUpdatePending
+      ? transitions.UPDATE_FROM_UPDATE_PENDING
       : transitions.MAKE_OFFER;
 
   return transitionName;

@@ -18,7 +18,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     transactionRole,
     nextTransitions,
     onCheckoutRedirect,
-    onMakeOfferFromRequest,
+    onMakeOfferRedirect,
     onOpenRequestChangesModal,
     onOpenMakeCounterOfferModal,
   } = txInfo;
@@ -54,6 +54,10 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       translationId:
         'TransactionPage.ActivityFeed.default-negotiation.transition.provider-reject-counter-offer',
     },
+    {
+      transition: transitions.ACCEPT_UPDATE,
+      translationId: 'TransactionPage.ActivityFeed.default-negotiation.transition.accept-update',
+    },
   ];
   const sharedStateData = {
     processName,
@@ -77,7 +81,7 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
     .cond([states.QUOTE_REQUESTED, PROVIDER], () => {
       const overwritesForMakeOfferFromRequest = {
         onAction: () => {
-          return onMakeOfferFromRequest();
+          return onMakeOfferRedirect();
         },
       };
       return {
@@ -124,6 +128,10 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
               translationKey: `TransactionPage.${processName}.${CUSTOMER}.${states.OFFER_PENDING}.disabled.maxRequests`,
             },
           },
+          {
+            type: 'customerCounterOfferHidden',
+            action: 'hide',
+          },
         ],
       };
 
@@ -146,12 +154,90 @@ export const getStateDataForNegotiationProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.OFFER_PENDING, PROVIDER], () => {
+      const overwritesForUpdateOffer = {
+        onAction: () => {
+          return onMakeOfferRedirect();
+        },
+        // conditions to disable the button
+        conditions: [
+          {
+            type: 'maxTransitions',
+            action: 'disable',
+            max: 50,
+            disabledReason: {
+              translationKey: `TransactionPage.${processName}.${PROVIDER}.${states.OFFER_PENDING}.disabled.maxRequests`,
+            },
+          },
+          {
+            type: 'providerUpdateOfferHidden',
+            action: 'hide',
+          },
+        ],
+      };
+
       return {
         ...sharedStateData,
         showDetailCardHeadings: true,
         showExtraInfo: true,
         showActionButtons: true,
         secondaryButtonProps: actionButtonProps(transitions.PROVIDER_WITHDRAW_OFFER, PROVIDER),
+        tertiaryButtonProps: actionButtonProps(
+          transitions.UPDATE_OFFER,
+          PROVIDER,
+          overwritesForUpdateOffer
+        ),
+        actionButtonOrder: ['tertiary', 'secondary'],
+      };
+    })
+    .cond([states.UPDATE_PENDING, CUSTOMER], () => {
+      return {
+        ...sharedStateData,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.ACCEPT_UPDATE, CUSTOMER),
+        secondaryButtonProps: actionButtonProps(
+          transitions.CUSTOMER_REJECT_FROM_UPDATE_PENDING,
+          CUSTOMER
+        ),
+      };
+    })
+    .cond([states.UPDATE_PENDING, PROVIDER], () => {
+      const overwritesForUpdateOffer = {
+        onAction: () => {
+          return onMakeOfferRedirect();
+        },
+        // conditions to disable the button
+        conditions: [
+          {
+            type: 'maxTransitions',
+            action: 'disable',
+            max: 50,
+            disabledReason: {
+              translationKey: `TransactionPage.${processName}.${PROVIDER}.${states.UPDATE_PENDING}.disabled.maxRequests`,
+            },
+          },
+          {
+            type: 'providerUpdateOfferHidden',
+            action: 'hide',
+          },
+        ],
+      };
+      return {
+        ...sharedStateData,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        secondaryButtonProps: actionButtonProps(
+          transitions.PROVIDER_WITHDRAW_FROM_UPDATE_PENDING,
+          PROVIDER
+        ),
+        tertiaryButtonProps: actionButtonProps(
+          transitions.UPDATE_FROM_UPDATE_PENDING,
+          PROVIDER,
+          overwritesForUpdateOffer
+        ),
+        actionButtonOrder: ['tertiary', 'secondary'],
       };
     })
     .cond([states.CUSTOMER_OFFER_PENDING, CUSTOMER], () => {
