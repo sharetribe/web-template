@@ -10,7 +10,7 @@
     "@reduxjs/toolkit": "2.11.2",
     "@sentry/browser": "^8.55.0",
     "@sentry/node": "^8.55.0",
-    "autosize": "^5.0.2",
+    "autosize": "^6.0.1",
     "basic-auth": "^2.0.1",
     "body-parser": "^2.2.2",
     "classnames": "^2.5.1",
