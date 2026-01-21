@@ -2,14 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { addMarketplaceEntities } from './marketplaceData.duck';
-import { types as sdkTypes } from '../util/sdkLoader';
 import { createImageVariantConfig } from '../util/sdkLoader';
 
-const { UUID } = sdkTypes;
-
-// Note: you can't add more that 10 listing IDs via Console
 const MAX_LISTING_COUNT = 10;
-const NUMBER_OF_NEWEST_LISTINGS = 10;
 
 // ================ HELPERS ==================== //
 
@@ -22,98 +17,57 @@ const getSectionBySectionId = (sections, sectionId) => {
 
 const getSectionKey = sectionIndex => `section-${sectionIndex + 1}`;
 const isListingsSection = section => section.sectionType === 'listings';
-const limitListingNumber = (selectedListings, maxListings) => {
-  return selectedListings.slice(0, maxListings);
-};
 
-// Initialize data object for redux based on selection type (newest/manual)
-const initialiseSectionData = (allSections, featuredListingData, parentPage, selectionType) => {
-  // Tally all listing ids in total on this page
-  let pageListingIds = [];
-  let pageSections = {};
-
-  allSections.forEach((section, sectionIndex) => {
-    if (isListingsSection(section) && section.listingSelection === selectionType) {
-      const sectionKey = getSectionKey(sectionIndex);
-
-      if (selectionType === 'newest') {
-        pageSections[sectionKey] = {
-          selection: 'newest',
-          listingIds: [],
-          fetched: false,
-        };
-      } else if (selectionType === 'manual' && section.selectedListings) {
-        const listingIds = limitListingNumber(section.selectedListings, MAX_LISTING_COUNT).map(
-          listing => new UUID(listing.listingId)
-        );
-        pageListingIds.push(...listingIds);
-
-        pageSections[sectionKey] = {
-          selection: 'manual',
-          listingIds,
-          fetched: false,
-        };
-      }
-    }
-  });
-
-  if (Object.keys(pageSections).length > 0) {
-    featuredListingData[parentPage] = {
-      ...pageSections,
-    };
-
-    if (pageListingIds.length > 0) {
-      // Deduplicate listing IDs by converting to strings, creating a Set, then back to UUID objects
-      featuredListingData[parentPage].allListingIds = [
-        ...new Set(pageListingIds.map(id => id.uuid)),
-      ].map(uuid => new UUID(uuid));
-    }
-  }
-  return featuredListingData;
-};
-
-// Generate featured listings data object
-const generateFeaturedListingData = (parentPage, sectionId, allSections) => {
-  const currentSection = getSectionBySectionId(allSections, sectionId);
-  const listingSelection = currentSection.listingSelection;
-  let featuredListingData = {};
-  if (listingSelection === 'newest') {
-    initialiseSectionData(allSections, featuredListingData, parentPage, 'newest');
-  }
-  if (listingSelection === 'manual') {
-    initialiseSectionData(allSections, featuredListingData, parentPage, 'manual');
-  }
-  return featuredListingData;
-};
+// Get section keys for all listing sections that match a specific selection type
+// e.g., if selectionType is "newest", returns ['section-1', 'section-3'] for sections 1 and 3 if they're both listing sections with selection type "newest"
+const getSectionKeysBySelectionType = (allSections, selectionType) =>
+  allSections
+    .map((section, index) => ({ section, key: getSectionKey(index) }))
+    .filter(
+      ({ section }) => isListingsSection(section) && section.listingSelection === selectionType
+    )
+    .map(({ key }) => key);
 
 // ================ Async Thunks ================ //
 
 const fetchFeaturedListingsPayloadCreator = async (arg, thunkAPI) => {
   const { extra: sdk, rejectWithValue, dispatch } = thunkAPI;
-  const { sectionId, parentPage, listingImageConfig, allSections } = arg;
+  const { sectionId, listingImageConfig, allSections } = arg;
+
+  const currentSection = getSectionBySectionId(allSections, sectionId);
+  const listingSelection = currentSection?.listingSelection;
+
+  // Validate selection type
+  const validSelectionTypes = ['newest', 'queryString'];
+  if (!listingSelection || !validSelectionTypes.includes(listingSelection)) {
+    const error = new Error(
+      `Invalid listingSelection: "${listingSelection}". Expected "newest" or "queryString".`
+    );
+    return rejectWithValue(storableError(error));
+  }
 
   let queryParams = {};
-  const featuredListingData = generateFeaturedListingData(parentPage, sectionId, allSections);
-  const currentSection = getSectionBySectionId(allSections, sectionId);
-  const listingSelection = currentSection.listingSelection;
 
   if (listingSelection === 'newest') {
     queryParams = {
-      perPage: NUMBER_OF_NEWEST_LISTINGS,
+      perPage: MAX_LISTING_COUNT,
       page: 1,
     };
   }
 
-  if (listingSelection === 'manual') {
-    const allListingIds = featuredListingData[parentPage].allListingIds;
+  if (listingSelection === 'queryString') {
+    // temporary example before we get actual data from the API
+    const queryString =
+      '?bounds=77.34631846%2C49.08839634%2C-47.41303277%2C-29.29395771&pub_accessories=has_all%3Abell%2Clights&pub_brand=pelago-bicycles%2Ccanyon&pub_categoryLevel1=hybrid-bicycles&pub_categoryLevel2=city-bike&pub_gears=4%2C13&pub_listingType=daily-booking';
+    const nQuery = 'bounds=62.75462507%2C28.92134794%2C50.51328622%2C19.07801618';
+    const sp = new URLSearchParams(nQuery);
+    const searchParams = Object.fromEntries(new URLSearchParams(sp));
 
-    // Early return if no listings are selected
-    if (allListingIds.length === 0) {
-      return { featuredListingData: {}, listingData: {} };
-    }
-
+    // For testing: console.log(JSON.stringify(Object.fromEntries(new URLSearchParams(searchParams)), null, 2));
     queryParams = {
-      ids: allListingIds.map(id => id.uuid).join(','),
+      perPage: MAX_LISTING_COUNT,
+      page: 1,
+      ...searchParams,
     };
   }
 
@@ -154,10 +108,7 @@ const fetchFeaturedListingsPayloadCreator = async (arg, thunkAPI) => {
     })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
-      return {
-        apiResponse: response,
-        featuredListingData,
-      };
+      return { apiResponse: response };
     })
     .catch(error => {
       log.error(error, 'featured-listings-fetch-failed', {
@@ -172,73 +123,112 @@ export const fetchFeaturedListings = createAsyncThunk(
   fetchFeaturedListingsPayloadCreator
 );
 
+// ================ Reducer Helpers ================ //
+
+// Get the section keys that should be updated based on selection type
+// - queryString: Only the specific section (each may have unique query params)
+// - newest: All sections with 'newest' type (they share the same data)
+const getAffectedSectionKeys = (allSections, triggeredSectionId, selectionType) => {
+  if (selectionType === 'queryString') {
+    return [triggeredSectionId];
+  }
+
+  if (selectionType === 'newest') {
+    // Returns array of all section keys that have selection type 'newest'
+    // Example: ['section-1', 'section-3'] if sections 1 and 3 are both 'newest'
+    // This is needed because all 'newest' sections share the same data
+    return getSectionKeysBySelectionType(allSections, 'newest');
+  }
+
+  return [];
+};
+
+// Initialize or/and update section specific state with the data passed in the `updates` parameter
+// Example state structure:
+// {
+//   'landing-page': {
+//     'section-1': { selection: 'newest', listingIds: [...], fetched: true, inProgress: false },
+//     'section-3': { selection: 'queryString', listingIds: [...], fetched: true, inProgress: false }
+//   }
+// }
+const updateSectionState = (state, parentPage, sectionKey, selectionType, updates) => {
+  // Initialize state data for this page if not yet initialised
+  if (!state[parentPage]) {
+    state[parentPage] = {};
+  }
+
+  // Initialize section with default values if it doesn't exist
+  if (!state[parentPage][sectionKey]) {
+    state[parentPage][sectionKey] = {
+      selection: selectionType,
+      listingIds: [],
+      fetched: false,
+    };
+  }
+
+  Object.assign(state[parentPage][sectionKey], updates);
+};
+
 // ================ Slice ================ //
 
 const featuredListingsSlice = createSlice({
   name: 'featuredListings',
-  initialState: {
-    featuredListingData: {},
-  },
+  initialState: {},
   reducers: {},
   extraReducers: builder => {
     builder
       .addCase(fetchFeaturedListings.pending, (state, action) => {
         const { parentPage, sectionId, allSections } = action.meta.arg;
+        const currentSection = getSectionBySectionId(allSections, sectionId);
+        const selectionType = currentSection?.listingSelection;
 
-        // Initialize featured listings data structure and mark as loading
-        const featuredListingData = generateFeaturedListingData(parentPage, sectionId, allSections);
-        Object.entries(featuredListingData[parentPage]).forEach(([sectionId, sectionData]) => {
-          sectionData.fetched = false;
-          sectionData.inProgress = true;
+        if (!selectionType) return;
+
+        const affectedSections = getAffectedSectionKeys(allSections, sectionId, selectionType);
+
+        affectedSections.forEach(sectionKey => {
+          updateSectionState(state, parentPage, sectionKey, selectionType, {
+            fetched: false,
+            inProgress: true,
+          });
         });
-
-        state.featuredListingData[parentPage] = {
-          ...state.featuredListingData[parentPage],
-          ...featuredListingData[parentPage],
-        };
       })
       .addCase(fetchFeaturedListings.fulfilled, (state, action) => {
-        const { apiResponse, featuredListingData } = action.payload;
-        const { parentPage } = action.meta.arg;
+        const { apiResponse } = action.payload;
+        const { parentPage, sectionId, allSections } = action.meta.arg;
+        const currentSection = getSectionBySectionId(allSections, sectionId);
+        const selectionType = currentSection?.listingSelection;
 
-        // Update data with fetched listings and mark as complete
-        if (featuredListingData[parentPage]) {
-          Object.entries(featuredListingData[parentPage]).forEach(([sectionId, sectionData]) => {
-            sectionData.fetched = true;
-            sectionData.inProgress = false;
-            // For newest listings, populate with API response data
-            if (sectionData?.selection === 'newest') {
-              sectionData.listingIds = apiResponse.data.data.map(listing => listing.id);
-            }
-            if (sectionData?.selection === 'manual') {
-              // Filter out listing ids that were not succesfully returned by the API call
-              const returnedListingIds = apiResponse.data.data.map(listing => listing.id.uuid);
-              sectionData.listingIds = sectionData.listingIds.filter(id =>
-                returnedListingIds.includes(id.uuid)
-              );
-            }
+        if (!selectionType) return;
+
+        const affectedSections = getAffectedSectionKeys(allSections, sectionId, selectionType);
+        const listingIds = apiResponse.data.data.map(listing => listing.id);
+
+        affectedSections.forEach(sectionKey => {
+          updateSectionState(state, parentPage, sectionKey, selectionType, {
+            fetched: true,
+            inProgress: false,
+            listingIds,
           });
-        }
-
-        state.featuredListingData[parentPage] = {
-          ...state.featuredListingData[parentPage],
-          ...featuredListingData[parentPage],
-        };
+        });
       })
       .addCase(fetchFeaturedListings.rejected, (state, action) => {
-        const { parentPage, allSections, sectionId } = action.meta.arg;
+        const { parentPage, sectionId, allSections } = action.meta.arg;
+        const currentSection = getSectionBySectionId(allSections, sectionId);
+        const selectionType = currentSection?.listingSelection;
 
-        const featuredListingData = generateFeaturedListingData(parentPage, sectionId, allSections);
-        Object.entries(featuredListingData[parentPage]).forEach(([sectionId, sectionData]) => {
-          sectionData.fetched = false;
-          sectionData.inProgress = false;
-          sectionData.error = action.payload;
+        const affectedSections = getAffectedSectionKeys(allSections, sectionId, selectionType);
+
+        // Affected section only matches valid sectionTypes. We want to store an error if there's an invalid sectionType
+        const sectionsToUpdate = affectedSections.length > 0 ? affectedSections : [sectionId];
+
+        sectionsToUpdate.forEach(sectionKey => {
+          updateSectionState(state, parentPage, sectionKey, selectionType, {
+            fetched: false,
+            inProgress: false,
+            error: action.payload,
+          });
         });
-
-        state.featuredListingData[parentPage] = {
-          ...state.featuredListingData[parentPage],
-          ...featuredListingData[parentPage],
-        };
       });
   },
 });

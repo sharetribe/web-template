@@ -103,7 +103,7 @@ const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = f
  * @param {Object} props - Component properties
  * @param {number} props.numColumns - Number of columns to display
  * @param {Array} props.listings - Array of listing data
- * @param {string} props.sliderId - Unique ID for the slider element
+ * @param {React.RefObject} props.sliderRef - Ref object for the slider element
  * @param {boolean} props.darkMode - Whether to apply dark mode styling
  * @returns {JSX.Element} Carousel container with listing cards
  */
@@ -111,7 +111,7 @@ const ListingCarouselComponent = props => {
   const {
     numColumns,
     listings,
-    sliderId,
+    sliderRef,
     darkMode,
     featuredListings,
     onFetchFeaturedListings,
@@ -148,7 +148,7 @@ const ListingCarouselComponent = props => {
   }
 
   return listings.length > 0 ? (
-    <div className={getColumnCSS(numColumns)} id={sliderId} role="list">
+    <div className={getColumnCSS(numColumns)} ref={sliderRef} role="list">
       {listings.map(listing => (
         <li key={listing.id.uuid} className={css.listItem}>
           <ListingCard
@@ -162,6 +162,8 @@ const ListingCarouselComponent = props => {
     </div>
   ) : null;
 };
+
+const LazyListingCarouselComponent = lazyLoadWithDimensions(ListingCarouselComponent);
 
 /**
  * Main component for rendering a listings section with carousel functionality
@@ -207,18 +209,20 @@ const SectionListings = props => {
 
   const error = featuredListingData?.[sectionId]?.error;
 
-  const sliderContainerId = `${sectionId}-container`;
-  const sliderId = `${sectionId}-slider`;
-
   const numberOfListings = listingEntities?.length > 0 ? listingIds?.length : 0;
 
   const [carouselWidthConstant, setCarouselWidthConstant] = useState(null);
   const [mounted, setMounted] = useState(false);
 
+  const containerRef = React.useRef(null);
+  const sliderRef = React.useRef(null);
+
   useEffect(() => {
     const setCarouselWidth = () => {
+      const elem = containerRef.current;
+      if (!elem) return; //
+
       const windowWidth = window.innerWidth;
-      const elem = window.document.getElementById(sliderContainerId);
       const scrollbarWidth = window.innerWidth - document.body.clientWidth;
       const elementWidth =
         elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
@@ -237,16 +241,18 @@ const SectionListings = props => {
   }, []);
 
   const onSlideLeft = e => {
-    var slider = window.document.getElementById(sliderId);
-    const slideWidth = numColumns * slider?.firstChild?.clientWidth;
+    const slider = sliderRef.current;
+    if (!slider) return;
+    const slideWidth = numColumns * slider.clientWidth;
     slider.scrollLeft = slider.scrollLeft - slideWidth;
     // Fix for Safari
     e.target.focus();
   };
 
   const onSlideRight = e => {
-    var slider = window.document.getElementById(sliderId);
-    const slideWidth = numColumns * slider?.firstChild?.clientWidth;
+    const slider = sliderRef.current;
+    if (!slider) return;
+    const slideWidth = numColumns * slider.clientWidth;
     slider.scrollLeft = slider.scrollLeft + slideWidth;
     // Fix for Safari
     e.target.focus();
@@ -269,8 +275,6 @@ const SectionListings = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const darkMode = appearance?.textColor === 'white';
 
-  // Create lazy-loaded version of carousel component for performance
-  const LazyListingCarouselComponent = lazyLoadWithDimensions(ListingCarouselComponent);
   const isMobile = mounted && isMobileViewport();
 
   const carouselHeight = calculateCarouselHeight(
@@ -296,7 +300,7 @@ const SectionListings = props => {
         </header>
       ) : null}
 
-      <div className={css.carouselContainer} id={sliderContainerId}>
+      <div className={css.carouselContainer} ref={containerRef}>
         <div
           className={classNames(css.carouselArrows, {
             [css.notEnoughListings]: numberOfListings <= numColumns,
@@ -314,7 +318,7 @@ const SectionListings = props => {
           <LazyListingCarouselComponent
             numColumns={numColumns}
             listings={listingEntities}
-            sliderId={sliderId}
+            sliderRef={sliderRef}
             darkMode={darkMode}
             onFetchFeaturedListings={onFetchFeaturedListings}
             fetched={fetched}

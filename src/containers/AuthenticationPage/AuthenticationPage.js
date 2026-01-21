@@ -738,7 +738,7 @@ const mapStateToProps = state => {
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
   const { pageAssetsData, inProgress: pageAssetsFetchInProgress, error: pageAssetsFetchError } =
     state.hostedAssets || {};
-  const { featuredListingData } = state.featuredListings || {};
+  const featuredListingData = state.featuredListings || {};
 
   const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
 
