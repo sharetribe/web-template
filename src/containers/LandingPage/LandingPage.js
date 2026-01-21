@@ -40,7 +40,7 @@ LandingPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  const { featuredListingData } = state.featuredListings || {};
+  const featuredListingData = state.featuredListings || {};
 
   const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
 
