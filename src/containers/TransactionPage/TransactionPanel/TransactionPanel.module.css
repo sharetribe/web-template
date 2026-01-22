@@ -430,18 +430,15 @@
 .deliveryInfoContainer,
 .inquiryMessageContainer,
 .feedContainer {
-  margin: 42px 24px 0 24px;
+  margin: 24px 24px 0 24px;
 
   @media (--viewportMedium) {
     padding: 7px 0 1px 0;
-    margin: 40px 24px 0 24px;
+    margin: 24px 24px 0 24px;
   }
   @media (--viewportLarge) {
-    margin: 40px 0 0 0;
+    margin: 24px 0 0 0;
   }
-}
-.customFieldsContainer {
-  margin-top: 40px;
 }
 
 /* Prop to be passed to SendMessageForm component */

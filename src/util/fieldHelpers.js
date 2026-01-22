@@ -130,7 +130,7 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
 };
 
 /**
- * Pick props for SectionMultiEnumMaybe and SectionTextMaybe display components.
+ * Pick props for SectionMultiEnum and SectionText display components.
  *
  * @param {*} extendedData the different entity extended data containing the value(s) to be displayed:
  * publicData, metadata, protectedData.

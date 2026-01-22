@@ -28,6 +28,9 @@ import {
   isBookingProcess,
   NEGOTIATION_PROCESS_NAME,
   OFFER,
+  isPurchaseProcess,
+  PURCHASE_PROCESS_NAME,
+  isInquiryProcess,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -57,6 +60,7 @@ import ActionButtons, {
 } from './ActionButtons/ActionButtons';
 import RequestQuote from './RequestQuote/RequestQuote';
 import Offer from './Offer/Offer';
+import TransactionFields from './TransactionFields/TransactionFields.js';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
@@ -652,15 +656,19 @@ export const TransactionPageComponent = props => {
       ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
       : true;
 
-  const transactionFieldConfigs = foundListingTypeConfig?.transactionFields;
-
-  const customTransactionFieldProps = role => ({
-    protectedData: transaction.attributes.protectedData,
-    transactionFieldConfigs: transactionFieldConfigs,
+  const customTransactionFieldProps = (role = 'customer', isOfferOrRequest = false) => ({
+    protectedData: transaction?.attributes.protectedData,
     intl,
-    className: css.customFieldsContainer,
-    rowClassName: css.detailsRow,
     role,
+    transactionFieldConfigs: foundListingTypeConfig?.transactionFields,
+    isCustomerBanned,
+    isProviderBanned,
+    isOfferOrRequest,
+    isNegotiationProcess,
+    isBookingProcess: isBookingProcess(processName),
+    isPurchaseProcess: processName === PURCHASE_PROCESS_NAME,
+    isInquiryProcess: processName === INQUIRY_PROCESS_NAME,
+    isRegularNegotiation,
   });
 
   const actionButtonContainer = isMobile ? 'mobile' : 'desktop';
@@ -721,6 +729,9 @@ export const TransactionPageComponent = props => {
           fetchMessagesInProgress={fetchMessagesInProgress}
         />
       }
+      transactionFieldsComponent={
+        <TransactionFields {...customTransactionFieldProps('customer')} />
+      }
       requestQuote={
         <RequestQuote
           transaction={transaction}
@@ -728,7 +739,9 @@ export const TransactionPageComponent = props => {
           isCustomerBanned={isCustomerBanned}
           transactionRole={transactionRole}
           intl={intl}
-          customTransactionFieldProps={customTransactionFieldProps('customer')}
+          transactionFieldsComponent={
+            <TransactionFields {...customTransactionFieldProps('customer', true)} />
+          }
         />
       }
       offer={
@@ -739,11 +752,12 @@ export const TransactionPageComponent = props => {
           isRegularNegotiation={isRegularNegotiation}
           isProviderBanned={isProviderBanned}
           intl={intl}
-          customTransactionFieldProps={customTransactionFieldProps('provider')}
+          transactionFieldsComponent={
+            <TransactionFields {...customTransactionFieldProps('provider', true)} />
+          }
         />
       }
       isInquiryProcess={processName === INQUIRY_PROCESS_NAME}
-      transactionFieldConfigs={transactionFieldConfigs}
       config={config}
       {...orderBreakdownMaybe}
       orderPanel={

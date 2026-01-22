@@ -6,18 +6,12 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
-import {
-  isBookingProcess,
-  isPurchaseProcess,
-  isNegotiationProcess,
-} from '../../../transactions/transaction';
 import { displayPrice } from '../../../util/configHelpers';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
-import TextMaybe from '../TextMaybe/TextMaybe';
 
 // These are internal components that make this file more readable.
 import BreakdownMaybe from './BreakdownMaybe';
@@ -28,7 +22,6 @@ import BookingLocationMaybe from './BookingLocationMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
-import CustomTransactionFields from './CustomTransactionFields';
 
 import css from './TransactionPanel.module.css';
 
@@ -197,7 +190,7 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
-      transactionFieldConfigs = [],
+      transactionFieldsComponent,
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -239,11 +232,6 @@ export class TransactionPanelComponent extends Component {
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
     const showBreakDown = stateData.showBreakDown !== false; // NOTE: undefined defaults to true due to historical reasons.
 
-    // Negotiation process custom transaction fields are shown in RequestQuote and Offer components,
-    // so we don't show them here
-    const showCustomTransactionFields =
-      transactionFieldConfigs?.length > 0 && !isNegotiationProcess(stateData.processName);
-
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
@@ -254,20 +242,6 @@ export class TransactionPanelComponent extends Component {
 
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
     const priceVariantName = protectedData?.priceVariantName;
-
-    const defaultMessageContent = isInquiryProcess
-      ? protectedData?.inquiryMessage
-      : isBookingProcess(processName) || isPurchaseProcess(processName)
-      ? protectedData?.customerDefaultMessage
-      : null;
-
-    const initialMessage = !isCustomerBanned
-      ? defaultMessageContent
-      : intl.formatMessage({ id: 'TransactionPage.messageSenderBanned' });
-
-    const initialMessageHeadingId = isInquiryProcess
-      ? 'TransactionPanel.inquiryMessageHeading'
-      : 'TransactionPanel.defaultMessageHeading';
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -308,25 +282,9 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <TextMaybe
-              rootClassName={css.inquiryMessageContainer}
-              heading={intl.formatMessage({ id: initialMessageHeadingId })}
-              text={initialMessage}
-              isOwn={isCustomer}
-              showText={!!defaultMessageContent}
-            />
-
             {requestQuote}
             {offer}
-
-            {showCustomTransactionFields ? (
-              <CustomTransactionFields
-                protectedData={protectedData}
-                transactionFieldConfigs={transactionFieldConfigs}
-                intl={intl}
-                className={css.customFieldsContainer}
-              />
-            ) : null}
+            {transactionFieldsComponent}
 
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
