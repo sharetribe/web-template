@@ -56,14 +56,10 @@ const fetchFeaturedListingsPayloadCreator = async (arg, thunkAPI) => {
   }
 
   if (listingSelection === 'queryString') {
-    // temporary example before we get actual data from the API
-    const queryString =
-      '?bounds=77.34631846%2C49.08839634%2C-47.41303277%2C-29.29395771&pub_accessories=has_all%3Abell%2Clights&pub_brand=pelago-bicycles%2Ccanyon&pub_categoryLevel1=hybrid-bicycles&pub_categoryLevel2=city-bike&pub_gears=4%2C13&pub_listingType=daily-booking';
-    const nQuery = 'bounds=62.75462507%2C28.92134794%2C50.51328622%2C19.07801618';
-    const sp = new URLSearchParams(nQuery);
-    const searchParams = Object.fromEntries(new URLSearchParams(sp));
+    const searchParams = Object.fromEntries(
+      new URLSearchParams(currentSection?.listingSearchQuery)
+    );
 
-    // For testing: console.log(JSON.stringify(Object.fromEntries(new URLSearchParams(searchParams)), null, 2));
     queryParams = {
       perPage: MAX_LISTING_COUNT,
       page: 1,

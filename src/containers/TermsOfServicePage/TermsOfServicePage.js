@@ -29,7 +29,7 @@ import { ASSET_NAME } from './TermsOfServicePage.duck';
 
 // This "content-only" component can be used in modals etc.
 const TermsOfServiceContent = props => {
-  const { inProgress, error, data, featuredListings } = props;
+  const { inProgress, error, data, featuredListings, isOpen } = props;
 
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
@@ -56,6 +56,7 @@ const TermsOfServiceContent = props => {
           heading1: { component: CustomHeading1, pickValidProps: exposeContentAsChildren },
         },
         isInsideContainer: true,
+        isOpen,
       }}
     />
   );

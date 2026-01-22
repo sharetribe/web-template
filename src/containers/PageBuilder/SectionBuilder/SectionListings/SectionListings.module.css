@@ -78,6 +78,7 @@
   width: var(--carouselWidth);
   padding-top: 32px;
   padding-bottom: 24px;
+  margin: 0;
 
   overflow-x: auto;
   -ms-overflow-style: none;
@@ -90,8 +91,6 @@
   }
 }
 
-.oneColumn,
-.twoColumns,
 .threeColumns,
 .fourColumns {
   composes: baseCarousel;
@@ -139,27 +138,34 @@
   }
 }
 
-.threeColumns a {
+/* Modal specific styles for cards */
+.card.isInsideContainer {
+  @media (min-width: 1200px) {
+    transform: translateX(32px);
+  }
+}
+
+.threeColumns .card:not(.isInsideContainer) {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 32px (two gutters á 32px) / 3 (number of columns) */
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 64px) / 3);
   }
 }
 
-.threeColumns .listItem:last-of-type > * {
+.threeColumns .listItem:last-of-type > *:not(.isInsideContainer) {
   @media (--viewportMedium) {
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 3);
   }
 }
 
-.fourColumns a {
+.fourColumns .card:not(.isInsideContainer) {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
   }
 }
 
-.fourColumns .listItem:last-of-type > * {
+.fourColumns .listItem:last-of-type > *:not(.isInsideContainer) {
   @media (--viewportMedium) {
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
   }

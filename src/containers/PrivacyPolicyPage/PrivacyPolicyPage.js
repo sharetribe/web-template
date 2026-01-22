@@ -28,7 +28,7 @@ const SectionBuilder = loadable(
 
 // This "content-only" component can be used in modals etc.
 const PrivacyPolicyContent = props => {
-  const { inProgress, error, data, featuredListings } = props;
+  const { inProgress, error, data, featuredListings, isOpen } = props;
 
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
@@ -55,6 +55,7 @@ const PrivacyPolicyContent = props => {
           heading1: { component: CustomHeading1, pickValidProps: exposeContentAsChildren },
         },
         isInsideContainer: true,
+        isOpen,
       }}
     />
   );
