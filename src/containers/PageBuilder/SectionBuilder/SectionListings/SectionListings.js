@@ -20,8 +20,14 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 // Configuration for supported column layouts
 // Only 3 and 4 columns are supported in this component
 const COLUMN_CONFIG = {
-  3: { css: css.threeColumns },
-  4: { css: css.fourColumns },
+  3: {
+    css: css.threeColumns,
+    responsiveImageSizes: '(max-width: 767px) 100vw, (max-width: 1024px) 33vw, 330px',
+  },
+  4: {
+    css: css.fourColumns,
+    responsiveImageSizes: '(max-width: 767px) 100vw, (max-width: 1024px) 33vw, 240px',
+  },
 };
 
 /**
@@ -32,6 +38,11 @@ const COLUMN_CONFIG = {
 const getColumnCSS = numColumns => {
   const config = COLUMN_CONFIG[numColumns];
   return config ? config.css : COLUMN_CONFIG[3].css;
+};
+
+const getResponsiveImageSizes = numColumns => {
+  const config = COLUMN_CONFIG[numColumns];
+  return config ? config.responsiveImageSizes : COLUMN_CONFIG[3].responsiveImageSizes;
 };
 
 const parseAspectRatio = aspectRatio => {
@@ -56,10 +67,16 @@ const isMobileViewport = () => {
  * @param {number} numColumns - Number of columns in the layout
  * @param {Object} config - Configuration object containing layout settings
  * @param {number} carouselWidth - Width of the carousel container
- * @param {boolean} isMobile - Whether the viewport is mobile
+ * @param {boolean} isMobileBreakpoint - Whether the viewport is mobile
  * @returns {number} Calculated height in pixels
  */
-const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = false, error) => {
+const calculateCarouselHeight = (
+  numColumns,
+  config,
+  carouselWidth,
+  isMobileBreakpoint = false,
+  error
+) => {
   const errorMessageHeight = 250;
 
   if (error) {
@@ -84,14 +101,16 @@ const calculateCarouselHeight = (numColumns, config, carouselWidth, isMobile = f
 
   const parsedAspectRatio = parseAspectRatio(thumbnailAspectRatio);
 
-  const gutters = isMobile ? 0 : numColumns === 3 ? 64 : 96;
+  const gutters = isMobileBreakpoint ? 0 : numColumns === 3 ? 64 : 96;
 
   const mainColumnWidth = Math.min(contentMaxWidthPages, carouselWidth);
-  const cardWidth = (mainColumnWidth - paddingHorizontal - gutters) / (isMobile ? 1 : numColumns);
+  const cardWidth =
+    (mainColumnWidth - paddingHorizontal - gutters) / (isMobileBreakpoint ? 1 : numColumns);
   const cardImageHeight = cardWidth / parsedAspectRatio;
   const cardInfoHeight = priceHeight + titleHeightSingleLine + authorInfoHeight + cardInfoPadding;
 
-  const totalCardHeight = cardImageHeight + (isMobile ? cardInfoHeightMobile : cardInfoHeight);
+  const totalCardHeight =
+    cardImageHeight + (isMobileBreakpoint ? cardInfoHeightMobile : cardInfoHeight);
   const totalWithPaddings = totalCardHeight + containerPaddingTop + containerPaddingBottom;
 
   return Math.ceil(totalWithPaddings);
@@ -113,7 +132,6 @@ const ListingCarouselComponent = props => {
     listings,
     sliderRef,
     darkMode,
-    featuredListings,
     onFetchFeaturedListings,
     fetched,
     inProgress,
@@ -122,6 +140,7 @@ const ListingCarouselComponent = props => {
     config,
     error,
     allSections,
+    isInsideContainer,
   } = props;
 
   const listingImageConfig = config.layout.listingImage;
@@ -148,18 +167,19 @@ const ListingCarouselComponent = props => {
   }
 
   return listings.length > 0 ? (
-    <div className={getColumnCSS(numColumns)} ref={sliderRef} role="list">
+    <ul className={getColumnCSS(numColumns, false)} ref={sliderRef} role="list">
       {listings.map(listing => (
         <li key={listing.id.uuid} className={css.listItem}>
           <ListingCard
-            className={css.card}
+            className={classNames(css.card, { [css.isInsideContainer]: isInsideContainer })}
             aspectRatioClassName={css.carouselImageHoverEffect}
             listing={listing}
             darkMode={darkMode}
+            renderSizes={getResponsiveImageSizes(numColumns)}
           />
         </li>
       ))}
-    </div>
+    </ul>
   ) : null;
 };
 
@@ -191,9 +211,10 @@ const SectionListings = props => {
     callToAction,
     options,
     allSections,
+    isInsideContainer,
   } = props;
 
-  const { featuredListings } = options;
+  const { featuredListings, isOpen } = options;
   const {
     onFetchFeaturedListings,
     getListingEntitiesById,
@@ -217,28 +238,39 @@ const SectionListings = props => {
   const containerRef = React.useRef(null);
   const sliderRef = React.useRef(null);
 
+  // force mobile styles if we render this section within a modal
+  const isMobile = mounted && isMobileViewport();
+  const isMobileBreakpoint = isMobile || isInsideContainer;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const setCarouselWidth = () => {
       const elem = containerRef.current;
-      if (!elem) return; //
+      if (!elem) return;
 
-      const windowWidth = window.innerWidth;
-      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-      const elementWidth =
-        elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
-      const carouselWidth = elementWidth - scrollbarWidth;
-      elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
-      setCarouselWidthConstant(carouselWidth);
+      if (isInsideContainer && !isMobile) {
+        // When inside container (this is when either the ToS or Privacy Policy page are opened inside the modal on the authentication page), use the element's actual width
+        const carouselWidth = 604;
+        elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
+        setCarouselWidthConstant(carouselWidth);
+      } else {
+        const windowWidth = window.innerWidth;
+        const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+        const elementWidth =
+          elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
+        const carouselWidth = elementWidth - scrollbarWidth;
+        elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
+        setCarouselWidthConstant(carouselWidth);
+      }
     };
     setCarouselWidth();
 
     window.addEventListener('resize', setCarouselWidth);
     return () => window.removeEventListener('resize', setCarouselWidth);
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  }, [isOpen]); // isOpen triggers re-render on modal to calculate correct dimensions
 
   const onSlideLeft = e => {
     const slider = sliderRef.current;
@@ -275,13 +307,11 @@ const SectionListings = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const darkMode = appearance?.textColor === 'white';
 
-  const isMobile = mounted && isMobileViewport();
-
   const carouselHeight = calculateCarouselHeight(
     numColumns,
     config,
     carouselWidthConstant,
-    isMobile,
+    isMobileBreakpoint,
     error
   );
 
@@ -314,21 +344,40 @@ const SectionListings = props => {
           </button>
         </div>
         <div className={css.dynamicContainer} style={{ height: carouselHeight }}>
-          {/* Lazy-loaded carousel component renders when in viewport */}
-          <LazyListingCarouselComponent
-            numColumns={numColumns}
-            listings={listingEntities}
-            sliderRef={sliderRef}
-            darkMode={darkMode}
-            onFetchFeaturedListings={onFetchFeaturedListings}
-            fetched={fetched}
-            inProgress={inProgress}
-            parentPage={parentPage}
-            sectionId={sectionId}
-            error={error}
-            config={config}
-            allSections={allSections}
-          />
+          {/* Lazy-loaded carousel component renders when in viewport. We don't use lazy loading if component is rendered within a modal */}
+          {isInsideContainer ? (
+            <ListingCarouselComponent
+              numColumns={numColumns}
+              listings={listingEntities}
+              sliderRef={sliderRef}
+              darkMode={darkMode}
+              onFetchFeaturedListings={onFetchFeaturedListings}
+              fetched={fetched}
+              inProgress={inProgress}
+              parentPage={parentPage}
+              sectionId={sectionId}
+              error={error}
+              config={config}
+              allSections={allSections}
+              isInsideContainer={isInsideContainer}
+            />
+          ) : (
+            <LazyListingCarouselComponent
+              numColumns={numColumns}
+              listings={listingEntities}
+              sliderRef={sliderRef}
+              darkMode={darkMode}
+              onFetchFeaturedListings={onFetchFeaturedListings}
+              fetched={fetched}
+              inProgress={inProgress}
+              parentPage={parentPage}
+              sectionId={sectionId}
+              error={error}
+              config={config}
+              allSections={allSections}
+              isInsideContainer={isInsideContainer}
+            />
+          )}
         </div>
       </div>
     </SectionContainer>

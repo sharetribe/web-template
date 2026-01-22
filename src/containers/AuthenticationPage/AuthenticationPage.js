@@ -709,6 +709,7 @@ export const AuthenticationPageComponent = props => {
             error={pageAssetsFetchError}
             data={pageAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
             featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
+            isOpen={tosModalOpen}
           />
         </div>
       </Modal>
@@ -726,6 +727,7 @@ export const AuthenticationPageComponent = props => {
             error={pageAssetsFetchError}
             data={pageAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
             featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
+            isOpen={privacyModalOpen}
           />
         </div>
       </Modal>

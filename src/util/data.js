@@ -196,6 +196,29 @@ export const denormalizeAssetData = assetJson => {
   return denormalizeJsonData(data, included);
 };
 
+/**
+ * Limits the number of listing sections on a page to 10
+ *
+ * This function filters sections to enforce a maximum limit of listing sections
+ * while preserving all other section types. It maintains the original order of sections.
+ *
+ * @param {Object} data - Page data object containing sections array
+ *
+ * @return {Object} Filtered sections array
+ *
+ * @example
+ * const pageData = {
+ *   sections: [
+ *     { sectionType: 'hero' },
+ *     { sectionType: 'listings' },  // kept (1st listing section)
+ *     { sectionType: 'listings' },  // kept (2nd listing section)
+ *     // ... more listing sections up to 10th
+ *     { sectionType: 'listings' },  // removed (11th listing section)
+ *     { sectionType: 'footer' }     // kept (non-listing section)
+ *   ]
+ * };
+ * const limited = limitListingsSections(pageData);
+ */
 export const limitListingsSections = data => {
   let acc = 0;
   const listingSectionLimit = 10;
@@ -203,10 +226,11 @@ export const limitListingsSections = data => {
     if (section.sectionType === 'listings') {
       if (acc < listingSectionLimit) {
         acc++;
-        return true;
+        return true; // Keep this listing section
       }
-      return false;
+      return false; // Remove this listing section (limit exceeded)
     }
+    // Keep all non-listing sections
     return true;
   });
   return { ...data, sections: filteredSections };
