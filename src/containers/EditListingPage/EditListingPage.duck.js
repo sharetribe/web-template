@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import omit from 'lodash/omit';
 
+import { omit } from '../../util/common';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
 import {

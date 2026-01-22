@@ -27,7 +27,7 @@
     "full-icu": "^1.5.0",
     "helmet": "^8.1.0",
     "jose": "5.9.6",
-    "lodash": "^4.17.21",
+    "lodash": "4.17.23",
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.6.0",
