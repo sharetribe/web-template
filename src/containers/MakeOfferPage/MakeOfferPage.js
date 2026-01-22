@@ -29,7 +29,10 @@ import {
   REQUEST,
   resolveLatestProcessName,
 } from '../../transactions/transaction.js';
-import { pickTransactionFieldsData } from '../../util/fieldHelpers.js';
+import {
+  initialValuesForTransactionFields,
+  pickTransactionFieldsData,
+} from '../../util/fieldHelpers.js';
 
 // Import global thunk functions
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
@@ -210,6 +213,11 @@ const MakeOfferPageComponent = props => {
     ? transaction.attributes?.protectedData?.providerDefaultMessage
     : null;
 
+  const transactionFieldInitialValues = initialValuesForTransactionFields(
+    transaction?.attributes?.protectedData,
+    transactionFieldConfigs
+  );
+
   return (
     <Page title={pageTitle} scrollingDisabled={scrollingDisabled}>
       <TopbarSimplified />
@@ -253,6 +261,7 @@ const MakeOfferPageComponent = props => {
               errorMessageComponent={ErrorMessage}
               makeOfferError={makeOfferError}
               transactionFieldConfigs={transactionFieldConfigs}
+              transactionFieldInitialValues={transactionFieldInitialValues}
             />
           </section>
         </main>
