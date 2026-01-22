@@ -132,7 +132,7 @@ export { default as Map } from './Map/Map';
 export { default as Page } from './Page/Page';
 export { default as Reviews } from './Reviews/Reviews';
 export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails';
-export const SectionTextMaybe = loadable(() => import(/* webpackChunkName: "SectionTextMaybe" */ './CustomExtendedDataSection/SectionTextMaybe'));
+export const SectionText = loadable(() => import(/* webpackChunkName: "SectionText" */ './CustomExtendedDataSection/SectionText'));
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as TopbarSimplified } from './TopbarSimplified/TopbarSimplified';

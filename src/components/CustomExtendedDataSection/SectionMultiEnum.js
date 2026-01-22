@@ -3,7 +3,7 @@ import { Heading, PropertyGroup } from '../../components';
 
 import css from './CustomExtendedDataSection.module.css';
 
-const SectionMultiEnumMaybe = props => {
+const SectionMultiEnum = props => {
   const { heading, options, selectedOptions, idPrefix, showUnselectedOptions = true } = props;
   const hasContent = showUnselectedOptions || selectedOptions?.length > 0;
   if (!heading || !options || !hasContent) {
@@ -28,4 +28,4 @@ const SectionMultiEnumMaybe = props => {
   );
 };
 
-export default SectionMultiEnumMaybe;
+export default SectionMultiEnum;

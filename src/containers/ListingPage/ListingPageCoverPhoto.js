@@ -57,7 +57,7 @@ import {
   NamedRedirect,
   OrderPanel,
   LayoutSingleColumn,
-  SectionTextMaybe,
+  SectionText,
 } from '../../components';
 
 // Related components and modules
@@ -421,7 +421,7 @@ export const ListingPageComponent = props => {
                 </H3>
               )}
             </div>
-            <SectionTextMaybe text={description} showAsIngress />
+            <SectionText text={description} showAsIngress />
 
             <CustomListingFields
               publicData={publicData}

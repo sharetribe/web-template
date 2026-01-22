@@ -1,10 +1,10 @@
 import CustomExtendedDataSection from './CustomExtendedDataSection';
 
-import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
-import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+import SectionDetails from './SectionDetails';
+import SectionMultiEnum from './SectionMultiEnum';
+import SectionText from './SectionText';
+import SectionYoutubeVideo from './SectionYoutubeVideo';
 
-export { SectionDetailsMaybe, SectionMultiEnumMaybe, SectionTextMaybe, SectionYoutubeVideoMaybe };
+export { SectionDetails, SectionMultiEnum, SectionText, SectionYoutubeVideo };
 
 export default CustomExtendedDataSection;

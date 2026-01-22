@@ -42,7 +42,7 @@ const YoutubeEmbed = props => {
   );
 };
 
-const SectionYoutubeVideoMaybe = props => {
+const SectionYoutubeVideo = props => {
   const { videoUrl, heading } = props;
   if (!videoUrl || !heading) {
     return null;
@@ -62,4 +62,4 @@ const SectionYoutubeVideoMaybe = props => {
   ) : null;
 };
 
-export default SectionYoutubeVideoMaybe;
+export default SectionYoutubeVideo;
