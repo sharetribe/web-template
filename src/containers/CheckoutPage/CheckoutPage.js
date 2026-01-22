@@ -39,7 +39,6 @@ import {
   speculateTransaction,
   stripeCustomer,
   confirmPayment,
-  sendMessage,
   initiateInquiryWithoutPayment,
 } from './CheckoutPage.duck';
 
@@ -159,6 +158,7 @@ const EnhancedCheckoutPage = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
   const showListingImage = requireListingImage(foundListingTypeConfig);
+  const { transactionFields } = foundListingTypeConfig || {};
 
   const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
@@ -182,6 +182,7 @@ const EnhancedCheckoutPage = props => {
       onInquiryWithoutPayment={onInquiryWithoutPayment}
       onSubmitCallback={onSubmitCallback}
       showListingImage={showListingImage}
+      transactionFields={transactionFields}
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
@@ -198,6 +199,7 @@ const EnhancedCheckoutPage = props => {
       title={title}
       onSubmitCallback={onSubmitCallback}
       showListingImage={showListingImage}
+      transactionFields={transactionFields}
       {...props}
     />
   ) : (
@@ -256,7 +258,6 @@ const mapDispatchToProps = dispatch => ({
   onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>
     dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
-  onSendMessage: params => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });

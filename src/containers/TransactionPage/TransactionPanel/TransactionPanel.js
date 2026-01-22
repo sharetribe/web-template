@@ -6,14 +6,12 @@ import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
-import { NEGOTIATION_PROCESS_NAME } from '../../../transactions/transaction';
 import { displayPrice } from '../../../util/configHelpers';
 
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
-import TextMaybe from '../TextMaybe/TextMaybe';
 
 // These are internal components that make this file more readable.
 import BreakdownMaybe from './BreakdownMaybe';
@@ -86,7 +84,6 @@ const allowShowingExtraInfo = (showExtraInfo, transactionPartyInfo) => {
  * @param {boolean} props.hasTransitions - Whether the transitions are shown
  * @param {propTypes.uuid} props.transactionId - The transaction id
  * @param {Array<propTypes.message>)} props.messages - The messages
- * @param {boolean} props.initialMessageFailed - Whether the initial message failed
  * @param {boolean} props.savePaymentMethodFailed - Whether the save payment method failed
  * @param {propTypes.error} props.fetchMessagesError - The fetch messages error
  * @param {boolean} props.sendMessageInProgress - Whether the send message is in progress
@@ -172,9 +169,9 @@ export class TransactionPanelComponent extends Component {
       customer,
       provider,
       transitions,
+      processName,
       protectedData,
       messages,
-      initialMessageFailed = false,
       savePaymentMethodFailed = false,
       fetchMessagesError,
       sendMessageInProgress,
@@ -193,6 +190,7 @@ export class TransactionPanelComponent extends Component {
       orderPanel,
       config,
       hasViewingRights,
+      transactionFieldsComponent,
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -245,10 +243,6 @@ export class TransactionPanelComponent extends Component {
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
     const priceVariantName = protectedData?.priceVariantName;
 
-    const inquiryMessage = !isCustomerBanned
-      ? protectedData?.inquiryMessage
-      : intl.formatMessage({ id: 'TransactionPage.messageSenderBanned' });
-
     const classes = classNames(rootClassName || css.root, className);
 
     return (
@@ -288,16 +282,9 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <TextMaybe
-              rootClassName={css.inquiryMessageContainer}
-              heading={intl.formatMessage({ id: 'TransactionPanel.inquiryMessageHeading' })}
-              text={inquiryMessage}
-              isOwn={isCustomer}
-              showText={isInquiryProcess}
-            />
-
             {requestQuote}
             {offer}
+            {transactionFieldsComponent}
 
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
@@ -343,13 +330,11 @@ export class TransactionPanelComponent extends Component {
                 />
               </div>
             ) : null}
-
             <FeedSection
               rootClassName={css.feedContainer}
               hasMessages={messages.length > 0}
               hasTransitions={hasTransitions}
               fetchMessagesError={fetchMessagesError}
-              initialMessageFailed={initialMessageFailed}
               activityFeed={activityFeed}
               isConversation={isInquiryProcess}
             />

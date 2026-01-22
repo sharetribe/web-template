@@ -860,6 +860,7 @@ const validListingTypes = listingTypes => {
       label,
       transactionType,
       priceVariations,
+      transactionFields,
       ...restOfListingType
     } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
@@ -870,6 +871,11 @@ const validListingTypes = listingTypes => {
 
     const priceVariationTypeMaybe = isBookingProcessAlias(alias)
       ? { priceVariations: { enabled: priceVariations?.enabled } }
+      : {};
+
+    const hasTransactionFields = transactionFields?.length > 0;
+    const validTransactionFieldsMaybe = hasTransactionFields
+      ? { transactionFields: transactionFields.map(restructureTransactionFields) }
       : {};
 
     if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
@@ -884,6 +890,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
+          ...validTransactionFieldsMaybe,
           ...priceVariationTypeMaybe,
           // e.g. stockType, availabilityType,...
           ...restOfListingType,
@@ -1007,6 +1014,46 @@ const restructureListingFields = hostedListingFields => {
         : null;
     }) || []
   );
+};
+
+const restructureTransactionFields = transactionField => {
+  const {
+    key,
+    enumOptions,
+    label,
+    numberConfig = {},
+    saveConfig = {},
+    showConfig = {},
+    schemaType,
+    ...rest
+  } = transactionField;
+
+  const defaultLabel = label || key;
+  const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+  const numberConfigMaybe = schemaType === 'long' ? { numberConfig } : {};
+  const { required: isRequired, ...restSaveConfig } = saveConfig;
+
+  return key
+    ? {
+        key,
+        label,
+        scope: 'protected',
+        schemaType,
+        ...enumOptionsMaybe,
+        ...numberConfigMaybe,
+        showConfig: {
+          ...showConfig,
+          unselectedOptions: false,
+          label: showConfig.label || defaultLabel,
+        },
+        saveConfig: {
+          ...restSaveConfig,
+          isRequired,
+          label: saveConfig.label || defaultLabel,
+        },
+        ...rest,
+      }
+    : null;
 };
 
 ///////////////////////////////////////

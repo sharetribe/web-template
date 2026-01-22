@@ -2,12 +2,12 @@ import React from 'react';
 import { Heading } from '../../components';
 import { richText } from '../../util/richText';
 
-import css from './ProfilePage.module.css';
+import css from './CustomExtendedDataSection.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-const SectionTextMaybe = props => {
-  const { text, heading, showAsIngress = false } = props;
+const SectionText = props => {
+  const { text, heading, headingClassName, showAsIngress = false } = props;
   const textClass = showAsIngress ? css.ingress : css.text;
   const content = richText(text, {
     linkify: true,
@@ -17,15 +17,15 @@ const SectionTextMaybe = props => {
   });
 
   return text ? (
-    <div className={css.sectionText}>
+    <section className={css.sectionText}>
       {heading ? (
-        <Heading as="h2" rootClassName={css.sectionHeading}>
+        <Heading as="h2" rootClassName={css.sectionHeading} className={headingClassName}>
           {heading}
         </Heading>
       ) : null}
       <p className={textClass}>{content}</p>
-    </div>
+    </section>
   ) : null;
 };
 
-export default SectionTextMaybe;
+export default SectionText;
