@@ -7,7 +7,7 @@ import { Heading } from '../../components';
 import css from './CustomExtendedDataSection.module.css';
 import classNames from 'classnames';
 
-const SectionDetailsMaybe = props => {
+const SectionDetails = props => {
   const {
     fieldConfigs,
     page,
@@ -48,4 +48,4 @@ const SectionDetailsMaybe = props => {
   ) : null;
 };
 
-export default SectionDetailsMaybe;
+export default SectionDetails;

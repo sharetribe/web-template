@@ -13,9 +13,9 @@ import CustomExtendedDataSection from '../../components/CustomExtendedDataSectio
 
 /**
  * Renders custom listing fields.
- * - SectionDetailsMaybe is used if schemaType is 'enum', 'long', or 'boolean'
- * - SectionMultiEnumMaybe is used if schemaType is 'multi-enum'
- * - SectionTextMaybe is used if schemaType is 'text'
+ * - SectionDetails is used if schemaType is 'enum', 'long', or 'boolean'
+ * - SectionMultiEnum is used if schemaType is 'multi-enum'
+ * - SectionText is used if schemaType is 'text'
  *
  * @param {*} props include publicData, metadata, listingFieldConfigs, categoryConfiguration
  * @returns React.Fragment containing aforementioned components
