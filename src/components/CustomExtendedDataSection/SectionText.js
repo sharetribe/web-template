@@ -6,8 +6,8 @@ import css from './CustomExtendedDataSection.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-const SectionTextMaybe = props => {
-  const { text, heading, showAsIngress = false } = props;
+const SectionText = props => {
+  const { text, heading, headingClassName, showAsIngress = false } = props;
   const textClass = showAsIngress ? css.ingress : css.text;
   const content = richText(text, {
     linkify: true,
@@ -19,7 +19,7 @@ const SectionTextMaybe = props => {
   return text ? (
     <section className={css.sectionText}>
       {heading ? (
-        <Heading as="h2" rootClassName={css.sectionHeading}>
+        <Heading as="h2" rootClassName={css.sectionHeading} className={headingClassName}>
           {heading}
         </Heading>
       ) : null}
@@ -28,4 +28,4 @@ const SectionTextMaybe = props => {
   ) : null;
 };
 
-export default SectionTextMaybe;
+export default SectionText;
