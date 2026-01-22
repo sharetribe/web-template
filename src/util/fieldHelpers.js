@@ -355,3 +355,34 @@ export const getDetailCustomFieldValue = (
     ? { key, value, label }
     : null;
 };
+
+/**
+ * Pick extended data fields from transaction protected data.
+ * Picking is based on transaction fields configuration.
+ *
+ * This returns namespaced (e.g. 'prot_') initial values for the form.
+ *
+ * @param {Object} data extended data values to look through against userConfig.js and util/configHelpers.js
+ * @param {String} targetScope Check that the scope of extended data the config matches
+ * @param {String} targetUserType Check that the extended data is relevant for this user type.
+ * @param {Object} userFieldConfigs Extended data configurations for user fields.
+ * @returns Array of picked extended data fields
+ */
+export const initialValuesForTransactionFields = (data, transactionFieldConfigs) => {
+  return transactionFieldConfigs?.reduce((fields, field) => {
+    const { key, scope = 'protected', schemaType, showTo } = field || {};
+    const namespacedKey = addScopePrefix(scope, key);
+    // Fields are saved in extended data with a role prefix corresponding to
+    // the author of the fields, so we need to use the same prefix when
+    // fetching them from protected data
+    const roleKey = getPrefixedKey(showTo, key);
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+
+    if (isKnownSchemaType) {
+      const fieldValue = getFieldValue(data, roleKey);
+      return { ...fields, [namespacedKey]: fieldValue };
+    }
+    return fields;
+  }, {});
+};

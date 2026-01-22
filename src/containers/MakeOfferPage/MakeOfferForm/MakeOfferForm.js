@@ -95,12 +95,17 @@ export const MakeOfferForm = props => {
     errorMessageComponent: ErrorMessage,
     makeOfferError,
     onSubmit,
+    transactionFieldInitialValues = {},
     ...restProps
   } = props;
 
   const providerDefaultMessageMaybe = providerDefaultMessage ? { providerDefaultMessage } : {};
   const priceMaybe = price ? { quote: price } : {};
-  const initialValuesMaybe = { ...providerDefaultMessageMaybe, ...priceMaybe };
+  const initialValuesMaybe = {
+    ...providerDefaultMessageMaybe,
+    ...priceMaybe,
+    ...transactionFieldInitialValues,
+  };
 
   const marketplaceCurrency = config.currency;
   const priceValidators = getPriceValidators(
