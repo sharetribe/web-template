@@ -12,6 +12,7 @@ const noop = () => null;
 
 describe('PasswordChangePageComponent', () => {
   it('Check that newPassword input shows error and submit is enabled if form is filled', async () => {
+    const user = userEvent.setup();
     render(
       <PasswordChangePageComponent
         params={{ displayName: 'my-shop' }}
@@ -42,28 +43,27 @@ describe('PasswordChangePageComponent', () => {
     // There's a too short password, there is error text visible
     const newPasswordInput = screen.getByLabelText(newPasswordLabel);
 
+    await user.type(newPasswordInput, 'short');
     await act(async () => {
-      userEvent.type(newPasswordInput, 'short');
       newPasswordInput.blur();
     });
-
     const passwordTooShort = 'PasswordChangeForm.passwordTooShort';
     expect(screen.getByText(passwordTooShort)).toBeInTheDocument();
 
+    // There's a long enough password => there is no error text visible
+    await user.type(newPasswordInput, 'morethan8characters');
     await act(async () => {
-      // There's a long enough password => there is no error text visible
-      userEvent.type(newPasswordInput, 'morethan8characters');
       newPasswordInput.blur();
     });
+
     expect(screen.queryByText(passwordTooShort)).not.toBeInTheDocument();
     const passwordLabel = 'PasswordChangeForm.passwordLabel';
     const passwordInput = screen.getByText(passwordLabel);
     expect(passwordInput).toBeInTheDocument();
 
-    await act(async () => {
-      // Save button is enabled
-      userEvent.type(passwordInput, 'somepasswordasoldpassword');
-    });
+    // Save button is enabled
+    await user.type(passwordInput, 'somepasswordasoldpassword');
+
     expect(screen.queryByText(passwordTooShort)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'PasswordChangeForm.saveChanges' })).toBeEnabled();
   });

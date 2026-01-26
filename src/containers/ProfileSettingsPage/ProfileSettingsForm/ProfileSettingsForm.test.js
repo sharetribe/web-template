@@ -406,14 +406,15 @@ describe('ProfileSettingsForm', () => {
     expect(screen.queryByDisplayValue(123)).toBeNull();
   });
 
-  it('enables Save button when required fields are filled', () => {
-    const user = createCurrentUser('userId');
+  it('enables Save button when required fields are filled', async () => {
+    const user = userEvent.setup();
+    const currentUser = createCurrentUser('userId');
     const u1 = {
-      ...user,
+      ...currentUser,
       attributes: {
-        ...user.attributes,
+        ...currentUser.attributes,
         profile: {
-          ...user.attributes.profile,
+          ...currentUser.attributes.profile,
           ...attributes.profile,
         },
       },
@@ -454,14 +455,14 @@ describe('ProfileSettingsForm', () => {
     // First, enter text into textField and check that the save button remains
     // disabled, since another required field is still empty
     const textInput1 = screen.getByRole('textbox', { name: 'Text Field' });
-    userEvent.type(textInput1, 'Text 1 value');
+    await user.type(textInput1, 'Text 1 value');
     expect(textInput1).toHaveValue('Text 1 value');
     expect(screen.getByRole('button', { name: 'ProfileSettingsForm.saveChanges' })).toBeDisabled();
 
     // Enter text into the other required text field, and check that the
     // save button is now enabled, since all required fields have values.
     const textInput2 = screen.getByRole('textbox', { name: 'Text Field 2' });
-    userEvent.type(textInput2, 'Text 2 value');
+    await user.type(textInput2, 'Text 2 value');
     expect(textInput2).toHaveValue('Text 2 value');
     expect(screen.getByRole('button', { name: 'ProfileSettingsForm.saveChanges' })).toBeEnabled();
   });

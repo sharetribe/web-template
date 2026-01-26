@@ -70,16 +70,14 @@ describe('AuthenticationPage', () => {
     // for social logins are as we expect them to be
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
     process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
+    const user = userEvent.setup();
 
     render(<AuthenticationPage {...props} />);
 
     // First we can check that login button is in the document
     expect(screen.getByRole('button', { name: 'LoginForm.logIn' })).toBeInTheDocument();
 
-    await act(async () => {
-      // User event for changing the tab
-      userEvent.click(screen.getByRole('link', { name: 'AuthenticationPage.signupLinkText' }));
-    });
+    await user.click(screen.getByRole('link', { name: 'AuthenticationPage.signupLinkText' }));
 
     // Then we can check that login sign up button is in the document
     waitFor(() =>

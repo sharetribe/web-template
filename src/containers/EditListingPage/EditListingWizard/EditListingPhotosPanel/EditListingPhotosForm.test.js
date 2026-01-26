@@ -38,6 +38,7 @@ describe('EditListingDeliveryForm', () => {
   // TODO to test this fully, we would need to check that store's state changes correctly.
 
   it('Check that FieldAddImage works', async () => {
+    const user = userEvent.setup();
     const ACCEPT_IMAGES = 'image/*';
     const tree = render(
       <FinalForm
@@ -73,7 +74,7 @@ describe('EditListingDeliveryForm', () => {
     });
     const input = screen.getByLabelText(/label/i);
 
-    userEvent.upload(input, file);
+    await user.upload(input, file);
     expect(input.files[0]).toBe(file);
     expect(input.files.item(0)).toBe(file);
     expect(input.files).toHaveLength(1);
