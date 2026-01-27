@@ -16,6 +16,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v10.9.0] 2026-01-26
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#753](https://github.com/sharetribe/web-template/pull/753)
 - [add] Add support for provider-driven negotiation loop ("Update offer" loop). With this loop, the
   provider can update the offer they made on default-negotiation process.
   [#735](https://github.com/sharetribe/web-template/pull/735)
