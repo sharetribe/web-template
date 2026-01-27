@@ -24,7 +24,6 @@
     "express-enforces-ssl": "^1.1.0",
     "final-form": "4.20.10",
     "final-form-arrays": "3.1.0",
-    "full-icu": "^1.5.0",
     "helmet": "^8.1.0",
     "jose": "5.9.6",
     "lodash": "4.17.23",
@@ -76,11 +75,6 @@
     "sharetribe-scripts/webpack-dev-server/express/path-to-regexp": "0.1.12",
     "moment": "^2.30.1"
   },
-  "nodemonConfig": {
-    "execMap": {
-      "js": "node --icu-data-dir=node_modules/full-icu"
-    }
-  },
   "jest": {
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
@@ -100,10 +94,10 @@
     "format": "prettier --write '**/*.{js,css}'",
     "format-ci": "prettier --list-different '**/*.{js,css}'",
     "format-docs": "prettier --write '**/*.md'",
-    "test": "NODE_ICU_DATA=node_modules/full-icu sharetribe-scripts test",
+    "test": "sharetribe-scripts test",
     "test-ci": "yarn run test-server --runInBand && sharetribe-scripts test --runInBand",
     "eject": "sharetribe-scripts eject",
-    "start": "node --icu-data-dir=node_modules/full-icu server/index.js",
+    "start": "node server/index.js",
     "dev-server": "cross-env-shell NODE_ENV=development PORT=4000 REACT_APP_MARKETPLACE_ROOT_URL=http://localhost:4000 \"yarn run build&&nodemon --watch server server/index.js\"",
     "test-server": "jest ./server/**/*.test.js",
     "heroku-postbuild": "yarn run build",
