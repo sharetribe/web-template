@@ -20,7 +20,7 @@
     "decimal.js": "^10.6.0",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
-    "express": "^4.22.1",
+    "express": "^5.2.1",
     "express-enforces-ssl": "^1.1.0",
     "final-form": "4.20.10",
     "final-form-arrays": "3.1.0",
