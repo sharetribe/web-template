@@ -1,5 +1,4 @@
 import React from 'react';
-import mapValues from 'lodash/mapValues';
 
 import * as reactTestingLibrary from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -722,7 +721,7 @@ export const dispatchedActions = fakeDispatch => {
 
 // Locale should not affect the tests. We ensure this by providing
 // messages with the key as the value of each message.
-const testMessages = mapValues(messages, (val, key) => key);
+const testMessages = Object.fromEntries(Object.entries(messages).map(([key]) => [key, key]));
 
 // Provide all the context for components that connect to the Redux
 // store, i18n, router, etc.
