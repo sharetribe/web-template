@@ -1,5 +1,4 @@
 import React from 'react';
-import dropWhile from 'lodash/dropWhile';
 import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
@@ -256,7 +255,8 @@ const organizedItems = (messages, transitions, hideOldTransitions) => {
     // Hide transitions that happened before the oldest message. Since
     // we have older items (messages) that we are not showing, seeing
     // old transitions would be confusing.
-    return dropWhile(items, i => !isMessage(i));
+    const firstMessageIndex = items.findIndex(i => isMessage(i));
+    return firstMessageIndex >= 0 ? items.slice(firstMessageIndex) : [];
   } else {
     return items;
   }
