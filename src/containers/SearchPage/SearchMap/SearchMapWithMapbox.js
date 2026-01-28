@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import differenceBy from 'lodash/differenceBy';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
@@ -409,7 +408,9 @@ class SearchMapWithMapbox extends Component {
       );
 
       // If map has moved or info card opened, unnecessary markers need to be removed
-      const removableMarkers = differenceBy(this.currentMarkers, labels, 'markerId');
+      const removableMarkers = this.currentMarkers.filter(
+        marker => !labels.some(label => label.markerId === marker.markerId)
+      );
       removableMarkers.forEach(rm => rm.marker.remove());
 
       // Helper function to create markers to given container
