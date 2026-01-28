@@ -62,6 +62,7 @@ export const IncludeScripts = props => {
       <script
         key="mapboxSDK"
         src={`${rootURL}/static/scripts/mapbox/mapbox-sdk@0.16.2/mapbox-sdk.min.js`}
+        async
       ></script>
     );
     // License information for v3.7.0 of the mapbox-gl-js library:
