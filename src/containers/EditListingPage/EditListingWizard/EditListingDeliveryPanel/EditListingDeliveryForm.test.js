@@ -12,6 +12,7 @@ const noop = () => null;
 
 describe('EditListingDeliveryForm', () => {
   it('Check that shipping fees can be given and submit button activates', async () => {
+    const user = userEvent.setup();
     const saveActionMsg = 'Save location';
     render(
       <EditListingDeliveryForm
@@ -38,14 +39,13 @@ describe('EditListingDeliveryForm', () => {
     // Test that save button is disabled at first
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeDisabled();
 
-    await act(async () => {
-      // Add shipping price
-      userEvent.click(screen.getByLabelText(/EditListingDeliveryForm.shippingLabel/i));
-    });
+    // Add shipping price
+    await user.click(screen.getByLabelText(/EditListingDeliveryForm.shippingLabel/i));
+
     const shippingOneItemLabel = 'EditListingDeliveryForm.shippingOneItemLabel';
     const shippingAdditionalItemsLabel = 'EditListingDeliveryForm.shippingAdditionalItemsLabel';
-    userEvent.type(screen.getByRole('textbox', { name: shippingOneItemLabel }), '10');
-    userEvent.type(screen.getByRole('textbox', { name: shippingAdditionalItemsLabel }), '5');
+    await user.type(screen.getByRole('textbox', { name: shippingOneItemLabel }), '10');
+    await user.type(screen.getByRole('textbox', { name: shippingAdditionalItemsLabel }), '5');
 
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();

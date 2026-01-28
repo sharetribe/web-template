@@ -104,7 +104,7 @@ describe('urlHelpers', () => {
         undef: undefined,
         nil: null,
       };
-      expect(stringify(params)).toEqual(`bool=true&num=123&space=A${SPACE}and${SPACE}b`);
+      expect(stringify(params)).toEqual(`bool=true&num=123&space=A+and+b`);
     });
 
     it('encodes SDK types', () => {
@@ -123,14 +123,19 @@ describe('urlHelpers', () => {
       expect(parse('')).toEqual({});
     });
 
+    it('handles null', () => {
+      expect(parse(null)).toEqual({});
+    });
+
     it('handles question mark', () => {
       expect(parse('?')).toEqual({});
     });
 
     it('decodes values', () => {
-      const search = `bool1=true&bool2=false&num1=123&num2=-1.01&space=A${SPACE}and${SPACE}b`;
+      const search = `bool1=true&bool2=false&num1=123&num2=-1.01&space=A${SPACE}and${SPACE}b&spaceEncoded=A%20and%20b`;
       expect(parse(search)).toEqual({
         space: 'A and b',
+        spaceEncoded: 'A and b',
         num1: 123,
         num2: -1.01,
         bool2: false,

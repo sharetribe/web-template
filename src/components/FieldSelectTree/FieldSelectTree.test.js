@@ -147,7 +147,8 @@ describe('FieldSelectTree', () => {
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
-  it('enables submit', () => {
+  it('enables submit', async () => {
+    const user = userEvent.setup();
     render(<FormComponent onSubmit={noop} />, {
       messages: {
         'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
@@ -160,12 +161,12 @@ describe('FieldSelectTree', () => {
 
     // Select "Fish" and see more options
     expect(screen.queryByRole('button', { name: 'Choose Freshwater.' })).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Choose Fish.' }));
+    await user.click(screen.getByRole('button', { name: 'Choose Fish.' }));
     expect(screen.getByRole('button', { name: 'Choose Fish/Freshwater.' })).toBeInTheDocument();
 
     // Select "Freshwater" and see more options
     expect(screen.queryByRole('button', { name: 'Choose Pike.' })).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Choose Fish/Freshwater.' }));
+    await user.click(screen.getByRole('button', { name: 'Choose Fish/Freshwater.' }));
     expect(
       screen.getByRole('button', { name: 'Choose Fish/Freshwater/Pike.' })
     ).toBeInTheDocument();

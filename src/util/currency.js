@@ -1,4 +1,3 @@
-import has from 'lodash/has';
 import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
 
@@ -23,7 +22,7 @@ export const isSafeNumber = decimalValue => {
 
 // Get the minor unit divisor for the given currency
 export const unitDivisor = currency => {
-  if (!has(subUnitDivisors, currency)) {
+  if (!subUnitDivisors[currency]) {
     throw new Error(
       `No minor unit divisor defined for currency: ${currency} in currencySettings.js`
     );

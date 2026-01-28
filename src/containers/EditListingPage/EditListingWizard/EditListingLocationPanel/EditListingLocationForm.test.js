@@ -27,6 +27,7 @@ beforeAll(() => {
 
 describe('EditListingDeliveryForm', () => {
   it('Check that shipping fees can be given and submit button activates', async () => {
+    const user = userEvent.setup();
     const saveActionMsg = 'Save location';
     await act(async () => {
       render(
@@ -53,9 +54,7 @@ describe('EditListingDeliveryForm', () => {
     // Test that save button is disabled at first
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeDisabled();
 
-    await act(async () => {
-      userEvent.type(screen.getByTestId('location-search'), 'Erottajankatu 19, Helsinki');
-      userEvent.type(screen.getByRole('textbox', { name: building }), 'B');
-    });
+    await user.type(screen.getByTestId('location-search'), 'Erottajankatu 19, Helsinki');
+    await user.type(screen.getByRole('textbox', { name: building }), 'B');
   });
 });

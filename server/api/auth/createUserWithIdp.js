@@ -43,7 +43,7 @@ module.exports = (req, res) => {
     ...baseUrl,
   });
 
-  const { idpToken, idpId, ...rest } = req.body;
+  const { idpToken, idpId, ...rest } = req.body || {};
 
   // Choose the idpClientId based on which authentication method is used.
   const idpClientId =

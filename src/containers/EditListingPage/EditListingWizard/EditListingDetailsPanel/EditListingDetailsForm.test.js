@@ -12,7 +12,8 @@ const { screen, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('EditListingDetailsForm', () => {
-  it('Check that shipping fees can be given and submit button activates', () => {
+  it('Check that shipping fees can be given and submit button activates', async () => {
+    const user = userEvent.setup();
     const saveActionMsg = 'Save details';
 
     const selectableListingTypes = [
@@ -109,11 +110,11 @@ describe('EditListingDetailsForm', () => {
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeDisabled();
 
     // Fill mandatory attributes
-    userEvent.type(screen.getByRole('textbox', { name: title }), 'My Listing');
-    userEvent.type(screen.getByRole('textbox', { name: description }), 'Lorem ipsum');
+    await user.type(screen.getByRole('textbox', { name: title }), 'My Listing');
+    await user.type(screen.getByRole('textbox', { name: description }), 'Lorem ipsum');
 
     // Fill custom listing field
-    userEvent.selectOptions(screen.getByLabelText('Clothing'), 'kids');
+    await user.selectOptions(screen.getByLabelText('Clothing'), 'kids');
 
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();

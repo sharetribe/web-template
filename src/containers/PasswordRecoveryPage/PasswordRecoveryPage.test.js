@@ -12,6 +12,7 @@ const noop = () => null;
 
 describe('PasswordRecoveryPageComponent', () => {
   it('Check that email input shows error and submit is enabled if form is filled', async () => {
+    const user = userEvent.setup();
     render(
       <PasswordRecoveryPageComponent
         params={{ displayName: 'my-shop' }}
@@ -42,17 +43,17 @@ describe('PasswordRecoveryPageComponent', () => {
       screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' })
     ).toBeDisabled();
 
+    // There's a too short password, there is error text visible
+    await user.type(emailInput, 'foobar');
     await act(async () => {
-      // There's a too short password, there is error text visible
-      userEvent.type(emailInput, 'foobar');
       emailInput.blur();
     });
     const emailInvalid = 'PasswordRecoveryForm.emailInvalid';
     expect(screen.getByText(emailInvalid)).toBeInTheDocument();
 
+    // There's a valid email written to input => there is no error text visible
+    await user.type(emailInput, '@bar.com');
     await act(async () => {
-      // There's a valid email written to input => there is no error text visible
-      userEvent.type(emailInput, '@bar.com');
       emailInput.blur();
     });
     expect(screen.queryByText(emailInvalid)).not.toBeInTheDocument();

@@ -11,7 +11,8 @@ const { screen, userEvent, fireEvent } = testingLibrary;
 const noop = () => null;
 
 describe('EditListingDeliveryForm', () => {
-  it('Check that price can be given and submit button activates', () => {
+  it('Check that price can be given and submit button activates', async () => {
+    const user = userEvent.setup();
     const saveActionMsg = 'Save price';
     render(
       <EditListingPricingForm
@@ -34,7 +35,7 @@ describe('EditListingDeliveryForm', () => {
 
     // Fill mandatory attributes
     const price = 'EditListingPricingForm.pricePerProduct';
-    userEvent.type(screen.getByRole('textbox', { name: price }), '10');
+    await user.type(screen.getByRole('textbox', { name: price }), '10');
 
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();
