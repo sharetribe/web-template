@@ -3,7 +3,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import loadable from '@loadable/component';
-import difference from 'lodash/difference';
 import moment from 'moment';
 
 // Configs and store setup
@@ -14,6 +13,7 @@ import configureStore from './store';
 // utils
 import { RouteConfigurationProvider } from './context/routeConfigurationContext';
 import { ConfigurationProvider } from './context/configurationContext';
+import { difference } from './util/common';
 import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import { includeCSSProperties } from './util/style';
