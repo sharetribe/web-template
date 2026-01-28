@@ -1,10 +1,9 @@
-import find from 'lodash/find';
 import { matchPath } from 'react-router-dom';
 import { compile } from 'path-to-regexp';
 // NOTE: This file imports urlHelpers.js, which may lead to circular dependency
 import { stringify } from './urlHelpers';
 
-const findRouteByName = (nameToFind, routes) => find(routes, route => route.name === nameToFind);
+const findRouteByName = (nameToFind, routes) => routes.find(route => route.name === nameToFind);
 
 /**
  * E.g. ```const toListingPath = toPathByRouteName('ListingPage', routes);```
