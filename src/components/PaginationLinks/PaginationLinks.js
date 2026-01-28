@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import range from 'lodash/range';
 
 import { useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
@@ -24,7 +23,7 @@ const paginationGapKey = () => {
  */
 const getPageNumbersArray = (page, totalPages) => {
   // Create array of numbers: [1, 2, 3, 4, ..., totalPages]
-  const numbersFrom1ToTotalPages = range(1, totalPages + 1);
+  const numbersFrom1ToTotalPages = Array.from({ length: totalPages }, (_, i) => i + 1);
   return numbersFrom1ToTotalPages
     .filter(v => {
       // Filter numbers that are next to current page and pick also first and last page
