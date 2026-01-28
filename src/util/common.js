@@ -6,6 +6,28 @@
  */
 
 /**
+ * Creates an array of array values not included in the other given arrays.
+ * This is a modern JavaScript replacement for lodash's difference function.
+ *
+ * @param {Array} array - The array to inspect
+ * @param {Array} valuesToExclude - The values to exclude
+ * @returns {Array} Returns the new array of filtered values
+ *
+ * @example
+ * difference([2, 1], [2, 3]) // [1]
+ * difference(['a', 'b', 'c'], ['b', 'd']) // ['a', 'c']
+ */
+export const difference = (array, valuesToExclude) => {
+  if (!Array.isArray(array)) {
+    return [];
+  }
+  if (!Array.isArray(valuesToExclude)) {
+    return array;
+  }
+  return array.filter(item => !valuesToExclude.includes(item));
+};
+
+/**
  * Creates a function that returns the result of invoking the given functions
  * with the result of the previous function call.
  * This is a modern JavaScript replacement for lodash's flow function.
@@ -103,26 +125,4 @@ export const pickBy = (obj, predicate) => {
     return {};
   }
   return Object.fromEntries(Object.entries(obj).filter(([key, value]) => predicate(value, key)));
-};
-
-/**
- * Creates an array of array values not included in the other given arrays.
- * This is a modern JavaScript replacement for lodash's difference function.
- *
- * @param {Array} array - The array to inspect
- * @param {Array} valuesToExclude - The values to exclude
- * @returns {Array} Returns the new array of filtered values
- *
- * @example
- * difference([2, 1], [2, 3]) // [1]
- * difference(['a', 'b', 'c'], ['b', 'd']) // ['a', 'c']
- */
-export const difference = (array, valuesToExclude) => {
-  if (!Array.isArray(array)) {
-    return [];
-  }
-  if (!Array.isArray(valuesToExclude)) {
-    return array;
-  }
-  return array.filter(item => !valuesToExclude.includes(item));
 };
