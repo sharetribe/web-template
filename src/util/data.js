@@ -1,5 +1,4 @@
 import isArray from 'lodash/isArray';
-import reduce from 'lodash/reduce';
 import { sanitizeEntity } from './sanitize';
 // NOTE: This file imports sanitize.js, which may lead to circular dependency
 
@@ -92,9 +91,8 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
 
     if (relationships) {
       // Recursively join in all the relationship entities
-      return reduce(
-        relationships,
-        (ent, relRef, relName) => {
+      return Object.entries(relationships).reduce(
+        (ent, [relName, relRef]) => {
           // A relationship reference can be either a single object or
           // an array of objects. We want to keep that form in the final
           // result.

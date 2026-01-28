@@ -1,5 +1,4 @@
 import groupBy from 'lodash/groupBy';
-import reduce from 'lodash/reduce';
 
 /**
  * hasParentWithClassName searches class name from parent elements of given target
@@ -31,5 +30,5 @@ export const groupedByCoordinates = mapListings => {
  *   (They are arrays containing all the listings in that location)
  */
 export const reducedToArray = mapListings => {
-  return reduce(mapListings, (acc, listing) => acc.concat([listing]), []);
+  return Object.values(mapListings).reduce((acc, listing) => acc.concat([listing]), []);
 };
