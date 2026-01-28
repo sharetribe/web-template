@@ -8,7 +8,6 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import includes from 'lodash/includes';
 
 import css from './PropertyGroup.module.css';
 
@@ -16,7 +15,7 @@ const checkSelected = (options, selectedOptions) => {
   return options.map(option => ({
     key: option.key,
     label: option.label,
-    isSelected: includes(selectedOptions, option.key),
+    isSelected: selectedOptions.includes(option.key),
   }));
 };
 
