@@ -60,3 +60,26 @@ export const pick = (obj, keys) => {
   const keysToPick = Array.isArray(keys) ? keys : [keys];
   return Object.fromEntries(Object.entries(obj).filter(([key]) => keysToPick.includes(key)));
 };
+
+/**
+ * Creates an object composed of the object properties predicate returns truthy for.
+ * This is a modern JavaScript replacement for lodash's pickBy function.
+ *
+ * @param {Object} obj - The source object
+ * @param {Function} predicate - The function invoked per property. Receives (value, key) arguments.
+ * @returns {Object} Returns the new object with only the properties that pass the predicate
+ *
+ * @example
+ * pickBy({ a: 1, b: 2, c: 0 }, value => value > 0) // { a: 1, b: 2 }
+ * pickBy({ a: 1, b: 'hello', c: null }, (value, key) => key !== 'c') // { a: 1, b: 'hello' }
+ * pickBy({ a: 1, b: 2, c: 3 }, () => true) // { a: 1, b: 2, c: 3 }
+ */
+export const pickBy = (obj, predicate) => {
+  if (!obj || typeof obj !== 'object') {
+    return {};
+  }
+  if (typeof predicate !== 'function') {
+    return {};
+  }
+  return Object.fromEntries(Object.entries(obj).filter(([key, value]) => predicate(value, key)));
+};

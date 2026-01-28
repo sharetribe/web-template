@@ -1,11 +1,11 @@
 import React from 'react';
-import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
 import appSettings from '../../../config/settings';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 
+import { pickBy } from '../../../util/common';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
 import { parse, stringify } from '../../../util/urlHelpers';
