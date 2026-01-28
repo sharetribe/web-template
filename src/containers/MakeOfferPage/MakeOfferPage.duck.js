@@ -1,6 +1,6 @@
-import pick from 'lodash/pick';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { pick } from '../../util/common';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { initiatePrivileged, transitionPrivileged } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';

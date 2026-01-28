@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import polyline from '@mapbox/polyline';
 
+import { pick } from '../../util/common';
 import { encodeLatLng, stringify } from '../../util/urlHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { circlePolyline } from '../../util/maps';

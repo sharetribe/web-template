@@ -39,3 +39,24 @@ export const omit = (obj, keys) => {
   const keysToRemove = Array.isArray(keys) ? keys : [keys];
   return Object.fromEntries(Object.entries(obj).filter(([key]) => !keysToRemove.includes(key)));
 };
+
+/**
+ * Creates an object composed of the picked object properties.
+ * This is a modern JavaScript replacement for lodash's pick function.
+ *
+ * @param {Object} obj - The source object
+ * @param {string|string[]} keys - The property paths to pick (can be a single key or an array of keys)
+ * @returns {Object} Returns the new object with only the picked properties
+ *
+ * @example
+ * pick({ a: 1, b: 2, c: 3 }, 'a') // { a: 1 }
+ * pick({ a: 1, b: 2, c: 3 }, ['a', 'c']) // { a: 1, c: 3 }
+ * pick({ a: 1, b: 2, c: 3 }, ['a', 'd']) // { a: 1 }
+ */
+export const pick = (obj, keys) => {
+  if (!obj || typeof obj !== 'object') {
+    return {};
+  }
+  const keysToPick = Array.isArray(keys) ? keys : [keys];
+  return Object.fromEntries(Object.entries(obj).filter(([key]) => keysToPick.includes(key)));
+};

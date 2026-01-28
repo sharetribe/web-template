@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import pick from 'lodash/pick';
+
+import { pick } from '../util/common';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
 
