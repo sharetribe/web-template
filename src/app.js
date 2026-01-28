@@ -255,7 +255,7 @@ export const ClientApp = props => {
       >
         <Provider store={store}>
           <HelmetProvider>
-            <IncludeScripts config={appConfig} />
+            <IncludeScripts config={appConfig} initialPathname={window.location.pathname} />
             <BrowserRouter>
               <Routes logLoadDataCalls={logLoadDataCalls} />
             </BrowserRouter>
@@ -302,7 +302,7 @@ export const ServerApp = props => {
       >
         <Provider store={store}>
           <HelmetProvider context={helmetContext}>
-            <IncludeScripts config={appConfig} />
+            <IncludeScripts config={appConfig} initialPathname={url} />
             <StaticRouter location={url} context={context}>
               <Routes />
             </StaticRouter>
