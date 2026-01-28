@@ -6,6 +6,24 @@
  */
 
 /**
+ * Checks if a value is an empty object or array.
+ * Returns true if the value is an object or array with no enumerable properties.
+ *
+ * @param {*} obj - The value to check
+ * @returns {boolean} Returns true if the value is an empty object or array, false otherwise
+ *
+ * @example
+ * isEmpty({}) // true
+ * isEmpty([]) // true
+ * isEmpty({ a: 1 }) // false
+ * isEmpty([1, 2]) // false
+ * isEmpty(null) // true
+ * isEmpty(undefined) // true
+ */
+export const isEmpty = obj =>
+  [Object, Array].includes((obj || {}).constructor) && !Object.entries(obj || {}).length;
+
+/**
  * Creates an object composed of the own enumerable property paths of object that are not omitted.
  * This is a modern JavaScript replacement for lodash's omit function.
  *
