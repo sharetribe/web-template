@@ -90,27 +90,24 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
 
     if (relationships) {
       // Recursively join in all the relationship entities
-      return Object.entries(relationships).reduce(
-        (ent, [relName, relRef]) => {
-          // A relationship reference can be either a single object or
-          // an array of objects. We want to keep that form in the final
-          // result.
-          const hasMultipleRefs = Array.isArray(relRef.data);
-          const multipleRefsEmpty = hasMultipleRefs && relRef.data.length === 0;
-          if (!relRef.data || multipleRefsEmpty) {
-            ent[relName] = hasMultipleRefs ? [] : null;
-          } else {
-            const refs = hasMultipleRefs ? relRef.data : [relRef.data];
+      return Object.entries(relationships).reduce((ent, [relName, relRef]) => {
+        // A relationship reference can be either a single object or
+        // an array of objects. We want to keep that form in the final
+        // result.
+        const hasMultipleRefs = Array.isArray(relRef.data);
+        const multipleRefsEmpty = hasMultipleRefs && relRef.data.length === 0;
+        if (!relRef.data || multipleRefsEmpty) {
+          ent[relName] = hasMultipleRefs ? [] : null;
+        } else {
+          const refs = hasMultipleRefs ? relRef.data : [relRef.data];
 
-            // If a relationship is not found, an Error should be thrown
-            const rels = denormalisedEntities(entities, refs, true);
+          // If a relationship is not found, an Error should be thrown
+          const rels = denormalisedEntities(entities, refs, true);
 
-            ent[relName] = hasMultipleRefs ? rels : rels[0];
-          }
-          return ent;
-        },
-        entityData
-      );
+          ent[relName] = hasMultipleRefs ? rels : rels[0];
+        }
+        return ent;
+      }, entityData);
     }
     return entityData;
   });

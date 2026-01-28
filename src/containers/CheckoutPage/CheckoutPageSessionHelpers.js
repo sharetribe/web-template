@@ -15,15 +15,12 @@ const { UUID, Money } = sdkTypes;
 // Validate that given 'obj' has all the keys of defined by validPropTypes parameter
 // and values must pass related test-value-format function.
 const validateProperties = (obj, validPropTypes) => {
-  return Object.entries(validPropTypes).reduce(
-    (acc, [prop, fn]) => {
-      if (Object.prototype.hasOwnProperty.call(obj, prop) && fn(obj[prop])) {
-        return acc;
-      }
-      return false;
-    },
-    true
-  );
+  return Object.entries(validPropTypes).reduce((acc, [prop, fn]) => {
+    if (Object.prototype.hasOwnProperty.call(obj, prop) && fn(obj[prop])) {
+      return acc;
+    }
+    return false;
+  }, true);
 };
 
 // Validate content of booking dates object received from SessionStore
