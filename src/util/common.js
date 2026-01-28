@@ -6,6 +6,27 @@
  */
 
 /**
+ * Creates a function that returns the result of invoking the given functions
+ * with the result of the previous function call.
+ * This is a modern JavaScript replacement for lodash's flow function.
+ *
+ * @param {Array<Function>} funcs - The functions to invoke
+ * @returns {Function} Returns the new composite function
+ *
+ * @example
+ * const add = (a, b) => a + b;
+ * const multiply = (a) => a * 2;
+ * const addThenMultiply = flow([add, multiply]);
+ * addThenMultiply(1, 2) // 6 (adds 1+2=3, then multiplies 3*2=6)
+ */
+export const flow = funcs => {
+  if (!Array.isArray(funcs)) {
+    return value => value;
+  }
+  return value => funcs.reduce((acc, func) => func(acc), value);
+};
+
+/**
  * Checks if a value is an empty object or array.
  * Returns true if the value is an object or array with no enumerable properties.
  *
