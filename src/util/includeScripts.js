@@ -10,6 +10,9 @@ const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
 /**
  * Map library is shown on some of the pages, but ReusableMapContainer is used app wide.
  * However, we can defer the map library loading on pages that don't show the map immediately.
+ * Note: this currently only affects Mapbox library.
+ * Google Maps library is always loaded immediately. (It seems to be more fragile when loaded asynchronously.)
+ *
  * @param {string} initialPathname - The initial pathname at the time of the full page load.
  * @param {array} routeConfiguration - The route configuration.
  * @returns {boolean} - True if the map library can be deferred, false otherwise.
@@ -39,6 +42,7 @@ export const IncludeScripts = props => {
   const { googleAnalyticsId, plausibleDomains } = analytics;
 
   const routeConfiguration = useRouteConfiguration();
+  // Note: Affects Mapbox only. Google Maps initialization is not yet ready to support asynchronous loading.
   const deferMapLibrary = canDeferMapLibrary(props?.initialPathname, routeConfiguration)
     ? { defer: '' }
     : {};
@@ -62,6 +66,7 @@ export const IncludeScripts = props => {
       <script
         key="mapboxSDK"
         src={`${rootURL}/static/scripts/mapbox/mapbox-sdk@0.16.2/mapbox-sdk.min.js`}
+        async
       ></script>
     );
     // License information for v3.7.0 of the mapbox-gl-js library:
