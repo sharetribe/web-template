@@ -1,4 +1,3 @@
-import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
 
 import appSettings from '../config/settings';
@@ -118,7 +117,8 @@ export const truncateToSubUnitPrecision = (inputString, subUnitDivisor, useComma
   const subUnitDivisorAsDecimal = convertDivisorToDecimal(subUnitDivisor);
 
   // '10,' should be passed through, but that format is not supported as valid number
-  const trimmed = trimEnd(inputString, useComma ? ',' : '.');
+  const separator = useComma ? ',' : '\\.';
+  const trimmed = inputString.replace(new RegExp(`${separator}+$`), '');
   // create another instance and check if value is convertable
   const value = convertToDecimal(trimmed, useComma);
 
