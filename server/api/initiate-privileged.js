@@ -49,7 +49,7 @@ const getMetadata = (orderData, transition) => {
 };
 
 module.exports = (req, res) => {
-  const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
+  const { isSpeculative, orderData, bodyParams, queryParams } = req.body || {};
   const transitionName = bodyParams.transition;
   const sdk = getSdk(req, res);
   let lineItems = null;

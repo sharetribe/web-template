@@ -311,6 +311,7 @@ describe('SearchPage', () => {
 
   it('Check that filterColumn and filters exist in grid variant', async () => {
     // Select correct SearchPage variant according to route configuration
+    const user = userEvent.setup();
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
@@ -382,9 +383,7 @@ describe('SearchPage', () => {
     });
 
     // Test category intercation: click "Fish"
-    await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Choose Fish.' }));
-    });
+    await user.click(getByRole('button', { name: 'Choose Fish.' }));
 
     expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
@@ -398,6 +397,7 @@ describe('SearchPage', () => {
 
   it('Check that map and filters exist in map variant', async () => {
     // Select correct SearchPage variant according to route configuration
+    const user = userEvent.setup();
     const config = getConfig('map');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
@@ -474,9 +474,8 @@ describe('SearchPage', () => {
     });
 
     // Test category intercation
-    await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Filter: FilterComponent.categoryLabel' }));
-    });
+    await user.click(getByRole('button', { name: 'Filter: FilterComponent.categoryLabel' }));
+
     expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
     expect(getByText('Cats')).toBeInTheDocument();
@@ -485,9 +484,8 @@ describe('SearchPage', () => {
     expect(queryByText('Freshwater')).not.toBeInTheDocument();
 
     // Test category intercation: click "Fish"
-    await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Choose Fish.' }));
-    });
+    await user.click(getByRole('button', { name: 'Choose Fish.' }));
+
     expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
     expect(getByText('Cats')).toBeInTheDocument();
@@ -500,6 +498,7 @@ describe('SearchPage', () => {
 
   it('Check that Cat filters is revealed in grid variant', async () => {
     // Select correct SearchPage variant according to route configuration
+    const user = userEvent.setup();
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
@@ -533,9 +532,7 @@ describe('SearchPage', () => {
     });
 
     // Test category intercation: click "Cats"
-    await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Choose Cats.' }));
-    });
+    await user.click(getByRole('button', { name: 'Choose Cats.' }));
 
     // Has Cat filter (enum) using SelectMultipleFilter component (it contains also legend for screen readers)
     expect(getAllByText('Cat')).toHaveLength(2);
@@ -552,6 +549,7 @@ describe('SearchPage', () => {
   });
 
   it('Check that Boat filters is revealed in grid variant', async () => {
+    const user = userEvent.setup();
     // Select correct SearchPage variant according to route configuration
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
@@ -584,9 +582,7 @@ describe('SearchPage', () => {
     });
 
     // Test category intercation: click "Sell bicycles"
-    await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'Choose Sell bicycles.' }));
-    });
+    await user.click(getByRole('button', { name: 'Choose Sell bicycles.' }));
 
     // Has Boat filter (enum) using SelectMultipleFilter component (it contains also legend for screen readers)
     expect(getAllByText('Boat')).toHaveLength(2);

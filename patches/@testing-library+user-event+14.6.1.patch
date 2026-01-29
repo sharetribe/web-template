@@ -1,0 +1,25 @@
+diff --git a/node_modules/@testing-library/user-event/dist/cjs/utils/dataTransfer/Clipboard.js b/node_modules/@testing-library/user-event/dist/cjs/utils/dataTransfer/Clipboard.js
+index 434be79..e32e8aa 100644
+--- a/node_modules/@testing-library/user-event/dist/cjs/utils/dataTransfer/Clipboard.js
++++ b/node_modules/@testing-library/user-event/dist/cjs/utils/dataTransfer/Clipboard.js
+@@ -155,10 +155,18 @@ async function writeDataTransferToClipboard(document, clipboardData) {
+ }
+ const g = globalThis;
+ /* istanbul ignore else */ if (typeof g.afterEach === 'function') {
+-    g.afterEach(()=>resetClipboardStubOnView(globalThis.window));
++    g.afterEach(() => {
++        if (typeof globalThis.window !== 'undefined') {
++            resetClipboardStubOnView(globalThis.window)
++        }
++    })
+ }
+ /* istanbul ignore else */ if (typeof g.afterAll === 'function') {
+-    g.afterAll(()=>detachClipboardStubFromView(globalThis.window));
++    g.afterAll(() => {
++        if (typeof globalThis.window !== 'undefined') {
++            detachClipboardStubFromView(globalThis.window)
++        }
++    })
+ }
+ 
+ exports.attachClipboardStubToView = attachClipboardStubToView;

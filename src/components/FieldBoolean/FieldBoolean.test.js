@@ -43,14 +43,15 @@ describe('FieldBoolean', () => {
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
-  it('enables submit', () => {
+  it('enables submit', async () => {
+    const user = userEvent.setup();
     render(<FormComponent onSubmit={noop} />);
 
     expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
     expect(screen.getByRole('combobox')).toHaveValue('');
-    userEvent.selectOptions(screen.getByRole('combobox'), 'true');
+    await user.selectOptions(screen.getByRole('combobox'), 'true');
     expect(screen.getByRole('combobox')).toHaveValue('true');
-    userEvent.selectOptions(screen.getByRole('combobox'), 'false');
+    await user.selectOptions(screen.getByRole('combobox'), 'false');
     expect(screen.getByRole('combobox')).toHaveValue('false');
   });
 });

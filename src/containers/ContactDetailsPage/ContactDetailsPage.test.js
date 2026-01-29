@@ -12,6 +12,7 @@ const noop = () => null;
 
 describe('ContactDetailsPageComponent', () => {
   it('Check that newPassword input shows error and submit is enabled if form is filled', async () => {
+    const user = userEvent.setup();
     render(
       <ContactDetailsPageComponent
         params={{ displayName: 'my-shop' }}
@@ -43,10 +44,8 @@ describe('ContactDetailsPageComponent', () => {
     const phoneLabel = 'ContactDetailsForm.phoneLabel';
     const phoneInput = screen.getByText(phoneLabel);
 
-    await act(async () => {
-      userEvent.type(phoneInput, '+358555555555');
-      phoneInput.blur();
-    });
+    await user.type(phoneInput, '+358555555555');
+    phoneInput.blur();
 
     // Save button is enabled
     expect(screen.getByRole('button', { name: 'ContactDetailsForm.saveChanges' })).toBeEnabled();

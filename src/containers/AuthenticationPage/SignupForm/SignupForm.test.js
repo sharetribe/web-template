@@ -112,6 +112,7 @@ describe('SignupForm', () => {
   // });
 
   it('enables Sign up button when required fields are filled', async () => {
+    const user = userEvent.setup();
     render(
       <SignupForm
         intl={fakeIntl}
@@ -123,25 +124,23 @@ describe('SignupForm', () => {
     );
 
     // Simulate user interaction and select parent level category
-    await waitFor(() => {
-      userEvent.selectOptions(
-        screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Seller' })
-      );
-    });
+    await user.selectOptions(
+      screen.getByRole('combobox'),
+      screen.getByRole('option', { name: 'Seller' })
+    );
 
     // Test that sign up button is disabled at first
     expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeDisabled();
 
     // Type the values to the sign up form
-    userEvent.type(
+    await user.type(
       screen.getByRole('textbox', { name: 'SignupForm.emailLabel' }),
       'joe@example.com'
     );
-    userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.firstNameLabel' }), 'Joe');
-    userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.lastNameLabel' }), 'Dunphy');
-    userEvent.type(screen.getByLabelText('SignupForm.passwordLabel'), 'secret-password');
-    userEvent.type(screen.getByLabelText('Text Field'), 'Text value');
+    await user.type(screen.getByRole('textbox', { name: 'SignupForm.firstNameLabel' }), 'Joe');
+    await user.type(screen.getByRole('textbox', { name: 'SignupForm.lastNameLabel' }), 'Dunphy');
+    await user.type(screen.getByLabelText('SignupForm.passwordLabel'), 'secret-password');
+    await user.type(screen.getByLabelText('Text Field'), 'Text value');
 
     // Test that sign up button is still disabled before clicking the checkbox
     expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeDisabled();
@@ -152,6 +151,7 @@ describe('SignupForm', () => {
   });
 
   it('shows custom user fields according to configuration', async () => {
+    const user = userEvent.setup();
     render(
       <SignupForm
         intl={fakeIntl}
@@ -163,12 +163,10 @@ describe('SignupForm', () => {
     );
 
     // Simulate user interaction and select parent level category
-    await waitFor(() => {
-      userEvent.selectOptions(
-        screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'Seller' })
-      );
-    });
+    await user.selectOptions(
+      screen.getByRole('combobox'),
+      screen.getByRole('option', { name: 'Seller' })
+    );
 
     // Show user fields that have not been limited to type and have displayInSignUp: true
     expect(screen.getByText('Enum Field 1')).toBeInTheDocument();

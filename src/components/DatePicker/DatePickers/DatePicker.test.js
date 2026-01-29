@@ -115,30 +115,32 @@ describe('DatePicker', () => {
     });
   });
 
-  it('Selects dates: June 15th, 25th, 26th, 19th', () => {
+  it('Selects dates: June 15th, 25th, 26th, 19th', async () => {
     const startDate = '2024-06-15';
+    const user = userEvent.setup();
     render(<DatePicker {...{ ...props, startDate }} />);
-    userEvent.click(screen.getByRole('button', { name: 'Choose June 15' }));
+    await user.click(screen.getByRole('button', { name: 'Choose June 15' }));
     expect(screen.getByRole('button', { name: 'June 15 is selected' })).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Choose June 25' }));
+    await user.click(screen.getByRole('button', { name: 'Choose June 25' }));
     expect(screen.getByRole('button', { name: 'June 25 is selected' })).toBeInTheDocument();
-    userEvent.keyboard('[ArrowRight][Enter]');
+    await user.keyboard('[ArrowRight][Enter]');
     expect(screen.getByRole('button', { name: 'June 26 is selected' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'June 25 is selected' })).not.toBeInTheDocument();
-    userEvent.keyboard('[ArrowUp][Enter]');
+    await user.keyboard('[ArrowUp][Enter]');
     expect(screen.getByRole('button', { name: 'June 19 is selected' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'June 19 is selected' })).toHaveClass('dateCurrent');
     expect(screen.getByRole('button', { name: 'Choose June 15' })).not.toHaveClass('dateCurrent');
   });
 
-  it('Highlights current date with keyboard selection', () => {
+  it('Highlights current date with keyboard selection', async () => {
     const startDate = '2024-06-15';
+    const user = userEvent.setup();
     render(<DatePicker {...{ ...props, startDate }} />);
-    userEvent.click(screen.getByRole('button', { name: 'Choose June 15' }));
+    await user.click(screen.getByRole('button', { name: 'Choose June 15' }));
     const clicked15 = screen.getByRole('button', { name: 'June 15 is selected' });
     expect(clicked15).toBeInTheDocument();
     expect(clicked15).toHaveClass('dateCurrent');
-    userEvent.keyboard('[ArrowRight][Enter]');
+    await user.keyboard('[ArrowRight][Enter]');
     const selected16 = screen.getByRole('button', { name: 'June 16 is selected' });
     expect(selected16).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Choose June 15' })).not.toHaveClass('dateCurrent');
@@ -160,18 +162,20 @@ describe('DatePicker', () => {
 
   it('changes months through key navigation', async () => {
     const startDate = '2024-08-11';
+    const user = userEvent.setup();
     const day = removeTimezoneOffset(new Date(startDate));
     const dateString = intl.formatDate(day, { day: 'numeric', month: 'long' });
     const onMonthChange = jest.fn();
 
     render(<DatePicker {...{ ...props, startDate, onMonthChange }} />);
-    userEvent.click(screen.getByRole('button', { name: `Choose ${dateString}` }));
-    userEvent.keyboard('[ArrowDown][ArrowDown][ArrowDown][ArrowDown][ArrowDown]');
+    await user.click(screen.getByRole('button', { name: `Choose ${dateString}` }));
+    await user.keyboard('[ArrowDown][ArrowDown][ArrowDown][ArrowDown][ArrowDown]');
     expect(onMonthChange).toHaveBeenCalled();
   });
 
   it('jumps to current month', async () => {
     const startDate = '2024-01-01';
+    const user = userEvent.setup();
     const showTodayButton = true;
     const localStartDate = removeTimezoneOffset(new Date(startDate));
     const getCurrentMonthString = (localDate, scr) =>
@@ -180,21 +184,22 @@ describe('DatePicker', () => {
     render(<DatePicker {...{ ...props, startDate, showTodayButton }} />);
     const currentMonthString = getCurrentMonthString(localStartDate, screen);
     expect(currentMonthString).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: `DatePicker.todayButton` }));
+    await user.click(screen.getByRole('button', { name: `DatePicker.todayButton` }));
     const currentMonthString2 = getCurrentMonthString(removeTimezoneOffset(new Date()), screen);
     expect(currentMonthString2).toBeInTheDocument();
   });
 
   it('clears its value', async () => {
     const startDate = '2024-06-15';
+    const user = userEvent.setup();
     const showClearButton = true;
     render(<DatePicker {...{ ...props, startDate, showClearButton }} />);
-    userEvent.click(screen.getByRole('button', { name: 'Choose June 15' }));
+    await user.click(screen.getByRole('button', { name: 'Choose June 15' }));
     const clicked15 = screen.getByRole('button', { name: 'June 15 is selected' });
     expect(clicked15).toBeInTheDocument();
     expect(clicked15).toHaveClass('dateSelected');
 
-    userEvent.click(screen.getByRole('button', { name: `DatePicker.clearButton` }));
+    await user.click(screen.getByRole('button', { name: `DatePicker.clearButton` }));
     expect(clicked15).toBeInTheDocument();
     expect(clicked15).not.toHaveClass('dateSelected');
   });
@@ -218,8 +223,9 @@ describe('SingleDatePicker', () => {
     intl,
   };
 
-  it('shows selected date', () => {
+  it('shows selected date', async () => {
     const startDay = removeTimezoneOffset(new Date('2024-08-11'));
+    const user = userEvent.setup();
     render(<SingleDatePicker {...props} />);
 
     const calendarDateString = intl.formatDate(startDay, { day: 'numeric', month: 'long' });
@@ -229,7 +235,7 @@ describe('SingleDatePicker', () => {
 
     const inputDateFormatOptions = { day: 'numeric', month: 'short', weekday: 'short' };
     const todayInputString = intl.formatDate(startDay, inputDateFormatOptions);
-    userEvent.click(screen.getByDisplayValue(todayInputString));
+    await user.click(screen.getByDisplayValue(todayInputString));
 
     const calendarDateBtn = screen.getByRole('button', {
       name: `${calendarDateString} is selected`,
@@ -238,7 +244,7 @@ describe('SingleDatePicker', () => {
     expect(calendarDateBtn).toHaveAttribute('tabIndex', '0');
     expect(calendarDateBtn).toHaveClass('dateSelected');
 
-    userEvent.keyboard('[ArrowRight][Enter]');
+    await user.keyboard('[ArrowRight][Enter]');
     const nextDayInputString = intl.formatDate(addDays(startDay, 1), inputDateFormatOptions);
     expect(screen.getByDisplayValue(nextDayInputString)).toBeInTheDocument();
     expect(screen.queryByDisplayValue(todayInputString)).not.toBeInTheDocument();
@@ -263,8 +269,9 @@ describe('DateRangePicker', () => {
     intl,
   };
 
-  it('shows selected date range: single day with minimumNights: 0', () => {
+  it('shows selected date range: single day with minimumNights: 0', async () => {
     const startDate = '2024-08-11';
+    const user = userEvent.setup();
     render(<DateRangePicker {...{ ...props, startDate }} />);
 
     const startDay = removeTimezoneOffset(new Date(startDate));
@@ -275,7 +282,7 @@ describe('DateRangePicker', () => {
 
     const inputDateFormatOptions = { day: 'numeric', month: 'short', weekday: 'short' };
     const startDayInputString = intl.formatDate(startDay, inputDateFormatOptions);
-    userEvent.click(screen.getByDisplayValue(startDayInputString));
+    await user.click(screen.getByDisplayValue(startDayInputString));
     const calendarDate = screen.getByRole('button', {
       name: `${calendarStartDayString} is selected`,
     });
@@ -285,14 +292,14 @@ describe('DateRangePicker', () => {
     expect(calendarDate).toHaveClass('dateStart');
     expect(calendarDate).toHaveClass('dateInRange');
 
-    userEvent.keyboard('[ArrowRight][ArrowLeft][Enter]');
+    await user.keyboard('[ArrowRight][ArrowLeft][Enter]');
     const endDay = startDay;
     const endDayInputString = intl.formatDate(endDay, inputDateFormatOptions);
     // These are the same
     expect(screen.queryAllByDisplayValue(startDayInputString)).toHaveLength(2);
     expect(screen.queryAllByDisplayValue(endDayInputString)).toHaveLength(2);
 
-    userEvent.click(screen.queryAllByDisplayValue(startDayInputString)[0]);
+    await user.click(screen.queryAllByDisplayValue(startDayInputString)[0]);
     const calendarStartDate = screen.getByRole('button', {
       name: `${calendarStartDayString} is selected`,
     });
@@ -307,8 +314,9 @@ describe('DateRangePicker', () => {
     expect(calendarEndDate).toHaveClass('dateInRange');
   });
 
-  it('shows selected date range: minimumNights: 1', () => {
+  it('shows selected date range: minimumNights: 1', async () => {
     const startDate = '2024-08-11';
+    const user = userEvent.setup();
     render(<DateRangePicker {...{ ...props, startDate, minimumNights: 1 }} />);
 
     const startDay = removeTimezoneOffset(new Date(startDate));
@@ -319,7 +327,7 @@ describe('DateRangePicker', () => {
 
     const inputDateFormatOptions = { day: 'numeric', month: 'short', weekday: 'short' };
     const startDayInputString = intl.formatDate(startDay, inputDateFormatOptions);
-    userEvent.click(screen.getByDisplayValue(startDayInputString));
+    await user.click(screen.getByDisplayValue(startDayInputString));
     const calendarDate = screen.getByRole('button', {
       name: `${calendarStartDayString} is selected`,
     });
@@ -330,20 +338,20 @@ describe('DateRangePicker', () => {
     expect(calendarDate).toHaveClass('dateInRange');
 
     // Try to select the same day
-    userEvent.keyboard('[ArrowRight][ArrowLeft][Enter]');
+    await user.keyboard('[ArrowRight][ArrowLeft][Enter]');
     const faultyEndDay = addDays(startDay, 1);
     const faultyEndDayInputString = intl.formatDate(faultyEndDay, inputDateFormatOptions);
     expect(screen.getByDisplayValue(startDayInputString)).toBeInTheDocument();
     expect(screen.queryByDisplayValue(faultyEndDayInputString)).not.toBeInTheDocument();
 
-    userEvent.keyboard('[ArrowRight][Enter]');
+    await user.keyboard('[ArrowRight][Enter]');
     const endDay = addDays(startDay, 1);
     const endDayInputString = intl.formatDate(endDay, inputDateFormatOptions);
     const calendarEndDayString = intl.formatDate(endDay, { day: 'numeric', month: 'long' });
     expect(screen.getByDisplayValue(startDayInputString)).toBeInTheDocument();
     expect(screen.getByDisplayValue(endDayInputString)).toBeInTheDocument();
 
-    userEvent.click(screen.getByDisplayValue(startDayInputString));
+    await user.click(screen.getByDisplayValue(startDayInputString));
     const calendarStartDate = screen.getByRole('button', {
       name: `${calendarStartDayString} is selected as the start date`,
     });

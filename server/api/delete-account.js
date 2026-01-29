@@ -25,7 +25,7 @@ const HAS_INCOMPLETE_TRANSACTIONS =
   'User has transactions on states that include incomplete payment processing';
 
 module.exports = (req, res) => {
-  const { currentPassword } = req.body;
+  const { currentPassword } = req.body || {};
 
   const sdk = getSdk(req, res);
 

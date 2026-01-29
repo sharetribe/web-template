@@ -19,7 +19,7 @@ const targetPathKey = `st-${CLIENT_ID}-targetPath`;
 // an authorization code and uses that to log in and redirect to the landing
 // page.
 module.exports = (req, res) => {
-  const { code, state, error } = req.query;
+  const { code, state, error } = req.query || {};
   const storedState = req.cookies[stateKey];
 
   if (state !== storedState) {

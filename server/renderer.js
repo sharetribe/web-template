@@ -62,8 +62,7 @@ const templateTags = templatedWithHtmlAttributes =>
 
 // Interpolate htmlAttributes and other helmet data into the template
 const template = params => {
-  const htmlAttributes = params.htmlAttributes;
-  const tags = _.omit(params, ['htmlAttributes']);
+  const { htmlAttributes, ...tags } = params || {};
   const templatedWithHtmlAttributes = templateWithHtmlAttributes({ htmlAttributes });
   return templateTags(templatedWithHtmlAttributes)(tags);
 };
