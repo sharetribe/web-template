@@ -21,6 +21,29 @@ This file makes it possible to have named routes. So, in-app links look like thi
 This means that you are free to change any route path to match your needs without changing every
 link that points to it. E.g. `path: '/s',` > `path: '/search',`.
 
+### Available Route Configuration Options
+
+Each route is an object with the following possible properties.
+
+**Required**
+
+| Property    | Description                                                                           |
+| ----------- | ------------------------------------------------------------------------------------- |
+| `name`      | Unique name for the route, used with `NamedLink` and `NamedRedirect`.                 |
+| `path`      | URL path pattern. Supports React Router params (e.g. `/l/:slug/:id`).                 |
+| `component` | React component to render. Page-level components live in `src/containers/` directory. |
+
+**Optional**
+
+| Property                      | Description                                                                                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth`                        | If `true`, only authenticated users can access the route. Others are redirected to `authPage`.                                         |
+| `authPage`                    | Route name for the login/signup page used when `auth` is required. Default: `'SignupPage'`.                                            |
+| `loadData`                    | Function to load data for the route. Called on SSR and client navigation. Signature: `(pathParams, searchParams, config)`.             |
+| `setInitialValues`            | Function that sets initial values for the route’s form/Redux slice. Used to reset if page is re-rendered with different API entity.    |
+| `extraProps`                  | Extra props passed to the page-level component that renders the current route.                                                         |
+| `prioritizeMapLibraryLoading` | Useful for routes that don't display maps immediately to improve initial load performance. This currently only affects Mapbox library. |
+
 ## Routes.js
 
 This component uses React Router library to create different routes for the SPA. It's also
