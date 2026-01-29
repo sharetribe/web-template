@@ -1,5 +1,3 @@
-import intersection from 'lodash/intersection';
-
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString, matchPathname } from '../../util/routes';
 import {
@@ -150,7 +148,7 @@ export const validURLParamForExtendedData = (
       // Pick valid select options only
       const valueArray = parseSelectFilterOptions(paramValue);
       const allowedValues = enumOptions.map(o => `${o.option}`);
-      const validValues = intersection(valueArray, allowedValues).join(',');
+      const validValues = valueArray.filter(v => allowedValues.includes(v)).join(',');
 
       return validValues.length > 0
         ? {

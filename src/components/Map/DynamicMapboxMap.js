@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 // https://github.com/mapbox/mapbox-gl-js/issues/2618
 // TODO: we should add an overlay with text "use two fingers to pan".
 import MultiTouch from 'mapbox-gl-multitouch';
-import uniqueId from 'lodash/uniqueId';
 
 import { circlePolyline } from '../../util/maps';
 
@@ -34,8 +33,10 @@ const circleLayer = (center, mapsConfig, layerId) => {
   };
 };
 
+let fuzzyLayerIdCounter = 0;
 const generateFuzzyLayerId = () => {
-  return uniqueId('fuzzy_layer_');
+  fuzzyLayerIdCounter += 1;
+  return `fuzzy_layer_${fuzzyLayerIdCounter}`;
 };
 
 /**

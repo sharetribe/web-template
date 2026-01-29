@@ -1,4 +1,3 @@
-import toPairs from 'lodash/toPairs';
 import { types as sdkTypes } from './sdkLoader';
 import { diffInTime } from './dates';
 import { extractYouTubeID } from './string';
@@ -68,7 +67,7 @@ export const requiredFieldArrayCheckbox = message => value => {
     return message;
   }
 
-  const entries = toPairs(value);
+  const entries = Object.entries(value);
   const hasSelectedValues = entries.filter(e => !!e[1]).length > 0;
   return hasSelectedValues ? VALID : message;
 };

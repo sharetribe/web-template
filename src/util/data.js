@@ -1,5 +1,3 @@
-import isArray from 'lodash/isArray';
-import reduce from 'lodash/reduce';
 import { sanitizeEntity } from './sanitize';
 // NOTE: This file imports sanitize.js, which may lead to circular dependency
 
@@ -92,28 +90,24 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
 
     if (relationships) {
       // Recursively join in all the relationship entities
-      return reduce(
-        relationships,
-        (ent, relRef, relName) => {
-          // A relationship reference can be either a single object or
-          // an array of objects. We want to keep that form in the final
-          // result.
-          const hasMultipleRefs = Array.isArray(relRef.data);
-          const multipleRefsEmpty = hasMultipleRefs && relRef.data.length === 0;
-          if (!relRef.data || multipleRefsEmpty) {
-            ent[relName] = hasMultipleRefs ? [] : null;
-          } else {
-            const refs = hasMultipleRefs ? relRef.data : [relRef.data];
+      return Object.entries(relationships).reduce((ent, [relName, relRef]) => {
+        // A relationship reference can be either a single object or
+        // an array of objects. We want to keep that form in the final
+        // result.
+        const hasMultipleRefs = Array.isArray(relRef.data);
+        const multipleRefsEmpty = hasMultipleRefs && relRef.data.length === 0;
+        if (!relRef.data || multipleRefsEmpty) {
+          ent[relName] = hasMultipleRefs ? [] : null;
+        } else {
+          const refs = hasMultipleRefs ? relRef.data : [relRef.data];
 
-            // If a relationship is not found, an Error should be thrown
-            const rels = denormalisedEntities(entities, refs, true);
+          // If a relationship is not found, an Error should be thrown
+          const rels = denormalisedEntities(entities, refs, true);
 
-            ent[relName] = hasMultipleRefs ? rels : rels[0];
-          }
-          return ent;
-        },
-        entityData
-      );
+          ent[relName] = hasMultipleRefs ? rels : rels[0];
+        }
+        return ent;
+      }, entityData);
     }
     return entityData;
   });
@@ -401,31 +395,6 @@ export const userAbbreviatedName = (user, defaultUserAbbreviatedName) => {
     return user.attributes.profile.abbreviatedName;
   } else {
     return defaultUserAbbreviatedName || '';
-  }
-};
-
-/**
- * A customizer function to be used with the
- * mergeWith function from lodash.
- *
- * Works like merge in every way exept that on case of
- * an array the old value is completely overridden with
- * the new value.
- *
- * @param {Object} objValue Value of current field, denoted by key
- * @param {Object} srcValue New value
- * @param {String} key Key of the field currently being merged
- * @param {Object} object Target object that is receiving values from source
- * @param {Object} source Source object that is merged into object param
- * @param {Object} stack Tracks merged values
- *
- * @return {Object} New value for objValue if the original is an array,
- * otherwise undefined is returned, which results in mergeWith using the
- * standard merging function
- */
-export const overrideArrays = (objValue, srcValue, key, object, source, stack) => {
-  if (isArray(objValue)) {
-    return srcValue;
   }
 };
 

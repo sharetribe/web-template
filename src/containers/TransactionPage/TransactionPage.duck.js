@@ -1,7 +1,6 @@
-import pickBy from 'lodash/pickBy';
-import isEmpty from 'lodash/isEmpty';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { isEmpty, pickBy } from '../../util/common';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import {
   bookingTimeUnits,
