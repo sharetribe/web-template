@@ -88,6 +88,7 @@
     "dev-frontend": "sharetribe-scripts start",
     "dev-backend": "nodemon server/apiServer.js",
     "dev": "yarn run config-check&&cross-env NODE_ENV=development REACT_APP_DEV_API_SERVER_PORT=3500 concurrently --kill-others \"yarn run dev-frontend\" \"yarn run dev-backend\"",
+    "builder.io:dev": "yarn run config&&cross-env NODE_ENV=production PORT=4000 concurrently --kill-others \"yarn run dev-frontend\" \"yarn run dev-backend\"",
     "build": "yarn build-web&&yarn build-server",
     "build-web": "sharetribe-scripts build",
     "build-server": "sharetribe-scripts build-server",
