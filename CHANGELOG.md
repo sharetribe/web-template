@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] errors.js: fix a bug with error status checking.
+  [#756](https://github.com/sharetribe/web-template/pull/756)
 - [change] Remove or rewrite some lodash functions that could be achieved with native JavaScript.
   [#755](https://github.com/sharetribe/web-template/pull/755)
 - [add] Update several dependencies. Including Express, body-parser, and
