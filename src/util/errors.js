@@ -54,17 +54,19 @@ const responseAPIErrors = error => {
 /**
  * 403 Forbidden
  */
-export const isForbiddenError = error => hasErrorWithCode(error, ERROR_CODE_FORBIDDEN);
+export const isForbiddenError = error =>
+  error?.status === 403 || hasErrorWithCode(error, ERROR_CODE_FORBIDDEN);
 
 /**
  * 404 Not Found
  */
-export const isNotFoundError = error => hasErrorWithCode(error, ERROR_CODE_NOT_FOUND);
+export const isNotFoundError = error =>
+  error?.status === 404 || hasErrorWithCode(error, ERROR_CODE_NOT_FOUND);
 
 /**
  * 429 Too Many Requests error
  */
-export const isTooManyRequestsError = error => error && error.status === 429;
+export const isTooManyRequestsError = error => error?.status === 429;
 
 /**
  * Check if the given API error (from `sdk.currentuser.create()`) is
