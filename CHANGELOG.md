@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add AGENTS.md file to give guidance to coding agents.
+  [#759](https://github.com/sharetribe/web-template/pull/759)
+
 ## [v10.9.0] 2026-01-26
 
 - [add] Add support for provider-driven negotiation loop ("Update offer" loop). With this loop, the
