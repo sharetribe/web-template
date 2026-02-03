@@ -73,6 +73,22 @@ const FilterDateRange = props => {
     }
   };
 
+  const handleClick = event => {
+    const el = event.currentTarget;
+    const dropdownHeight = 350; // approximately
+    const toBottom = window.innerHeight - el.getBoundingClientRect().bottom;
+    // If there's not enough space under the toggle button, scroll down to make space for the dropdown.
+    if (toBottom < dropdownHeight) {
+      const topbarOffset = 72;
+      const toTop = el.getBoundingClientRect().top - topbarOffset;
+      // Scroll page max 350px down to get toggle button more space below it - or move it just under the topbar.
+      // This mitigates browsers own accessibility feature that autoscrolls too much.
+      const top = toTop < dropdownHeight ? toTop : dropdownHeight;
+      window.scrollBy({ top });
+    }
+    setIsOpen(prevState => !prevState);
+  };
+
   const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
   const { dateRangeMode } = datesFilter || {};
   const isNightlyMode = dateRangeMode === 'night';
@@ -92,7 +108,7 @@ const FilterDateRange = props => {
         role="button"
         ref={toggleButtonRef}
         className={css.toggleButton}
-        onClick={() => setIsOpen(prevState => !prevState)}
+        onClick={handleClick}
         tabIndex={0}
         aria-controls={isOpen ? 'dateRange' : ''}
         aria-expanded={isOpen}
