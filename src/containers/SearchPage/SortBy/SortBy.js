@@ -87,7 +87,7 @@ const SortBy = props => {
           },
         ];
   }, []);
-  const defaultValue = 'createdAt';
+  const defaultValue = config.search.sortConfig.options[0].key;
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
   const relevanceValue =
     isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;
