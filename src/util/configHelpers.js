@@ -790,6 +790,59 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
   }, []);
 };
 
+const validTransactionFields = transactionFields => {
+  const keys = transactionFields.map(d => d.key);
+  const scopeOptions = ['protected'];
+  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
+
+  return transactionFields.reduce((acc, data) => {
+    const schemaType = data.schemaType;
+
+    const validationData = Object.entries(data).reduce(
+      (acc, entry) => {
+        const [name, value] = entry;
+
+        // Validate each property
+        const [isValid, prop] =
+          name === 'key'
+            ? validKey(value, keys)
+            : name === 'scope'
+            ? validEnumString('scope', value, scopeOptions, 'protected')
+            : name === 'numberConfig'
+            ? validNumberConfig(value)
+            : name === 'schemaType'
+            ? validEnumString('schemaType', value, validSchemaTypes)
+            : name === 'enumOptions'
+            ? validSchemaOptions(value, schemaType)
+            : name === 'filterConfig'
+            ? validFilterConfig(value, schemaType)
+            : name === 'showConfig'
+            ? validShowConfig(value)
+            : name === 'saveConfig'
+            ? validSaveConfig(value)
+            : [true, { [name]: value }];
+
+        const hasFoundValid = !(acc.isValid === false || isValid === false);
+        // Let's warn about wrong data in listing extended data config
+        if (isValid === false) {
+          console.warn(
+            `Unsupported transaction extended data configurations detected (${name}) in`,
+            data
+          );
+        }
+
+        return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
+      },
+      { config: {}, isValid: true }
+    );
+    if (validationData.isValid) {
+      return [...acc, validationData.config];
+    } else {
+      return acc;
+    }
+  }, []);
+};
+
 const validUserTypes = userTypes => {
   const validTypes = userTypes.filter(config => {
     const { userType, label } = config;
@@ -874,8 +927,10 @@ const validListingTypes = listingTypes => {
       : {};
 
     const hasTransactionFields = transactionFields?.length > 0;
+    const restructuredTransactionFields = transactionFields?.map(restructureTransactionFields);
+
     const validTransactionFieldsMaybe = hasTransactionFields
-      ? { transactionFields: transactionFields.map(restructureTransactionFields) }
+      ? { transactionFields: validTransactionFields(restructuredTransactionFields) }
       : {};
 
     if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
