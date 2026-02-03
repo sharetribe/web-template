@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] FilterDateRange: fix a bug with browser autoscrolling the dropdown too much.
+  [#761](https://github.com/sharetribe/web-template/pull/761)
 - [change] Update an Email text in the default-purchase transaction process
   [#758](https://github.com/sharetribe/web-template/pull/758)
 - [fix] errors.js: fix a bug with error status checking.
