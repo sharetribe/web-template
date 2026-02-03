@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.10.0] 2026-02-03
+
 - [change] Improve map library loading strategy.
   [#733](https://github.com/sharetribe/web-template/pull/733)
 - [fix] FilterDateRange: fix a bug with browser autoscrolling the dropdown too much.
@@ -29,6 +31,8 @@ way to update this template, but currently, we follow a pattern:
   [#754](https://github.com/sharetribe/web-template/pull/754)
 - [add] Add currently available translations for DE, ES, FR.
   [#753](https://github.com/sharetribe/web-template/pull/753)
+
+  [v10.10.0]: https://github.com/sharetribe/web-template/compare/v10.9.0...v10.10.0
 
 ## [v10.9.0] 2026-01-26
 
