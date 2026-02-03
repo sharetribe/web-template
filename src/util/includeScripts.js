@@ -1,8 +1,30 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import { useRouteConfiguration } from '../context/routeConfigurationContext';
+import { matchPathname } from '../util/routes';
+
 const MAPBOX_SCRIPT_ID = 'mapbox_GL_JS';
 const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
+
+/**
+ * Map library is shown on some of the pages, but ReusableMapContainer is used app wide.
+ * However, we can defer the map library loading on pages that don't show the map immediately.
+ * Note: this currently only affects Mapbox library.
+ * Google Maps library is always loaded immediately. (It seems to be more fragile when loaded asynchronously.)
+ *
+ * @param {string} initialPathname - The initial pathname at the time of the full page load.
+ * @param {array} routeConfiguration - The route configuration.
+ * @returns {boolean} - True if the map library can be deferred, false otherwise.
+ */
+const canDeferMapLibrary = (initialPathname, routeConfiguration) => {
+  if (!initialPathname) {
+    return false;
+  }
+  const matchedRoutes = matchPathname(initialPathname, routeConfiguration);
+  const currentRouteConfig = matchedRoutes.length > 0 ? matchedRoutes[0]?.route : null;
+  return currentRouteConfig?.prioritizeMapLibraryLoading !== true;
+};
 
 /**
  * Include scripts (like Map Provider).
@@ -18,6 +40,12 @@ const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
 export const IncludeScripts = props => {
   const { marketplaceRootURL: rootURL, maps, analytics } = props?.config || {};
   const { googleAnalyticsId, plausibleDomains } = analytics;
+
+  const routeConfiguration = useRouteConfiguration();
+  // Note: Affects Mapbox only. Google Maps initialization is not yet ready to support asynchronous loading.
+  const deferMapLibrary = canDeferMapLibrary(props?.initialPathname, routeConfiguration)
+    ? { defer: '' }
+    : {};
 
   const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
   const isGoogleMapsInUse = mapProvider === 'googleMaps';
@@ -38,6 +66,7 @@ export const IncludeScripts = props => {
       <script
         key="mapboxSDK"
         src={`${rootURL}/static/scripts/mapbox/mapbox-sdk@0.16.2/mapbox-sdk.min.js`}
+        async
       ></script>
     );
     // License information for v3.7.0 of the mapbox-gl-js library:
@@ -59,6 +88,7 @@ export const IncludeScripts = props => {
         key="mapbox_GL_JS"
         src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"
         crossOrigin="anonymous"
+        {...deferMapLibrary}
       ></script>
     );
   } else if (isGoogleMapsInUse) {
