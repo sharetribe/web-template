@@ -14,8 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.10.1] 2026-02-04
+
 - [fix] SearchMapWithMapbox: fix a bug with info card marker container not being removed correctly.
   [#763](https://github.com/sharetribe/web-template/pull/763)
+
+  [v10.10.1]: https://github.com/sharetribe/web-template/compare/v10.10.0...v10.10.1
 
 ## [v10.10.0] 2026-02-03
 
