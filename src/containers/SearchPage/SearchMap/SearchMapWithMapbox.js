@@ -303,7 +303,7 @@ class SearchMapWithMapbox extends Component {
   }
 
   componentWillUnmount() {
-    this.currentInfoCard.markerContainer.removeEventListener(
+    this.currentInfoCard?.markerContainer?.removeEventListener(
       'dblclick',
       this.handleDoubleClickOnInfoCard
     );
@@ -409,7 +409,7 @@ class SearchMapWithMapbox extends Component {
 
       // If map has moved or info card opened, unnecessary markers need to be removed
       const removableMarkers = this.currentMarkers.filter(
-        marker => !labels.some(label => label.markerId === marker.markerId)
+        marker => !labels.some(label => label?.markerId === marker?.markerId)
       );
       removableMarkers.forEach(rm => rm.marker.remove());
 
