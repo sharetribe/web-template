@@ -684,7 +684,7 @@ const editListingPageSlice = createSlice({
         state.showListingsError = null;
       })
       .addCase(showListingThunk.fulfilled, (state, action) => {
-        const listingIdFromPayload = action.payload.data.id;
+        const listingIdFromPayload = action.payload.data.data.id;
         const { listingId, allExceptions, weeklyExceptionQueries, monthlyExceptionQueries } = state;
         // If listing stays the same, we trust previously fetched exception data.
         if (listingIdFromPayload?.uuid === state.listingId?.uuid) {
