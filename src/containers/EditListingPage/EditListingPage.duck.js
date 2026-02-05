@@ -182,6 +182,7 @@ export const createListingDraftThunk = createAsyncThunk(
     return sdk.ownListings
       .createDraft(ownListingValues, queryParams)
       .then(response => {
+        dispatch(addMarketplaceEntities(response));
         const listingId = response.data.data.id;
         // If stockUpdate info is passed through, update stock
         return updateStockOfListingMaybe(listingId, stockUpdate, dispatch).then(() => response);
@@ -634,8 +635,8 @@ const editListingPageSlice = createSlice({
         state.uploadedImages = updatedImagesState.uploadedImages;
         state.uploadedImagesOrder = updatedImagesState.uploadedImagesOrder;
         state.createListingDraftInProgress = false;
-        state.submittedListingId = action.payload.data.id;
-        state.listingDraft = action.payload.data;
+        state.submittedListingId = action.payload.data.data.id;
+        state.listingDraft = action.payload.data.data;
       })
       .addCase(createListingDraftThunk.rejected, (state, action) => {
         state.createListingDraftInProgress = false;
