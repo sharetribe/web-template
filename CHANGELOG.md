@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] EditListingPage.duck.js: fix a bug where exception cache was not updated correctly.
+  [#766](https://github.com/sharetribe/web-template/pull/766)
+
 ## [v10.10.1] 2026-02-04
 
 - [fix] SearchMapWithMapbox: fix a bug with info card marker container not being removed correctly.
