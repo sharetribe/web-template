@@ -251,7 +251,7 @@ describe('richText', () => {
       // </span>
       const htmlString = wrapper.asFragment().firstChild.outerHTML;
       expect(htmlString).toEqual(
-        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three${commaWithZWSP} count until <span class="longWord">exhaustion…</span></span>`
+        `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three, count until <span class="longWord">exhaustion…</span></span>`
       );
     });
 
@@ -406,7 +406,7 @@ describe('richText', () => {
         </span>
       );
       expect(comma.asFragment().firstChild.outerHTML).toEqual(
-        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>​,​ asdf</span>`
+        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>, asdf</span>`
       );
 
       // .
