@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] richText.js: fix a bug with break chars configuration. Old comma rule caused text flow
+  issues. [#770](https://github.com/sharetribe/web-template/pull/770)
 - [fix] TopbarMobileMenu: logged out user saw bullet points in custom links.
   [#769](https://github.com/sharetribe/web-template/pull/769)
 - [fix] ListingPage.duck.js: fix a bug where inquiry is not allowed for customer role on OFFER flow.
