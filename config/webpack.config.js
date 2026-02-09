@@ -145,7 +145,6 @@ module.exports = function(webpackEnv, target = 'web') {
             plugins: !useTailwind
               ? sharetribeConfigUtils.postcssOptionsPlugins
               : [
-                  'tailwindcss',
                   'postcss-flexbugs-fixes',
                   [
                     'postcss-preset-env',
