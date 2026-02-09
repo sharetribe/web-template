@@ -46,62 +46,46 @@ const fetchFeaturedListingsPayloadCreator = async (arg, thunkAPI) => {
     return rejectWithValue(storableError(error));
   }
 
-  let queryParams = {};
-
-  if (listingSelection === 'newest') {
-    queryParams = {
-      perPage: MAX_LISTING_COUNT,
-      page: 1,
-    };
-  }
-
-  if (listingSelection === 'queryString') {
-    const searchParams = Object.fromEntries(
-      new URLSearchParams(currentSection?.listingSearchQuery)
-    );
-
-    queryParams = {
-      perPage: MAX_LISTING_COUNT,
-      page: 1,
-      ...searchParams,
-    };
-  }
-
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  // Fetch listings from API
   return sdk.listings
-    .query({
-      ...queryParams,
-      minStock: 1,
-      stockMode: 'match-undefined',
-      include: ['images', 'author'],
-      'fields.listing': [
-        'title',
-        'geolocation',
-        'price',
-        'deleted',
-        'state',
-        'publicData.listingType',
-        'publicData.transactionProcessAlias',
-        'publicData.unitType',
-        'publicData.cardStyle',
-        'publicData.pickupEnabled',
-        'publicData.shippingEnabled',
-        'publicData.priceVariationsEnabled',
-        'publicData.priceVariants',
-      ],
-      'fields.image': [
-        'variants.listing-card',
-        'variants.listing-card-2x',
-        'variants.scaled-small',
-        'variants.scaled-medium',
-      ],
-      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-      'limit.images': 1,
-    })
+    .query([
+      ...(listingSelection === 'queryString' && currentSection?.listingSearchQuery
+        ? [currentSection.listingSearchQuery]
+        : []),
+      {
+        perPage: MAX_LISTING_COUNT,
+        page: 1,
+        minStock: 1,
+        stockMode: 'match-undefined',
+        include: ['images', 'author'],
+        'fields.listing': [
+          'title',
+          'geolocation',
+          'price',
+          'deleted',
+          'state',
+          'publicData.listingType',
+          'publicData.transactionProcessAlias',
+          'publicData.unitType',
+          'publicData.cardStyle',
+          'publicData.pickupEnabled',
+          'publicData.shippingEnabled',
+          'publicData.priceVariationsEnabled',
+          'publicData.priceVariants',
+        ],
+        'fields.image': [
+          'variants.listing-card',
+          'variants.listing-card-2x',
+          'variants.scaled-small',
+          'variants.scaled-medium',
+        ],
+        ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+        ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+        'limit.images': 1,
+      },
+    ])
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       return { apiResponse: response };
