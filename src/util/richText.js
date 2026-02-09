@@ -159,7 +159,7 @@ export const richText = (text, options) => {
   const { longWordMinLength, longWordClass, linkify = false, linkClass, breakChars } = options;
   const linkOrLongWordClass = linkClass ? linkClass : longWordClass;
   const nonWhiteSpaceSequence = /([^\s]+)/gi;
-  const breakCharsConfig = breakChars != null ? breakChars : '/,';
+  const breakCharsConfig = breakChars != null ? breakChars : '/';
 
   return text.split(nonWhiteSpaceSequence).reduce((acc, nextChild, i) => {
     const parts = flow([
