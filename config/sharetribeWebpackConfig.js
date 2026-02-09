@@ -42,7 +42,7 @@ const checkConfigStructure = config => {
   const hasRules = config?.module?.rules?.length > 0;
   const foundRuleWithOneOfArray =
     hasRules &&
-    config.module.rules.find(rule => rule.oneOf?.length === 10);
+    config.module.rules.find(rule => rule.oneOf?.length === 8);
 
   const hasCssLoader =
     foundRuleWithOneOfArray &&
