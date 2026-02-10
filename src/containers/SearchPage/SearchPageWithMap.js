@@ -361,7 +361,7 @@ export class SearchPageComponent extends Component {
     const { listingType: listingTypePathParam } = currentPathParams;
 
     const { listingFields } = config?.listing || {};
-    const { defaultFilters: defaultFiltersRaw, sortConfig } = config?.search || {};
+    const { defaultFilters: defaultFiltersRaw, sortConfig, mainSearch } = config?.search || {};
 
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const defaultFiltersConfig = listingTypePathParam
@@ -384,6 +384,7 @@ export class SearchPageComponent extends Component {
       listingCategories,
       activeListingTypes,
       currentPathParams,
+      mainSearch,
     };
 
     // Page transition might initially use values from previous search
@@ -394,6 +395,7 @@ export class SearchPageComponent extends Component {
       searchParams,
       filterConfigs,
       sortConfig,
+      mainSearch,
       isOriginInUse(config)
     );
 
