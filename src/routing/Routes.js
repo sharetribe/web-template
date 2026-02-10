@@ -56,7 +56,7 @@ const setPageScrollPosition = (location, delayed) => {
       left: 0,
     });
   } else {
-    const el = document.querySelector(location.hash);
+    const el = document.querySelector(CSS.escape(location.hash));
     if (el) {
       // Found element from the current page with the given fragment identifier,
       // scrolling to that element.
@@ -76,7 +76,7 @@ const setPageScrollPosition = (location, delayed) => {
       // Note: 300 milliseconds might not be enough, but adding too much delay
       // might affect user initiated scrolling.
       delayed = window.setTimeout(() => {
-        const reTry = document.querySelector(location.hash);
+        const reTry = document.querySelector(CSS.escape(location.hash));
         reTry?.scrollIntoView({
           block: 'start',
           behavior: 'smooth',

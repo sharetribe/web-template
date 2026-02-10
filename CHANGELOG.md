@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Routes.js: document.querySelector must have valid CSS id.
+  [#773](https://github.com/sharetribe/web-template/pull/773)
 - [fix] richText.js: fix a bug with break chars configuration. Old comma rule caused text flow
   issues. [#770](https://github.com/sharetribe/web-template/pull/770)
 - [fix] TopbarMobileMenu: logged out user saw bullet points in custom links.
