@@ -1,6 +1,4 @@
 import React from 'react';
-
-import css from './CustomExtendedDataSection.module.css';
 import classNames from 'classnames';
 
 import { lazyLoadWithDimensions } from '../../util/uiHelpers.js';
@@ -8,6 +6,8 @@ import { extractYouTubeID } from '../../util/string.js';
 
 import { AspectRatioWrapper } from '../../components/index.js';
 import { Heading } from '../../components';
+
+import css from './CustomExtendedDataSection.module.css';
 
 const RADIX = 10;
 const BLACK_BG = '#000000';
@@ -43,15 +43,17 @@ const YoutubeEmbed = props => {
 };
 
 const SectionYoutubeVideo = props => {
-  const { videoUrl, heading } = props;
+  const { videoUrl, heading, className, rootClassName } = props;
   if (!videoUrl || !heading) {
     return null;
   }
 
+  const classes = classNames(rootClassName || css.sectionEmbeddedYoutubeVideo, className);
+
   const extractedVideoID = extractYouTubeID(videoUrl);
 
   return extractedVideoID ? (
-    <section className={css.sectionEmbeddedYoutubeVideo}>
+    <section className={classes}>
       {heading ? (
         <Heading as="h2" rootClassName={css.sectionHeading}>
           {heading}

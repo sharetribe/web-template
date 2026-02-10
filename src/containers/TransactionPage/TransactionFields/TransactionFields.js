@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 // Utils
 import {
   getDetailCustomFieldValue,
@@ -153,13 +154,13 @@ const CustomTransactionFields = props => {
   const sectionDetailsPropsCustomer = {
     ...props,
     fieldConfigs: customerRoleConfigs,
-    className: className,
+    rootClassName: css.transactionFieldSection,
   };
 
   const sectionDetailsPropsProvider = {
     ...props,
     fieldConfigs: providerRoleConfigs,
-    className: className,
+    rootClassName: css.transactionFieldSection,
   };
 
   const pickExtendedDataFields = (filteredConfigs, config) => {
@@ -190,6 +191,8 @@ const CustomTransactionFields = props => {
           propsForCustomFields={propsForCustomerCustomFields}
           idPrefix="transactionPage"
           pickExtendedDataFields={pickExtendedDataFields}
+          className={className}
+          rootClassName={css.transactionFieldSection}
         />
       ) : role === 'provider' && providerRoleConfigs?.length > 0 ? (
         <CustomExtendedDataSection
@@ -197,6 +200,8 @@ const CustomTransactionFields = props => {
           propsForCustomFields={propsForProviderCustomFields}
           idPrefix="transactionPage"
           pickExtendedDataFields={pickExtendedDataFields}
+          className={className}
+          rootClassName={css.transactionFieldSection}
         />
       ) : null}
     </>
@@ -282,6 +287,7 @@ const TransactionFields = props => {
         })}
         headingClassName={css.defaultMessageLabel}
         text={initialMessage}
+        className={css.transactionFieldSection}
       />
     </div>
   ) : null;

@@ -226,6 +226,7 @@ export const CustomUserFields = props => {
     ...props,
     fieldConfigs: userFieldConfig,
     heading: 'ProfilePage.detailsTitle',
+    rootClassName: css.userFieldSection,
   };
 
   return (
@@ -234,6 +235,7 @@ export const CustomUserFields = props => {
       propsForCustomFields={propsForCustomFields}
       idPrefix="profilePage"
       pickExtendedDataFields={pickUserFields}
+      rootClassName={css.userFieldSection}
     />
   );
 };

@@ -30,6 +30,8 @@ const CustomExtendedDataSection = props => {
     propsForCustomFields = [],
     idPrefix,
     pickExtendedDataFields,
+    className,
+    rootClassName,
   } = props;
 
   return (
@@ -38,11 +40,27 @@ const CustomExtendedDataSection = props => {
       {propsForCustomFields.map(customFieldProps => {
         const { schemaType, key, ...fieldProps } = customFieldProps;
         return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
-          <SectionMultiEnum key={key} idPrefix={idPrefix} {...fieldProps} />
+          <SectionMultiEnum
+            key={key}
+            idPrefix={idPrefix}
+            className={className}
+            rootClassName={rootClassName}
+            {...fieldProps}
+          />
         ) : schemaType === SCHEMA_TYPE_TEXT ? (
-          <SectionText key={key} {...fieldProps} />
+          <SectionText
+            key={key}
+            className={className}
+            rootClassName={rootClassName}
+            {...fieldProps}
+          />
         ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
-          <SectionYoutubeVideo key={key} {...fieldProps} />
+          <SectionYoutubeVideo
+            key={key}
+            className={className}
+            rootClassName={rootClassName}
+            {...fieldProps}
+          />
         ) : null;
       })}
     </>
