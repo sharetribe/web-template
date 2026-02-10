@@ -191,11 +191,29 @@
   transform: translate(-50%, -50%);
 }
 
-.genericErrorContainer {
+.centeredMessageContainer {
   composes: centeredContent;
   text-align: center;
   border-radius: 20px;
   padding-left: 20px;
   padding-right: 20px;
   max-width: 500px;
+}
+
+.ctaButton {
+  background-color: var(--marketplaceColor);
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--boxShadowButton);
+  color: var(--colorWhite);
+  display: inline-block;
+  font-size: 15px;
+  font-weight: var(--fontWeightMedium);
+  margin-top: 24px;
+  padding: 8px 20px;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+    text-decoration: none;
+  }
 }

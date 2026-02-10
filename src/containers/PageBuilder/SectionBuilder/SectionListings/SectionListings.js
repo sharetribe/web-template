@@ -6,7 +6,7 @@ import { useConfiguration } from '../../../../context/configurationContext';
 import { lazyLoadWithDimensions } from '../../../../util/uiHelpers';
 import { FormattedMessage } from '../../../../util/reactIntl';
 
-import { ListingCard, IconSpinner, ErrorMessage } from '../../../../components';
+import { ListingCard, IconSpinner, ErrorMessage, NamedLink } from '../../../../components';
 
 import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
@@ -75,13 +75,20 @@ const calculateCarouselHeight = (
   config,
   carouselWidth,
   isMobileBreakpoint = false,
-  error
+  error,
+  noListingsFound
 ) => {
   const errorMessageHeight = 250;
+  const noListingsFoundHeight = 220;
 
   if (error) {
     return errorMessageHeight;
   }
+
+  if (noListingsFound) {
+    return noListingsFoundHeight;
+  }
+
   const thumbnailAspectRatio = config.layout.listingImage.aspectRatio;
   const paddingHorizontal = 2 * 32; // 2x32px
   const titleHeightSingleLine = 16;
@@ -157,7 +164,7 @@ const ListingCarouselComponent = props => {
 
   if (error) {
     return (
-      <div className={css.genericErrorContainer} role="alert">
+      <div className={css.centeredMessageContainer} role="alert">
         <h4 className={css.genericErrorTitle}>
           <FormattedMessage id="SectionListings.genericErrorTitle" />
         </h4>
@@ -166,7 +173,20 @@ const ListingCarouselComponent = props => {
     );
   }
 
-  return listings.length > 0 ? (
+  if (listings.length === 0) {
+    return (
+      <div className={css.centeredMessageContainer} role="status">
+        <p className={css.noListingsFound}>
+          <FormattedMessage id="SectionListings.noListingsFoundInfo" />
+        </p>
+        <NamedLink name="SearchPage" className={css.ctaButton}>
+          <FormattedMessage id="SectionListings.noListingsFoundCTA" />
+        </NamedLink>
+      </div>
+    );
+  }
+
+  return (
     <ul className={getColumnCSS(numColumns, false)} ref={sliderRef} role="list">
       {listings.map(listing => (
         <li key={listing.id.uuid} className={css.listItem}>
@@ -180,7 +200,7 @@ const ListingCarouselComponent = props => {
         </li>
       ))}
     </ul>
-  ) : null;
+  );
 };
 
 const LazyListingCarouselComponent = lazyLoadWithDimensions(ListingCarouselComponent);
@@ -306,13 +326,15 @@ const SectionListings = props => {
   const fieldOptions = { fieldComponents };
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const darkMode = appearance?.textColor === 'white';
+  const noListingsFound = fetched && listingEntities.length === 0;
 
   const carouselHeight = calculateCarouselHeight(
     numColumns,
     config,
     carouselWidthConstant,
     isMobileBreakpoint,
-    error
+    error,
+    noListingsFound
   );
 
   return (

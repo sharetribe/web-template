@@ -939,6 +939,8 @@
   "SearchPage.searchError": "Search failed. Please try again.",
   "SeatsFilter.labelSelected": "Seats: {seatCount}",
   "SectionListings.genericErrorTitle": "Content temporarily unavailable",
+  "SectionListings.noListingsFoundCTA": "Search all listings",
+  "SectionListings.noListingsFoundInfo": "We couldn't find any listings for this section.",
   "SelectMultipleFilter.labelSelected": "{labelText} • {count}",
   "SelectMultipleFilterPlainForm.labelSelected": "• {count}",
   "SendMessageForm.sendFailed": "Failed to send. Please try again.",
