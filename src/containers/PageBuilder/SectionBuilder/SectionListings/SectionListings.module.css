@@ -1,0 +1,219 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.carouselContainer {
+  display: flex;
+  position: relative;
+  align-items: center;
+  scroll-behavior: smooth;
+  padding: 32px 0 0 0;
+
+  &:hover .carouselArrows {
+    opacity: 1;
+  }
+
+  /* smartphones, touchscreens: we don't need to show arrows */
+  @media (any-hover: none) and (pointer: coarse) {
+    &:hover .carouselArrows {
+      opacity: 0;
+    }
+  }
+}
+
+.dynamicContainer {
+  width: 100%;
+  position: relative;
+}
+
+.carouselArrows {
+  opacity: 0;
+  z-index: 2;
+  transition: all ease-in-out 500ms;
+}
+
+.carouselArrowPrev,
+.carouselArrowNext {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 2;
+
+  width: 48px;
+  height: 48px;
+  padding: 0px 0 4px 0;
+  margin-top: -64px;
+  border-radius: 100%;
+  border: none;
+
+  background-color: lightgrey;
+  opacity: 0.9;
+  font-size: 30px;
+  color: black;
+  transition: all ease-in-out 100ms;
+
+  &:hover {
+    opacity: 1;
+    cursor: pointer;
+    background: black;
+    color: white;
+  }
+}
+
+.carouselArrowPrev {
+  left: 48px;
+}
+
+.carouselArrowNext {
+  right: 48px;
+}
+.notEnoughListings {
+  @media (--viewportMedium) {
+    display: none;
+  }
+}
+
+.baseCarousel {
+  display: flex;
+  flex-wrap: nowrap;
+  width: var(--carouselWidth);
+  padding-top: 32px;
+  padding-bottom: 24px;
+  margin: 0;
+
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.threeColumns,
+.fourColumns {
+  composes: baseCarousel;
+}
+
+.listItem {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: contents;
+}
+
+.listItem:last-of-type > * {
+  padding-right: 32px;
+  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+}
+
+@media (min-width: 1200px) {
+  .listItem:last-of-type > * {
+    padding-right: 32px;
+    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+  }
+}
+
+.card {
+  flex: 0 0 auto;
+  /* 64px = horizontal layout paddings */
+  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px);
+
+  margin-right: 16px;
+  scroll-snap-align: center;
+
+  transform: translateX(32px);
+
+  @media (--viewportMedium) {
+    margin-right: 32px;
+  }
+
+  @media (min-width: 1200px) {
+    /* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
+    /* Removing this uses the full page width for the slider pane */
+    transform: translateX(
+      max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
+    );
+  }
+}
+
+/* Modal specific styles for cards */
+.card.isInsideContainer {
+  @media (min-width: 1200px) {
+    transform: translateX(32px);
+  }
+}
+
+.threeColumns .card:not(.isInsideContainer) {
+  @media (--viewportMedium) {
+    /* 64px (horizontal layout paddings) - 32px (two gutters á 32px) / 3 (number of columns) */
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 64px) / 3);
+  }
+}
+
+.threeColumns .listItem:last-of-type > *:not(.isInsideContainer) {
+  @media (--viewportMedium) {
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 3);
+  }
+}
+
+.fourColumns .card:not(.isInsideContainer) {
+  @media (--viewportMedium) {
+    /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
+  }
+}
+
+.fourColumns .listItem:last-of-type > *:not(.isInsideContainer) {
+  @media (--viewportMedium) {
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
+  }
+}
+
+.carouselImageHoverEffect {
+  transition: var(--transitionStyleButton);
+  background: var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+
+  @media (--viewportMedium) {
+    &:hover {
+      box-shadow: var(--boxShadowFeaturedListingCard);
+      filter: brightness(1.05) contrast(1.05);
+    }
+  }
+}
+
+.centeredContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.centeredMessageContainer {
+  composes: centeredContent;
+  text-align: center;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 500px;
+}
+
+.ctaButton {
+  background-color: var(--marketplaceColor);
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--boxShadowButton);
+  color: var(--colorWhite);
+  display: inline-block;
+  font-size: 15px;
+  font-weight: var(--fontWeightMedium);
+  margin-top: 24px;
+  padding: 8px 20px;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+    text-decoration: none;
+  }
+}
