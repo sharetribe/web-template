@@ -334,9 +334,18 @@ export const cleanSearchFromConflictingParams = (searchParams, filterConfigs, so
  * @param {Object} sortConfig config for sort search results feature
  * @param {boolean} isOriginInUse if origin is in use, return it too.
  */
-export const pickSearchParamsOnly = (params, filterConfigs, sortConfig, isOriginInUse) => {
+export const pickSearchParamsOnly = (
+  params,
+  filterConfigs,
+  sortConfig,
+  mainSearch,
+  isOriginInUse
+) => {
   const { address, origin, bounds, ...rest } = params || {};
   const boundsMaybe = bounds ? { bounds } : {};
+  // Pick keywords separately if the main search type is keywords
+  const keywordsMaybe =
+    mainSearch.searchType === 'keywords' && params?.keywords ? { keywords: params?.keywords } : {};
   const originMaybe = isOriginInUse && origin ? { origin } : {};
   const filterParams = validFilterParams(rest, filterConfigs);
   const sort = rest[sortConfig.queryParamName];
@@ -345,6 +354,7 @@ export const pickSearchParamsOnly = (params, filterConfigs, sortConfig, isOrigin
   return {
     ...boundsMaybe,
     ...originMaybe,
+    ...keywordsMaybe,
     ...filterParams,
     ...sortMaybe,
   };
@@ -372,6 +382,7 @@ export const searchParamsPicker = (
   searchParamsInProps,
   filterConfigs,
   sortConfig,
+  mainSearch,
   isOriginInUse
 ) => {
   const { mapSearch, page, ...searchParamsInURL } = parse(searchFromLocation, {
@@ -384,6 +395,7 @@ export const searchParamsPicker = (
     searchParamsInProps,
     filterConfigs,
     sortConfig,
+    mainSearch,
     isOriginInUse
   );
   // Pick only search params that are part of current search configuration
@@ -391,6 +403,7 @@ export const searchParamsPicker = (
     searchParamsInURL,
     filterConfigs,
     sortConfig,
+    mainSearch,
     isOriginInUse
   );
 
