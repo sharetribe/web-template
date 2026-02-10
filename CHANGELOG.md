@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] SearchPage.shared.js: fix a bug with keywords search type. (SortBy doesn't pick relevance
+  option when keywords search is active.)
+  [#772](https://github.com/sharetribe/web-template/pull/772)
 - [change] SearchCTA/FilterDateRange: tune scroll behaviour.
   [#771](https://github.com/sharetribe/web-template/pull/771)
 - [fix] Routes.js: document.querySelector must have valid CSS id.
