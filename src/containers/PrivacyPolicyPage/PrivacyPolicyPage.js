@@ -7,6 +7,10 @@ import { connect } from 'react-redux';
 
 import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
+import { getFeaturedListingsProps } from '../../util/data';
+
+import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
+import { getListingsById } from '../../ducks/marketplaceData.duck';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
 import FallbackPage, { fallbackSections } from './FallbackPage';
@@ -24,7 +28,7 @@ const SectionBuilder = loadable(
 
 // This "content-only" component can be used in modals etc.
 const PrivacyPolicyContent = props => {
-  const { inProgress, error, data } = props;
+  const { inProgress, error, data, featuredListings, isOpen } = props;
 
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
@@ -46,10 +50,12 @@ const PrivacyPolicyContent = props => {
     <SectionBuilder
       {...sectionsData}
       options={{
+        featuredListings,
         fieldComponents: {
           heading1: { component: CustomHeading1, pickValidProps: exposeContentAsChildren },
         },
         isInsideContainer: true,
+        isOpen,
       }}
     />
   );
@@ -65,6 +71,7 @@ const PrivacyPolicyPageComponent = props => {
       inProgress={inProgress}
       error={error}
       fallbackPage={<FallbackPage />}
+      featuredListings={getFeaturedListingsProps(camelize(ASSET_NAME), props)}
     />
   );
 };
@@ -77,8 +84,17 @@ PrivacyPolicyPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress, error };
+  const featuredListingData = state.featuredListings || {};
+
+  const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
+
+  return { pageAssetsData, featuredListingData, getListingEntitiesById, inProgress, error };
 };
+
+const mapDispatchToProps = dispatch => ({
+  onFetchFeaturedListings: (sectionId, parentPage, listingImageConfig, allSections) =>
+    dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
@@ -86,7 +102,12 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const PrivacyPolicyPage = compose(connect(mapStateToProps))(PrivacyPolicyPageComponent);
+const PrivacyPolicyPage = compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(PrivacyPolicyPageComponent);
 
 const PRIVACY_POLICY_ASSET_NAME = ASSET_NAME;
 export { PRIVACY_POLICY_ASSET_NAME, PrivacyPolicyPageComponent, PrivacyPolicyContent };
