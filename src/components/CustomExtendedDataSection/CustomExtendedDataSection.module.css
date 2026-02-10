@@ -19,7 +19,7 @@
 .sectionDetails,
 .sectionMultiEnum,
 .sectionEmbeddedYoutubeVideo {
-  padding: 0px;
+  padding: 0px 24px;
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
@@ -74,7 +74,7 @@
 }
 
 .sectionText {
-  padding: 0px;
+  padding: 0px 24px;
   margin-bottom: 24px;
 
   @media (--viewportMedium) {

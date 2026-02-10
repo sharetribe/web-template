@@ -1,11 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 
 import { FormattedMessage } from '../../util/reactIntl';
 
 import { Heading } from '../../components';
 
 import css from './CustomExtendedDataSection.module.css';
-import classNames from 'classnames';
 
 const SectionDetails = props => {
   const { fieldConfigs, pickExtendedDataFields, heading, className, rootClassName } = props;
