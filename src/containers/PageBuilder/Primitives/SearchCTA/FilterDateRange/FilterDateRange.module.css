@@ -17,7 +17,7 @@
   padding-bottom: 16px;
   border-radius: var(--borderRadiusMedium);
   box-shadow: var(--boxShadowPopup);
-  z-index: calc(var(--zIndexPopup) + 1);
+  z-index: 1;
 
   @media (--viewportLarge) {
     top: 51px;
