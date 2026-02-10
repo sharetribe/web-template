@@ -7,6 +7,10 @@ import { connect } from 'react-redux';
 
 import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
+import { getFeaturedListingsProps } from '../../util/data';
+
+import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
+import { getListingsById } from '../../ducks/marketplaceData.duck';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
 
@@ -25,7 +29,7 @@ import { ASSET_NAME } from './TermsOfServicePage.duck';
 
 // This "content-only" component can be used in modals etc.
 const TermsOfServiceContent = props => {
-  const { inProgress, error, data } = props;
+  const { inProgress, error, data, featuredListings } = props;
 
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
@@ -47,6 +51,7 @@ const TermsOfServiceContent = props => {
     <SectionBuilder
       {...sectionsData}
       options={{
+        featuredListings,
         fieldComponents: {
           heading1: { component: CustomHeading1, pickValidProps: exposeContentAsChildren },
         },
@@ -66,6 +71,7 @@ const TermsOfServicePageComponent = props => {
       inProgress={inProgress}
       error={error}
       fallbackPage={<FallbackPage />}
+      featuredListings={getFeaturedListingsProps(camelize(ASSET_NAME), props)}
     />
   );
 };
@@ -78,8 +84,17 @@ TermsOfServicePageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress, error };
+  const featuredListingData = state.featuredListings || {};
+
+  const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
+
+  return { pageAssetsData, featuredListingData, getListingEntitiesById, inProgress, error };
 };
+
+const mapDispatchToProps = dispatch => ({
+  onFetchFeaturedListings: (sectionId, parentPage, listingImageConfig, allSections) =>
+    dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
@@ -87,7 +102,12 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const TermsOfServicePage = compose(connect(mapStateToProps))(TermsOfServicePageComponent);
+const TermsOfServicePage = compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(TermsOfServicePageComponent);
 
 const TOS_ASSET_NAME = ASSET_NAME;
 export { TOS_ASSET_NAME, TermsOfServicePageComponent, TermsOfServiceContent };
