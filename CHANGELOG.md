@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Routes.js: fix a bug with hash selector. (CSS.escape was not used correctly.)
+  [#774](https://github.com/sharetribe/web-template/pull/774)
 - [fix] SearchPage.shared.js: fix a bug with keywords search type. (SortBy doesn't pick relevance
   option when keywords search is active.)
   [#772](https://github.com/sharetribe/web-template/pull/772)
