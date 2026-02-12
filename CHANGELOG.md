@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.11.0] 2026-02-12
+
 - [add] Add AGENTS.md file to provide context for LLMs.
   [#765](https://github.com/sharetribe/web-template/pull/765)
 - [fix] Routes.js: fix a bug with hash selector. (CSS.escape was not used correctly.)
@@ -33,6 +35,8 @@ way to update this template, but currently, we follow a pattern:
   [#768](https://github.com/sharetribe/web-template/pull/768)
 - [fix] EditListingPage.duck.js: fix a bug where exception cache was not updated correctly.
   [#766](https://github.com/sharetribe/web-template/pull/766)
+
+  [v10.11.0]: https://github.com/sharetribe/web-template/compare/v10.10.1...v10.11.0
 
 ## [v10.10.1] 2026-02-04
 
