@@ -19,26 +19,6 @@ import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
 
-const SignupLink = () => {
-  return (
-    <NamedLink id="signup-link" name="SignupPage" className={css.topbarLink}>
-      <span className={css.topbarLinkLabel}>
-        <FormattedMessage id="TopbarDesktop.signup" />
-      </span>
-    </NamedLink>
-  );
-};
-
-const LoginLink = () => {
-  return (
-    <NamedLink id="login-link" name="LoginPage" className={css.topbarLink}>
-      <span className={css.topbarLinkLabel}>
-        <FormattedMessage id="TopbarDesktop.login" />
-      </span>
-    </NamedLink>
-  );
-};
-
 const InboxLink = ({ notificationCount, inboxTab }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
@@ -53,6 +33,50 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
         {notificationDot}
       </span>
     </NamedLink>
+  );
+};
+
+const AuthDropdown = () => {
+  return (
+    <Menu skipFocusOnNavigation={true} rootClassName={css.authMenu}>
+      <MenuLabel
+        id="auth-menu-label"
+        className={css.authMenuLabel}
+        isOpenClassName={css.authMenuIsOpen}
+        ariaLabel="Authentication menu"
+      >
+        <span className={css.buttonLabel}>
+          Join
+          <span className={css.authDropdownIcon}>
+            <svg style={{ fill: "transparent" }} width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 1L6.5 6.5L1 1" stroke="#6B7A40" style={{ stroke: "#6B7A40", stroke: 'color(display-p3 0.4196 0.4784 0.2510)', strokeOpacity: 1 }} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+
+          </span>
+        </span>
+      </MenuLabel>
+      <MenuContent className={css.authMenuContent}>
+        <MenuItem key="signup">
+          <NamedLink
+            className={classNames(css.menuLink)}
+            name="SignupPage"
+          >
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarDesktop.signup" />
+          </NamedLink>
+        </MenuItem>
+        <MenuItem key="login">
+          <NamedLink
+            className={classNames(css.menuLink)}
+            name="LoginPage"
+          >
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarDesktop.login" />
+          </NamedLink>
+        </MenuItem>
+      </MenuContent>
+    </Menu>
   );
 };
 
@@ -180,8 +204,7 @@ const TopbarDesktop = props => {
     />
   ) : null;
 
-  const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
-  const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
+  const authDropdownMaybe = isAuthenticatedOrJustHydrated ? null : <AuthDropdown />;
 
   const searchFormMaybe = showSearchForm ? (
     <TopbarSearchForm
@@ -223,8 +246,7 @@ const TopbarDesktop = props => {
 
       {inboxLinkMaybe}
       {profileMenuMaybe}
-      {signupLinkMaybe}
-      {loginLinkMaybe}
+      {authDropdownMaybe}
     </nav>
   );
 };

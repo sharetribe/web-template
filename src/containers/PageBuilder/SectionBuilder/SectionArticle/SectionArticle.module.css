@@ -12,3 +12,83 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+.readyToStartButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  margin: 32px 0;
+}
+
+.listTackleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 100px;
+  background-color: #D2691E;
+  color: white;
+  font-family: Open Sans;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0px;
+  text-align: center;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.listTackleButton:hover {
+  background-color: #e67e00;
+}
+
+.browseTackleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: 2px solid white;
+  border-radius: 100px;
+  background-color: #FFFFFF1A;
+  color: white;
+  font-family: Open Sans;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0px;
+  text-align: center;
+
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  text-decoration: none !important;
+}
+
+.browseTackleButton:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.buttonArrow {
+  width: 9px;
+  height: 13px;
+}
+
+@media (max-width: 776px) {
+  .readyToStartButtons {
+    flex-direction: column;
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .listTackleButton,
+  .browseTackleButton {
+    width: 100%;
+    max-width: 280px;
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+}

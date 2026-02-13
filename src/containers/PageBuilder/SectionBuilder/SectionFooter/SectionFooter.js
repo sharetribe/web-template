@@ -7,6 +7,7 @@ import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionFooter.module.css';
+import Logo from '../../../../assets/logo.png';
 
 // The number of columns (numberOfColumns) affects styling
 
@@ -116,13 +117,17 @@ const SectionFooter = props => {
       <div className={css.footer}>
         <div className={classNames(css.content, getContentCss(numberOfColumns))}>
           <div>
-            <LinkedLogo
+          <div  className={css.logoLink}>
+        <img src={Logo} alt="Logo" />
+
+          </div>
+            {/* <LinkedLogo
               rootClassName={css.logoLink}
               logoClassName={css.logoWrapper}
               logoImageClassName={css.logoImage}
               linkToExternalSite={linkLogoToExternalSite}
               layout={logoLayout}
-            />
+            /> */}
           </div>
           <div className={css.sloganMobile}>
             <Field data={slogan} className={css.slogan} />

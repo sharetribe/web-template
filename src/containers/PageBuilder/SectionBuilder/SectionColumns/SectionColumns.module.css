@@ -15,18 +15,23 @@
 
 .twoColumns {
   composes: baseColumn;
+
   @media (--viewportMedium) {
     grid-template-columns: repeat(2, calc((100% - 32px) / 2));
   }
 }
+
 .threeColumns {
   composes: baseColumn;
+
   @media (--viewportMedium) {
     grid-template-columns: repeat(3, calc((100% - 2 * 32px) / 3));
   }
 }
+
 .fourColumns {
   composes: baseColumn;
+
   @media (--viewportMedium) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
   }
@@ -35,4 +40,34 @@
 .noSidePaddings {
   padding-left: 0;
   padding-right: 0;
+}
+
+.sectionPill {
+  font-family: Open Sans;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 0 auto 16px;
+  padding: 7px 15px;
+  border-radius: 100px;
+  background: #6B7A40;
+  justify-self: left;
+}
+
+.sectionPill2{
+      font-family: Open Sans;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #4B5320;
+   margin: 0 auto 16px;
+    padding: 7px 15px;
+    border-radius: 100px;
+    background: #6B7A401A;
+    justify-self: left;
 }

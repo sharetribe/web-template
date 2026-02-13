@@ -56,6 +56,7 @@
     "sitemap": "^9.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
+    "swiper": "^12.0.3",
     "unified": "^9.2.2"
   },
   "devDependencies": {

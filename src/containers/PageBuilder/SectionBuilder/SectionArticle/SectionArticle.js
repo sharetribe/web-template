@@ -4,8 +4,11 @@ import classNames from 'classnames';
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 
+// import IconArrowHead from '../../IconArrowHead';
+
 import SectionContainer from '../SectionContainer';
 import css from './SectionArticle.module.css';
+import { NamedLink } from '../../../../components';
 
 /**
  * @typedef {Object} BlockConfig
@@ -82,6 +85,21 @@ const SectionArticle = props => {
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
         </header>
+      ) : null}
+      {sectionId === 'ready-to-start' ? (
+        <div className={css.readyToStartButtons}>
+          <NamedLink className={css.listTackleButton} name="SearchPage">
+            List Your Tackle
+            <svg style={{fill:"transparent"}}width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3.33325 8H12.6666" stroke="white" style={{"stroke": "white;stroke-opacity:1;"}} stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M8 3.3335L12.6667 8.00016L8 12.6668" stroke="white" style={{"stroke": "white;stroke-opacity:1;"}} stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+          </NamedLink>
+          <NamedLink className={css.browseTackleButton} name="SearchPage">
+            Browse Tackle
+          </NamedLink>
+        </div>
       ) : null}
       {hasBlocks ? (
         <div

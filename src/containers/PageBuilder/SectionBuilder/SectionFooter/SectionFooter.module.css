@@ -1,7 +1,17 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .root {
-  border-top: 1px solid var(--colorGrey100);
+  /* border-top: 1px solid var(--colorGrey100); */
+  background: #4B5320 !important;
+  & a{
+    color: #E8E8E0;
+  }
+   & p{
+    color: #fff;
+   }
+    & div{
+    color: #fff;
+   }
 }
 
 .footer {
@@ -87,7 +97,7 @@
   display: inline-block;
   font-size: 12px;
   line-height: 16px;
-  color: var(--colorGrey600);
+  color: #fff;
   margin-top: 24px;
 }
 

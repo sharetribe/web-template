@@ -10,6 +10,7 @@ import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
 import css from './PageBuilder.module.css';
+import landingPage from './landingPage.module.css';
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;

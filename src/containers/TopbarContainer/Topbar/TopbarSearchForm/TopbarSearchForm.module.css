@@ -65,21 +65,21 @@
 }
 
 .desktopIcon {
-  height: var(--topbarHeightDesktop);
+  height: 37px;
   border: none;
   padding-top: 2px;
 
   display: flex;
   width: 24px;
   align-self: stretch;
-  background-color: var(--colorWhite);
+  background-color: transparent;
 }
 
 .desktopInput {
   composes: p from global;
   flex-grow: 1;
   /* Font */
-  height: var(--topbarHeightDesktop);
+  height: 37px;
   line-height: unset;
   border: none;
   padding-top: 0;
@@ -92,6 +92,12 @@
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 10px;
+  background: transparent;
+  font-family: Open Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
 
   &:hover,
   &:focus {
@@ -99,11 +105,13 @@
     outline: none;
     border: 0;
     box-shadow: none;
+      background: transparent;
   }
 
   &:hover::placeholder,
   &:focus::placeholder {
     color: var(--colorGrey700);
+      background: transparent;
   }
 
   /* Placeholder text might be too wide */
@@ -207,6 +215,8 @@
 
 .iconSvg {
   margin: auto;
+  width: 18px;
+  height: 18px;
 }
 
 .iconSvgGroup {

@@ -55,6 +55,7 @@ export { default as NamedRedirect } from './NamedRedirect/NamedRedirect';
 export { default as NotificationBadge } from './NotificationBadge/NotificationBadge';
 export { default as ListingCardThumbnail } from './ListingCardThumbnail/ListingCardThumbnail';
 export { default as OutsideClickHandler } from './OutsideClickHandler/OutsideClickHandler';
+export { default as ProductCard } from './ProductCard/ProductCard';
 export { default as Promised } from './Promised/Promised';
 export { default as PropertyGroup } from './PropertyGroup/PropertyGroup';
 export { default as RangeSlider } from './RangeSlider/RangeSlider';

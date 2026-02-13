@@ -1,5 +1,107 @@
 @import '../../../../styles/customMediaQueries.css';
 
+.filterButtonWrapper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: 8px 16px;
+  border: 1px solid #e1e8ed;
+  background: white;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #536471;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f7f9fa;
+    border-color: #1da1f2;
+    color: #1da1f2;
+  }
+
+  &:first-child {
+    background: #1da1f2;
+    color: white;
+    border-color: #1da1f2;
+  }
+}
+
+.headerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  & h2 {
+    font-family: Open Sans;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #4B5320;
+    margin: 0 0 26px;
+    padding: 7px 15px;
+    border-radius: 100px;
+    background: #6B7A401A;
+    justify-self: left;
+  }
+
+  & p {
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0px;
+    color: #444444;
+    padding: 0;
+    margin: 0;
+  }
+  & select{
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23444444' style='stroke:%23444444;stroke:color(display-p3 0.2667 0.2667 0.2667);stroke-opacity:1;' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat;
+    background-size: 20px;
+
+   
+  }
+}
+
+.featuredListingWrapper {
+  margin-bottom: 48px;
+  max-width: 100vw;
+  width: 100%;
+  overflow: hidden;
+}
+
+.featuredTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0f1419;
+  margin: 0 0 24px 0;
+}
+
+.featuredCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .carouselContainer {
   display: flex;
   align-items: center;
@@ -60,6 +162,7 @@
 .carouselArrowNext {
   right: 48px;
 }
+
 .notEnoughBlocks {
   @media (--viewportMedium) {
     display: none;
@@ -113,15 +216,12 @@
   @media (min-width: 1200px) {
     /* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
     /* Removing this uses the full page width for the slider pane */
-    transform: translateX(
-      max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
-    );
+    transform: translateX(max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px));
 
     &:last-of-type {
       padding-right: 32px;
-      width: calc(
-        min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
-      ); /* 32px (padding-right above) */
+      width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+      /* 32px (padding-right above) */
     }
   }
 }
@@ -172,4 +272,37 @@
       width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
     }
   }
+}
+
+.sliderContainer {
+  position: relative;
+  width: 100%;
+
+  
+}
+
+.swiper {
+  width: 100%;
+  padding-bottom: 10px;
+  background: #ffffff;
+  margin: 0 auto;
+  margin-bottom: 70px;
+  margin-top: 24px;
+  max-width: 1226px;
+  padding-left: 10px;
+    transform: translateX(0px);
+
+  @media (max-width:767px) {
+    margin-bottom: 50px;
+  }
+}
+
+.slide {
+  height: auto;
+  width: 286px !important;
+   background: white;
+  border-radius: 4px;
+  border-top: 1px solid #D0D0C8;
+box-shadow: 2px 4px 10px 2px #BDBDBD70;
+
 }

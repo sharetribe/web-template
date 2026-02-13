@@ -95,6 +95,12 @@ const SectionColumns = props => {
     >
       {hasHeaderFields ? (
         <header className={defaultClasses.sectionDetails}>
+          {sectionId == "why-choose"?
+          <div className={css.sectionPill}>Why Choose Tackl</div>
+          
+        : sectionId == "landing-how-works"?
+        <div className={css.sectionPill2}>Simple & Secure</div>
+        : null}
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />

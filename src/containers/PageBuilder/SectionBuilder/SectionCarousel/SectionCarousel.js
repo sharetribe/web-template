@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
+import ProductCard from '../../../../components/ProductCard';
 import css from './SectionCarousel.module.css';
 
 const KEY_CODE_ARROW_LEFT = 37;
@@ -85,6 +86,48 @@ const SectionCarousel = props => {
   const numberOfBlocks = blocks?.length;
   const hasBlocks = numberOfBlocks > 0;
 
+  const [swiperModules, setSwiperModules] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [activePageIndex, setActivePageIndex] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const swiperRef = useRef(null);
+  const nextButtonRef = useRef(null);
+  const prevButtonRef = useRef(null);
+
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isMounted) {
+      Promise.all([import('swiper/react'), import('swiper/modules')])
+        .then(([swiperReact, swiperModulesImport]) => {
+          if (
+            swiperReact?.Swiper &&
+            swiperReact?.SwiperSlide &&
+            swiperModulesImport?.Navigation
+          ) {
+            setSwiperModules({
+              Swiper: swiperReact.Swiper,
+              SwiperSlide: swiperReact.SwiperSlide,
+              Navigation: swiperModulesImport.Navigation,
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Failed to load Swiper in ExploreCards:', error);
+        });
+    }
+  }, [isMounted]);
+
+  const Swiper = swiperModules?.Swiper;
+  const SwiperSlide = swiperModules?.SwiperSlide;
+  const NavigationModule = swiperModules?.Navigation;
+
   useEffect(() => {
     const setCarouselWidth = () => {
       if (hasBlocks) {
@@ -139,6 +182,158 @@ const SectionCarousel = props => {
     }
   };
 
+
+  // Sample data for featured listings
+  const featuredListings = [
+    {
+      image: 'https://via.placeholder.com/300x200/4a90e2/ffffff?text=Rods',
+      title: 'Rods',
+      price: '£95.00',
+      location: 'Kent, England',
+      actionText: 'Buyer Crosscast',
+      actionIcon: '📦'
+    },
+    {
+      image: 'https://via.placeholder.com/300x200/7b68ee/ffffff?text=Reels',
+      title: 'Reels',
+      price: '£120.00',
+      location: 'Surrey, England',
+      actionText: 'Fast Shipping',
+      actionIcon: '🚚'
+    },
+    {
+      image: 'https://via.placeholder.com/300x200/50c878/ffffff?text=Lures',
+      title: 'Lures',
+      price: '£45.00',
+      location: 'Collection A419',
+      actionText: 'Collection A419',
+      actionIcon: '📍'
+    },
+    {
+      image: 'https://via.placeholder.com/300x200/ff6347/ffffff?text=Terminal+Tackle',
+      title: 'Terminal Tackle',
+      price: '£35.00',
+      originalPrice: '£60.00',
+      location: 'Collection A419',
+      actionText: 'Collection A419',
+      actionIcon: '📍'
+    }
+  ];
+
+  if (sectionId == "landing-shop-by-category") {
+    return (
+      <>
+        <SectionContainer
+          id={sectionId}
+          className={className}
+          rootClassName={rootClassName}
+          appearance={appearance}
+          options={fieldOptions}
+        >
+          {hasHeaderFields ? (
+            <header className={defaultClasses.sectionDetails}>
+              <div className={css.headerWrapper}>
+                <div>
+
+                  <Field data={title} className={defaultClasses.title} options={fieldOptions} />
+                  <Field data={description} className={defaultClasses.description} options={fieldOptions} />
+                </div>
+                <div className={css.filterButtonWrapper}>
+                  <select>
+                    <option value="all">All</option>
+                    <option value="rods">Rods</option>
+                    <option value="reels">Reels</option>
+                    <option value="lures">Lures</option>
+                    <option value="terminal-tackle">Terminal Tackle</option>
+                  </select>
+                </div>
+              </div>
+            </header>
+          ) : null}
+
+          <div className={css.featuredListingWrapper}>
+            {isMounted && Swiper && SwiperSlide && NavigationModule ? (
+              <>
+                <Swiper
+                  modules={[NavigationModule]}
+                  spaceBetween={20}
+                  slidesPerView={"auto"}
+                  navigation={{
+                    nextEl: nextButtonRef.current,
+                    prevEl: prevButtonRef.current,
+                  }}
+                  allowTouchMove
+                  watchOverflow
+                  speed={350}
+                  onSwiper={instance => {
+                    if (instance && typeof instance === 'object') {
+                      swiperRef.current = instance;
+                      // snapGrid length corresponds to number of pagination "pages"
+                      if (Array.isArray(instance.snapGrid) && instance.snapGrid.length > 0) {
+                        setPageCount(instance.snapGrid.length);
+                      }
+                      setActivePageIndex(instance.activeIndex || 0);
+                    }
+                  }}
+                  onSlideChange={instance => {
+                    if (instance && typeof instance === 'object') {
+                      setActivePageIndex(instance.activeIndex || 0);
+                    }
+                  }}
+                  breakpoints={{
+                    320: {
+                      slidesPerView: 1,
+                      spaceBetween: 16,
+                    },
+                    640: {
+                      slidesPerView: 2,
+                      spaceBetween: 20,
+                    },
+                    1024: {
+                      slidesPerView: 3,
+                      spaceBetween: 24,
+                    },
+                    1280: {
+                      slidesPerView: 4,
+                      spaceBetween: 32,
+                    },
+                  }}
+                  className={css.swiper}
+                >
+                  <div className={css.featuredCards}>
+                    {featuredListings.map((listing, index) => (
+                      <SwiperSlide key={index} className={css.slide}>
+
+                        <ProductCard
+                          key={index}
+                          image={listing.image}
+                          title={listing.title}
+                          price={listing.price}
+                          originalPrice={listing.originalPrice}
+                          location={listing.location}
+                          actionText={listing.actionText}
+                          actionIcon={listing.actionIcon}
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </div>
+                </Swiper>
+              </>
+            ) : (
+              <div className={css.swiper}>
+
+              </div>
+            )}
+          </div>
+
+        </SectionContainer>
+      </>
+    )
+
+  }
+
+
+
   return (
     <SectionContainer
       id={sectionId}
@@ -154,6 +349,7 @@ const SectionCarousel = props => {
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
         </header>
       ) : null}
+
       {hasBlocks ? (
         <div className={css.carouselContainer} id={sliderContainerId}>
           <div
