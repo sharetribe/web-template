@@ -1163,6 +1163,55 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Purchase: edit flow with no description', async () => {
+    const listingTypesPurchaseNoDescription = [
+      {
+        ...listingTypesPurchase[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypesPurchaseNoDescription, listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
   it('Booking (day): edit flow on details tab', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesBookingDay, listingFieldsBooking);
@@ -2300,6 +2349,175 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Booking (day): edit flow with no description', async () => {
+    const listingTypeDailyBookingNoDescription = [
+      {
+        ...listingTypesBookingDay[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypeDailyBookingNoDescription, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-day', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'rent-bicycles-daily',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'day',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('Booking (night): edit flow with no description', async () => {
+    const listingTypeNightlyBookingNoDescription = [
+      {
+        ...listingTypesBookingNightly[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypeNightlyBookingNoDescription, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-night', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-nightly',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'night',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('Booking (hour): edit flow with no description', async () => {
+    const listingTypesBookingHourlyNoDescription = [
+      {
+        ...listingTypesBookingHourly[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypesBookingHourlyNoDescription, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-hour', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-hourly',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'hour',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
   it('Inquiry: edit flow on details tab', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
@@ -2628,6 +2846,50 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Inquiry: edit flow with no description', async () => {
+    const listingTypesInquiryNoDescription = [
+      {
+        ...listingTypesInquiry[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+
+    const config = getConfig(listingTypesInquiryNoDescription, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-inquiry', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
   it('Negotiation: edit flow with only details and style panels', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesNegotiation, []);
@@ -2776,6 +3038,49 @@ describe('EditListingPage', () => {
 
     const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
     expect(queryByText(tabLabelPhotos)).not.toBeInTheDocument();
+  });
+
+  it('Negotiation: edit flow with no description', async () => {
+    const listingTypesNegotiationNoDescription = [
+      {
+        ...listingTypesNegotiation[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypesNegotiationNoDescription, []);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-negotiation', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'negotiation-offer',
+        transactionProcessAlias: 'default-negotiation/release-1',
+        unitType: 'request',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
   });
 });
 
