@@ -216,6 +216,7 @@ export const ListingPageComponent = props => {
   const validListingTypes = listingConfig.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showListingImage = requireListingImage(foundListingTypeConfig);
+  const showDescription = foundListingTypeConfig?.defaultListingFields?.description;
 
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const isBooking = isBookingProcess(processName);
@@ -393,7 +394,7 @@ export const ListingPageComponent = props => {
                 </H3>
               )}
             </div>
-            <SectionText text={description} showAsIngress />
+            {showDescription && <SectionText text={description} showAsIngress />}
 
             <CustomListingFields
               publicData={publicData}
