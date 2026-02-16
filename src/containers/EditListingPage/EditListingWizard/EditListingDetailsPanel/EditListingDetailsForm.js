@@ -5,6 +5,8 @@ import classNames from 'classnames';
 
 // Import util modules
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
+import { displayDescription } from '../../../../util/configHelpers.js';
+import { useConfiguration } from '../../../../context/configurationContext.js';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import {
   isFieldForCategory,
@@ -274,6 +276,11 @@ const AddListingFields = props => {
   return <>{fields}</>;
 };
 
+// Return configuration for given listingType
+const getListingTypeConfig = (config, listingType) => {
+  return config.listing.listingTypes?.find(config => config.listingType === listingType);
+};
+
 /**
  * Form that asks title, description, transaction process and unit type for pricing
  * In addition, it asks about custom fields according to marketplace-custom-config.js
@@ -366,7 +373,14 @@ const EditListingDetailsForm = props => (
       const showCategories = listingType && hasCategories;
 
       const showTitle = hasCategories ? allCategoriesChosen : listingType;
-      const showDescription = hasCategories ? allCategoriesChosen : listingType;
+
+      const config = useConfiguration();
+      const listingTypeConfig = getListingTypeConfig(config, listingType);
+      const showDescriptionMaybe = displayDescription(listingTypeConfig);
+      const showDescription = hasCategories
+        ? allCategoriesChosen && showDescriptionMaybe
+        : showDescriptionMaybe;
+
       const showListingFields = hasCategories ? allCategoriesChosen : listingType;
 
       const classes = classNames(css.root, className);
