@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { displayDescription } from '../../../util/configHelpers.js';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
@@ -232,12 +233,19 @@ const tabCompleted = (tab, listing, config) => {
     pickupEnabled,
     cardStyle,
   } = publicData || {};
+  const listingTypeConfig = config.listing.listingTypes.find(
+    config => config.listingType === listingType
+  );
+
+  const descriptionRequired = displayDescription(listingTypeConfig);
+  const hasValidDescription = descriptionRequired ? description : true;
+
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DETAILS:
       return !!(
-        description &&
+        (!descriptionRequired || hasValidDescription) &&
         title &&
         listingType &&
         transactionProcessAlias &&

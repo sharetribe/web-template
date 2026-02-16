@@ -40,6 +40,9 @@ const listingTypesBookingDay = [
     },
     unitType: 'day',
     availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesBookingDayWithSeats = [
@@ -51,6 +54,9 @@ const listingTypesBookingDayWithSeats = [
     },
     unitType: 'day',
     availabilityType: 'multipleSeats',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesBookingNightly = [
@@ -62,6 +68,9 @@ const listingTypesBookingNightly = [
     },
     unitType: 'night',
     availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesBookingHourly = [
@@ -73,6 +82,9 @@ const listingTypesBookingHourly = [
     },
     unitType: 'hour',
     availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesPurchase = [
@@ -84,6 +96,9 @@ const listingTypesPurchase = [
     },
     unitType: 'item',
     stockType: 'multipleItems',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 
@@ -96,6 +111,9 @@ const listingTypesInquiry = [
       alias: 'default-inquiry/release-1',
     },
     unitType: 'inquiry',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 

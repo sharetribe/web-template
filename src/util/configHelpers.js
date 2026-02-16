@@ -959,6 +959,10 @@ const validListingTypes = listingTypes => {
   return validTypes;
 };
 
+export const displayDescription = listingTypeConfig => {
+  return listingTypeConfig?.defaultListingFields?.description !== false;
+};
+
 export const displayPrice = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.price !== false;
 };
