@@ -14,13 +14,14 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-const chalk = require('react-dev-utils/chalk');
+const path = require('path');
+const chalk = require('chalk');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-const printBuildError = require('react-dev-utils/printBuildError');
+const checkRequiredFiles = require(path.join(__dirname, '..', 'config', 'react-dev-utils', 'checkRequiredFiles'));
+const formatWebpackMessages = require(path.join(__dirname, '..', 'config', 'react-dev-utils', 'formatWebpackMessages'));
+const printBuildError = require(path.join(__dirname, '..', 'config', 'react-dev-utils', 'printBuildError'));
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
