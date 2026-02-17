@@ -711,7 +711,7 @@ module.exports = function(webpackEnv, target = 'web') {
           cwd: paths.appPath,
           resolvePluginsRelativeTo: __dirname,
           baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
+            extends: [path.resolve(__dirname, 'eslint-config-react-app/base.js')],
             rules: {
               ...(!hasJsxRuntime && {
                 'react/react-in-jsx-scope': 'error',
