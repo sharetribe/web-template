@@ -21,7 +21,7 @@ const postcssOptionsPlugins = [
         flexbox: 'no-2009',
       },
       features: {
-        "custom-properties": false, //  stage 3, but browser support is good.
+        'custom-properties': false, //  stage 3, but browser support is good.
         'nesting-rules': true, // stage 1
         'custom-media-queries': true, // stage 2
       },
@@ -41,8 +41,7 @@ const checkConfigStructure = config => {
   // the config with the correct assumptions.
   const hasRules = config?.module?.rules?.length > 0;
   const foundRuleWithOneOfArray =
-    hasRules &&
-    config.module.rules.find(rule => rule.oneOf?.length === 8);
+    hasRules && config.module.rules.find(rule => rule.oneOf?.length === 8);
 
   const hasCssLoader =
     foundRuleWithOneOfArray &&
@@ -52,12 +51,13 @@ const checkConfigStructure = config => {
   const hasOutput = !!config.output;
   const hasOptimization = !!config.optimization;
 
-  const configStructureKnown = hasRules
-        && foundRuleWithOneOfArray
-        && hasCssLoader
-        && hasPlugins
-        && hasOutput
-        && hasOptimization;
+  const configStructureKnown =
+    hasRules &&
+    foundRuleWithOneOfArray &&
+    hasCssLoader &&
+    hasPlugins &&
+    hasOutput &&
+    hasOptimization;
 
   if (!configStructureKnown) {
     throw new Error(
@@ -92,9 +92,7 @@ const applySharetribeConfigs = (config, options) => {
     ];
 
     // Use a 'node' subdirectory for the server build
-    newConfig.output.path = isEnvProduction
-      ? path.join(paths.appBuild, 'node')
-      : undefined;
+    newConfig.output.path = isEnvProduction ? path.join(paths.appBuild, 'node') : undefined;
 
     // Set build output specifically for node
     newConfig.output.libraryTarget = 'commonjs2';
