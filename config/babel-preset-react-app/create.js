@@ -46,7 +46,7 @@ module.exports = function(api, opts, env) {
     const projectRoot = process.cwd();
     const projectNodeModules = path.join(projectRoot, 'node_modules');
     const runtimePackageJson = path.join(projectNodeModules, '@babel', 'runtime', 'package.json');
-    
+
     // Check if @babel/runtime exists in project root's node_modules
     if (require('fs').existsSync(runtimePackageJson)) {
       absoluteRuntimePath = path.dirname(runtimePackageJson);
@@ -102,7 +102,7 @@ module.exports = function(api, opts, env) {
           // Adds component stack to warning messages
           // When using automatic runtime, __self and __source are handled automatically
           // by the runtime itself, so we don't need to add them via development mode
-          development: opts.runtime === 'automatic' ? false : (isEnvDevelopment || isEnvTest),
+          development: opts.runtime === 'automatic' ? false : isEnvDevelopment || isEnvTest,
           // Will use the native built-in instead of trying to polyfill
           // behavior for any plugins that require one.
           ...(opts.runtime !== 'automatic' ? { useBuiltIns: true } : {}),
