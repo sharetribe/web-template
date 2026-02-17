@@ -19,7 +19,6 @@
     "autosize": "^6.0.1",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
-    "babel-plugin-named-asset-import": "^0.3.8",
     "babel-preset-react-app": "^10.0.1",
     "basic-auth": "^2.0.1",
     "bfj": "^9.1.3",
