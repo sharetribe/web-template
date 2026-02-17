@@ -39,13 +39,15 @@ const reactRefreshRuntimeEntry = require.resolve('react-refresh/runtime');
 const reactRefreshWebpackPluginRuntimeEntry = require.resolve(
   '@pmmmwh/react-refresh-webpack-plugin'
 );
-const babelRuntimeEntry = require.resolve('babel-preset-react-app');
+const babelRuntimeEntry = require.resolve('./babel-preset-react-app');
+// Resolve @babel/runtime helpers from project root to avoid nested node_modules paths
+const projectRoot = paths.appPath;
 const babelRuntimeEntryHelpers = require.resolve(
   '@babel/runtime/helpers/esm/assertThisInitialized',
-  { paths: [babelRuntimeEntry] }
+  { paths: [path.join(projectRoot, 'node_modules'), projectRoot] }
 );
 const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
-  paths: [babelRuntimeEntry],
+  paths: [path.join(projectRoot, 'node_modules'), projectRoot],
 });
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
@@ -404,11 +406,11 @@ module.exports = function(webpackEnv, target = 'web') {
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides'
+                  './babel-preset-react-app/webpack-overrides'
                 ),
                 presets: [
                   [
-                    require.resolve('babel-preset-react-app'),
+                    require.resolve('./babel-preset-react-app'),
                     {
                       runtime: hasJsxRuntime ? 'automatic' : 'classic',
 
@@ -416,6 +418,11 @@ module.exports = function(webpackEnv, target = 'web') {
                       // in Node, leave as undefined otherwise to get
                       // the default behavior.
                       useESModules: isTargetNode ? false : undefined,
+                      
+                      // Disable absoluteRuntime to avoid ModuleScopePlugin errors
+                      // When using local babel-preset-react-app, we control @babel/runtime version
+                      // so absolute paths aren't needed and cause issues with ModuleScopePlugin
+                      absoluteRuntime: false,
                     },
                   ],
                 ],
@@ -451,7 +458,7 @@ module.exports = function(webpackEnv, target = 'web') {
                 compact: false,
                 presets: [
                   [
-                    require.resolve('babel-preset-react-app/dependencies'),
+                    require.resolve('./babel-preset-react-app/dependencies'),
                     { helpers: true },
                   ],
                 ],
