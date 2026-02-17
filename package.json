@@ -21,7 +21,6 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-named-asset-import": "^0.3.8",
     "babel-preset-react-app": "^10.0.1",
-    "balanced-match": "^2.0.0",
     "basic-auth": "^2.0.1",
     "bfj": "^9.1.3",
     "body-parser": "^2.2.2",
