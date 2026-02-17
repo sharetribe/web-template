@@ -46,7 +46,7 @@ module.exports = function(api, opts) {
     const projectRoot = process.cwd();
     const projectNodeModules = path.join(projectRoot, 'node_modules');
     const runtimePackageJson = path.join(projectNodeModules, '@babel', 'runtime', 'package.json');
-    
+
     // Check if @babel/runtime exists in project root's node_modules
     if (require('fs').existsSync(runtimePackageJson)) {
       absoluteRuntimePath = path.dirname(runtimePackageJson);
