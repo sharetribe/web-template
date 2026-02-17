@@ -3121,19 +3121,19 @@
   dependencies:
     "@babel/plugin-syntax-dynamic-import" "^7.7.4"
 
-"@loadable/component@^5.16.4":
-  version "5.16.4"
-  resolved "https://registry.yarnpkg.com/@loadable/component/-/component-5.16.4.tgz#583cb65945a5061ca3c6b90eb34835c154283ff4"
-  integrity sha512-fJWxx9b5WHX90QKmizo9B+es2so8DnBthI1mbflwCoOyvzEwxiZ/SVDCTtXEnHG72/kGBdzr297SSIekYtzSOQ==
+"@loadable/component@^5.16.7":
+  version "5.16.7"
+  resolved "https://registry.yarnpkg.com/@loadable/component/-/component-5.16.7.tgz#22de0bf3c037bc5bdf3d8dc3ef6b301732c2a8e5"
+  integrity sha512-XvkFixLUOTEaj8lI7uwc4nf8Wmq3IulYG7SZHCWcPm/Li5gjJDFfIkgWOLPnD7jqPJVtAG9bEz4SCek+SpHYYg==
   dependencies:
     "@babel/runtime" "^7.12.18"
     hoist-non-react-statics "^3.3.1"
     react-is "^16.12.0"
 
-"@loadable/server@^5.16.5":
-  version "5.16.5"
-  resolved "https://registry.yarnpkg.com/@loadable/server/-/server-5.16.5.tgz#6cbe8a9cb6b96cb09e1cdfa232e161ba2ab8ce38"
-  integrity sha512-y87OMpi43B8mGg/r4Fy6PLkisj0c3SiQqxHqxmCAK1j3UUuYyq1EPLSKTjnrMBUerROA5R0isHobHCNfD20Cnw==
+"@loadable/server@^5.16.7":
+  version "5.16.7"
+  resolved "https://registry.yarnpkg.com/@loadable/server/-/server-5.16.7.tgz#b212061c8b7e1dc30b84a4efcb51dc6658444428"
+  integrity sha512-wdRmljftCjzyh75xeyc4+3UL2DGz25/YUrB7BT7VTgVRovHmDThl7feu/01w2C+vSxBqzpMkiuPjSftFPL/Fqw==
   dependencies:
     lodash "^4.17.15"
 
