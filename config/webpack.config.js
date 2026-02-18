@@ -431,7 +431,7 @@ module.exports = function(webpackEnv, target = 'web') {
             // Unlike the application JS, we only compile the standard ES features.
             {
               test: /\.(js|mjs)$/,
-              exclude: /@babel(?:\/|\\{1,2})runtime/,
+              exclude: /@babel(?:\/|\\{1,2})runtime|webpack-dev-server/,
               loader: require.resolve('babel-loader'),
               options: {
                 babelrc: false,

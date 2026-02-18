@@ -16,6 +16,7 @@ const sockPort = process.env.WDS_SOCKET_PORT;
 
 module.exports = function(proxy, allowedHost) {
   const disableFirewall = !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true';
+  const httpsConfig = getHttpsConfig();
   return {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
     // websites from potentially accessing local content through DNS rebinding:
@@ -91,7 +92,13 @@ module.exports = function(proxy, allowedHost) {
       publicPath: paths.publicUrlOrPath.slice(0, -1),
     },
 
-    https: getHttpsConfig(),
+    // Migrated from https option to server option for webpack-dev-server v5
+    ...(httpsConfig && {
+      server: {
+        type: 'https',
+        ...(typeof httpsConfig === 'object' && { options: httpsConfig }),
+      },
+    }),
     host,
     historyApiFallback: {
       // Paths with dots should still use the history fallback.
