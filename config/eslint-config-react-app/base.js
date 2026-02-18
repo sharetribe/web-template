@@ -39,8 +39,9 @@ module.exports = {
     requireConfigFile: false,
     babelOptions: {
       // Use local babel-preset-react-app instead of npm package
+      // Use index.js which auto-detects environment from NODE_ENV/BABEL_ENV
       // require.resolve ensures we get an absolute path that Babel can use
-      presets: [require.resolve('../babel-preset-react-app/prod')],
+      presets: [require.resolve('../babel-preset-react-app')],
     },
   },
 
