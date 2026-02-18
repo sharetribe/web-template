@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Support `helpText` from listing and user field asset configs. Displayed below form fields
+  via new HelpText component.[#778](https://github.com/sharetribe/web-template/pull/778)
+
 ## [v10.11.0] 2026-02-12
 
 - [add] Add AGENTS.md file to provide context for LLMs.

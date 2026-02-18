@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { ValidationError } from '../../components';
+import { ValidationError, HelpText } from '../../components';
 
 import css from './FieldSelect.module.css';
 
@@ -13,6 +13,7 @@ const FieldSelectComponent = props => {
     labelClassName,
     id,
     label,
+    helpText,
     input,
     meta,
     children,
@@ -58,6 +59,7 @@ const FieldSelectComponent = props => {
         </label>
       ) : null}
       <select {...selectProps}>{children}</select>
+      <HelpText helpText={helpText} />
       <ValidationError fieldMeta={meta} />
     </div>
   );
