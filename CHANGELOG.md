@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Support `helpText` from listing and user field asset configs. Displayed below form fields
+  via new HelpText component.[#778](https://github.com/sharetribe/web-template/pull/778)
 - [fix] Modify listing card price classes
   [#796](https://github.com/sharetribe/web-template/pull/796)
 
