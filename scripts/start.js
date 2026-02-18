@@ -120,16 +120,18 @@ checkBrowsers(paths.appPath, isInteractive)
 
     ['SIGINT', 'SIGTERM'].forEach(function(sig) {
       process.on(sig, function() {
-        devServer.close();
-        process.exit();
+        devServer.stopCallback(() => {
+          process.exit();
+        });
       });
     });
 
     if (process.env.CI !== 'true') {
       // Gracefully exit when stdin ends
       process.stdin.on('end', function() {
-        devServer.close();
-        process.exit();
+        devServer.stopCallback(() => {
+          process.exit();
+        });
       });
     }
   })
