@@ -9,7 +9,7 @@
 const address = require('address');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
+const { URL } = require('url');
 const chalk = require('chalk');
 const detect = require('detect-port-alt');
 const isRoot = require('is-root');
@@ -21,20 +21,17 @@ const forkTsCheckerWebpackPlugin = require('./ForkTsCheckerWebpackPlugin');
 const isInteractive = process.stdout.isTTY;
 
 function prepareUrls(protocol, host, port, pathname = '/') {
-  const formatUrl = hostname =>
-    url.format({
-      protocol,
-      hostname,
-      port,
-      pathname,
-    });
-  const prettyPrintUrl = hostname =>
-    url.format({
-      protocol,
-      hostname,
-      port: chalk.bold(port),
-      pathname,
-    });
+  // Ensure pathname is valid - default to '/' if empty
+  const validPathname = pathname || '/';
+  const formatUrl = hostname => {
+    const urlObj = new URL(validPathname, `${protocol}://${hostname}:${port}`);
+    return urlObj.toString();
+  };
+  const prettyPrintUrl = hostname => {
+    // For pretty printing, we need to format manually since chalk.bold() 
+    // can't be used in URL constructor
+    return `${protocol}://${hostname}:${chalk.bold(port)}${validPathname}`;
+  };
 
   const isUnspecifiedHost = host === '0.0.0.0' || host === '::';
   let prettyHost, lanUrlForConfig, lanUrlForTerminal;
@@ -205,32 +202,36 @@ function createCompiler({ appName, config, urls, useYarn, useTypeScript, webpack
 }
 
 function resolveLoopback(proxy) {
-  const o = url.parse(proxy);
-  o.host = undefined;
-  if (o.hostname !== 'localhost') {
+  try {
+    const urlObj = new URL(proxy);
+    if (urlObj.hostname !== 'localhost') {
+      return proxy;
+    }
+    // Unfortunately, many languages (unlike node) do not yet support IPv6.
+    // This means even though localhost resolves to ::1, the application
+    // must fall back to IPv4 (on 127.0.0.1).
+    // We can re-enable this in a few years.
+    /*try {
+      urlObj.hostname = address.ipv6() ? '::1' : '127.0.0.1';
+    } catch (_ignored) {
+      urlObj.hostname = '127.0.0.1';
+    }*/
+
+    try {
+      // Check if we're on a network; if we are, chances are we can resolve
+      // localhost. Otherwise, we can just be safe and assume localhost is
+      // IPv4 for maximum compatibility.
+      if (!address.ip()) {
+        urlObj.hostname = '127.0.0.1';
+      }
+    } catch (_ignored) {
+      urlObj.hostname = '127.0.0.1';
+    }
+    return urlObj.toString();
+  } catch (err) {
+    // If URL parsing fails, return the original proxy
     return proxy;
   }
-  // Unfortunately, many languages (unlike node) do not yet support IPv6.
-  // This means even though localhost resolves to ::1, the application
-  // must fall back to IPv4 (on 127.0.0.1).
-  // We can re-enable this in a few years.
-  /*try {
- o.hostname = address.ipv6() ? '::1' : '127.0.0.1';
- } catch (_ignored) {
- o.hostname = '127.0.0.1';
- }*/
-
-  try {
-    // Check if we're on a network; if we are, chances are we can resolve
-    // localhost. Otherwise, we can just be safe and assume localhost is
-    // IPv4 for maximum compatibility.
-    if (!address.ip()) {
-      o.hostname = '127.0.0.1';
-    }
-  } catch (_ignored) {
-    o.hostname = '127.0.0.1';
-  }
-  return url.format(o);
 }
 
 // We need to provide a custom onError function for httpProxyMiddleware.
