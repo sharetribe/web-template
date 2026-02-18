@@ -4,7 +4,7 @@ import { FieldSelect } from '../../components';
 
 const FieldBoolean = props => {
   const intl = useIntl();
-  const { placeholder, ...rest } = props;
+  const { placeholder, helpText, ...rest } = props;
   const trueLabel = intl.formatMessage({
     id: 'FieldBoolean.yes',
   });
@@ -31,7 +31,7 @@ const FieldBoolean = props => {
     },
   };
   return (
-    <FieldSelect {...selectProps}>
+    <FieldSelect {...selectProps} helpText={helpText}>
       <option value="">{placeholder}</option>
       <option value="true">{trueLabel}</option>
       <option value="false">{falseLabel}</option>

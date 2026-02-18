@@ -19,7 +19,7 @@ const ESCAPE_TEXT_REPLACEMENTS = {
 
 // An example how you could sanitize text content.
 // This swaps some coding related characters to less dangerous ones
-const sanitizeText = str =>
+export const sanitizeText = str =>
   str == null
     ? str
     : typeof str === 'string'

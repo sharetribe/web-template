@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { ValidationError, ExpandingTextarea } from '../../components';
+import { ValidationError, ExpandingTextarea, HelpText } from '../../components';
 
 import css from './FieldTextInput.module.css';
 
@@ -14,6 +14,7 @@ const FieldTextInputComponent = props => {
     inputRootClass,
     labelClassName,
     customErrorText,
+    helpText,
     id,
     label,
     input,
@@ -87,6 +88,7 @@ const FieldTextInputComponent = props => {
         </label>
       ) : null}
       {isTextarea ? <ExpandingTextarea {...inputProps} /> : <input {...inputProps} />}
+      <HelpText helpText={helpText} />
       {hideErrorMessage ? null : <ValidationError fieldMeta={fieldMeta} />}
     </div>
   );
