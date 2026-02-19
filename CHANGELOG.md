@@ -14,12 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.12.0] 2026-02-19
+
 - [add] Add transaction fields based on Console configuration
 
   This PR prepares the codebase for using transaction field configurations that will be a part of
   the listing type asset. Operators can define transaction fields per listing type.
 
   [#737](https://github.com/sharetribe/web-template/pull/737)
+
+  [v10.12.0]: https://github.com/sharetribe/web-template/compare/v10.11.0...v10.12.0
 
 ## [v10.11.0] 2026-02-12
 
