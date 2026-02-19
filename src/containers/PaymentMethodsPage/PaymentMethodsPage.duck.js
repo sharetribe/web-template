@@ -79,7 +79,7 @@ const paymentMethodsPageSlice = createSlice({
         state.setupIntent = action.payload;
       })
       .addCase(createStripeSetupIntentThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.setupIntentInProgress = false;
         state.setupIntentError = action.payload;
       })
@@ -92,7 +92,7 @@ const paymentMethodsPageSlice = createSlice({
         state.stripeCustomerFetched = true;
       })
       .addCase(stripeCustomerThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.stripeCustomerFetchError = action.payload;
       });
   },

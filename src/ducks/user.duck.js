@@ -336,7 +336,6 @@ const userSlice = createSlice({
         state.currentUserShowTimestamp = action.payload ? new Date().getTime() : 0;
       })
       .addCase(fetchCurrentUserThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload);
         state.currentUserShowError = action.payload;
       })
@@ -348,7 +347,7 @@ const userSlice = createSlice({
         state.currentUserHasListings = action.payload.hasListings;
       })
       .addCase(fetchCurrentUserHasListingsThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line
+        console.error(action.payload);
         state.currentUserHasListingsError = action.payload;
       })
       // fetchCurrentUserNotifications
@@ -360,7 +359,7 @@ const userSlice = createSlice({
         state.currentUserOrderNotificationCount = action.payload.orderNotificationsCount;
       })
       .addCase(fetchCurrentUserNotificationsThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line
+        console.error(action.payload);
         state.currentUserNotificationCountError = action.payload;
       })
       // fetchCurrentUserHasOrders
@@ -371,7 +370,7 @@ const userSlice = createSlice({
         state.currentUserHasOrders = action.payload.hasOrders;
       })
       .addCase(fetchCurrentUserHasOrdersThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line
+        console.error(action.payload);
         state.currentUserHasOrdersError = action.payload;
       })
       // sendVerificationEmail
