@@ -112,9 +112,8 @@ export const sanitizeUser = (entity, config = {}) => {
     return publicData ? { publicData: sanitizedConfiguredPublicData } : {};
   };
   const sanitizeMetadata = metadata => {
-    // TODO: If you add user-generated metadata through Integration API,
-    // you should probably sanitize it here.
-    return metadata ? { metadata } : {};
+    const sanitized = sanitizeConfiguredMetadata(metadata, config);
+    return metadata ? { metadata: sanitized } : {};
   };
 
   const profileMaybe = profile
@@ -202,6 +201,28 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
   }, {});
 };
 
+const sanitizeConfiguredMetadata = (metadata, config = {}) => {
+  const metadataObj = metadata || {};
+  const listingMetadataConfigs = config?.listingFields?.filter(d => d.scope === 'metadata') || [];
+  const userMetadataConfigs = config?.userFields?.filter(d => d.scope === 'metadata') || [];
+  const metadataFieldConfigs = [...listingMetadataConfigs, ...userMetadataConfigs];
+
+  return Object.entries(metadataObj).reduce((sanitized, entry) => {
+    const [key, value] = entry;
+    const foundFieldConfig = metadataFieldConfigs.find(d => d.key === key);
+    const sanitizedValue = foundFieldConfig
+      ? sanitizedExtendedDataFields(value, foundFieldConfig)
+      : typeof value === 'string'
+      ? sanitizeText(value)
+      : value;
+
+    return {
+      ...sanitized,
+      [key]: sanitizedValue,
+    };
+  }, {});
+};
+
 /**
  * Sanitize listing entity.
  * If you add public data, you should probably sanitize it here.
@@ -211,7 +232,7 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
  */
 export const sanitizeListing = (entity, config = {}) => {
   const { attributes, ...restEntity } = entity;
-  const { title, description, publicData, ...restAttributes } = attributes || {};
+  const { title, description, publicData, metadata, ...restAttributes } = attributes || {};
 
   const sanitizeLocation = location => {
     const { address, building } = location || {};
@@ -228,12 +249,18 @@ export const sanitizeListing = (entity, config = {}) => {
     return publicData ? { publicData: { ...locationMaybe, ...sanitizedConfiguredPublicData } } : {};
   };
 
+  const sanitizeMetadata = metadata => {
+    const sanitized = sanitizeConfiguredMetadata(metadata, config);
+    return metadata ? { metadata: sanitized } : {};
+  };
+
   const attributesMaybe = attributes
     ? {
         attributes: {
           title: sanitizeText(title),
           description: sanitizeText(description),
           ...sanitizePublicData(publicData),
+          ...sanitizeMetadata(metadata),
           ...restAttributes,
         },
       }
