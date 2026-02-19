@@ -57,6 +57,7 @@ import {
   NamedRedirect,
   OrderPanel,
   LayoutSingleColumn,
+  SectionText,
 } from '../../components';
 
 // Related components and modules
@@ -84,7 +85,6 @@ import {
   priceForSchemaMaybe,
 } from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
@@ -393,7 +393,7 @@ export const ListingPageComponent = props => {
                 </H3>
               )}
             </div>
-            <SectionTextMaybe text={description} showAsIngress />
+            <SectionText text={description} showAsIngress />
 
             <CustomListingFields
               publicData={publicData}

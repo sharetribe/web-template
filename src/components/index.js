@@ -124,6 +124,7 @@ export { default as UserNav } from './UserNav/UserNav';
 
 export { default as Avatar, AvatarSmall, AvatarMedium, AvatarLarge } from './Avatar/Avatar';
 export { default as CustomExtendedDataField } from './CustomExtendedDataField/CustomExtendedDataField';
+export const CustomExtendedDataSection = loadable(() => import(/* webpackChunkName: "CustomExtendedDataSection" */ './CustomExtendedDataSection/CustomExtendedDataSection'));
 export { default as OrderBreakdown } from './OrderBreakdown/OrderBreakdown';
 export { default as OrderPanel } from './OrderPanel/OrderPanel';
 export { default as ListingCard } from './ListingCard/ListingCard';
@@ -131,9 +132,11 @@ export { default as Map } from './Map/Map';
 export { default as Page } from './Page/Page';
 export { default as Reviews } from './Reviews/Reviews';
 export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails';
+export const SectionText = loadable(() => import(/* webpackChunkName: "SectionText" */ './CustomExtendedDataSection/SectionText'));
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as TopbarSimplified } from './TopbarSimplified/TopbarSimplified';
+
 
 // Forms
 export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/StripeConnectAccountForm';

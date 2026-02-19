@@ -77,3 +77,9 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.detailsRow {
+  &:first-child {
+    padding-top: 0px;
+  }
+}

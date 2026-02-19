@@ -28,6 +28,9 @@ import {
   isBookingProcess,
   NEGOTIATION_PROCESS_NAME,
   OFFER,
+  isPurchaseProcess,
+  PURCHASE_PROCESS_NAME,
+  isInquiryProcess,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -57,6 +60,7 @@ import ActionButtons, {
 } from './ActionButtons/ActionButtons';
 import RequestQuote from './RequestQuote/RequestQuote';
 import Offer from './Offer/Offer';
+import TransactionFields from './TransactionFields/TransactionFields.js';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
@@ -230,7 +234,6 @@ const getDataValidationResult = (transaction, process) => {
  * @param {propTypes.error} props.fetchMessagesError - The fetch messages error
  * @param {number} props.totalMessagePages - The total message pages
  * @param {number} props.oldestMessagePageFetched - The oldest message page fetched
- * @param {propTypes.uuid} props.initialMessageFailedToTransaction - The initial message failed to be send to transaction
  * @param {boolean} props.sendMessageInProgress - Whether the send message is in progress
  * @param {propTypes.error} props.sendMessageError - The send message error
  * @param {boolean} props.savePaymentMethodFailed - Whether the payment method is saved
@@ -277,7 +280,6 @@ export const TransactionPageComponent = props => {
   const intl = useIntl();
   const {
     currentUser,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed = false,
     fetchMessagesError,
     fetchMessagesInProgress,
@@ -559,11 +561,6 @@ export const TransactionPageComponent = props => {
     </div>
   );
 
-  const initialMessageFailed = !!(
-    initialMessageFailedToTransaction &&
-    initialMessageFailedToTransaction.uuid === transaction?.id?.uuid
-  );
-
   const otherUserDisplayName = isOwnOrder ? (
     <UserDisplayName user={provider} intl={intl} />
   ) : (
@@ -659,6 +656,21 @@ export const TransactionPageComponent = props => {
       ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
       : true;
 
+  const customTransactionFieldProps = (role = 'customer', isOfferOrRequest = false) => ({
+    protectedData: transaction?.attributes.protectedData,
+    intl,
+    role,
+    transactionFieldConfigs: foundListingTypeConfig?.transactionFields,
+    isCustomerBanned,
+    isProviderBanned,
+    isOfferOrRequest,
+    isNegotiationProcess,
+    isBookingProcess: isBookingProcess(processName),
+    isPurchaseProcess: processName === PURCHASE_PROCESS_NAME,
+    isInquiryProcess: processName === INQUIRY_PROCESS_NAME,
+    isRegularNegotiation,
+  });
+
   const actionButtonContainer = isMobile ? 'mobile' : 'desktop';
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -671,9 +683,9 @@ export const TransactionPageComponent = props => {
       customer={customer}
       provider={provider}
       transitions={txTransitions}
+      processName={processName}
       protectedData={transaction?.attributes?.protectedData}
       messages={messages}
-      initialMessageFailed={initialMessageFailed}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
       sendMessageInProgress={sendMessageInProgress}
@@ -717,6 +729,9 @@ export const TransactionPageComponent = props => {
           fetchMessagesInProgress={fetchMessagesInProgress}
         />
       }
+      transactionFieldsComponent={
+        <TransactionFields {...customTransactionFieldProps('customer')} />
+      }
       requestQuote={
         <RequestQuote
           transaction={transaction}
@@ -724,6 +739,9 @@ export const TransactionPageComponent = props => {
           isCustomerBanned={isCustomerBanned}
           transactionRole={transactionRole}
           intl={intl}
+          transactionFieldsComponent={
+            <TransactionFields {...customTransactionFieldProps('customer', true)} />
+          }
         />
       }
       offer={
@@ -734,6 +752,9 @@ export const TransactionPageComponent = props => {
           isRegularNegotiation={isRegularNegotiation}
           isProviderBanned={isProviderBanned}
           intl={intl}
+          transactionFieldsComponent={
+            <TransactionFields {...customTransactionFieldProps('provider', true)} />
+          }
         />
       }
       isInquiryProcess={processName === INQUIRY_PROCESS_NAME}
@@ -908,7 +929,6 @@ const mapStateToProps = state => {
     totalMessagePages,
     oldestMessagePageFetched,
     messages,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed,
     sendMessageInProgress,
     sendMessageError,
@@ -938,7 +958,6 @@ const mapStateToProps = state => {
     totalMessagePages,
     oldestMessagePageFetched,
     messages,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed,
     sendMessageInProgress,
     sendMessageError,

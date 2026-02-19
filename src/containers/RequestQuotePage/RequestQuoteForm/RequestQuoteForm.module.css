@@ -39,3 +39,12 @@
   composes: marketplaceTinyFontStyles from global;
   text-align: center;
 }
+
+.transactionFieldsContainer {
+  /* margin-top: 36px; */
+  margin-bottom: 36px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 40px;
+  }
+}

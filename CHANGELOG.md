@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add transaction fields based on Console configuration
+
+  This PR prepares the codebase for using transaction field configurations that will be a part of
+  the listing type asset. Operators can define transaction fields per listing type.
+
+  [#737](https://github.com/sharetribe/web-template/pull/737)
+
 ## [v10.11.0] 2026-02-12
 
 - [add] Add AGENTS.md file to provide context for LLMs.
@@ -33,6 +40,7 @@ way to update this template, but currently, we follow a pattern:
   [#769](https://github.com/sharetribe/web-template/pull/769)
 - [fix] ListingPage.duck.js: fix a bug where inquiry is not allowed for customer role on OFFER flow.
   [#768](https://github.com/sharetribe/web-template/pull/768)
+
 - [fix] EditListingPage.duck.js: fix a bug where exception cache was not updated correctly.
   [#766](https://github.com/sharetribe/web-template/pull/766)
 

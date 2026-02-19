@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
+import {
+  isValidCurrencyForTransactionProcess,
+  pickTransactionFieldsData,
+} from '../../util/fieldHelpers.js';
 import { propTypes } from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
@@ -101,7 +104,14 @@ const prefixPriceVariantProperties = priceVariant => {
  * @param {Object} config app-wide configs. This contains hosted configs too.
  * @returns orderParams.
  */
-const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config) => {
+const getOrderParams = (
+  pageData,
+  shippingDetails,
+  optionalPaymentParams,
+  config,
+  transactionFieldProtectedData,
+  customerDefaultMessage
+) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
   const seats = pageData.orderData?.seats;
@@ -116,12 +126,16 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const priceVariant = priceVariants?.find(pv => pv.name === priceVariantName);
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
 
+  const customerDefaultMessageMaybe = customerDefaultMessage ? { customerDefaultMessage } : {};
+
   const protectedDataMaybe = {
     protectedData: {
       ...getTransactionTypeData(listingType, unitType, config),
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...priceVariantMaybe,
+      ...transactionFieldProtectedData,
+      ...customerDefaultMessageMaybe,
     },
   };
 
@@ -244,15 +258,19 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     onInitiateOrder,
     onConfirmCardPayment,
     onConfirmPayment,
-    onSendMessage,
     onSavePaymentMethod,
     onSubmitCallback,
     pageData,
     setPageData,
     sessionStorageKey,
+    transactionFieldConfigs = [],
   } = props;
   const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
   const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
+
+  const transactionFieldsProtectedData = {
+    ...pickTransactionFieldsData(formValues, 'protected', true, transactionFieldConfigs),
+  };
 
   const saveAfterOnetimePayment =
     Array.isArray(saveAfterOnetimePaymentRaw) && saveAfterOnetimePaymentRaw.length > 0;
@@ -273,7 +291,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     stripe,
     card,
     billingDetails: getBillingDetails(formValues, currentUser),
-    message,
     paymentIntent,
     hasPaymentIntentUserActionsDone,
     stripePaymentMethodId,
@@ -281,7 +298,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     onInitiateOrder,
     onConfirmCardPayment,
     onConfirmPayment,
-    onSendMessage,
     onSavePaymentMethod,
     sessionStorageKey,
     stripeCustomer: currentUser?.stripeCustomer,
@@ -303,20 +319,25 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
-  const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
+  const orderParams = getOrderParams(
+    pageData,
+    shippingDetails,
+    optionalPaymentParams,
+    config,
+    transactionFieldsProtectedData,
+    message
+  );
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
-      const { orderId, messageSuccess, paymentMethodSaved } = response;
+      const { orderId, paymentMethodSaved } = response;
       setSubmitting(false);
 
-      const initialMessageFailedToTransaction = messageSuccess ? null : orderId;
       const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
         id: orderId.uuid,
       });
       const initialValues = {
-        initialMessageFailedToTransaction,
         savePaymentMethodFailed: !paymentMethodSaved,
       };
 
@@ -378,7 +399,6 @@ const onStripeInitialized = (stripe, process, props) => {
  * @param {Function} props.onInitiateOrder - The function to initiate the order
  * @param {Function} props.onConfirmCardPayment - The function to confirm the card payment
  * @param {Function} props.onConfirmPayment - The function to confirm the payment after Stripe call is made
- * @param {Function} props.onSendMessage - The function to send a message
  * @param {Function} props.onSavePaymentMethod - The function to save the payment method for later use
  * @param {Function} props.onSubmitCallback - The function to submit the callback
  * @param {propTypes.error} props.initiateOrderError - The error message for the initiate order
@@ -415,6 +435,8 @@ export const CheckoutPageWithPayment = props => {
     processName,
     listingTitle,
     title,
+    transactionFieldConfigs = [],
+    showTransactionFields,
     config,
   } = props;
 
@@ -627,6 +649,8 @@ export const CheckoutPageWithPayment = props => {
                 marketplaceName={config.marketplaceName}
                 isBooking={isBookingProcessAlias(transactionProcessAlias)}
                 isFuzzyLocation={config.maps.fuzzy.enabled}
+                transactionFieldConfigs={transactionFieldConfigs}
+                showTransactionFields={showTransactionFields}
               />
             ) : null}
           </section>

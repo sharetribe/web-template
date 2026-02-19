@@ -227,7 +227,12 @@ const CustomFieldYoutube = props => {
 const CustomExtendedDataField = props => {
   const intl = useIntl();
   const { enumOptions = [], schemaType } = props?.fieldConfig || {};
-  const renderFieldComponent = (FieldComponent, props) => <FieldComponent {...props} intl={intl} />;
+  const defaultRequiredMessage = intl.formatMessage({
+    id: 'CustomExtendedDataField.required',
+  });
+  const renderFieldComponent = (FieldComponent, props) => (
+    <FieldComponent {...props} defaultRequiredMessage={defaultRequiredMessage} intl={intl} />
+  );
 
   return schemaType === SCHEMA_TYPE_ENUM && enumOptions
     ? renderFieldComponent(CustomFieldEnum, props)

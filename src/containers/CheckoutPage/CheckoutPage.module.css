@@ -458,3 +458,11 @@
 .incompatibleCurrency {
   margin-top: 20px;
 }
+
+.transactionFieldsContainer {
+  margin-bottom: 36px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 40px;
+  }
+}

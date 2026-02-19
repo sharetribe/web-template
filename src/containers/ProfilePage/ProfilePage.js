@@ -5,14 +5,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import {
-  REVIEW_TYPE_OF_PROVIDER,
-  REVIEW_TYPE_OF_CUSTOMER,
-  SCHEMA_TYPE_MULTI_ENUM,
-  SCHEMA_TYPE_TEXT,
-  SCHEMA_TYPE_YOUTUBE,
-  propTypes,
-} from '../../util/types';
+import { REVIEW_TYPE_OF_PROVIDER, REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../../util/types';
 import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
@@ -24,7 +17,11 @@ import {
   isForbiddenError,
   isNotFoundError,
 } from '../../util/errors';
-import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import {
+  getDetailCustomFieldValue,
+  getFieldValue,
+  pickCustomFieldProps,
+} from '../../util/fieldHelpers';
 import {
   getCurrentUserTypeRoles,
   hasPermissionToViewData,
@@ -46,6 +43,7 @@ import {
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
   NamedRedirect,
+  CustomExtendedDataSection,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -53,10 +51,6 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
-import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
-import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
-import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -190,28 +184,59 @@ export const DesktopReviews = props => {
 };
 
 export const CustomUserFields = props => {
-  const { publicData, metadata, userFieldConfig } = props;
+  const { publicData, metadata, userFieldConfig, intl } = props;
 
   const shouldPickUserField = fieldConfig =>
     fieldConfig?.scope === 'public' && fieldConfig?.showConfig?.displayInProfile !== false;
   const propsForCustomFields =
-    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
-    [];
+    pickCustomFieldProps(
+      { publicData, metadata },
+      userFieldConfig,
+      'userType',
+      shouldPickUserField
+    ) || [];
+
+  const pickUserFields = (filteredConfigs, config) => {
+    const { key, schemaType, enumOptions, userTypeConfig = {}, showConfig = {} } = config;
+    const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
+    const userType = publicData.userType;
+    const isTargetUserType = !limitToUserTypeIds || userTypeIds.includes(userType);
+
+    const { label, displayInProfile } = showConfig;
+    const publicDataValue = getFieldValue(publicData, key);
+    const metadataValue = getFieldValue(metadata, key);
+    const value = publicDataValue !== null ? publicDataValue : metadataValue;
+
+    if (displayInProfile && isTargetUserType && value !== null) {
+      const detailValue = getDetailCustomFieldValue(
+        enumOptions,
+        value,
+        schemaType,
+        key,
+        label,
+        intl,
+        'ProfilePage'
+      );
+
+      return detailValue ? filteredConfigs.concat(detailValue) : filteredConfigs;
+    }
+    return filteredConfigs;
+  };
+  const sectionDetailsProps = {
+    ...props,
+    fieldConfigs: userFieldConfig,
+    heading: 'ProfilePage.detailsTitle',
+    rootClassName: css.userFieldSection,
+  };
 
   return (
-    <>
-      <SectionDetailsMaybe {...props} />
-      {propsForCustomFields.map(customFieldProps => {
-        const { schemaType, key, ...fieldProps } = customFieldProps;
-        return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
-          <SectionMultiEnumMaybe key={key} {...fieldProps} />
-        ) : schemaType === SCHEMA_TYPE_TEXT ? (
-          <SectionTextMaybe key={key} {...fieldProps} />
-        ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
-          <SectionYoutubeVideoMaybe key={key} {...fieldProps} />
-        ) : null;
-      })}
-    </>
+    <CustomExtendedDataSection
+      sectionDetailsProps={sectionDetailsProps}
+      propsForCustomFields={propsForCustomFields}
+      idPrefix="profilePage"
+      pickExtendedDataFields={pickUserFields}
+      rootClassName={css.userFieldSection}
+    />
   );
 };
 

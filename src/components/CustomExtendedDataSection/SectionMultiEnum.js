@@ -1,31 +1,42 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Heading, PropertyGroup } from '../../components';
 
-import css from './ProfilePage.module.css';
+import css from './CustomExtendedDataSection.module.css';
 
-const SectionMultiEnumMaybe = props => {
-  const { heading, options, selectedOptions, showUnselectedOptions = true } = props;
+const SectionMultiEnum = props => {
+  const {
+    heading,
+    options,
+    selectedOptions,
+    idPrefix,
+    className,
+    rootClassName,
+    showUnselectedOptions = true,
+  } = props;
   const hasContent = showUnselectedOptions || selectedOptions?.length > 0;
   if (!heading || !options || !hasContent) {
     return null;
   }
   const idSlug = heading.toLowerCase().replace(/ /g, '_');
 
+  const classes = classNames(rootClassName || css.sectionMultiEnum, className);
+
   return (
-    <div className={css.sectionMultiEnum}>
+    <section className={classes}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         {heading}
       </Heading>
       <PropertyGroup
-        id={`ProfilePage.${idSlug}`}
+        id={`${idPrefix}.${idSlug}`}
         ariaLabel={heading}
         options={options}
         selectedOptions={selectedOptions}
         twoColumns={options.length > 5}
         showUnselectedOptions={showUnselectedOptions}
       />
-    </div>
+    </section>
   );
 };
 
-export default SectionMultiEnumMaybe;
+export default SectionMultiEnum;

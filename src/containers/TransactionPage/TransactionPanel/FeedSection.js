@@ -14,12 +14,11 @@ const FeedSection = props => {
     activityFeed,
     hasTransitions,
     fetchMessagesError,
-    initialMessageFailed,
     hasMessages,
     isConversation,
   } = props;
 
-  const showFeed = hasMessages || hasTransitions || initialMessageFailed || fetchMessagesError;
+  const showFeed = hasMessages || hasTransitions || fetchMessagesError;
 
   const classes = classNames(rootClassName || css.feedContainer, className);
 
@@ -32,11 +31,6 @@ const FeedSection = props => {
           <FormattedMessage id="TransactionPanel.activityHeading" />
         )}
       </Heading>
-      {initialMessageFailed ? (
-        <p className={css.messageError}>
-          <FormattedMessage id="TransactionPanel.initialMessageFailed" />
-        </p>
-      ) : null}
       {fetchMessagesError ? (
         <p className={css.messageError}>
           <FormattedMessage id="TransactionPanel.messageLoadingFailed" />

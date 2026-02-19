@@ -1,0 +1,29 @@
+@import '../../../styles/customMediaQueries.css';
+
+.transactionFieldsContainer {
+  margin: 42px 0 0 0;
+
+  @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
+    margin: 16px 0 0 0;
+  }
+  @media (--viewportLarge) {
+    margin: 16px 0 0 0;
+  }
+
+  :last-child {
+    margin-bottom: 0px;
+  }
+}
+
+.defaultMessageLabel {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+  margin: 0 0 8px 0;
+}
+
+.transactionFieldSection {
+  padding: 0px;
+  margin-bottom: 24px;
+}

@@ -9,7 +9,6 @@ import { getProcess, resolveLatestProcessName } from '../../../transactions/tran
 
 import { Heading } from '../../../components';
 
-import TextMaybe from '../TextMaybe/TextMaybe';
 import css from './Offer.module.css';
 
 const { Money } = sdkTypes;
@@ -25,6 +24,8 @@ const Offer = props => {
     isRegularNegotiation,
     isProviderBanned,
     intl,
+    customTransactionFieldProps,
+    transactionFieldsComponent,
   } = props;
 
   if (!isNegotiationProcess) {
@@ -114,13 +115,7 @@ const Offer = props => {
         </div>
       )}
 
-      <TextMaybe
-        heading={intl.formatMessage({ id: 'TransactionPage.Offer.providerDefaultMessageLabel' })}
-        headingClassName={css.defaultMessageLabel}
-        text={providerDefaultMessage}
-        isOwn={isNegotiationProcess && isProvider}
-        showText={isNegotiationProcess}
-      />
+      {transactionFieldsComponent}
     </div>
   ) : null;
 };

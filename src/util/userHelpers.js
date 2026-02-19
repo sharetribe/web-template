@@ -92,7 +92,6 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
 /**
  * Returns props for custom user fields
  * @param {*} userFieldsConfig Configuration for user fields
- * @param {*} intl
  * @param {*} userType User type to restrict fields to. If none is passed,
  * only user fields applying to all user types are returned.
  * @param {*} isSignup Optional flag to determine whether the target context
@@ -102,7 +101,6 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
  */
 export const getPropsForCustomUserFieldInputs = (
   userFieldsConfig,
-  intl,
   userType = null,
   isSignup = true
 ) => {
@@ -124,9 +122,6 @@ export const getPropsForCustomUserFieldInputs = (
               key: namespacedKey,
               name: namespacedKey,
               fieldConfig: fieldConfig,
-              defaultRequiredMessage: intl.formatMessage({
-                id: 'CustomExtendedDataField.required',
-              }),
             },
           ]
         : pickedFields;

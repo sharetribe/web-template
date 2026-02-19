@@ -7,8 +7,14 @@ import {
   isBookingProcessAlias,
   isNegotiationProcessAlias,
 } from '../transactions/transaction';
-import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from './types';
+import {
+  EXTENDED_DATA_SCHEMA_TYPES,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_YOUTUBE,
+} from './types';
 import appSettings from '../config/settings';
+import { addScopePrefix } from './userHelpers';
 
 const { stripeSupportedCurrencies, subUnitDivisors } = appSettings;
 
@@ -37,6 +43,23 @@ const getEntityTypeRestrictions = (entityTypeKey, config) => {
 
   return { isLimited, limitToIds };
 };
+
+const isCustomFieldRelevantForEntityType = (entityTypeKey, publicData, config) => {
+  if (entityTypeKey == null) {
+    return true;
+  }
+
+  const entityType = publicData && publicData[entityTypeKey];
+  return isFieldFor(entityTypeKey, entityType, config);
+};
+
+/**
+ * Get a snake-cased key with the specified prefix, e.g. customer_options
+ * @param {String} prefix the prefix to append to the key, e.g. 'customer'
+ * @param {String} key the original key, e.g. 'options'
+ * @returns string
+ */
+export const getPrefixedKey = (prefix, key) => `${prefix}_${key}`;
 
 /**
  * Check if the given listing type is allowed according to the given listing field config.
@@ -107,10 +130,10 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
 };
 
 /**
- * Pick props for SectionMultiEnumMaybe and SectionTextMaybe display components.
+ * Pick props for SectionMultiEnum and SectionText display components.
  *
- * @param {*} publicData entity public data containing the value(s) to be displayed
- * @param {*} metadata entity metadata containing the value(s) to be displayed
+ * @param {*} extendedData the different entity extended data containing the value(s) to be displayed:
+ * publicData, metadata, protectedData.
  * @param {Array<Object>} fieldConfigs array of custom field configuration objects
  * @param {String} entityTypeKey the name of the key denoting the entity type in publicData.
  * E.g. 'listingType', 'userType', or 'category'
@@ -119,18 +142,16 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
  * - 'options' and 'selectedOptions' for SCHEMA_TYPE_MULTI_ENUM
  * - or 'text' for SCHEMA_TYPE_TEXT
  */
-export const pickCustomFieldProps = (
-  publicData,
-  metadata,
-  fieldConfigs,
-  entityTypeKey,
-  shouldPickFn
-) => {
+export const pickCustomFieldProps = (extendedData, fieldConfigs, entityTypeKey, shouldPickFn) => {
+  const { publicData, metadata, protectedData } = extendedData;
   return fieldConfigs?.reduce((pickedElements, config) => {
     const { key, enumOptions, schemaType, scope = 'public', showConfig } = config;
     const { label, unselectedOptions: showUnselectedOptions } = showConfig || {};
-    const entityType = publicData && publicData[entityTypeKey];
-    const isTargetEntityType = isFieldFor(entityTypeKey, entityType, config);
+    const isTargetEntityType = isCustomFieldRelevantForEntityType(
+      entityTypeKey,
+      publicData,
+      config
+    );
 
     const createFilterOptions = options =>
       options.map(o => ({ key: `${o.option}`, label: o.label }));
@@ -140,6 +161,8 @@ export const pickCustomFieldProps = (
     const value =
       scope === 'public'
         ? getFieldValue(publicData, key)
+        : scope === 'protected'
+        ? getFieldValue(protectedData, key)
         : scope === 'metadata'
         ? getFieldValue(metadata, key)
         : null;
@@ -226,4 +249,140 @@ export const isValidCurrencyForTransactionProcess = (
       (!isStripeRelatedProcess && Object.keys(subUnitDivisors).includes(listingCurrency))
     );
   }
+};
+
+/**
+ * Return props for custom transaction fields
+ * @param {Object} transactionFieldConfigs Configuration for transaction fields
+ * @param {Boolean} isCustomer Flag to determine whether the target context
+ * is a set of fields related to the customer
+ * @returns an array of props for CustomExtendedDataField: key, name,
+ * fieldConfig
+ */
+export const getPropsForCustomTransactionFieldInputs = (transactionFieldConfigs, isCustomer) => {
+  return (
+    transactionFieldConfigs?.reduce((pickedFields, fieldConfig) => {
+      const { key, showTo, schemaType, scope } = fieldConfig || {};
+      const namespacedKey = addScopePrefix(scope, key);
+      const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+      const isTransactionScope = scope === 'protected';
+      const showToCustomer = showTo === 'customer';
+      const isCorrectRole = showToCustomer === isCustomer;
+
+      return isKnownSchemaType && isTransactionScope && isCorrectRole
+        ? [
+            ...pickedFields,
+            {
+              key: namespacedKey,
+              name: namespacedKey,
+              fieldConfig: fieldConfig,
+            },
+          ]
+        : pickedFields;
+    }, []) || []
+  );
+};
+
+/**
+ * Pick extended data fields from given form data.
+ * Picking is based on extended data configuration for the transaction and target user role.
+ *
+ * This expects submit data to be namespaced (e.g. 'prot_') and it returns the field without that namespace.
+ * This function is used when form submit values are restructured for the actual API endpoint.
+ *
+ * @param {Object} data values to look through against transaction field configuration
+ * @param {String} targetScope Check that the scope of extended data in the config matches this scope
+ * @param {Boolean} isCustomer Flag to determine whether the data relates to a customer of a transaction
+ * @param {Object} transactionFieldConfigs Field configurations
+ * @returns an object with field data as key-value pairs
+ */
+export const pickTransactionFieldsData = (
+  data,
+  targetScope = 'protected',
+  isCustomer,
+  transactionFieldConfigs
+) => {
+  return transactionFieldConfigs.reduce((fields, field) => {
+    const { key, schemaType, scope = 'protected', showTo } = field || {};
+    const namespacedKey = addScopePrefix(scope, key);
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isTargetScope = scope === targetScope;
+    const showToCustomer = showTo === 'customer';
+    const isCorrectRole = showToCustomer === isCustomer;
+    const roleKey = getPrefixedKey(showTo, key);
+
+    if (isKnownSchemaType && isTargetScope && isCorrectRole) {
+      const fieldValue = getFieldValue(data, namespacedKey);
+      return { ...fields, [roleKey]: fieldValue };
+    }
+    return fields;
+  }, {});
+};
+
+/**
+ * Returns a value for an enum, boolean, or long custom extended data field
+ * @param {Array} enumOptions an array of enum options related to the field
+ * @param {String | Number} value field value in extended data
+ * @param {String} schemaType field schema type
+ * @param {String} key field key
+ * @param {*} label field label
+ * @param {*} intl intl
+ * @param {*} page the context where the details is being used
+ * @returns an object with the detail information: key, value, label
+ */
+export const getDetailCustomFieldValue = (
+  enumOptions,
+  value,
+  schemaType,
+  key,
+  label,
+  intl,
+  page
+) => {
+  const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
+  const getBooleanMessage = value =>
+    value
+      ? intl.formatMessage({ id: `${page}.detailYes` })
+      : intl.formatMessage({ id: `${page}.detailNo` });
+  const optionConfig = findSelectedOption(value);
+
+  return schemaType === 'enum'
+    ? { key, value: optionConfig?.label, label }
+    : schemaType === 'boolean'
+    ? { key, value: getBooleanMessage(value), label }
+    : schemaType === 'long'
+    ? { key, value, label }
+    : null;
+};
+
+/**
+ * Pick extended data fields from transaction protected data.
+ * Picking is based on transaction fields configuration.
+ *
+ * This returns namespaced (e.g. 'prot_') initial values for the form.
+ *
+ * @param {Object} data extended data values to look through against userConfig.js and util/configHelpers.js
+ * @param {String} targetScope Check that the scope of extended data the config matches
+ * @param {String} targetUserType Check that the extended data is relevant for this user type.
+ * @param {Object} userFieldConfigs Extended data configurations for user fields.
+ * @returns Array of picked extended data fields
+ */
+export const initialValuesForTransactionFields = (data, transactionFieldConfigs) => {
+  return transactionFieldConfigs?.reduce((fields, field) => {
+    const { key, scope = 'protected', schemaType, showTo } = field || {};
+    const namespacedKey = addScopePrefix(scope, key);
+    // Fields are saved in extended data with a role prefix corresponding to
+    // the author of the fields, so we need to use the same prefix when
+    // fetching them from protected data
+    const roleKey = getPrefixedKey(showTo, key);
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+
+    if (isKnownSchemaType) {
+      const fieldValue = getFieldValue(data, roleKey);
+      return { ...fields, [namespacedKey]: fieldValue };
+    }
+    return fields;
+  }, {});
 };

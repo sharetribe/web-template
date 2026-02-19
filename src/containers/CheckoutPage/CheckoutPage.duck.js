@@ -168,34 +168,6 @@ export const confirmPayment = (
   ).unwrap();
 };
 
-//////////////////
-// Send Message //
-//////////////////
-const sendMessagePayloadCreator = ({ message, id: orderId }, { extra: sdk, rejectWithValue }) => {
-  if (message) {
-    return sdk.messages
-      .send({ transactionId: orderId, content: message })
-      .then(() => {
-        return { orderId, messageSuccess: true };
-      })
-      .catch(e => {
-        log.error(e, 'initial-message-send-failed', { txId: orderId });
-        return rejectWithValue({ orderId, messageSuccess: false });
-      });
-  } else {
-    return { orderId, messageSuccess: true };
-  }
-};
-
-export const sendMessageThunk = createAsyncThunk(
-  'CheckoutPage/sendMessage',
-  sendMessagePayloadCreator
-);
-// Backward compatible wrapper function for sendMessage
-export const sendMessage = params => dispatch => {
-  return dispatch(sendMessageThunk(params)).unwrap();
-};
-
 //////////////////////
 // Initiate Inquiry //
 //////////////////////

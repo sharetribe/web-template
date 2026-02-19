@@ -790,6 +790,59 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
   }, []);
 };
 
+const validTransactionFields = transactionFields => {
+  const keys = transactionFields.map(d => d.key);
+  const scopeOptions = ['protected'];
+  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
+
+  return transactionFields.reduce((acc, data) => {
+    const schemaType = data.schemaType;
+
+    const validationData = Object.entries(data).reduce(
+      (acc, entry) => {
+        const [name, value] = entry;
+
+        // Validate each property
+        const [isValid, prop] =
+          name === 'key'
+            ? validKey(value, keys)
+            : name === 'scope'
+            ? validEnumString('scope', value, scopeOptions, 'protected')
+            : name === 'numberConfig'
+            ? validNumberConfig(value)
+            : name === 'schemaType'
+            ? validEnumString('schemaType', value, validSchemaTypes)
+            : name === 'enumOptions'
+            ? validSchemaOptions(value, schemaType)
+            : name === 'filterConfig'
+            ? validFilterConfig(value, schemaType)
+            : name === 'showConfig'
+            ? validShowConfig(value)
+            : name === 'saveConfig'
+            ? validSaveConfig(value)
+            : [true, { [name]: value }];
+
+        const hasFoundValid = !(acc.isValid === false || isValid === false);
+        // Let's warn about wrong data in listing extended data config
+        if (isValid === false) {
+          console.warn(
+            `Unsupported transaction extended data configurations detected (${name}) in`,
+            data
+          );
+        }
+
+        return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
+      },
+      { config: {}, isValid: true }
+    );
+    if (validationData.isValid) {
+      return [...acc, validationData.config];
+    } else {
+      return acc;
+    }
+  }, []);
+};
+
 const validUserTypes = userTypes => {
   const validTypes = userTypes.filter(config => {
     const { userType, label } = config;
@@ -860,6 +913,7 @@ const validListingTypes = listingTypes => {
       label,
       transactionType,
       priceVariations,
+      transactionFields,
       ...restOfListingType
     } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
@@ -870,6 +924,13 @@ const validListingTypes = listingTypes => {
 
     const priceVariationTypeMaybe = isBookingProcessAlias(alias)
       ? { priceVariations: { enabled: priceVariations?.enabled } }
+      : {};
+
+    const hasTransactionFields = transactionFields?.length > 0;
+    const restructuredTransactionFields = transactionFields?.map(restructureTransactionFields);
+
+    const validTransactionFieldsMaybe = hasTransactionFields
+      ? { transactionFields: validTransactionFields(restructuredTransactionFields) }
       : {};
 
     if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
@@ -884,6 +945,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
+          ...validTransactionFieldsMaybe,
           ...priceVariationTypeMaybe,
           // e.g. stockType, availabilityType,...
           ...restOfListingType,
@@ -1007,6 +1069,46 @@ const restructureListingFields = hostedListingFields => {
         : null;
     }) || []
   );
+};
+
+const restructureTransactionFields = transactionField => {
+  const {
+    key,
+    enumOptions,
+    label,
+    numberConfig = {},
+    saveConfig = {},
+    showConfig = {},
+    schemaType,
+    ...rest
+  } = transactionField;
+
+  const defaultLabel = label || key;
+  const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+  const numberConfigMaybe = schemaType === 'long' ? { numberConfig } : {};
+  const { required: isRequired, ...restSaveConfig } = saveConfig;
+
+  return key
+    ? {
+        key,
+        label,
+        scope: 'protected',
+        schemaType,
+        ...enumOptionsMaybe,
+        ...numberConfigMaybe,
+        showConfig: {
+          ...showConfig,
+          unselectedOptions: false,
+          label: showConfig.label || defaultLabel,
+        },
+        saveConfig: {
+          ...restSaveConfig,
+          isRequired,
+          label: saveConfig.label || defaultLabel,
+        },
+        ...rest,
+      }
+    : null;
 };
 
 ///////////////////////////////////////

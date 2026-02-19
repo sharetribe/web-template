@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import contexts and util modules
@@ -9,9 +10,11 @@ import { FormattedMessage, intlShape } from '../../../util/reactIntl.js';
 import { formatMoney } from '../../../util/currency.js';
 import { propTypes } from '../../../util/types.js';
 import * as validators from '../../../util/validators.js';
+import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers.js';
 
 // Import shared components
 import {
+  CustomExtendedDataField,
   FieldCurrencyInput,
   FieldTextInput,
   Form,
@@ -92,11 +95,17 @@ export const MakeOfferForm = props => {
     errorMessageComponent: ErrorMessage,
     makeOfferError,
     onSubmit,
+    transactionFieldInitialValues = {},
+    ...restProps
   } = props;
 
   const providerDefaultMessageMaybe = providerDefaultMessage ? { providerDefaultMessage } : {};
   const priceMaybe = price ? { quote: price } : {};
-  const initialValuesMaybe = { ...providerDefaultMessageMaybe, ...priceMaybe };
+  const initialValuesMaybe = {
+    ...providerDefaultMessageMaybe,
+    ...priceMaybe,
+    ...transactionFieldInitialValues,
+  };
 
   const marketplaceCurrency = config.currency;
   const priceValidators = getPriceValidators(
@@ -108,7 +117,9 @@ export const MakeOfferForm = props => {
   return (
     <FinalForm
       initialValues={initialValuesMaybe}
+      mutators={{ ...arrayMutators }}
       onSubmit={onSubmit}
+      {...restProps}
       render={formRenderProps => {
         const {
           rootClassName,
@@ -119,11 +130,18 @@ export const MakeOfferForm = props => {
           inProgress,
           invalid,
           authorDisplayName,
+          transactionFieldConfigs = [],
         } = formRenderProps;
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = invalid || submitInProgress || !stripeConnected;
+
+        const hasTransactionFieldConfigs = transactionFieldConfigs.length > 0;
+        const transactionFieldsProps = getPropsForCustomTransactionFieldInputs(
+          transactionFieldConfigs,
+          false
+        );
 
         return (
           <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SaleDetailsPage">
@@ -145,6 +163,14 @@ export const MakeOfferForm = props => {
                 currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                 validate={priceValidators}
               />
+
+              {hasTransactionFieldConfigs ? (
+                <div className={css.transactionFieldsContainer}>
+                  {transactionFieldsProps.map(({ key, ...fieldProps }) => (
+                    <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
+                  ))}
+                </div>
+              ) : null}
 
               <FieldTextInput
                 className={css.fieldDefaultMessage}
