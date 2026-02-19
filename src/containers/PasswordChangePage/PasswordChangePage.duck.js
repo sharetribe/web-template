@@ -65,7 +65,7 @@ const passwordChangeSlice = createSlice({
         state.passwordChanged = true;
       })
       .addCase(changePasswordThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.changePasswordInProgress = false;
         state.changePasswordError = action.payload;
       })
@@ -78,7 +78,7 @@ const passwordChangeSlice = createSlice({
         state.resetPasswordInProgress = false;
       })
       .addCase(resetPasswordThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.resetPasswordInProgress = false;
         state.resetPasswordError = action.payload;
       });

@@ -203,12 +203,14 @@ const ExceptionDateRange = props => {
       // This side effect just prints debug data into the console.log feed.
       // Note: endMonth is exclusive end time of the range.
       const lastFetchedMonth = new Date(endMonth.getTime() - 1);
+      /* eslint-disable no-console */
       console.log(
         `Fetched months: ${monthIdString(startMonth)} ... ${monthIdString(lastFetchedMonth)}`,
         '\nExceptions found:',
         allExceptions
       );
       console.log('Dates with availability info:', availableDates);
+      /* eslint-enable no-console */
     }
   }, [currentMonth]);
 
