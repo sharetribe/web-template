@@ -25,14 +25,12 @@ export const openGraphMetaProps = data => {
   } = data;
 
   if (!(socialSharingTitle && socialSharingDescription && openGraphType && url && facebookImages)) {
-    /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create Open Graph meta tags:
         socialSharingTitle, socialSharingDescription, openGraphType, url, and facebookImages are needed.`
       );
     }
-    /* eslint-enable no-console */
     return [];
   }
 
@@ -92,14 +90,12 @@ export const twitterMetaProps = data => {
   } = data;
 
   if (!(socialSharingTitle && socialSharingDescription && url)) {
-    /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create twitter card meta tags:
         socialSharingTitle, socialSharingDescription, and url are needed.`
       );
     }
-    /* eslint-enable no-console */
     return [];
   }
 
