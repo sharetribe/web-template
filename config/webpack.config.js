@@ -364,8 +364,14 @@ module.exports = function(webpackEnv, target = 'web') {
                   options: {
                     prettier: false,
                     svgo: false,
+                    // SVGO v3 format (not used when svgo: false, but kept for future reference)
                     svgoConfig: {
-                      plugins: [{ removeViewBox: false }],
+                      plugins: [
+                        {
+                          name: 'removeViewBox',
+                          params: { removeViewBox: false },
+                        },
+                      ],
                     },
                     titleProp: true,
                     ref: true,
