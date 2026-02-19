@@ -57,6 +57,7 @@ export const clearUserId = () => {
 };
 
 const printAPIErrorsAsConsoleTable = apiErrors => {
+  /* eslint-disable no-console */
   if (apiErrors != null && apiErrors.length > 0 && typeof console.table === 'function') {
     console.log('Errors returned by Marketplace API call:');
     console.table(
@@ -68,6 +69,7 @@ const printAPIErrorsAsConsoleTable = apiErrors => {
       }))
     );
   }
+  /* eslint-enable no-console */
 };
 
 const responseAPIErrors = error => {

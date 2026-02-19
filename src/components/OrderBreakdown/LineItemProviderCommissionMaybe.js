@@ -42,7 +42,6 @@ const LineItemProviderCommissionMaybe = props => {
   // https://www.sharetribe.com/docs/concepts/transaction-process/
   if (isProvider && providerCommissionLineItem) {
     if (!isValidCommission(providerCommissionLineItem)) {
-      // eslint-disable-next-line no-console
       console.error('invalid commission line item:', providerCommissionLineItem);
       throw new Error('Commission should be present and the value should be zero or negative');
     }

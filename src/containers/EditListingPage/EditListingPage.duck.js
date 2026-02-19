@@ -657,7 +657,6 @@ const editListingPageSlice = createSlice({
         state.updateInProgress = false;
       })
       .addCase(publishListingThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload);
         state.publishListingError = {
           listingId: state.listingId,
@@ -700,7 +699,6 @@ const editListingPageSlice = createSlice({
         }
       })
       .addCase(showListingThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload);
         state.showListingsError = action.payload;
         state.redirectToListing = false;

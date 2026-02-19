@@ -578,6 +578,7 @@ export const BookingDatesForm = props => {
       const timeSlotsData = timeSlotsPerDate(currentMonth, nextMonth, allTimeSlots, tz);
       const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, tz);
       const lastFetchedMonth = new Date(endMonth.getTime() - 1);
+      /* eslint-disable no-console */
       console.log(monthIdString(lastFetchedMonth, tz));
 
       console.log(
@@ -588,6 +589,7 @@ export const BookingDatesForm = props => {
         '\nTime slots for the current month:',
         timeSlotsData
       );
+      /* eslint-enable no-console */
     }
   }, [currentMonth, currentMonthInProgress, nextMonthInProgress, timeZone, monthlyTimeSlots]);
 
