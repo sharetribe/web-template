@@ -667,9 +667,6 @@ module.exports = function(webpackEnv, target = 'web') {
               { file: '**/src/setupTests.*' },
             ],
           },
-          logger: {
-            infrastructure: 'silent',
-          },
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({
