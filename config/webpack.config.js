@@ -484,6 +484,10 @@ module.exports = function(webpackEnv, target = 'web') {
                 modules: {
                   mode: 'local',
                   getLocalIdent: getCSSModuleLocalIdent,
+                  // css-loader v7: namedExport defaults to true, but we use default imports
+                  // Set to false to maintain backward compatibility with existing code
+                  namedExport: false,
+                  exportLocalsConvention: 'as-is',
                 },
               }),
             },
