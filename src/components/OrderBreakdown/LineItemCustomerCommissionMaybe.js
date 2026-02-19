@@ -41,7 +41,6 @@ const LineItemCustomerCommissionMaybe = props => {
 
   if (isCustomer && customerCommissionLineItem) {
     if (!isValidCommission(customerCommissionLineItem)) {
-      // eslint-disable-next-line no-console
       console.error('invalid commission line item:', customerCommissionLineItem);
       throw new Error('Commission should be present and the value should be zero or positive');
     }

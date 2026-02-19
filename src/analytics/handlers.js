@@ -1,6 +1,6 @@
 export class LoggingAnalyticsHandler {
   trackPageView(url) {
-    console.log('Analytics page view:', url);
+    console.log('Analytics page view:', url); // eslint-disable-line no-console
   }
 }
 

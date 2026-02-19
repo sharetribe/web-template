@@ -325,7 +325,6 @@ class LocationAutocompleteInputImplementation extends Component {
       })
       .catch(e => {
         this.setState({ fetchingPlaceDetails: false });
-        // eslint-disable-next-line no-console
         console.error(e);
         this.props.input.onChange({
           ...this.props.input.value,
@@ -388,7 +387,6 @@ class LocationAutocompleteInputImplementation extends Component {
       })
       .catch(e => {
         this.setState({ fetchingPredictions: false });
-        // eslint-disable-next-line no-console
         console.error(e);
         const value = currentValue(this.props);
         onChange({

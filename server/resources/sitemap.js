@@ -331,7 +331,7 @@ module.exports = (req, res, next) => {
   // You might want to consider adding cron job and avoid sitemap generation on request time.
   if (isSitemapDisabled) {
     res.status(503).end();
-    console.log('Sitemap functionality is disabled.');
+    console.log('Sitemap functionality is disabled.'); // eslint-disable-line no-console
     return;
   }
 
@@ -354,7 +354,7 @@ module.exports = (req, res, next) => {
 
         if (dev) {
           // Log error
-          console.log('sitemap-render-failed-no-asset-found');
+          console.error('sitemap-render-failed-no-asset-found');
         }
       } else {
         next();

@@ -29,7 +29,6 @@ const { Money } = sdkTypes;
 
 const allowedInputProps = allProps => {
   // Strip away props that are not passed to input element (or are overwritten)
-  // eslint-disable-next-line no-unused-vars
   const { currencyConfig, defaultValue, intl, input, meta, ...inputProps } = allProps;
   return inputProps;
 };
@@ -185,7 +184,6 @@ class CurrencyInputComponent extends Component {
 
       return { formattedValue, value: unformattedValue, unformattedValue };
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn('Not a valid value.', e);
 
       // If an error occurs while filling input field, use previous values

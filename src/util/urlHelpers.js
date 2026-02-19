@@ -167,7 +167,6 @@ export const decodeLatLngBounds = str => {
 const serialiseSdkTypes = obj =>
   Object.keys(obj).reduce((result, key) => {
     const val = obj[key];
-    /* eslint-disable no-param-reassign */
     if (val instanceof LatLngBounds) {
       result[key] = encodeLatLngBounds(val);
     } else if (val instanceof LatLng) {
@@ -175,7 +174,6 @@ const serialiseSdkTypes = obj =>
     } else {
       result[key] = val;
     }
-    /* eslint-enable no-param-reassign */
     return result;
   }, {});
 
@@ -229,7 +227,6 @@ export const parse = (search, options = {}) => {
   const searchString = typeof search === 'string' ? search : '';
   const params = new URLSearchParams(searchString);
   return Array.from(params.entries()).reduce((result, [key, val]) => {
-    /* eslint-disable no-param-reassign */
     if (latlng.includes(key)) {
       result[key] = decodeLatLng(val);
     } else if (latlngBounds.includes(key)) {
@@ -242,7 +239,6 @@ export const parse = (search, options = {}) => {
       const num = parseFloatNum(val);
       result[key] = num === null ? val : num;
     }
-    /* eslint-enable no-param-reassign */
     return result;
   }, {});
 };

@@ -103,8 +103,6 @@ export const ManageAccountPageComponent = props => {
       if (typeof window !== 'undefined') {
         window.location = path;
       }
-
-      console.log('logged out'); // eslint-disable-line
     });
   };
 

@@ -5,9 +5,8 @@ let exportSdk;
 const isServer = () => typeof window === 'undefined';
 
 if (isServer()) {
-  // Use eval to skip webpack from bundling SDK in Node
-  // eslint-disable-next-line no-eval
-  exportSdk = eval('require')('sharetribe-flex-sdk');
+  // Only resolve at runtime on server; webpackIgnore prevents bundling in client build
+  exportSdk = require(/* webpackIgnore: true */ 'sharetribe-flex-sdk');
 } else {
   exportSdk = importedSdk;
 }

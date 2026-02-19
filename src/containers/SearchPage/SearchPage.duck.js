@@ -340,7 +340,6 @@ const searchPageSlice = createSlice({
         state.searchInProgress = false;
       })
       .addCase(searchListings.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload);
         state.searchInProgress = false;
         state.searchListingsError = action.payload;

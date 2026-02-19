@@ -38,7 +38,7 @@ const inboxPageSlice = createSlice({
         state.pagination = action.payload.data.meta;
       })
       .addCase(loadDataThunk.rejected, (state, action) => {
-        console.error(action.payload || action.error); // eslint-disable-line
+        console.error(action.payload || action.error);
         state.fetchInProgress = false;
         state.fetchOrdersOrSalesError = action.payload;
       });

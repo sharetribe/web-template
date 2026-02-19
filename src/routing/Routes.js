@@ -39,6 +39,7 @@ const callLoadData = props => {
       .then(() => {
         if (props.logLoadDataCalls) {
           // This gives good input for debugging issues on live environments, but with test it's not needed.
+          // eslint-disable-next-line no-console
           console.log(`loadData success for ${name} route`);
         }
       })
