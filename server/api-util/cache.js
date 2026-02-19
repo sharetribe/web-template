@@ -197,6 +197,9 @@ exports.createLRUCache = ({ memoryStore, maxBytes = 10485760, defaultTTL = 10 })
       // Purge least-recently-used _expired_ properties (up to MAX_PURGE_EXPIRED_PROPERTIES)
       purgeExpired(MAX_PURGE_EXPIRED_PROPERTIES);
       devLogger(`Total bytes: ${store.totalBytes}/${maxBytes}.`);
+      
+      // Return true to indicate successful property assignment
+      return true;
     },
   });
 };
