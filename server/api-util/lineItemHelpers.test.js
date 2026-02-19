@@ -57,7 +57,7 @@ describe('calculateTotalPriceFromSeats()', () => {
     const unitPrice = new Money(1000, 'EUR');
     const unitCount = 1;
     const seats = -3;
-    expect(() => calculateTotalPriceFromSeats(unitPrice, unitCount, seats)).toThrowError(
+    expect(() => calculateTotalPriceFromSeats(unitPrice, unitCount, seats)).toThrow(
       "Value of seats can't be negative"
     );
   });
@@ -82,7 +82,7 @@ describe('calculateQuantityFromDates()', () => {
     const start = new Date(2017, 0, 1);
     const end = new Date(2017, 0, 3);
     const type = 'line-item/units';
-    expect(() => calculateQuantityFromDates(start, end, type)).toThrowError(
+    expect(() => calculateQuantityFromDates(start, end, type)).toThrow(
       `Can't calculate quantity from dates to unit type: ${type}`
     );
   });
@@ -151,7 +151,7 @@ describe('calculateLineTotal()', () => {
       includeFor: ['customer', 'provider'],
     };
     const code = lineItem.code;
-    expect(() => calculateLineTotal(lineItem)).toThrowError(
+    expect(() => calculateLineTotal(lineItem)).toThrow(
       `Can't calculate the lineTotal of lineItem: ${code}. Make sure the lineItem has quantity, percentage or both seats and units`
     );
   });
@@ -399,7 +399,7 @@ describe('constructValidLineItems()', () => {
       },
     ];
 
-    expect(() => constructValidLineItems(lineItems)).toThrowError(
+    expect(() => constructValidLineItems(lineItems)).toThrow(
       `Invalid line item code: ${code}`
     );
   });
@@ -419,8 +419,8 @@ describe('hasCommissionPercentage()', () => {
   });
 
   it('should throw error if percentage property does not contain number', () => {
-    expect(() => hasCommissionPercentage({ percentage: '10' })).toThrowError('10 is not a number.');
-    expect(() => hasCommissionPercentage({ percentage: 'asdf' })).toThrowError(
+    expect(() => hasCommissionPercentage({ percentage: '10' })).toThrow('10 is not a number.');
+    expect(() => hasCommissionPercentage({ percentage: 'asdf' })).toThrow(
       'asdf is not a number.'
     );
   });
@@ -440,10 +440,10 @@ describe('hasMinimumCommission()', () => {
   });
 
   it('should throw error if minimum commission property does not contain number', () => {
-    expect(() => hasMinimumCommission({ minimum_amount: '10' })).toThrowError(
+    expect(() => hasMinimumCommission({ minimum_amount: '10' })).toThrow(
       '10 is not a number.'
     );
-    expect(() => hasMinimumCommission({ minimum_amount: 'asdf' })).toThrowError(
+    expect(() => hasMinimumCommission({ minimum_amount: 'asdf' })).toThrow(
       'asdf is not a number.'
     );
   });
@@ -501,7 +501,7 @@ describe('getProviderCommissionMaybe()', () => {
     const commission = {
       percentage: '5',
     };
-    expect(() => getProviderCommissionMaybe(commission, order, currency)).toThrowError(
+    expect(() => getProviderCommissionMaybe(commission, order, currency)).toThrow(
       '5 is not a number'
     );
   });
@@ -509,7 +509,7 @@ describe('getProviderCommissionMaybe()', () => {
     const commission = {
       minimum_amount: '250',
     };
-    expect(() => getProviderCommissionMaybe(commission, order, currency)).toThrowError(
+    expect(() => getProviderCommissionMaybe(commission, order, currency)).toThrow(
       '250 is not a number'
     );
   });
@@ -641,7 +641,7 @@ describe('getCustomerCommissionMaybe()', () => {
     const commission = {
       percentage: '5',
     };
-    expect(() => getCustomerCommissionMaybe(commission, order, currency)).toThrowError(
+    expect(() => getCustomerCommissionMaybe(commission, order, currency)).toThrow(
       '5 is not a number'
     );
   });
@@ -649,7 +649,7 @@ describe('getCustomerCommissionMaybe()', () => {
     const commission = {
       minimum_amount: '250',
     };
-    expect(() => getCustomerCommissionMaybe(commission, order, currency)).toThrowError(
+    expect(() => getCustomerCommissionMaybe(commission, order, currency)).toThrow(
       '250 is not a number'
     );
   });
