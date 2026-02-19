@@ -78,7 +78,7 @@
     "@loadable/babel-plugin": "^5.16.1",
     "@loadable/webpack-plugin": "^5.15.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
-    "@rushstack/eslint-patch": "^1.1.0",
+    "@rushstack/eslint-patch": "^1.16.0",
     "@svgr/webpack": "^8.1.0",
     "eslint-plugin-react": "^7.33.0",
     "@testing-library/dom": "^10.4.1",
