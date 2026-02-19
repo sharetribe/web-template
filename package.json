@@ -116,7 +116,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-resolve": "^29.7.0",
-    "jest-watch-typeahead": "^1.0.0",
+    "jest-watch-typeahead": "^2.2.2",
     "loader-utils": "^3.2.0",
     "mini-css-extract-plugin": "^2.10.0",
     "nodemon": "^3.1.11",
