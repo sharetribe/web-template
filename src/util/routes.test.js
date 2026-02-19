@@ -25,15 +25,15 @@ describe('util/routes.js', () => {
       expect(
         createResourceLocatorString('ListingPage', routes, { id: '1234', slug: 'nice-listing' }, {})
       ).toEqual('/l/nice-listing/1234');
-      expect(() => createResourceLocatorString('ListingPage', routes, {}, {})).toThrowError(
+      expect(() => createResourceLocatorString('ListingPage', routes, {}, {})).toThrow(
         TypeError('Missing parameters: slug, id')
       );
       expect(() =>
         createResourceLocatorString('ListingPage', routes, { id: '1234' }, {})
-      ).toThrowError(TypeError('Missing parameters: slug'));
+      ).toThrow(TypeError('Missing parameters: slug'));
       expect(() =>
         createResourceLocatorString('ListingPage', routes, { slug: 'nice-listing' }, {})
-      ).toThrowError(TypeError('Missing parameters: id'));
+      ).toThrow(TypeError('Missing parameters: id'));
     });
 
     it('should return meaningful strings with search parameters', () => {
@@ -65,7 +65,7 @@ describe('util/routes.js', () => {
     });
 
     it('should throw exception for non-existing route (BlaaBlaaPage)', () => {
-      expect(() => findRouteByRouteName('BlaaBlaaPage', routes)).toThrowError(
+      expect(() => findRouteByRouteName('BlaaBlaaPage', routes)).toThrow(
         'Component "BlaaBlaaPage" was not found.'
       );
     });

@@ -16,26 +16,26 @@ describe('currency utils', () => {
       const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 2 ** 53 - 1;
       expect(() =>
         convertDecimalJSToNumber(new Decimal(MIN_SAFE_INTEGER - 1), subUnitDivisor)
-      ).toThrowError('Cannot represent Decimal.js value -9007199254740992 safely as a number');
+      ).toThrow('Cannot represent Decimal.js value -9007199254740992 safely as a number');
       expect(() =>
         convertDecimalJSToNumber(new Decimal(MAX_SAFE_INTEGER + 1), subUnitDivisor)
-      ).toThrowError('Cannot represent Decimal.js value 9007199254740992 safely as a number');
+      ).toThrow('Cannot represent Decimal.js value 9007199254740992 safely as a number');
     });
 
     it('wrong type', () => {
-      expect(() => convertDecimalJSToNumber(0, subUnitDivisor)).toThrowError(
+      expect(() => convertDecimalJSToNumber(0, subUnitDivisor)).toThrow(
         'Value must be a Decimal'
       );
-      expect(() => convertDecimalJSToNumber(10, subUnitDivisor)).toThrowError(
+      expect(() => convertDecimalJSToNumber(10, subUnitDivisor)).toThrow(
         'Value must be a Decimal'
       );
-      expect(() => convertDecimalJSToNumber({}, subUnitDivisor)).toThrowError(
+      expect(() => convertDecimalJSToNumber({}, subUnitDivisor)).toThrow(
         'Value must be a Decimal'
       );
-      expect(() => convertDecimalJSToNumber([], subUnitDivisor)).toThrowError(
+      expect(() => convertDecimalJSToNumber([], subUnitDivisor)).toThrow(
         'Value must be a Decimal'
       );
-      expect(() => convertDecimalJSToNumber(null, subUnitDivisor)).toThrowError(
+      expect(() => convertDecimalJSToNumber(null, subUnitDivisor)).toThrow(
         'Value must be a Decimal'
       );
     });
@@ -50,11 +50,11 @@ describe('currency utils', () => {
     });
 
     it('Wrong type of a parameter', () => {
-      expect(() => getAmountAsDecimalJS(10)).toThrowError('Value must be a Money type');
-      expect(() => getAmountAsDecimalJS('10')).toThrowError('Value must be a Money type');
-      expect(() => getAmountAsDecimalJS(true)).toThrowError('Value must be a Money type');
-      expect(() => getAmountAsDecimalJS({})).toThrowError('Value must be a Money type');
-      expect(() => getAmountAsDecimalJS(new Money('asdf', 'USD'))).toThrowError(
+      expect(() => getAmountAsDecimalJS(10)).toThrow('Value must be a Money type');
+      expect(() => getAmountAsDecimalJS('10')).toThrow('Value must be a Money type');
+      expect(() => getAmountAsDecimalJS(true)).toThrow('Value must be a Money type');
+      expect(() => getAmountAsDecimalJS({})).toThrow('Value must be a Money type');
+      expect(() => getAmountAsDecimalJS(new Money('asdf', 'USD'))).toThrow(
         '[DecimalError] Invalid argument'
       );
     });
