@@ -8,7 +8,7 @@
 'use strict';
 
 const path = require('path');
-const escape = require('escape-string-regexp');
+const escape = require('./escapeStringRegExp');
 
 module.exports = function ignoredFiles(appSrc) {
   return new RegExp(
