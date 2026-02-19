@@ -13,7 +13,7 @@ import {
 } from '../../../components';
 
 // Copied directly from
-// `node_modules/react-image-gallery/styles/css/image-gallery.css`. The
+// `node_modules/react-image-gallery/styles/image-gallery.css`. The
 // copied file is left unedited, and all the overrides are defined in
 // the component CSS file below.
 import './image-gallery.css';

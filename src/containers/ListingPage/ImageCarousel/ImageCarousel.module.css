@@ -4,6 +4,7 @@
 :global(.image-gallery-slide-wrapper),
 :global(.image-gallery-swipe),
 :global(.image-gallery-slides),
+:global(.image-gallery-slides-container),
 :global(.image-gallery-slide) {
   width: 100%;
   height: 100%;
