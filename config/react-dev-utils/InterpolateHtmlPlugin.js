@@ -14,7 +14,7 @@
 // https://github.com/ampedandwired/html-webpack-plugin#events
 
 'use strict';
-const escapeStringRegexp = require('escape-string-regexp');
+const escapeStringRegexp = require('./escapeStringRegExp');
 
 class InterpolateHtmlPlugin {
   constructor(htmlWebpackPlugin, replacements) {
