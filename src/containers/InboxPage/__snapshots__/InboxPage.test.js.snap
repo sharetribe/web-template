@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/accept 1`] = `
 <div
