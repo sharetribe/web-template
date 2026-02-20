@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#781](https://github.com/sharetribe/web-template/pull/781)
+
 ## [v10.12.0] 2026-02-19
 
 - [add] Add transaction fields based on Console configuration
