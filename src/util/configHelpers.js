@@ -1436,17 +1436,15 @@ const mergeSortConfig = (hostedSortConfig, defaultSortConfig) => {
     '-createdAt': !hostedSortConfig?.oldest,
     '-price': !hostedSortConfig?.lowestPrice,
     price: !hostedSortConfig?.highestPrice,
+    relevance: !hostedSortConfig?.relevance,
   };
 
   // Remove disabled sort options
   const options = defaultSortConfig.options.filter(option => !removeByKey[option.key]);
 
-  // Set sortConfig active if any non-relevance options exist
-  const active = options.some(option => option.key !== defaultSortConfig.relevanceKey);
-
   return {
     ...defaultSortConfig,
-    active: active,
+    active: options.length > 0,
     options: options,
   };
 };

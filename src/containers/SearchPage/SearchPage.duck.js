@@ -241,8 +241,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     const sortConfig = config?.search?.sortConfig || {};
     const defaultSort = sortConfig?.options?.[0]?.key;
     // Prefer incoming sort option, fallback to default
-    const sort = sortParam || defaultSort;
-    return sort && sort !== sortConfig.relevanceKey ? { sort } : {};
+    return sortParam || defaultSort;
   };
 
   const {
