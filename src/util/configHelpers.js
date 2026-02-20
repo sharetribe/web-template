@@ -578,18 +578,25 @@ const validShowConfig = config => {
   // Validate: label, isDetail.
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidIsDetail, isDetail] = validBoolean('isDetail', config.isDetail, true);
+  const [isValidDisplayOnListingPage, isDisplayOnListingPage] = validBoolean(
+    'displayOnListingPage',
+    config.displayOnListingPage,
+    true
+  );
   const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
     'unselectedOptions',
     config.unselectedOptions,
     true
   );
 
-  const isValid = isValidLabel && isValidIsDetail && isValidUnselectedOptions;
+  const isValid =
+    isValidLabel && isValidIsDetail && isValidUnselectedOptions && isValidDisplayOnListingPage;
   const validValue = {
     showConfig: {
       ...label,
       ...isDetail,
       ...unselectedOptions,
+      ...isDisplayOnListingPage,
     },
   };
   return [isValid, validValue];
@@ -732,7 +739,7 @@ const validUserSaveConfig = config => {
 
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
-  const scopeOptions = ['public', 'private'];
+  const scopeOptions = ['public', 'private', 'metadata'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
 
   return listingFields.reduce((acc, data) => {
@@ -1031,6 +1038,7 @@ const restructureListingFields = hostedListingFields => {
         schemaType,
         enumOptions,
         label,
+        displayOnListingPage,
         filterConfig = {},
         showConfig = {},
         saveConfig = {},
@@ -1057,6 +1065,7 @@ const restructureListingFields = hostedListingFields => {
             showConfig: {
               ...showConfig,
               label: showConfig.label || defaultLabel,
+              displayOnListingPage,
             },
             saveConfig: {
               ...restSaveConfig,

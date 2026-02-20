@@ -2,6 +2,7 @@ import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString, matchPathname } from '../../util/routes';
 import {
   isAnyFilterActive,
+  isFilterEnabled,
   parseSelectFilterOptions,
   constructQueryParamName,
 } from '../../util/search';
@@ -176,8 +177,8 @@ export const validURLParamForExtendedData = (
 export const validFilterParams = (params, filterConfigs, dropNonFilterParams = true) => {
   const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
 
-  const listingFieldFiltersConfig = listingFieldsConfig.filter(
-    config => config.filterConfig?.indexForSearch
+  const listingFieldFiltersConfig = listingFieldsConfig.filter(config =>
+    isFilterEnabled(config.filterConfig)
   );
   const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
     constructQueryParamName(f.key, f.scope)
@@ -461,7 +462,7 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
     (grouped, config) => {
       const [primary, secondary] = grouped;
       const { listingTypeConfig = {}, filterConfig } = config;
-      const isIndexed = filterConfig?.indexForSearch === true;
+      const isIndexed = isFilterEnabled(filterConfig);
       const isActiveListingTypes =
         !listingTypeConfig.limitToListingTypeIds ||
         listingTypeConfig.listingTypeIds.some(lt => activeListingTypes.includes(lt));

@@ -27,6 +27,11 @@ const CustomListingFields = props => {
   const categoriesObj = pickCategoryFields(publicData, categoryPrefix, 1, listingCategoriesConfig);
   const currentCategories = Object.values(categoriesObj);
 
+  // metadata fields should not be shown on the listing page if displayOnListingPage flag is not present
+  const displayableFieldConfigs = listingFieldConfigs.filter(
+    fieldConfig => fieldConfig.showConfig?.displayOnListingPage !== false
+  );
+
   const isFieldForSelectedCategories = fieldConfig => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
     return isTargetCategory;
@@ -34,7 +39,7 @@ const CustomListingFields = props => {
   const propsForCustomFields =
     pickCustomFieldProps(
       { publicData, metadata },
-      listingFieldConfigs,
+      displayableFieldConfigs,
       'listingType',
       isFieldForSelectedCategories
     ) || [];
@@ -42,7 +47,7 @@ const CustomListingFields = props => {
   const sectionDetailsProps = {
     ...props,
     isFieldForCategory: isFieldForSelectedCategories,
-    fieldConfigs: listingFieldConfigs,
+    fieldConfigs: displayableFieldConfigs,
     heading: 'ListingPage.detailsTitle',
   };
 
@@ -55,7 +60,7 @@ const CustomListingFields = props => {
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
-    const value = typeof publicDataValue != null ? publicDataValue : metadataValue;
+    const value = publicDataValue != null ? publicDataValue : metadataValue;
 
     if (isDetail && isTargetListingType && isTargetCategory && typeof value !== 'undefined') {
       const detailValue = getDetailCustomFieldValue(

@@ -187,7 +187,8 @@ export const CustomUserFields = props => {
   const { publicData, metadata, userFieldConfig, intl } = props;
 
   const shouldPickUserField = fieldConfig =>
-    fieldConfig?.scope === 'public' && fieldConfig?.showConfig?.displayInProfile !== false;
+    ['public', 'metadata'].includes(fieldConfig?.scope) &&
+    fieldConfig?.showConfig?.displayInProfile !== false;
   const propsForCustomFields =
     pickCustomFieldProps(
       { publicData, metadata },
