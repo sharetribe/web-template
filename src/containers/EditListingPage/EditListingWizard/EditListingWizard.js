@@ -232,12 +232,18 @@ const tabCompleted = (tab, listing, config) => {
     pickupEnabled,
     cardStyle,
   } = publicData || {};
+  const listingTypeConfig = config.listing.listingTypes.find(
+    config => config.listingType === listingType
+  );
+  const descriptionRequired = listingTypeConfig?.defaultListingFields.description;
+  const descriptionMaybe = !descriptionRequired || description;
+
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DETAILS:
       return !!(
-        description &&
+        descriptionMaybe &&
         title &&
         listingType &&
         transactionProcessAlias &&
