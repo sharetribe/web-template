@@ -304,6 +304,12 @@ export const listingTypes = [
   //     },
   //     {
   //       showTo: 'customer',
+  //       label: 'Are you traveling with minors?',
+  //       key: 'minors',
+  //       schemaType: 'boolean',
+  //     },
+  //     {
+  //       showTo: 'customer',
   //       numberConfig: {
   //         minimum: 1,
   //         maximum: 10,

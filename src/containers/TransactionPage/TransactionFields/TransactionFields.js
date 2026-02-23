@@ -279,6 +279,7 @@ const TransactionFields = props => {
         isCustomerBanned={isCustomerBanned}
         isProviderBanned={isProviderBanned}
         bannedUserMessage={bannedUserMessage}
+        intl={intl}
       />
       <SectionText
         heading={intl.formatMessage({
