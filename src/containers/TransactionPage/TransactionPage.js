@@ -637,10 +637,12 @@ export const TransactionPageComponent = props => {
       }
     : {};
 
-  // The location of the booking can be shown if fuzzy location
+  // The location of the booking can be shown if fuzzy location, and if
+  // the listing type actually includes a location field.
   const showBookingLocation =
     isBookingProcess(stateData.processName) &&
-    process?.hasPassedState(process?.states?.ACCEPTED, transaction);
+    process?.hasPassedState(process?.states?.ACCEPTED, transaction) &&
+    foundListingTypeConfig?.defaultListingFields.location;
 
   const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
   const isRegularNegotiation =
