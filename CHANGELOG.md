@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Hides listing description input/display when option is toggled off in Console > Listing
+  types > Default listing fields
+  [#767](https://github.com/sharetribe/web-template/pull/767)
 - [change] ListingCard: refactor and add aria-label attribute to the component.
   [#787](https://github.com/sharetribe/web-template/pull/787)
 - [fix] FieldSelectIntegerRange: fix aria-attributes.
