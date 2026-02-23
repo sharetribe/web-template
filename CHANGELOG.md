@@ -14,8 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
-- [add] Fix a Marketplace text
-  [#784](https://github.com/sharetribe/web-template/pull/784)
+- [fix] Fix boolean support for transaction fields
+  [#782](https://github.com/sharetribe/web-template/pull/782)
+- [add] Fix a Marketplace text [#784](https://github.com/sharetribe/web-template/pull/784)
 - [add] Add currently available translations for DE, ES, FR.
   [#781](https://github.com/sharetribe/web-template/pull/781)
 
