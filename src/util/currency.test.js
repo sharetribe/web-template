@@ -82,9 +82,7 @@ describe('currency utils', () => {
 
     it('Throws exceptions if string formatted parameter can not be converted to Decimal', () => {
       expect(() => convertToDecimal('asdf')).toThrow('[DecimalError] Invalid argument: asdf');
-      expect(() => convertToDecimal('123asdf')).toThrow(
-        '[DecimalError] Invalid argument: 123asdf'
-      );
+      expect(() => convertToDecimal('123asdf')).toThrow('[DecimalError] Invalid argument: 123asdf');
     });
 
     it('Throws exceptions if parameter is not a string', () => {
@@ -117,9 +115,7 @@ describe('currency utils', () => {
     });
 
     it('Throws exceptions if string formatted parameter is not a number', () => {
-      expect(() => convertDecimalToString('asdf')).toThrow(
-        '[DecimalError] Invalid argument: asdf'
-      );
+      expect(() => convertDecimalToString('asdf')).toThrow('[DecimalError] Invalid argument: asdf');
       expect(() => convertDecimalToString('123asdf')).toThrow(
         '[DecimalError] Invalid argument: 123asdf'
       );

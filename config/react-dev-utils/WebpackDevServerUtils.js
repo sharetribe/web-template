@@ -28,7 +28,7 @@ function prepareUrls(protocol, host, port, pathname = '/') {
     return urlObj.toString();
   };
   const prettyPrintUrl = hostname => {
-    // For pretty printing, we need to format manually since chalk.bold() 
+    // For pretty printing, we need to format manually since chalk.bold()
     // can't be used in URL constructor
     return `${protocol}://${hostname}:${chalk.bold(port)}${validPathname}`;
   };
