@@ -6,20 +6,36 @@ const webpack = require('webpack');
 const resolve = require('resolve');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const InlineChunkHtmlPlugin = require(path.join(__dirname, 'react-dev-utils', 'InlineChunkHtmlPlugin'));
+const InlineChunkHtmlPlugin = require(path.join(
+  __dirname,
+  'react-dev-utils',
+  'InlineChunkHtmlPlugin'
+));
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const InterpolateHtmlPlugin = require(path.join(__dirname, 'react-dev-utils', 'InterpolateHtmlPlugin'));
+const InterpolateHtmlPlugin = require(path.join(
+  __dirname,
+  'react-dev-utils',
+  'InterpolateHtmlPlugin'
+));
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const ModuleScopePlugin = require(path.join(__dirname, 'react-dev-utils', 'ModuleScopePlugin'));
-const getCSSModuleLocalIdent = require(path.join(__dirname, 'react-dev-utils', 'getCSSModuleLocalIdent'));
+const getCSSModuleLocalIdent = require(path.join(
+  __dirname,
+  'react-dev-utils',
+  'getCSSModuleLocalIdent'
+));
 const ESLintPlugin = require('eslint-webpack-plugin');
 const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
-const ModuleNotFoundPlugin = require(path.join(__dirname, 'react-dev-utils', 'ModuleNotFoundPlugin'));
+const ModuleNotFoundPlugin = require(path.join(
+  __dirname,
+  'react-dev-utils',
+  'ModuleNotFoundPlugin'
+));
 const ForkTsCheckerWebpackPlugin =
   process.env.TSC_COMPILE_ON_ERROR === 'true'
     ? require(path.join(__dirname, 'react-dev-utils', 'ForkTsCheckerWarningWebpackPlugin'))
@@ -64,8 +80,7 @@ const hasEslintConfig = [
   '.eslintrc.yml',
   '.eslintrc.json',
 ].some(name => fs.existsSync(path.join(paths.appPath, name)));
-const disableESLintPlugin =
-  process.env.DISABLE_ESLINT_PLUGIN === 'true' || !hasEslintConfig;
+const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true' || !hasEslintConfig;
 
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
 

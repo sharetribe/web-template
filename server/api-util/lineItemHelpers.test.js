@@ -399,9 +399,7 @@ describe('constructValidLineItems()', () => {
       },
     ];
 
-    expect(() => constructValidLineItems(lineItems)).toThrow(
-      `Invalid line item code: ${code}`
-    );
+    expect(() => constructValidLineItems(lineItems)).toThrow(`Invalid line item code: ${code}`);
   });
 });
 
@@ -420,9 +418,7 @@ describe('hasCommissionPercentage()', () => {
 
   it('should throw error if percentage property does not contain number', () => {
     expect(() => hasCommissionPercentage({ percentage: '10' })).toThrow('10 is not a number.');
-    expect(() => hasCommissionPercentage({ percentage: 'asdf' })).toThrow(
-      'asdf is not a number.'
-    );
+    expect(() => hasCommissionPercentage({ percentage: 'asdf' })).toThrow('asdf is not a number.');
   });
 });
 
@@ -440,12 +436,8 @@ describe('hasMinimumCommission()', () => {
   });
 
   it('should throw error if minimum commission property does not contain number', () => {
-    expect(() => hasMinimumCommission({ minimum_amount: '10' })).toThrow(
-      '10 is not a number.'
-    );
-    expect(() => hasMinimumCommission({ minimum_amount: 'asdf' })).toThrow(
-      'asdf is not a number.'
-    );
+    expect(() => hasMinimumCommission({ minimum_amount: '10' })).toThrow('10 is not a number.');
+    expect(() => hasMinimumCommission({ minimum_amount: 'asdf' })).toThrow('asdf is not a number.');
   });
 });
 

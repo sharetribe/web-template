@@ -28,9 +28,9 @@ describe('util/routes.js', () => {
       expect(() => createResourceLocatorString('ListingPage', routes, {}, {})).toThrow(
         TypeError('Missing parameters: slug, id')
       );
-      expect(() =>
-        createResourceLocatorString('ListingPage', routes, { id: '1234' }, {})
-      ).toThrow(TypeError('Missing parameters: slug'));
+      expect(() => createResourceLocatorString('ListingPage', routes, { id: '1234' }, {})).toThrow(
+        TypeError('Missing parameters: slug')
+      );
       expect(() =>
         createResourceLocatorString('ListingPage', routes, { slug: 'nice-listing' }, {})
       ).toThrow(TypeError('Missing parameters: id'));

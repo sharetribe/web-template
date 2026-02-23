@@ -23,18 +23,10 @@ describe('currency utils', () => {
     });
 
     it('wrong type', () => {
-      expect(() => convertDecimalJSToNumber(0, subUnitDivisor)).toThrow(
-        'Value must be a Decimal'
-      );
-      expect(() => convertDecimalJSToNumber(10, subUnitDivisor)).toThrow(
-        'Value must be a Decimal'
-      );
-      expect(() => convertDecimalJSToNumber({}, subUnitDivisor)).toThrow(
-        'Value must be a Decimal'
-      );
-      expect(() => convertDecimalJSToNumber([], subUnitDivisor)).toThrow(
-        'Value must be a Decimal'
-      );
+      expect(() => convertDecimalJSToNumber(0, subUnitDivisor)).toThrow('Value must be a Decimal');
+      expect(() => convertDecimalJSToNumber(10, subUnitDivisor)).toThrow('Value must be a Decimal');
+      expect(() => convertDecimalJSToNumber({}, subUnitDivisor)).toThrow('Value must be a Decimal');
+      expect(() => convertDecimalJSToNumber([], subUnitDivisor)).toThrow('Value must be a Decimal');
       expect(() => convertDecimalJSToNumber(null, subUnitDivisor)).toThrow(
         'Value must be a Decimal'
       );
