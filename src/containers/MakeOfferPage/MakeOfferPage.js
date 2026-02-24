@@ -91,7 +91,7 @@ const handleSubmit = (submitting, setSubmitting, props, transactionFieldConfigs)
   const searchParams = parse(location.search);
   const transactionId = searchParams.transactionId;
 
-  const { providerDefaultMessage, customerDefaultMessage, quote } = values;
+  const { providerDefaultMessage, quote } = values;
 
   const { listingType, transactionProcessAlias, unitType } = listing?.attributes?.publicData || {};
 
@@ -104,7 +104,6 @@ const handleSubmit = (submitting, setSubmitting, props, transactionFieldConfigs)
     listingId: listing?.id,
     protectedData: {
       ...(providerDefaultMessage ? { providerDefaultMessage } : {}),
-      ...(customerDefaultMessage ? { customerDefaultMessage } : {}),
       ...getTransactionTypeData(listingType, unitType, config),
       ...pickTransactionFieldsData(
         values,
