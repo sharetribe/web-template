@@ -54,7 +54,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     processName,
     onInquiryWithoutPayment,
     onSubmitCallback,
-    transactionFieldConfigs,
+    transactionFieldConfigs = [],
   } = props;
 
   const { inquiryMessage } = values;
