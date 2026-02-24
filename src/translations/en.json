@@ -1303,7 +1303,7 @@
   "TransactionPage.default-negotiation.provider.offer-accepted.extraInfo": "Deliver the order and notify {customerName} to receive your payment.",
   "TransactionPage.default-negotiation.provider.offer-accepted.title": "Your offer has been accepted.",
   "TransactionPage.default-negotiation.provider.offer-pending.disabled.maxRequests": "You've reached the maximum number of offer updates. Please contact support.",
-  "TransactionPage.default-negotiation.provider.offer-pending.extraInfo": "{customerName} can now react your offer.",
+  "TransactionPage.default-negotiation.provider.offer-pending.extraInfo": "{customerName} can now react to your offer.",
   "TransactionPage.default-negotiation.provider.offer-pending.title": "Your offer has been received.",
   "TransactionPage.default-negotiation.provider.offer-rejected.title": "The offer was rejected.",
   "TransactionPage.default-negotiation.provider.pending-payment.title": "Payment hasn't been confirmed yet.",
