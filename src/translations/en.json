@@ -544,6 +544,7 @@
   "ListingCard.priceStartingFrom": "From {priceValue} {pricePerUnit}",
   "ListingCard.unsupportedPrice": "({currency})",
   "ListingCard.unsupportedPriceTitle": "Unsupported currency ({currency})",
+  "ListingCard.screenreader.label": "{listingTitle}, {formattedPrice}",
   "ListingImageGallery.closeModal": "CLOSE",
   "ListingImageGallery.closeModalTitle": "Close modal",
   "ListingImageGallery.imageAltText": "listing photo {index}/{count}",
