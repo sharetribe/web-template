@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Prevent saving customer fields when provider is making an offer
+  [#785](https://github.com/sharetribe/web-template/pull/785)
 - [fix] Remove location heading for listing types with no location
   [#783](https://github.com/sharetribe/web-template/pull/783)
 - [fix] Fix boolean support for transaction fields
