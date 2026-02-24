@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix submitting inquiry without transaction fields
+  [#788](https://github.com/sharetribe/web-template/pull/788)
 - [add] Prevent saving customer fields when provider is making an offer
   [#785](https://github.com/sharetribe/web-template/pull/785)
 - [fix] Remove location heading for listing types with no location
