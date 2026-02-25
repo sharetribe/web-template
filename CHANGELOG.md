@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.12.1] 2026-02-24
+
 - [fix] Fix submitting inquiry without transaction fields
   [#788](https://github.com/sharetribe/web-template/pull/788)
 - [add] Prevent saving customer fields when provider is making an offer
@@ -25,6 +27,8 @@ way to update this template, but currently, we follow a pattern:
 - [add] Fix a Marketplace text [#784](https://github.com/sharetribe/web-template/pull/784)
 - [add] Add currently available translations for DE, ES, FR.
   [#781](https://github.com/sharetribe/web-template/pull/781)
+
+  [v10.12.0]: https://github.com/sharetribe/web-template/compare/v10.12.0...v10.12.1
 
 ## [v10.12.0] 2026-02-19
 
