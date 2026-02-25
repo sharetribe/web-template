@@ -218,10 +218,7 @@ const RangeInput = props => {
             value={fieldValues.minValue}
             onChange={handleMinValueChange}
             onBlur={handleMinValueBlur}
-            aria-valuenow={fieldValues.minValue}
-            aria-valuetext={labelForRangeInput(fieldValues.minValue, 'min')}
-            aria-valuemin={defaultMinValue}
-            aria-valuemax={defaultMaxValue}
+            aria-invalid={isMinInvalid}
             aria-label={labelForRangeInput(fieldValues.minValue, 'min')}
           ></input>
           <span className={css.valueSeparator}>-</span>
@@ -239,10 +236,7 @@ const RangeInput = props => {
             value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
             onBlur={handleMaxValueBlur}
-            aria-valuenow={fieldValues.maxValue}
-            aria-valuetext={labelForRangeInput(fieldValues.maxValue, 'max')}
-            aria-valuemin={defaultMinValue}
-            aria-valuemax={defaultMaxValue}
+            aria-invalid={isMaxInvalid}
             aria-label={labelForRangeInput(fieldValues.maxValue, 'max')}
           ></input>
         </div>

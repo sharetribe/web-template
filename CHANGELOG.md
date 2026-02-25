@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] FieldSelectIntegerRange: fix aria-attributes.
+  [#786](https://github.com/sharetribe/web-template/pull/786)
 - [add] Add currently available translations for DE, ES, FR.
   [#790](https://github.com/sharetribe/web-template/pull/790)
 
