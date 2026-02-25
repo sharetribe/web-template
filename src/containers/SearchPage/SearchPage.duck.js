@@ -237,12 +237,25 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     return hasDatesFilterInUse && seatsFilter ? { seats } : {};
   };
 
-  const sortSearchParams = sortParam => {
+  const sortSearchParams = (sortParam, hasKeywords) => {
     const sortConfig = config?.search?.sortConfig || {};
     const defaultSort = sortConfig?.options?.[0]?.key;
-    // Prefer incoming sort option, fallback to default
-    const sort = sortParam || defaultSort;
-    return sort && sort !== sortConfig.relevanceKey ? { sort } : {};
+    const relevanceEnabled = sortConfig.options?.some(
+      option => option.key === sortConfig.relevanceKey
+    );
+
+    // User-specified sort takes priority
+    if (sortParam !== undefined) {
+      return { sort: sortParam };
+    }
+
+    // No sort parameter needed when keyword search is used or sort config is inactive
+    if (relevanceEnabled && (hasKeywords || !sortConfig.active)) {
+      return {};
+    }
+
+    // Fall back to default sort
+    return { sort: defaultSort };
   };
 
   const {
@@ -262,7 +275,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
   const seatsMaybe = seatsSearchParams(seats, datesMaybe);
-  const sortMaybe = sortSearchParams(sort);
+  const sortMaybe = sortSearchParams(sort, searchParams?.keywords !== undefined);
 
   const params = {
     // The params that are related to listing fields and categories are prepared here.
