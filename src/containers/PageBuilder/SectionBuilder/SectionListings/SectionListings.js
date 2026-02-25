@@ -294,7 +294,8 @@ const SectionListings = props => {
   const onSlideLeft = e => {
     const slider = sliderRef.current;
     if (!slider) return;
-    const slideWidth = numColumns * slider.clientWidth;
+    const sliderChildElement = sliderRef.current.firstElementChild?.querySelector('a');
+    const slideWidth = numColumns * sliderChildElement?.clientWidth;
     slider.scrollLeft = slider.scrollLeft - slideWidth;
     // Fix for Safari
     e.target.focus();
@@ -303,7 +304,8 @@ const SectionListings = props => {
   const onSlideRight = e => {
     const slider = sliderRef.current;
     if (!slider) return;
-    const slideWidth = numColumns * slider.clientWidth;
+    const sliderChildElement = sliderRef.current.firstElementChild?.querySelector('a');
+    const slideWidth = numColumns * sliderChildElement?.clientWidth;
     slider.scrollLeft = slider.scrollLeft + slideWidth;
     // Fix for Safari
     e.target.focus();
