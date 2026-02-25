@@ -3827,10 +3827,10 @@
     estree-walker "^2.0.2"
     picomatch "^4.0.2"
 
-"@rushstack/eslint-patch@^1.16.0":
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.16.0.tgz#d40bb0c401861298c9ac68448166636484655ef5"
-  integrity sha512-TMAArRcXZE6ckNI98mXuWv24yXs3bxXT0yGnySY9fpN7y+VkNcyZPiXeV7Dyr3cNdes9JxjM6KzbsZ+JMpVNNA==
+"@rushstack/eslint-patch@^1.16.1":
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.16.1.tgz#4f97581e114fc79f246cee3723a5c4edd3b62415"
+  integrity sha512-TvZbIpeKqGQQ7X0zSCvPH9riMSFQFSggnfBjFZ1mEoILW+UuXCKwOoPcgjMwiUtRqFZ8jWhPJc4um14vC6I4ag==
 
 "@sentry-internal/browser-utils@10.39.0":
   version "10.39.0"
