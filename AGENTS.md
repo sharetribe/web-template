@@ -9,6 +9,8 @@ React 18 + Redux Toolkit + Final Form + Express.js + Server-Side Rendering
 # Architecture
 
 ```shell
+├── config            # Webpack configuration. Be careful when modifying these.
+├── scripts           # Scripts e.g. build, start, test, etc.
 ├── public
 │   ├── static        # Static assets that are copied to the build directory.
 │   └── index.html    # The main HTML file.
@@ -26,7 +28,7 @@ React 18 + Redux Toolkit + Final Form + Express.js + Server-Side Rendering
 │   │   │   ├── SomeComponent.module.css
 │   │   │   └── SomeComponent.test.js
 │   │   └── index.js  # Export shared components and maintain the import order.
-│   ├── config        # Built-in configurations. Hosted configurations override most of these.
+│   ├── config        # Built-in configurations for the app. Hosted configurations override most of these.
 │   ├── containers    # Page-level components. Only these are connected to Redux store.
 │   │   ├── SomePage              # An example of a page-level component directory.
 │   │   │   ├── SomePage.duck.js  # Redux: contains a 'loadData' function and Redux slice creation.
