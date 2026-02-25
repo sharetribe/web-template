@@ -1205,6 +1205,8 @@
   "TransactionPage.ActivityFeed.reviewLink": "Laissez un avis sur {otherUsersName}.",
   "TransactionPage.ActivityFeed.showOlderMessages": "Voir plus",
   "TransactionPage.ActivityFeed.today": "Aujourd'hui",
+  "TransactionPage.detailNo": "Non",
+  "TransactionPage.detailYes": "Oui",
   "TransactionPage.Offer.counterOfferLabel": "Contre-offre",
   "TransactionPage.Offer.heading": "Offre",
   "TransactionPage.Offer.providerDefaultMessageLabel": "Détails supplémentaires",

@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#790](https://github.com/sharetribe/web-template/pull/790)
+
 ## [v10.12.1] 2026-02-24
 
 - [fix] Fix submitting inquiry without transaction fields

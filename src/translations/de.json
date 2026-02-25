@@ -1205,6 +1205,8 @@
   "TransactionPage.ActivityFeed.reviewLink": "Gib eine Bewertung für {otherUsersName} ab.",
   "TransactionPage.ActivityFeed.showOlderMessages": "Ältere anzeigen",
   "TransactionPage.ActivityFeed.today": "Heute",
+  "TransactionPage.detailNo": "Nein",
+  "TransactionPage.detailYes": "Ja",
   "TransactionPage.Offer.counterOfferLabel": "Gegenangebot",
   "TransactionPage.Offer.heading": "Angebot",
   "TransactionPage.Offer.providerDefaultMessageLabel": "Zusätzliche Details",
