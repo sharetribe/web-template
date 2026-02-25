@@ -2,6 +2,7 @@
 
 exports[`ListingCard matches snapshot 1`] = `
 <a
+  aria-label="ListingCard.screenreader.label"
   class="root"
   href="/l/listing1-title/listing1"
 >
@@ -28,9 +29,7 @@ exports[`ListingCard matches snapshot 1`] = `
       class="price"
       title="55"
     >
-      <span>
-        ListingCard.price
-      </span>
+      ListingCard.price
     </div>
     <div
       class="mainInfo"
@@ -43,9 +42,7 @@ exports[`ListingCard matches snapshot 1`] = `
       <div
         class="authorInfo"
       >
-        <span>
-          ListingCard.author
-        </span>
+        ListingCard.author
       </div>
     </div>
   </div>
@@ -54,6 +51,7 @@ exports[`ListingCard matches snapshot 1`] = `
 
 exports[`ListingCard matches snapshot without price 1`] = `
 <a
+  aria-label="listing1 title"
   class="root"
   href="/l/listing1-title/listing1"
 >
@@ -87,9 +85,7 @@ exports[`ListingCard matches snapshot without price 1`] = `
       <div
         class="authorInfo"
       >
-        <span>
-          ListingCard.author
-        </span>
+        ListingCard.author
       </div>
     </div>
   </div>
