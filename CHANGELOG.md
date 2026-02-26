@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.13.0] 2026-02-26
+
 - [change] Hides listing description input/display when option is toggled off in Console > Listing
   types > Default listing fields
   [#767](https://github.com/sharetribe/web-template/pull/767)
@@ -23,6 +25,8 @@ way to update this template, but currently, we follow a pattern:
   [#786](https://github.com/sharetribe/web-template/pull/786)
 - [add] Add currently available translations for DE, ES, FR.
   [#790](https://github.com/sharetribe/web-template/pull/790)
+
+  [v10.13.0]: https://github.com/sharetribe/web-template/compare/v10.12.1...v10.13.0
 
 ## [v10.12.1] 2026-02-24
 
