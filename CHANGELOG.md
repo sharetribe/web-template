@@ -14,11 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Modify listing card price classes
+  [#796](https://github.com/sharetribe/web-template/pull/796)
+
 ## [v10.13.0] 2026-02-26
 
 - [change] Hides listing description input/display when option is toggled off in Console > Listing
-  types > Default listing fields
-  [#767](https://github.com/sharetribe/web-template/pull/767)
+  types > Default listing fields [#767](https://github.com/sharetribe/web-template/pull/767)
 - [change] ListingCard: refactor and add aria-label attribute to the component.
   [#787](https://github.com/sharetribe/web-template/pull/787)
 - [fix] FieldSelectIntegerRange: fix aria-attributes.
