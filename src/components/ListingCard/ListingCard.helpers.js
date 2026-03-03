@@ -71,12 +71,11 @@ export const getListingCardTranslations = (listing, config, intl) => {
     : '';
 
   // Single formatted price line (amount + per-unit if applicable); used for both card aria and price block
+  const priceValue = <span className={css.priceValue}>{formattedPrice}</span>;
+  const pricePerUnit = isBookable ? <span className={css.perUnit}>{perUnitString}</span> : '';
   const priceMessage =
     showPrice && formattedPrice != null
-      ? intl.formatMessage(
-          { id: priceMessageId },
-          { priceValue: formattedPrice, pricePerUnit: perUnitString }
-        )
+      ? intl.formatMessage({ id: priceMessageId }, { priceValue, pricePerUnit })
       : '';
 
   const cardAriaLabel =
