@@ -52,7 +52,7 @@ const ListingCardImage = props => {
     aspectHeight,
     variantPrefix,
     aspectRatioClassName,
-    useEagerImages,
+    lazyLoadImage,
   } = props;
 
   const firstImage = listing?.images?.[0] || null;
@@ -61,7 +61,7 @@ const ListingCardImage = props => {
     : [];
 
   const aspectRatioClass = aspectRatioClassName || css.aspectRatioWrapper;
-  const ImageComponent = useEagerImages ? ResponsiveImage : LazyImage;
+  const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
 
   return (
     <AspectRatioWrapper
@@ -108,7 +108,7 @@ export const ListingCard = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo = true,
-    useEagerImages = false,
+    lazyLoadImage = true,
   } = props;
 
   const translations = getListingCardTranslations(listing, config, intl);
@@ -165,7 +165,7 @@ export const ListingCard = props => {
           aspectHeight={aspectHeight}
           variantPrefix={variantPrefix}
           aspectRatioClassName={aspectRatioClassName}
-          useEagerImages={useEagerImages}
+          lazyLoadImage={lazyLoadImage}
         />
       ) : (
         <ListingCardThumbnail
@@ -184,8 +184,16 @@ export const ListingCard = props => {
           </div>
         ) : null}
         <div className={css.mainInfo}>
-          {showListingImage && <div className={classNames(css.title, { [css.lightText]: darkMode })}>{titleFormatted}</div>}
-          {showAuthorInfo ? <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>{authorName}</div> : null}
+          {showListingImage && (
+            <div className={classNames(css.title, { [css.lightText]: darkMode })}>
+              {titleFormatted}
+            </div>
+          )}
+          {showAuthorInfo ? (
+            <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>
+              {authorName}
+            </div>
+          ) : null}
         </div>
       </div>
     </NamedLink>

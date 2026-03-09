@@ -196,7 +196,7 @@ const ListingCarouselComponent = props => {
             listing={listing}
             darkMode={darkMode}
             renderSizes={getResponsiveImageSizes(numColumns)}
-            useEagerImages={isInsideContainer}
+            lazyLoadImage={!isInsideContainer}
           />
         </li>
       ))}
@@ -268,27 +268,19 @@ const SectionListings = props => {
   }, []);
 
   useEffect(() => {
-    // Measures the container's natural width and sets it as the --carouselWidth CSS variable.
-    const setCarouselWidth = () => {
-      const elem = containerRef.current;
-      if (!elem) return;
-      // Reset to 0px so the container can shrink before we measure its natural width
-      elem.style.setProperty('--carouselWidth', '0px');
-      const carouselWidth = elem.clientWidth;
-      elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
-      setCarouselWidthConstant(carouselWidth);
-    };
-    setCarouselWidth();
+    // we use resizeObserver to accomodate for an edge case when this section is rendered within a modal
+    if (containerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        const carouselWidth = entries[0].contentRect.width;
+        containerRef.current.style.setProperty('--carouselWidth', `${carouselWidth}px`);
+        setCarouselWidthConstant(carouselWidth);
+      });
+      resizeObserver.observe(containerRef.current);
 
-    // ResizeObserver recalculates when the container's dimensions change
-    const resizeObserver = new ResizeObserver(setCarouselWidth);
-    resizeObserver.observe(containerRef.current);
-
-    window.addEventListener('resize', setCarouselWidth);
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', setCarouselWidth);
-    };
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
   }, []);
 
   const onSlideLeft = e => {
@@ -353,7 +345,7 @@ const SectionListings = props => {
         </header>
       ) : null}
 
-      <div className={css.carouselContainer} ref={containerRef}>
+      <div className={css.carouselContainer}>
         <div
           className={classNames(css.carouselArrows, {
             [css.notEnoughListings]: numberOfListings <= numColumns,
@@ -366,7 +358,7 @@ const SectionListings = props => {
             ›
           </button>
         </div>
-        <div className={css.dynamicContainer} style={{ height: carouselHeight }}>
+        <div className={css.dynamicContainer} style={{ height: carouselHeight }} ref={containerRef}>
           {/* Lazy-loaded carousel component renders when in viewport. We don't use lazy loading if component is rendered within a modal */}
           {isInsideContainer ? (
             <ListingCarouselComponent
