@@ -46,6 +46,7 @@
     "react-intl": "7.1.14",
     "react-redux": "9.2.0",
     "react-router-dom": "^5.3.4",
+    "recharts": "^2.12.7",
     "rehype-react": "^6.2.1",
     "rehype-sanitize": "^4.0.0",
     "remark-parse": "^9.0.0",

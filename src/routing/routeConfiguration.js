@@ -39,6 +39,7 @@ const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayou
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
+const PriceTrackerPage = loadable(() => import(/* webpackChunkName: "PriceTrackerPage" */ '../containers/PriceTrackerPage/PriceTrackerPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -369,6 +370,12 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'PrivacyPolicyPage',
       component: PrivacyPolicyPage,
       loadData: pageDataLoadingAPI.PrivacyPolicyPage.loadData,
+    },
+    {
+      path: '/price-tracker',
+      name: 'PriceTrackerPage',
+      component: PriceTrackerPage,
+      loadData: pageDataLoadingAPI.PriceTrackerPage.loadData,
     },
     {
       path: '/styleguide',

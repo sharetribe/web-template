@@ -16,6 +16,7 @@ const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const deleteAccount = require('./api/delete-account');
+const priceTracker = require('./api/price-tracker');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
@@ -52,6 +53,7 @@ router.use((req, res, next) => {
 
 router.get('/initiate-login-as', initiateLoginAs);
 router.get('/login-as', loginAs);
+router.get('/price-tracker', priceTracker);
 router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
