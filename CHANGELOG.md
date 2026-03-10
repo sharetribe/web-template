@@ -14,12 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.14.0] 2026-03-10
+
 - [add] Support `helpText` from listing and user field asset configs. Displayed below form fields
   via new HelpText component.[#778](https://github.com/sharetribe/web-template/pull/778)
 - [add] Add featured listings section type (SectionListings.js) that fetches and displays listings
   in a carousel layout. [#712](https://github.com/sharetribe/web-template/pull/712)
 - [fix] Modify listing card price classes
   [#796](https://github.com/sharetribe/web-template/pull/796)
+
+  [v10.14.0]: https://github.com/sharetribe/web-template/compare/v10.13.0...v10.14.0
 
 ## [v10.13.0] 2026-02-26
 
