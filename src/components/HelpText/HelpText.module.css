@@ -1,0 +1,12 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  composes: textSmall from global;
+  color: var(--colorGrey600);
+  margin-top: 11px;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 16px;
+  }
+}
