@@ -1,3 +1,5 @@
+// ⚠️ If you modify the styling of this component and you're using the SectionListings component in your marketplace (featured listings)
+// please reflect those changes in the calculateCarouselHeight function in SectionListing.js to avoid layout issues
 import React from 'react';
 import classNames from 'classnames';
 
@@ -49,6 +51,8 @@ const ListingCardImage = props => {
     aspectWidth,
     aspectHeight,
     variantPrefix,
+    aspectRatioClassName,
+    lazyLoadImage,
   } = props;
 
   const firstImage = listing?.images?.[0] || null;
@@ -56,14 +60,17 @@ const ListingCardImage = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
+  const aspectRatioClass = aspectRatioClassName || css.aspectRatioWrapper;
+  const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
+
   return (
     <AspectRatioWrapper
-      className={css.aspectRatioWrapper}
+      className={aspectRatioClass}
       width={aspectWidth}
       height={aspectHeight}
       {...setActivePropsMaybe}
     >
-      <LazyImage
+      <ImageComponent
         rootClassName={css.rootForImage}
         alt={title}
         image={firstImage}
@@ -81,6 +88,7 @@ const ListingCardImage = props => {
  * @param {Object} props
  * @param {string?} props.className add more style rules in addition to component's own css.root
  * @param {string?} props.rootClassName overwrite components own css.root
+ * @param {string?} props.aspectRatioClassName custom className for AspectRatioWrapper component
  * @param {Object} props.listing API entity: listing or ownListing
  * @param {string?} props.renderSizes for img/srcset
  * @param {Function?} props.setActiveListing
@@ -94,10 +102,13 @@ export const ListingCard = props => {
   const {
     className,
     rootClassName,
+    aspectRatioClassName,
+    darkMode,
     listing,
     renderSizes,
     setActiveListing,
     showAuthorInfo = true,
+    lazyLoadImage = true,
   } = props;
 
   const translations = getListingCardTranslations(listing, config, intl);
@@ -153,12 +164,14 @@ export const ListingCard = props => {
           aspectWidth={aspectWidth}
           aspectHeight={aspectHeight}
           variantPrefix={variantPrefix}
+          aspectRatioClassName={aspectRatioClassName}
+          lazyLoadImage={lazyLoadImage}
         />
       ) : (
         <ListingCardThumbnail
           style={cardStyle}
           listingTitle={title}
-          className={css.aspectRatioWrapper}
+          className={aspectRatioClassName}
           width={aspectWidth}
           height={aspectHeight}
           setActivePropsMaybe={setActivePropsMaybe}
@@ -171,8 +184,16 @@ export const ListingCard = props => {
           </div>
         ) : null}
         <div className={css.mainInfo}>
-          {showListingImage && <div className={css.title}>{titleFormatted}</div>}
-          {showAuthorInfo ? <div className={css.authorInfo}>{authorName}</div> : null}
+          {showListingImage && (
+            <div className={classNames(css.title, { [css.lightText]: darkMode })}>
+              {titleFormatted}
+            </div>
+          )}
+          {showAuthorInfo ? (
+            <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>
+              {authorName}
+            </div>
+          ) : null}
         </div>
       </div>
     </NamedLink>

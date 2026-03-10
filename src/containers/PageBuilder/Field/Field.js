@@ -60,60 +60,67 @@ const MarkdownField = ({ content, components }) => renderMarkdown(content, compo
 // as that's expected result after removing previously entered string.
 const omitInvalidPropsWarning = data => !hasContent(data);
 
-const defaultFieldComponents = {
-  heading1: { component: H1, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  heading2: { component: H2, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  heading3: { component: H3, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  heading4: { component: H4, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  heading5: { component: H5, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  heading6: { component: H6, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  paragraph: {
-    // By default, page asset schema uses 'paragraph' field type only in the context of
-    // lead paragraph aka ingress
-    component: Ingress,
-    pickValidProps: exposeContentAsChildren,
-    omitInvalidPropsWarning,
-  },
-  text: { component: Text, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
-  externalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
-  internalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
-  search: { component: SearchCTA, pickValidProps: exposeSearchCtaProps },
-  socialMediaLink: { component: SocialMediaLink, pickValidProps: exposeSocialMediaProps },
-  image: { component: FieldImage, pickValidProps: exposeImageProps },
-  customAppearance: { component: CustomAppearance, pickValidProps: exposeCustomAppearanceProps },
-  youtube: { component: YoutubeEmbed, pickValidProps: exposeYoutubeProps },
+const defaultFieldComponents = defaultLink => {
+  const DefaultLink = props => {
+    const rootClassMaybe = defaultLink ? { rootClassName: defaultLink } : {};
+    return <Link {...props} {...rootClassMaybe} />;
+  };
 
-  // markdown content field is pretty complex component
-  markdown: {
-    component: MarkdownField,
-    pickValidProps: exposeContentString,
-    options: {
-      // Custom components mapped to be rendered for markdown content (instead of the default ones)
-      components: {
-        ul: Ul,
-        ol: Ol,
-        li: Li,
-        h1: H1,
-        h2: H2,
-        h3: H3,
-        h4: H4,
-        h5: H5,
-        h6: H6,
-        p: P,
-        span: Text,
-        img: MarkdownImage,
-        code: Code,
-        pre: CodeBlock,
-        a: Link,
+  return {
+    heading1: { component: H1, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    heading2: { component: H2, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    heading3: { component: H3, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    heading4: { component: H4, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    heading5: { component: H5, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    heading6: { component: H6, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    paragraph: {
+      // By default, page asset schema uses 'paragraph' field type only in the context of
+      // lead paragraph aka ingress
+      component: Ingress,
+      pickValidProps: exposeContentAsChildren,
+      omitInvalidPropsWarning,
+    },
+    text: { component: Text, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+    externalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
+    internalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
+    search: { component: SearchCTA, pickValidProps: exposeSearchCtaProps },
+    socialMediaLink: { component: SocialMediaLink, pickValidProps: exposeSocialMediaProps },
+    image: { component: FieldImage, pickValidProps: exposeImageProps },
+    customAppearance: { component: CustomAppearance, pickValidProps: exposeCustomAppearanceProps },
+    youtube: { component: YoutubeEmbed, pickValidProps: exposeYoutubeProps },
+
+    // markdown content field is pretty complex component
+    markdown: {
+      component: MarkdownField,
+      pickValidProps: exposeContentString,
+      options: {
+        // Custom components mapped to be rendered for markdown content (instead of the default ones)
+        components: {
+          ul: Ul,
+          ol: Ol,
+          li: Li,
+          h1: H1,
+          h2: H2,
+          h3: H3,
+          h4: H4,
+          h5: H5,
+          h6: H6,
+          p: P,
+          span: Text,
+          img: MarkdownImage,
+          code: Code,
+          pre: CodeBlock,
+          a: DefaultLink,
+        },
       },
     },
-  },
 
-  // Page's metadata goes to <head> and it is not currently rendered as a separate component
-  // Instead, valid data is passed to <Page>, which then renders it using react-helmet-async
-  metaTitle: { component: null, pickValidProps: exposeContentString },
-  metaDescription: { component: null, pickValidProps: exposeContentString },
-  openGraphData: { component: null, pickValidProps: exposeOpenGraphData },
+    // Page's metadata goes to <head> and it is not currently rendered as a separate component
+    // Instead, valid data is passed to <Page>, which then renders it using react-helmet-async
+    metaTitle: { component: null, pickValidProps: exposeContentString },
+    metaDescription: { component: null, pickValidProps: exposeContentString },
+    openGraphData: { component: null, pickValidProps: exposeOpenGraphData },
+  };
 };
 
 //////////////////
@@ -128,7 +135,10 @@ const hasEmptyTextContent = obj =>
 
 const getFieldConfig = (data, defaultFieldComponents, options) => {
   const customFieldComponents = options?.fieldComponents || {};
-  const fieldMapping = { ...defaultFieldComponents, ...customFieldComponents };
+  const fieldMapping = {
+    ...defaultFieldComponents(options?.defaultClasses?.defaultLink),
+    ...customFieldComponents,
+  };
   return fieldMapping[(data?.fieldType)];
 };
 

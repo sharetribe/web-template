@@ -197,6 +197,66 @@ export const denormalizeAssetData = assetJson => {
 };
 
 /**
+ * Limits the number of listing sections on a page to 10
+ *
+ * This function filters sections to enforce a maximum limit of listing sections
+ * while preserving all other section types. It maintains the original order of sections.
+ *
+ * @param {Object} data - Page data object containing sections array
+ *
+ * @return {Object} Filtered sections array
+ *
+ * @example
+ * const pageData = {
+ *   sections: [
+ *     { sectionType: 'hero' },
+ *     { sectionType: 'listings' },  // kept (1st listing section)
+ *     { sectionType: 'listings' },  // kept (2nd listing section)
+ *     // ... more listing sections up to 10th
+ *     { sectionType: 'listings' },  // removed (11th listing section)
+ *     { sectionType: 'footer' }     // kept (non-listing section)
+ *   ]
+ * };
+ * const limited = limitListingsSections(pageData);
+ */
+export const limitListingsSections = data => {
+  let acc = 0;
+  const listingSectionLimit = 10;
+  const filteredSections = data.sections.filter(section => {
+    if (section.sectionType === 'listings') {
+      if (acc < listingSectionLimit) {
+        acc++;
+        return true; // Keep this listing section
+      }
+      return false; // Remove this listing section (limit exceeded)
+    }
+    // Keep all non-listing sections
+    return true;
+  });
+  return { ...data, sections: filteredSections };
+};
+
+/**
+ * Create a wrapper object to pass as a prop to PageBuilder.
+ * This helper wraps all the necessary data and functions related to featured listings.
+ *
+ * @param {String} pageId The ID of the current page
+ * @param {Object} props Component props containing featuredListingData, onFetchFeaturedListings, and getListingEntitiesById
+ *
+ * @return {Object} Object wrapper containing listing data and handlers for the specified page
+ */
+export const getFeaturedListingsProps = (pageId, props) => {
+  const { featuredListingData, onFetchFeaturedListings, getListingEntitiesById } = props;
+
+  return {
+    featuredListingData: featuredListingData?.[pageId] || {},
+    parentPage: pageId,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+  };
+};
+
+/**
  * Create shell objects to ensure that attributes etc. exists.
  *
  * @param {Object} transaction entity object, which is to be ensured against null values
