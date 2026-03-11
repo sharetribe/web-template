@@ -550,12 +550,13 @@ const validFilterConfig = (config, schemaType) => {
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: indexForSearch, label, filterType, searchMode, group
+  // Validate: indexForSearch, showFilter, label, filterType, searchMode, group
   const [isValidIndexForSearch, indexForSearch] = validBoolean(
     'indexForSearch',
     config.indexForSearch,
     false
   );
+  const [isValidShowFilter, showFilter] = validBoolean('showFilter', config.showFilter, false);
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
   const [isValidSearchMode, searchMode] = validSearchMode(config.searchMode, schemaType);
@@ -563,10 +564,16 @@ const validFilterConfig = (config, schemaType) => {
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
   const isValid =
-    isValidIndexForSearch && isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
+    isValidIndexForSearch &&
+    isValidShowFilter &&
+    isValidLabel &&
+    isValidFilterType &&
+    isValidSearchMode &&
+    isValidGroup;
   const validValue = {
     filterConfig: {
       ...indexForSearch,
+      ...showFilter,
       ...label,
       ...filterType,
       ...searchMode,
