@@ -410,6 +410,7 @@ const initialState = {
   initiateOrderError: null,
   confirmPaymentError: null,
   stripeCustomerFetched: false,
+  stripeCustomerFetchError: null,
   initiateInquiryInProgress: false,
   initiateInquiryError: null,
 };
@@ -470,6 +471,7 @@ const checkoutPageSlice = createSlice({
       // Stripe Customer cases
       .addCase(stripeCustomerThunk.pending, state => {
         state.stripeCustomerFetched = false;
+        state.stripeCustomerFetchError = null;
       })
       .addCase(stripeCustomerThunk.fulfilled, state => {
         state.stripeCustomerFetched = true;

@@ -393,6 +393,7 @@ describe('CheckoutPage', () => {
         listing: null,
         orderData: null,
         stripeCustomerFetched: false,
+        stripeCustomerFetchError: null,
         speculateTransactionError: null,
         speculateTransactionInProgress: false,
         speculatedTransaction: null,
