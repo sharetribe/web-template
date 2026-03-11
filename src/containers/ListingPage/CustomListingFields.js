@@ -27,7 +27,7 @@ const CustomListingFields = props => {
   const categoriesObj = pickCategoryFields(publicData, categoryPrefix, 1, listingCategoriesConfig);
   const currentCategories = Object.values(categoriesObj);
 
-  // metadata fields should not be shown on the listing page if displayOnListingPage flag is not present
+  // Fields are shown by default. Set showConfig.displayOnListingPage to false to explicitly hide a field.
   const displayableFieldConfigs = listingFieldConfigs.filter(
     fieldConfig => fieldConfig.showConfig?.displayOnListingPage !== false
   );

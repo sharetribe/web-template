@@ -20,6 +20,9 @@ way to update this template, but currently, we follow a pattern:
   [#799](https://github.com/sharetribe/web-template/pull/799)
 - [fix] Improve tests (avoid warnings and other issues)
   [#801](https://github.com/sharetribe/web-template/pull/801)
+- [add] Support custom metadata fields for listings and users. Metadata fields are
+  operator-controlled (editable only via Console or Integration API) and can be used for search
+  filtering and sorting. [#779](https://github.com/sharetribe/web-template/pull/779)
 
 ## [v10.14.0] 2026-03-10
 
