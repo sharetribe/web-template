@@ -10,7 +10,7 @@
 /**
  * Configuration options for listing fields (custom extended data fields):
  * - key:                           Unique key for the extended data field.
- * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
+ * - scope (optional):              Scope of the extended data can be 'public', 'private', or 'metadata'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
  * - schemaType (optional):         Schema for this extended data field.

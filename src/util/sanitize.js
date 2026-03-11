@@ -111,6 +111,9 @@ export const sanitizeUser = (entity, config = {}) => {
     const sanitizedConfiguredPublicData = sanitizeConfiguredPublicData(publicData, config);
     return publicData ? { publicData: sanitizedConfiguredPublicData } : {};
   };
+  // Note: only metadata fields defined in custom field config (assets) are passed through.
+  // If you write to metadata via the Integration API or another external source,
+  // add those fields to the config or extend the sanitization logic here.
   const sanitizeMetadata = metadata => {
     const sanitized = sanitizeConfiguredMetadata(metadata, config);
     return metadata ? { metadata: sanitized } : {};
@@ -249,6 +252,9 @@ export const sanitizeListing = (entity, config = {}) => {
     return publicData ? { publicData: { ...locationMaybe, ...sanitizedConfiguredPublicData } } : {};
   };
 
+  // Note: only metadata fields defined in custom field config (assets) are passed through.
+  // If you write to metadata via the Integration API or another external source,
+  // add those fields to the config or extend the sanitization logic here.
   const sanitizeMetadata = metadata => {
     const sanitized = sanitizeConfiguredMetadata(metadata, config);
     return metadata ? { metadata: sanitized } : {};
