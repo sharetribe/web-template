@@ -13,6 +13,13 @@ sharetribe-scripts, included the following changes:
 - Code-splitting
 - Custom CSS setup
 
+We have also added a custom Webpack config, sharetribeWebpackConfig.js, which is used to apply
+Sharetribe-specific changes to the original CRA-based Webpack config. This structure allowed us to
+keep sharetribe/web-template specific changes in one place, and avoid having to modify the original
+CRA config. We might revisit the decision to keep this structure in the future as this ejected
+version won't get updates anymore (and CRA is deprecated). That being said, customizers might want
+to create their own myWebpackConfig.js and use that instead of sharetribeWebpackConfig.js.
+
 ## Usage
 
 The configuration is used by the following scripts:
