@@ -550,12 +550,13 @@ const validFilterConfig = (config, schemaType) => {
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: indexForSearch, label, filterType, searchMode, group
+  // Validate: indexForSearch, showFilter, label, filterType, searchMode, group
   const [isValidIndexForSearch, indexForSearch] = validBoolean(
     'indexForSearch',
     config.indexForSearch,
     false
   );
+  const [isValidShowFilter, showFilter] = validBoolean('showFilter', config.showFilter, false);
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
   const [isValidSearchMode, searchMode] = validSearchMode(config.searchMode, schemaType);
@@ -563,10 +564,16 @@ const validFilterConfig = (config, schemaType) => {
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
   const isValid =
-    isValidIndexForSearch && isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
+    isValidIndexForSearch &&
+    isValidShowFilter &&
+    isValidLabel &&
+    isValidFilterType &&
+    isValidSearchMode &&
+    isValidGroup;
   const validValue = {
     filterConfig: {
       ...indexForSearch,
+      ...showFilter,
       ...label,
       ...filterType,
       ...searchMode,
@@ -586,18 +593,25 @@ const validShowConfig = config => {
   // Validate: label, isDetail.
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidIsDetail, isDetail] = validBoolean('isDetail', config.isDetail, true);
+  const [isValidDisplayOnListingPage, isDisplayOnListingPage] = validBoolean(
+    'displayOnListingPage',
+    config.displayOnListingPage,
+    true
+  );
   const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
     'unselectedOptions',
     config.unselectedOptions,
     true
   );
 
-  const isValid = isValidLabel && isValidIsDetail && isValidUnselectedOptions;
+  const isValid =
+    isValidLabel && isValidIsDetail && isValidUnselectedOptions && isValidDisplayOnListingPage;
   const validValue = {
     showConfig: {
       ...label,
       ...isDetail,
       ...unselectedOptions,
+      ...isDisplayOnListingPage,
     },
   };
   return [isValid, validValue];
@@ -740,7 +754,7 @@ const validUserSaveConfig = config => {
 
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
-  const scopeOptions = ['public', 'private'];
+  const scopeOptions = ['public', 'private', 'metadata'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
 
   return listingFields.reduce((acc, data) => {
@@ -1047,6 +1061,7 @@ const restructureListingFields = hostedListingFields => {
         schemaType,
         enumOptions,
         label,
+        displayOnListingPage,
         filterConfig = {},
         showConfig = {},
         saveConfig = {},
@@ -1073,6 +1088,7 @@ const restructureListingFields = hostedListingFields => {
             showConfig: {
               ...showConfig,
               label: showConfig.label || defaultLabel,
+              displayOnListingPage,
             },
             saveConfig: {
               ...restSaveConfig,
