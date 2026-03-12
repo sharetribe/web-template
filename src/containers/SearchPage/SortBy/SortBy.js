@@ -34,7 +34,8 @@ const SortBy = props => {
     ...rest
   } = props;
 
-  const { relevanceKey, relevanceFilter, queryParamName } = config.search.sortConfig;
+  const sortConfig = config.search.sortConfig;
+  const { relevanceKey, relevanceFilter, queryParamName } = sortConfig;
 
   const mobileClassesMaybe =
     mode === 'mobile'
@@ -87,10 +88,15 @@ const SortBy = props => {
           },
         ];
   }, []);
-  const defaultValue = 'createdAt';
+  const defaultValue = config.search.sortConfig.options[0].key;
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
+  const relevanceEnabled = sortConfig.options?.some(
+    option => option.key === sortConfig.relevanceKey
+  );
   const relevanceValue =
-    isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;
+    relevanceEnabled && isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0
+      ? relevanceKey
+      : null;
   const initialValue =
     hasConflictingFilters && !isConflictingFilterActive
       ? relevanceKey
