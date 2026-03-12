@@ -70,7 +70,7 @@ export const getDefaultConfiguration = () => {
             { option: 'kids-bikes', label: 'Kids bikes' },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             filterType: 'SelectSingleFilter',
             label: 'Bike type',
             group: 'primary',
@@ -110,7 +110,7 @@ export const getDefaultConfiguration = () => {
             { option: 18, label: '18' },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             label: 'Tire size',
             group: 'secondary',
           },
@@ -149,7 +149,7 @@ export const getDefaultConfiguration = () => {
             { option: 'vermont', label: 'Vermont' },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             label: 'Brand',
             group: 'secondary',
           },
@@ -367,7 +367,7 @@ export const getHostedConfiguration = () => {
             },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             group: 'primary',
           },
           scope: 'public',
@@ -410,7 +410,7 @@ export const getHostedConfiguration = () => {
             },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             group: 'secondary',
           },
           scope: 'public',
@@ -457,7 +457,7 @@ export const getHostedConfiguration = () => {
             },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             group: 'secondary',
           },
           scope: 'public',
@@ -488,7 +488,7 @@ export const getHostedConfiguration = () => {
             },
           ],
           filterConfig: {
-            indexForSearch: true,
+            showFilter: true,
             group: 'secondary',
           },
           scope: 'public',
