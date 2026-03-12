@@ -20,6 +20,8 @@ way to update this template, but currently, we follow a pattern:
   [#799](https://github.com/sharetribe/web-template/pull/799)
 - [fix] Improve tests (avoid warnings and other issues)
   [#801](https://github.com/sharetribe/web-template/pull/801)
+- [add] Add currently available translations for DE, ES, FR.
+  [#804](https://github.com/sharetribe/web-template/pull/804)
 
 ## [v10.14.0] 2026-03-10
 
