@@ -61,7 +61,7 @@ const checkConfigStructure = config => {
 
   if (!configStructureKnown) {
     throw new Error(
-      'create-react-app config structure changed, please check webpack.config.js and update to use the changed config'
+      'The structure of the Webpack config (derived from create-react-app) has changed, please check webpack.config.js and update sharetribeWebpackConfig.js to use the changed config.'
     );
   }
 
