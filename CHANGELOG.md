@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Improve tests (avoid warnings and other issues)
+  [#801](https://github.com/sharetribe/web-template/pull/801)
+
 ## [v10.14.0] 2026-03-10
 
 - [add] Support `helpText` from listing and user field asset configs. Displayed below form fields

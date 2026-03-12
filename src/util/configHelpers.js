@@ -2,6 +2,7 @@ import { subUnitDivisors } from '../config/settingsCurrency';
 import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transactions/transaction';
 import { sanitizeText } from './sanitize';
 
+const isTestEnvironment = process.env.NODE_ENV === 'test';
 // Generic helpers for validating config values
 
 const printErrorIfHostedAssetIsMissing = props => {
@@ -1535,7 +1536,7 @@ const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
 
   const hasApiAccess =
     mapProviderPicked === 'googleMaps' ? !!googleMapsAPIKeyPicked : !!mapboxAccessTokenPicked;
-  if (!hasApiAccess) {
+  if (!hasApiAccess && !isTestEnvironment) {
     console.error(
       `The access tokens are not in place for the selected map provider (${mapProviderPicked})`
     );

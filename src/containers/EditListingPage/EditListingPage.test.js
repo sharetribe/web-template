@@ -1,6 +1,14 @@
 import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
+// TopbarContainer uses @loadable/component, which triggers asynchronous state
+// updates (and thus React's act() warnings) in this test file. The Topbar is
+// not relevant to these tests, so we replace it with a simple stub here.
+jest.mock('../TopbarContainer/TopbarContainer', () => {
+  // eslint-disable-next-line react/display-name
+  return () => <div data-testid="topbar" />;
+});
+
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -398,9 +406,8 @@ describe('EditListingPage', () => {
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
     expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
 
-    // Simulate user selecting subcategory
-    // first combobox is location searc, second the first category, third the subcategory
-    const selectSubcategory = screen.getAllByRole('combobox')[2];
+    // Simulate user selecting subcategory: second combobox is the subcategory
+    const selectSubcategory = screen.getAllByRole('combobox')[1];
     await user.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
 
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
@@ -529,9 +536,8 @@ describe('EditListingPage', () => {
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
     expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
 
-    // Simulate user interaction and select sub level category
-    // first combobox is location searc, second the first category, third the subcategory
-    const selectSubcategory = screen.getAllByRole('combobox')[2];
+    // Simulate user interaction and select sub level category: second combobox is subcategory
+    const selectSubcategory = screen.getAllByRole('combobox')[1];
     await user.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
 
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
