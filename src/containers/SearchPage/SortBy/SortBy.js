@@ -73,7 +73,7 @@ const SortBy = props => {
     const translatedOption = option?.labelTranslationKey
       ? {
           key: option.key,
-          label: intl.formatMessage({ id: option.labelTranslationKey }),
+          label: intl.formatMessage({ id: option.labelTranslationKey }, option.values),
           ...translationKeyLongMaybe,
         }
       : option;
@@ -91,7 +91,9 @@ const SortBy = props => {
           },
         ];
   }, []);
-  const defaultValue = config.search.sortConfig.options[0].key;
+
+  // we want the first item in the sort options list to be the default
+  const defaultValue = options[0]?.key;
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
   const relevanceEnabled = sortConfig.options?.some(
     option => option.key === sortConfig.relevanceKey

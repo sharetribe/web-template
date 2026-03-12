@@ -563,13 +563,42 @@ const validFilterConfig = (config, schemaType) => {
   const groupOptions = ['primary', 'secondary'];
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
+  // Validate sort-related fields (used by numeric public and metadata fields)
+  // Validate: showSorting, sortingOrder and sortingGroup
+  const [isValidShowSorting, showSorting] = validBoolean('showSorting', config.showSorting, false);
+
+  const sortingGroupOptions = ['primary', 'secondary'];
+  const [isValidSortingGroup, sortingGroup] = validEnumString(
+    'sortingGroup',
+    config.sortingGroup,
+    sortingGroupOptions,
+    'primary'
+  );
+
+  const [isValidSortingOrderAsc, { asc: sortingOrderAsc }] = validBoolean(
+    'asc',
+    config.sortingOrder?.asc,
+    false
+  );
+  const [isValidSortingOrderDesc, { desc: sortingOrderDesc }] = validBoolean(
+    'desc',
+    config.sortingOrder?.desc,
+    false
+  );
+  const isValidSortingOrder = isValidSortingOrderAsc && isValidSortingOrderDesc;
+  const sortingOrder = { asc: sortingOrderAsc, desc: sortingOrderDesc };
+
   const isValid =
     isValidIndexForSearch &&
     isValidShowFilter &&
     isValidLabel &&
     isValidFilterType &&
     isValidSearchMode &&
-    isValidGroup;
+    isValidGroup &&
+    isValidShowSorting &&
+    isValidSortingGroup &&
+    isValidSortingOrder;
+
   const validValue = {
     filterConfig: {
       ...indexForSearch,
@@ -578,9 +607,56 @@ const validFilterConfig = (config, schemaType) => {
       ...filterType,
       ...searchMode,
       ...group,
+      ...showSorting,
+      ...sortingGroup,
+      sortingOrder,
     },
   };
   return [isValid, validValue];
+};
+
+// Build sort options derived from listing fields that have showSorting enabled.
+// Primary options are inserted before the default sort options and secondary after.
+const getSortOptionsFromListingFields = listingFields => {
+  const primaryOptions = [];
+  const secondaryOptions = [];
+
+  listingFields.forEach(field => {
+    const { key, scope, schemaType, filterConfig } = field;
+    // only add sort options for numeric fields and if showSorting is true
+    if (schemaType !== 'long' || !filterConfig?.showSorting) {
+      return;
+    }
+
+    const prefix = scope === 'metadata' ? 'meta_' : 'pub_';
+    const sortKey = `${prefix}${key}`;
+    const { label, sortingOrder, sortingGroup } = filterConfig;
+
+    const options = [];
+
+    if (sortingOrder.asc) {
+      options.push({
+        key: `-${sortKey}`,
+        labelTranslationKey: 'SortBy.numericSortOption',
+        values: { fieldLabel: label, direction: 'asc' },
+      });
+    }
+    if (sortingOrder.desc) {
+      options.push({
+        key: sortKey,
+        labelTranslationKey: 'SortBy.numericSortOption',
+        values: { fieldLabel: label, direction: 'desc' },
+      });
+    }
+
+    if (sortingGroup === 'secondary') {
+      secondaryOptions.push(...options);
+    } else {
+      primaryOptions.push(...options);
+    }
+  });
+
+  return { primaryOptions, secondaryOptions };
 };
 
 // listingFieldsConfig.showConfig
@@ -1461,7 +1537,7 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance) => {
+const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance, listingFields) => {
   if (hostedSortConfig == null) {
     return {
       ...defaultSortConfig,
@@ -1479,8 +1555,13 @@ const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance) => 
     relevance: !hostedSortConfig?.relevance || omitRelevance,
   };
 
-  // Remove disabled sort options
-  const options = defaultSortConfig.options.filter(option => !removeByKey[option.key]);
+  // In addition to the search configuration, sort options can be configured via an option
+  // in listing fields. getSortOptionsFromListingFields iterates through the listing fields
+  // and returns primaryOptions and secondaryOptions. primaryOptions are prepended to the
+  // sort options and secondaryOptions are appended.
+  const { primaryOptions, secondaryOptions } = getSortOptionsFromListingFields(listingFields);
+  const filteredDefaults = defaultSortConfig.options.filter(option => !removeByKey[option.key]);
+  const options = [...primaryOptions, ...filteredDefaults, ...secondaryOptions];
 
   return {
     ...defaultSortConfig,
@@ -1494,21 +1575,31 @@ const mergeSearchConfig = (
   hostedSearchConfig,
   defaultSearchConfig,
   categoryConfiguration,
-  listingTypeConfig
+  listingTypeConfig,
+  listingFieldsConfig
 ) => {
-  // Default search configs come from hosted assets
+  // the mainSearch attribute (reflects whether the user has chosen keyword or location search) is required in Console if modifying search configuration, so its presence reliably indicates a hosted config exists.
+  // If absent, we still check listingFieldsConfig since numeric fields may contribute sort options.
+  // If neither is set, return defaultSearchConfig
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
         sortConfig: mergeSortConfig(
           hostedSearchConfig?.sorting?.defaultSortingOptions,
           defaultSearchConfig.sortConfig,
-          hostedSearchConfig?.mainSearch?.searchType === 'location'
+          hostedSearchConfig?.mainSearch?.searchType === 'location',
+          listingFieldsConfig
         ),
-        // This just shows how to add custom built-in filters.
+        // This is an example of how to load custom built-in filters through the configListing.js file
         // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
         listingTypeFilter: defaultSearchConfig.listingTypeFilter,
         categoryFilter: defaultSearchConfig.categoryFilter,
         ...hostedSearchConfig,
+      }
+    : listingFieldsConfig
+    ? {
+        // here we pass null since in this scenario no hosted search configuration exists
+        sortConfig: mergeSortConfig(null, defaultSearchConfig.sortConfig, listingFieldsConfig),
+        ...defaultSearchConfig,
       }
     : defaultSearchConfig;
 
@@ -1686,7 +1777,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
       configAsset.search,
       defaultConfigs.search,
       categoryConfiguration,
-      listingConfiguration.listingTypes
+      listingConfiguration.listingTypes,
+      listingConfiguration.listingFields
     ),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
