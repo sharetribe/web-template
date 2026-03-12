@@ -60,6 +60,7 @@ module.exports = [
 ```
 
 Then you could add the following to the package.json file (scripts section):
+
 ```json
     "lint": "cross-env NODE_ENV=development eslint \"src/**/*.{js,jsx}\" \"server/**/*.js\"",
 ```
