@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add loading spinner to CheckoutPage.
+  [#802](https://github.com/sharetribe/web-template/pull/802)
 - [fix] CheckoutPage: fix the initialState not initializing stripeCustomerFetchError.
   [#799](https://github.com/sharetribe/web-template/pull/799)
 - [fix] Improve tests (avoid warnings and other issues)
