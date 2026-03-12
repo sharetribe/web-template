@@ -34,7 +34,8 @@ const SortBy = props => {
     ...rest
   } = props;
 
-  const { relevanceKey, relevanceFilter, queryParamName } = config.search.sortConfig;
+  const sortConfig = config.search.sortConfig;
+  const { relevanceKey, relevanceFilter, queryParamName } = sortConfig;
 
   const mobileClassesMaybe =
     mode === 'mobile'
@@ -69,7 +70,7 @@ const SortBy = props => {
     const translatedOption = option?.labelTranslationKey
       ? {
           key: option.key,
-          label: intl.formatMessage({ id: option.labelTranslationKey }),
+          label: intl.formatMessage({ id: option.labelTranslationKey }, option.values),
           ...translationKeyLongMaybe,
         }
       : option;
@@ -87,7 +88,8 @@ const SortBy = props => {
           },
         ];
   }, []);
-  const defaultValue = 'createdAt';
+  // we want the first item in the sort options list to be the default
+  const defaultValue = options[0]?.key;
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
   const relevanceValue =
     isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;
