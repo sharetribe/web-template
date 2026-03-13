@@ -562,8 +562,40 @@ const validFilterConfig = (config, schemaType) => {
   const groupOptions = ['primary', 'secondary'];
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
+  // Validate sort-related fields (used by numeric public and metadata fields)
+  // Validate: showSorting, sortingOrder and sortingGroup
+  const [isValidShowSorting, showSorting] = validBoolean('showSorting', config.showSorting, false);
+
+  const sortingGroupOptions = ['primary', 'secondary'];
+  const [isValidSortingGroup, sortingGroup] = validEnumString(
+    'sortingGroup',
+    config.sortingGroup,
+    sortingGroupOptions,
+    'primary'
+  );
+
+  const [isValidSortingOrderAsc, { asc: sortingOrderAsc }] = validBoolean(
+    'asc',
+    config.sortingOrder?.asc,
+    false
+  );
+  const [isValidSortingOrderDesc, { desc: sortingOrderDesc }] = validBoolean(
+    'desc',
+    config.sortingOrder?.desc,
+    false
+  );
+  const isValidSortingOrder = isValidSortingOrderAsc && isValidSortingOrderDesc;
+  const sortingOrder = { asc: sortingOrderAsc, desc: sortingOrderDesc };
+
   const isValid =
-    isValidIndexForSearch && isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
+    isValidIndexForSearch &&
+    isValidLabel &&
+    isValidFilterType &&
+    isValidSearchMode &&
+    isValidGroup &&
+    isValidShowSorting &&
+    isValidSortingGroup &&
+    isValidSortingOrder;
   const validValue = {
     filterConfig: {
       ...indexForSearch,
@@ -571,9 +603,56 @@ const validFilterConfig = (config, schemaType) => {
       ...filterType,
       ...searchMode,
       ...group,
+      ...showSorting,
+      ...sortingGroup,
+      sortingOrder,
     },
   };
   return [isValid, validValue];
+};
+
+// Build sort options derived from listing fields that have showSorting enabled.
+// Primary options are inserted before the default sort options and secondary after.
+const getSortOptionsFromListingFields = listingFields => {
+  const primaryOptions = [];
+  const secondaryOptions = [];
+
+  listingFields.forEach(field => {
+    const { key, scope, schemaType, filterConfig } = field;
+    // only add sort options for numeric fields and if showSorting is true
+    if (schemaType !== 'long' || !filterConfig?.showSorting) {
+      return;
+    }
+
+    const prefix = scope === 'metadata' ? 'meta_' : 'pub_';
+    const sortKey = `${prefix}${key}`;
+    const { label, sortingOrder, sortingGroup } = filterConfig;
+
+    const options = [];
+
+    if (sortingOrder.asc) {
+      options.push({
+        key: `-${sortKey}`,
+        labelTranslationKey: 'SortBy.numericSortOption',
+        values: { fieldLabel: label, direction: 'asc' },
+      });
+    }
+    if (sortingOrder.desc) {
+      options.push({
+        key: sortKey,
+        labelTranslationKey: 'SortBy.numericSortOption',
+        values: { fieldLabel: label, direction: 'desc' },
+      });
+    }
+
+    if (sortingGroup === 'secondary') {
+      secondaryOptions.push(...options);
+    } else {
+      primaryOptions.push(...options);
+    }
+  });
+
+  return { primaryOptions, secondaryOptions };
 };
 
 // listingFieldsConfig.showConfig
@@ -740,7 +819,7 @@ const validUserSaveConfig = config => {
 
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
-  const scopeOptions = ['public', 'private'];
+  const scopeOptions = ['public', 'private', 'metadata'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
 
   return listingFields.reduce((acc, data) => {
@@ -1434,14 +1513,15 @@ const validDefaultFilters = (defaultFilters, categoryConfiguration, listingTypeC
 // Validate sort config //
 //////////////////////////
 
-const validSortConfig = config => {
+const validSortConfig = (config, primaryOptions = [], secondaryOptions = []) => {
   const active = typeof config.active === 'boolean' ? config.active : true;
   const queryParamName = config.queryParamName || 'sort';
   const relevanceKey = config.relevanceKey || 'relevance';
   const relevanceFilter = config.relevanceFilter || 'keywords';
   const conflictingFilters = config.conflictingFilters || [];
   const optionsRaw = config.options || [];
-  const options = optionsRaw.filter(o => !!o.key && !!(o.label || o.labelTranslationKey));
+  const defaultOptions = optionsRaw.filter(o => !!o.key && !!(o.label || o.labelTranslationKey));
+  const options = [...primaryOptions, ...defaultOptions, ...secondaryOptions];
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
@@ -1449,7 +1529,8 @@ const mergeSearchConfig = (
   hostedSearchConfig,
   defaultSearchConfig,
   categoryConfiguration,
-  listingTypeConfig
+  listingTypeConfig,
+  listingFields = []
 ) => {
   // The sortConfig is not yet configurable through Console / hosted assets,
   // but other default search configs come from hosted assets
@@ -1508,10 +1589,12 @@ const mergeSearchConfig = (
     ...keywordsFilterMaybe,
   ];
 
+  const { primaryOptions, secondaryOptions } = getSortOptionsFromListingFields(listingFields);
+
   return {
     mainSearch: { searchType },
     defaultFilters: validDefaultFilters(defaultFilters, categoryConfiguration, listingTypeConfig),
-    sortConfig: validSortConfig(sortConfig),
+    sortConfig: validSortConfig(sortConfig, primaryOptions, secondaryOptions),
     ...rest,
   };
 };
@@ -1638,7 +1721,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
       configAsset.search,
       defaultConfigs.search,
       categoryConfiguration,
-      listingConfiguration.listingTypes
+      listingConfiguration.listingTypes,
+      listingConfiguration.listingFields
     ),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
