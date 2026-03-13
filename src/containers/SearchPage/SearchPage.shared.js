@@ -255,7 +255,6 @@ export const validUrlQueryParamsFromProps = props => {
     currentPathParams,
   };
 
-  // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],

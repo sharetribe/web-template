@@ -671,6 +671,7 @@ const FieldDateAndTimeInput = props => {
       const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, tz);
       const lastFetchedMonth = new Date(endMonth.getTime() - 1);
 
+      // eslint-disable-next-line no-console
       console.log(
         `Fetched months: ${monthIdString(startMonth, tz)} ... ${monthIdString(
           lastFetchedMonth,

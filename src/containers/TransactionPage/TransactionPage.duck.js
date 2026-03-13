@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import appSettings from '../../config/settings';
 import { isEmpty, pickBy } from '../../util/common';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import {
@@ -82,7 +83,7 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
     })
     .catch(e => {
       // refresh failed, but we don't act upon it.
-      console.log('error', e);
+      console.log('error', e); // eslint-disable-line no-console
     });
 };
 
@@ -283,7 +284,10 @@ const fetchTransactionPayloadCreator = (
           fetchMonthlyTimeSlots(dispatch, listing);
         }
       } catch (error) {
-        console.log(`transaction process (${processName}) was not recognized`);
+        if (appSettings.dev) {
+          // eslint-disable-next-line no-console
+          console.log(`transaction process (${processName}) was not recognized`);
+        }
       }
 
       return response;

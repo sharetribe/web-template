@@ -77,7 +77,7 @@ module.exports = (req, res) => {
       // Log error
       const is404 = e.status === 404;
       if (is404) {
-        console.log('webmanifest-render-failed-no-asset-found');
+        console.error('webmanifest-render-failed-no-asset-found');
       } else {
         log.error(e, 'webmanifest-render-failed');
       }
