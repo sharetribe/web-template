@@ -470,6 +470,64 @@
   }
 }
 
+.uploadedFilesSection {
+  margin: 24px 24px 0 24px;
+
+  @media (--viewportMedium) {
+    margin: 24px 24px 0 24px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 24px 0 0 0;
+  }
+}
+
+.uploadedFilesList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.uploadedFileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.uploadedFileName {
+  composes: marketplaceSmallFontStyles from global;
+  color: var(--colorGrey700);
+  overflow-wrap: anywhere;
+}
+
+.uploadedFileDownloadButton {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--marketplaceColor);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.uploadedFileDownloadButton:disabled {
+  color: var(--colorGrey500);
+  cursor: default;
+}
+
+.uploadStatus {
+  composes: marketplaceSmallFontStyles from global;
+  color: var(--colorGrey700);
+  margin: 8px 0 0 0;
+}
+
+.uploadStatusError {
+  composes: marketplaceSmallFontStyles from global;
+  color: var(--colorFail);
+  margin: 8px 0 0 0;
+}
+
 /* Container for ActionButtons subcomponent */
 .mobileActionButtons {
   display: block;

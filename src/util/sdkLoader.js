@@ -12,7 +12,7 @@ if (isServer()) {
   exportSdk = importedSdk;
 }
 
-const { createInstance, types, transit, util } = exportSdk;
+const { createInstance, types, transit, util, file } = exportSdk;
 
 // create image variant from variant name, desired width and aspectRatio
 const createImageVariantConfig = (name, width, aspectRatio) => {
@@ -43,4 +43,4 @@ const createImageVariantConfig = (name, width, aspectRatio) => {
   };
 };
 
-export { createInstance, types, transit, util, createImageVariantConfig };
+export { createInstance, types, transit, util, file, createImageVariantConfig };

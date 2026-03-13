@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { file as sdkFile } from '../../../util/sdkLoader';
 import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
@@ -69,6 +70,71 @@ const allowShowingExtraInfo = (showExtraInfo, transactionPartyInfo) => {
   );
 };
 
+const FILE_ID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const idAsString = id => (typeof id === 'string' ? id : id?.uuid || '');
+
+const parseUploadedFileFromMessage = message => {
+  const content = message?.attributes?.content || '';
+  const publicFiles = message?.attributes?.publicFiles || [];
+  const parsedFromPublicFiles = publicFiles
+    .map(publicFile => {
+      const fileId = idAsString(publicFile?.fileId);
+      if (!FILE_ID_REGEX.test(fileId)) {
+        return null;
+      }
+
+      const fileNameMatch = content.match(/^Uploaded file:\s*(.*?)\s*\(/i);
+      const fileName = fileNameMatch ? fileNameMatch[1] : fileId;
+
+      return {
+        fileId,
+        fileName,
+        messageId: message?.id?.uuid || fileId,
+      };
+    })
+    .filter(file => !!file);
+
+  if (parsedFromPublicFiles.length > 0) {
+    return parsedFromPublicFiles;
+  }
+
+  const fileIdMatch = content.match(/fileId:\s*([0-9a-f-]{36})/i);
+  if (!fileIdMatch) {
+    return [];
+  }
+
+  const fileId = fileIdMatch[1];
+  if (!FILE_ID_REGEX.test(fileId)) {
+    return [];
+  }
+
+  const fileNameMatch = content.match(/^Uploaded file:\s*(.*?)\s*\(/i);
+  const fileName = fileNameMatch ? fileNameMatch[1] : fileId;
+
+  return [
+    {
+      fileId,
+      fileName,
+      messageId: message?.id?.uuid || fileId,
+    },
+  ];
+};
+
+const uploadedFilesFromMessages = messages => {
+  const allUploadedFiles = (messages || [])
+    .flatMap(parseUploadedFileFromMessage)
+    .filter(file => !!file);
+
+  const filesById = allUploadedFiles.reduce((collected, file) => {
+    collected[file.fileId] = file;
+    return collected;
+  }, {});
+
+  return Object.values(filesById);
+};
+
 /**
  * Transaction panel
  *
@@ -105,6 +171,8 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      fileDownloadInProgress: false,
+      fileUploadStatus: 'idle',
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -112,6 +180,8 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormFocus = this.onSendMessageFormFocus.bind(this);
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
+    this.onFileUpload = this.onFileUpload.bind(this);
+    this.onDownloadUploadedFile = this.onDownloadUploadedFile.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
   }
 
@@ -145,6 +215,174 @@ export class TransactionPanelComponent extends Component {
       })
       .catch(e => {
         // Ignore, Redux handles the error
+      });
+  }
+
+  ensureAuthenticated(sdk) {
+    if (!sdk?.currentUser?.show) {
+      return Promise.resolve();
+    }
+
+    return sdk.currentUser.show().catch(() => {
+      throw new Error('User is not authenticated');
+    });
+  }
+
+  waitForFileAvailable(ownFilesApi, fileId, attempt = 0) {
+    const maxAttempts = 60;
+    const intervalMs = 1000;
+
+    return ownFilesApi.show({ id: fileId }).then(response => {
+      const ownFile = response?.data?.data;
+      const fileState = ownFile?.attributes?.state;
+
+      if (fileState === 'available') {
+        return ownFile;
+      }
+
+      if (fileState === 'verificationFailed') {
+        throw new Error('File verification failed');
+      }
+
+      if (attempt >= maxAttempts - 1) {
+        throw new Error('Timed out waiting for file to become available');
+      }
+
+      return new Promise(resolve => {
+        setTimeout(resolve, intervalMs);
+      }).then(() => this.waitForFileAvailable(ownFilesApi, fileId, attempt + 1));
+    });
+  }
+
+  onFileUpload(event) {
+    const file = event.target.files[0];
+    console.log('file', file);
+
+    if (!file) {
+      return;
+    }
+
+    const sdk = window?.app?.sdk;
+    const transactionId = this.props.transactionId;
+    const ownFilesApi = sdk?.ownFiles || sdk?.own_files;
+    const fileUploadsApi = sdk?.fileUploads || sdk?.file_uploads;
+    const messagesApi = sdk?.messages;
+
+    this.setState({ fileUploadStatus: 'uploading' });
+
+    if (!sdk || !transactionId) {
+      console.error('SDK instance or transactionId is missing');
+      this.setState({ fileUploadStatus: 'failed' });
+      return;
+    }
+
+    if (!ownFilesApi?.create || !ownFilesApi?.show || !fileUploadsApi?.create || !messagesApi?.send) {
+      console.error('Required SDK file APIs are missing', {
+        hasOwnFilesCreate: !!ownFilesApi?.create,
+        hasOwnFilesShow: !!ownFilesApi?.show,
+        hasFileUploadsCreate: !!fileUploadsApi?.create,
+        hasMessagesSend: !!messagesApi?.send,
+        hasFileMetadata: !!sdkFile?.metadata,
+        hasFileUpload: !!sdkFile?.upload,
+        sdkKeys: Object.keys(sdk || {}),
+      });
+      this.setState({ fileUploadStatus: 'failed' });
+      return;
+    }
+
+    let uploadedFileId;
+
+    this.ensureAuthenticated(sdk)
+      .then(() => {
+        return sdkFile.metadata(file);
+      })
+      .then(meta => ownFilesApi.create(meta))
+      .then(ownFileResponse => {
+        const ownFile = ownFileResponse?.data?.data;
+        const fileId = ownFile?.id;
+        const fileIdString = idAsString(fileId);
+
+        if (!fileId || !FILE_ID_REGEX.test(fileIdString)) {
+          throw new Error('Failed to create own file');
+        }
+
+        uploadedFileId = fileId;
+
+        return fileUploadsApi.create({ fileId }).then(fileUploadResponse => {
+          return { fileId, fileUploadResponse };
+        });
+      })
+      .then(({ fileId, fileUploadResponse }) => {
+        const uploadAttributes = fileUploadResponse?.data?.data?.attributes || {};
+        const method = uploadAttributes.method || 'PUT';
+        const url = uploadAttributes.url;
+        const headers = uploadAttributes.headers || {};
+
+        if (!url) {
+          throw new Error('Failed to get pre-signed upload URL');
+        }
+
+        return sdkFile.upload({ method, url, headers, file }).then(() => fileId);
+      })
+      .then(fileId => {
+        this.setState({ fileUploadStatus: 'verifying' });
+        return this.waitForFileAvailable(ownFilesApi, fileId).catch(error => {
+          if (error?.message === 'Timed out waiting for file to become available') {
+            console.warn('File verification is taking longer than expected, continuing with uploaded file ID');
+            return { id: fileId, attributes: { state: 'pendingUpload' } };
+          }
+
+          throw error;
+        });
+      })
+      .then(verifiedOwnFile => {
+        const ownFileId = verifiedOwnFile?.id || uploadedFileId;
+        const ownFileIdString = idAsString(ownFileId);
+        const messageContent = `Uploaded file: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes), fileId: ${ownFileIdString}`;
+
+        return messagesApi.send({
+          transactionId,
+          content: messageContent,
+          publicFiles: [{ fileId: ownFileId }],
+        });
+      })
+      .then(messageResponse => {
+        console.log('message response', messageResponse);
+        event.target.value = '';
+        this.setState({ fileUploadStatus: 'success' });
+      })
+      .catch(e => {
+        console.error('error', e);
+        this.setState({ fileUploadStatus: 'failed' });
+      });
+  }
+
+  onDownloadUploadedFile(fileId) {
+    const sdk = window?.app?.sdk;
+    const ownFileDownloadsApi = sdk?.ownFileDownloads || sdk?.own_file_downloads;
+
+    if (!ownFileDownloadsApi?.create) {
+      console.error('SDK ownFileDownloads.create is missing');
+      return;
+    }
+
+    this.setState({ fileDownloadInProgress: true });
+
+    ownFileDownloadsApi
+      .create({ fileId })
+      .then(response => {
+        const url = response?.data?.data?.attributes?.url;
+        if (!url) {
+          throw new Error('Download URL was not found in ownFileDownloads.create response');
+        }
+
+        window.open(url, '_blank', 'noopener,noreferrer');
+      })
+      .catch(error => {
+        console.error('File download failed', error);
+      })
+      .finally(() => {
+        this.setState({ fileDownloadInProgress: false });
       });
   }
 
@@ -192,6 +430,8 @@ export class TransactionPanelComponent extends Component {
       hasViewingRights,
       transactionFieldsComponent,
     } = this.props;
+
+    const { fileDownloadInProgress, fileUploadStatus } = this.state;
 
     const hasTransitions = transitions.length > 0;
     const isCustomer = transactionRole === 'customer';
@@ -244,6 +484,7 @@ export class TransactionPanelComponent extends Component {
     const priceVariantName = protectedData?.priceVariantName;
 
     const classes = classNames(rootClassName || css.root, className);
+    const uploadedFiles = uploadedFilesFromMessages(messages);
 
     return (
       <div className={classes}>
@@ -339,24 +580,70 @@ export class TransactionPanelComponent extends Component {
               isConversation={isInquiryProcess}
             />
             {showSendMessageForm ? (
-              <SendMessageForm
-                formId={this.sendMessageFormName}
-                rootClassName={css.sendMessageForm}
-                messagePlaceholder={intl.formatMessage(
-                  { id: 'TransactionPanel.sendMessagePlaceholder' },
-                  { name: otherUserDisplayNameString }
-                )}
-                inProgress={sendMessageInProgress}
-                sendMessageError={sendMessageError}
-                onFocus={this.onSendMessageFormFocus}
-                onBlur={this.onSendMessageFormBlur}
-                onSubmit={this.onMessageSubmit}
-              />
+              <>
+                <SendMessageForm
+                  formId={this.sendMessageFormName}
+                  rootClassName={css.sendMessageForm}
+                  messagePlaceholder={intl.formatMessage(
+                    { id: 'TransactionPanel.sendMessagePlaceholder' },
+                    { name: otherUserDisplayNameString }
+                  )}
+                  inProgress={sendMessageInProgress}
+                  sendMessageError={sendMessageError}
+                  onFocus={this.onSendMessageFormFocus}
+                  onBlur={this.onSendMessageFormBlur}
+                  onSubmit={this.onMessageSubmit}
+                />
+                <input type="file" onChange={this.onFileUpload} />
+                {fileUploadStatus === 'uploading' ? (
+                  <p className={css.uploadStatus}>
+                    <FormattedMessage id="TransactionPanel.uploadStatusUploading" />
+                  </p>
+                ) : null}
+                {fileUploadStatus === 'verifying' ? (
+                  <p className={css.uploadStatus}>
+                    <FormattedMessage id="TransactionPanel.uploadStatusVerifying" />
+                  </p>
+                ) : null}
+                {fileUploadStatus === 'success' ? (
+                  <p className={css.uploadStatus}>
+                    <FormattedMessage id="TransactionPanel.uploadStatusSuccess" />
+                  </p>
+                ) : null}
+                {fileUploadStatus === 'failed' ? (
+                  <p className={css.uploadStatusError}>
+                    <FormattedMessage id="TransactionPanel.uploadStatusFailed" />
+                  </p>
+                ) : null}
+              </>
             ) : (
               <div className={css.sendingMessageNotAllowed}>
                 <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
               </div>
             )}
+
+            {uploadedFiles.length > 0 ? (
+              <div className={css.uploadedFilesSection}>
+                <p className={css.sectionHeading}>
+                  <FormattedMessage id="TransactionPanel.uploadedFilesHeading" />
+                </p>
+                <ul className={css.uploadedFilesList}>
+                  {uploadedFiles.map(file => (
+                    <li key={file.fileId} className={css.uploadedFileItem}>
+                      <span className={css.uploadedFileName}>{file.fileName}</span>
+                      <button
+                        type="button"
+                        className={css.uploadedFileDownloadButton}
+                        onClick={() => this.onDownloadUploadedFile(file.fileId)}
+                        disabled={fileDownloadInProgress}
+                      >
+                        <FormattedMessage id="TransactionPanel.downloadFile" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
             {stateData.showActionButtons ? (
               <>
