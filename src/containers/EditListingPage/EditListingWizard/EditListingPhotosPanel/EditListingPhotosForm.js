@@ -61,12 +61,15 @@ export const FieldAddImage = props => {
         const { accept, input, label, disabled: fieldDisabled } = fieldprops;
         const { name, type } = input;
         const onChange = e => {
-          const file = e.target.files[0];
-          formApi.change(`addImage`, file);
-          formApi.blur(`addImage`);
-          onImageUploadHandler(file);
+          const files = Array.from(e.target.files);
+
+          files.forEach(file => {
+            formApi.change(`addImage`, file);
+            formApi.blur(`addImage`);
+            onImageUploadHandler(file);
+          });
         };
-        const inputProps = { accept, id: name, name, onChange, type };
+        const inputProps = { accept, id: name, name, onChange, type, multiple: true };
         return (
           <div className={css.addImageWrapper}>
             <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
