@@ -224,25 +224,25 @@ export const ManageListingsPageComponent = props => {
         <div className={css.listingPanel}>
           <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
 
-          <div className={css.listingCards}>
+          <ul className={css.listingCards}>
             {listings.map(l => (
-              <ManageListingCard
-                className={css.listingCard}
-                key={l.id.uuid}
-                listing={l}
-                isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-                actionsInProgressListingId={openingListing || closingListing || discardingDraft}
-                onToggleMenu={onToggleMenu}
-                onCloseListing={onCloseListing}
-                onOpenListing={handleOpenListing}
-                onDiscardDraft={openDiscardDraftModal}
-                hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-                hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-                hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
-                renderSizes={renderSizes}
-              />
+              <li key={l.id.uuid} className={css.listingCard}>
+                <ManageListingCard
+                  listing={l}
+                  isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
+                  actionsInProgressListingId={openingListing || closingListing || discardingDraft}
+                  onToggleMenu={onToggleMenu}
+                  onCloseListing={onCloseListing}
+                  onOpenListing={handleOpenListing}
+                  onDiscardDraft={openDiscardDraftModal}
+                  hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
+                  hasClosingError={closingErrorListingId.uuid === l.id.uuid}
+                  hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
+                  renderSizes={renderSizes}
+                />
+              </li>
             ))}
-          </div>
+          </ul>
           {onManageDisableScrolling && discardDraftModalOpen ? (
             <DiscardDraftModal
               id="ManageListingsPage"
