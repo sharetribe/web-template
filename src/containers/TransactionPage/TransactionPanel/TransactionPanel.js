@@ -135,6 +135,24 @@ const uploadedFilesFromMessages = messages => {
   return Object.values(filesById);
 };
 
+const mergeUploadedFiles = (messageFiles, localFiles) => {
+  const filesById = [...(messageFiles || []), ...(localFiles || [])].reduce((collected, file) => {
+    if (!file?.fileId) {
+      return collected;
+    }
+
+    const existing = collected[file.fileId] || {};
+    collected[file.fileId] = {
+      ...existing,
+      ...file,
+      fileName: file.fileName || existing.fileName || file.fileId,
+    };
+    return collected;
+  }, {});
+
+  return Object.values(filesById);
+};
+
 /**
  * Transaction panel
  *
@@ -173,6 +191,8 @@ export class TransactionPanelComponent extends Component {
       sendMessageFormFocused: false,
       fileDownloadInProgress: false,
       fileUploadStatus: 'idle',
+      localUploadedFiles: [],
+      fileDownloadError: null,
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -245,7 +265,10 @@ export class TransactionPanelComponent extends Component {
       }
 
       if (attempt >= maxAttempts - 1) {
-        throw new Error('Timed out waiting for file to become available');
+        const error = new Error('Timed out waiting for file to become available');
+        error.code = 'file-availability-timeout';
+        error.fileState = fileState;
+        throw error;
       }
 
       return new Promise(resolve => {
@@ -268,7 +291,7 @@ export class TransactionPanelComponent extends Component {
     const fileUploadsApi = sdk?.fileUploads || sdk?.file_uploads;
     const messagesApi = sdk?.messages;
 
-    this.setState({ fileUploadStatus: 'uploading' });
+    this.setState({ fileUploadStatus: 'uploading', fileDownloadError: null });
 
     if (!sdk || !transactionId) {
       console.error('SDK instance or transactionId is missing');
@@ -276,7 +299,13 @@ export class TransactionPanelComponent extends Component {
       return;
     }
 
-    if (!ownFilesApi?.create || !ownFilesApi?.show || !fileUploadsApi?.create || !messagesApi?.send) {
+    if (
+      !ownFilesApi?.create ||
+      !ownFilesApi?.show ||
+      !fileUploadsApi?.create ||
+      !messagesApi?.send ||
+      !sdkFile?.upload
+    ) {
       console.error('Required SDK file APIs are missing', {
         hasOwnFilesCreate: !!ownFilesApi?.create,
         hasOwnFilesShow: !!ownFilesApi?.show,
@@ -317,59 +346,143 @@ export class TransactionPanelComponent extends Component {
         const method = uploadAttributes.method || 'PUT';
         const url = uploadAttributes.url;
         const headers = uploadAttributes.headers || {};
+        const expiresAt = uploadAttributes.expiresAt;
 
         if (!url) {
           throw new Error('Failed to get pre-signed upload URL');
         }
 
-        return sdkFile.upload({ method, url, headers, file }).then(() => fileId);
-      })
-      .then(fileId => {
-        this.setState({ fileUploadStatus: 'verifying' });
-        return this.waitForFileAvailable(ownFilesApi, fileId).catch(error => {
-          if (error?.message === 'Timed out waiting for file to become available') {
-            console.warn('File verification is taking longer than expected, continuing with uploaded file ID');
-            return { id: fileId, attributes: { state: 'pendingUpload' } };
-          }
+        const uploadAndVerify = (retryCount = 0) => {
+          const target = new URL(url);
 
-          throw error;
-        });
+          return this
+            .ensureAuthenticated(sdk)
+            .then(() => sdkFile.upload({ method, url, headers, file }))
+            .then(uploadResponse => {
+              const responseHeaders = {
+                etag: uploadResponse?.headers?.etag,
+                xAmzRequestId: uploadResponse?.headers?.['x-amz-request-id'],
+                xAmzId2: uploadResponse?.headers?.['x-amz-id-2'],
+                server: uploadResponse?.headers?.server,
+              };
+
+              console.log('file upload response', {
+                host: target.host,
+                path: target.pathname,
+                status: uploadResponse?.status,
+                statusText: uploadResponse?.statusText,
+                responseHeaders,
+              });
+
+              console.log('upload request metadata', {
+                method,
+                expiresAt,
+                headerKeys: Object.keys(headers || {}),
+              });
+              this.setState({ fileUploadStatus: 'verifying' });
+              return this.waitForFileAvailable(ownFilesApi, fileId);
+            })
+            .catch(error => {
+              if (
+                retryCount < 1 &&
+                error?.code === 'file-availability-timeout' &&
+                error?.fileState === 'pendingUpload'
+              ) {
+                console.warn(
+                  'File remained in pendingUpload after upload. Retrying upload once with same pre-signed URL.',
+                  {
+                    method,
+                    expiresAt,
+                  }
+                );
+                return uploadAndVerify(retryCount + 1);
+              }
+
+              throw error;
+            });
+        };
+
+        return uploadAndVerify();
       })
       .then(verifiedOwnFile => {
         const ownFileId = verifiedOwnFile?.id || uploadedFileId;
         const ownFileIdString = idAsString(ownFileId);
+        const ownFileState = verifiedOwnFile?.attributes?.state;
         const messageContent = `Uploaded file: ${file.name} (${file.type || 'unknown'}, ${file.size} bytes), fileId: ${ownFileIdString}`;
 
         return messagesApi.send({
           transactionId,
           content: messageContent,
           publicFiles: [{ fileId: ownFileId }],
+        }).then(messageResponse => {
+          return { messageResponse, ownFileIdString, ownFileState };
         });
       })
-      .then(messageResponse => {
+      .then(({ messageResponse, ownFileIdString, ownFileState }) => {
         console.log('message response', messageResponse);
         event.target.value = '';
-        this.setState({ fileUploadStatus: 'success' });
+        this.setState(prevState => ({
+          fileUploadStatus: 'success',
+          localUploadedFiles: prevState.localUploadedFiles.concat({
+            fileId: ownFileIdString,
+            fileName: file.name,
+            fileState: ownFileState,
+          }),
+        }));
       })
       .catch(e => {
         console.error('error', e);
+
+        const uploadedFileIdString = idAsString(uploadedFileId);
+        const isPendingUploadTimeout =
+          e?.code === 'file-availability-timeout' && e?.fileState === 'pendingUpload';
+
+        if (isPendingUploadTimeout && uploadedFileIdString) {
+          this.setState(prevState => ({
+            fileUploadStatus: 'verificationPending',
+            localUploadedFiles: prevState.localUploadedFiles.concat({
+              fileId: uploadedFileIdString,
+              fileName: file.name,
+              fileState: 'pendingUpload',
+            }),
+          }));
+          return;
+        }
+
         this.setState({ fileUploadStatus: 'failed' });
       });
   }
 
   onDownloadUploadedFile(fileId) {
     const sdk = window?.app?.sdk;
+    const ownFilesApi = sdk?.ownFiles || sdk?.own_files;
     const ownFileDownloadsApi = sdk?.ownFileDownloads || sdk?.own_file_downloads;
 
-    if (!ownFileDownloadsApi?.create) {
-      console.error('SDK ownFileDownloads.create is missing');
+    if (!ownFilesApi?.show || !ownFileDownloadsApi?.create) {
+      console.error('SDK ownFiles.show or ownFileDownloads.create is missing');
       return;
     }
 
-    this.setState({ fileDownloadInProgress: true });
+    this.setState({ fileDownloadInProgress: true, fileDownloadError: null });
 
-    ownFileDownloadsApi
-      .create({ fileId })
+    ownFilesApi
+      .show({ id: fileId })
+      .then(ownFileResponse => {
+        const fileState = ownFileResponse?.data?.data?.attributes?.state;
+
+        this.setState(prevState => ({
+          localUploadedFiles: prevState.localUploadedFiles.map(file =>
+            file.fileId === fileId ? { ...file, fileState } : file
+          ),
+        }));
+
+        if (fileState !== 'available') {
+          this.setState({ fileDownloadError: 'pending' });
+          throw new Error(`File is not downloadable yet. Current state: ${fileState}`);
+        }
+
+        return ownFileDownloadsApi.create({ fileId });
+      })
       .then(response => {
         const url = response?.data?.data?.attributes?.url;
         if (!url) {
@@ -380,6 +493,9 @@ export class TransactionPanelComponent extends Component {
       })
       .catch(error => {
         console.error('File download failed', error);
+        if (!this.state.fileDownloadError) {
+          this.setState({ fileDownloadError: 'failed' });
+        }
       })
       .finally(() => {
         this.setState({ fileDownloadInProgress: false });
@@ -431,7 +547,8 @@ export class TransactionPanelComponent extends Component {
       transactionFieldsComponent,
     } = this.props;
 
-    const { fileDownloadInProgress, fileUploadStatus } = this.state;
+    const { fileDownloadInProgress, fileUploadStatus, localUploadedFiles, fileDownloadError } =
+      this.state;
 
     const hasTransitions = transitions.length > 0;
     const isCustomer = transactionRole === 'customer';
@@ -484,7 +601,7 @@ export class TransactionPanelComponent extends Component {
     const priceVariantName = protectedData?.priceVariantName;
 
     const classes = classNames(rootClassName || css.root, className);
-    const uploadedFiles = uploadedFilesFromMessages(messages);
+    const uploadedFiles = mergeUploadedFiles(uploadedFilesFromMessages(messages), localUploadedFiles);
 
     return (
       <div className={classes}>
@@ -615,6 +732,11 @@ export class TransactionPanelComponent extends Component {
                     <FormattedMessage id="TransactionPanel.uploadStatusFailed" />
                   </p>
                 ) : null}
+                {fileUploadStatus === 'verificationPending' ? (
+                  <p className={css.uploadStatusError}>
+                    <FormattedMessage id="TransactionPanel.uploadStatusVerificationPending" />
+                  </p>
+                ) : null}
               </>
             ) : (
               <div className={css.sendingMessageNotAllowed}>
@@ -635,13 +757,23 @@ export class TransactionPanelComponent extends Component {
                         type="button"
                         className={css.uploadedFileDownloadButton}
                         onClick={() => this.onDownloadUploadedFile(file.fileId)}
-                        disabled={fileDownloadInProgress}
+                        disabled={fileDownloadInProgress || file.fileState === 'pendingUpload'}
                       >
                         <FormattedMessage id="TransactionPanel.downloadFile" />
                       </button>
                     </li>
                   ))}
                 </ul>
+                {fileDownloadError === 'pending' ? (
+                  <p className={css.uploadStatusError}>
+                    <FormattedMessage id="TransactionPanel.downloadFilePending" />
+                  </p>
+                ) : null}
+                {fileDownloadError === 'failed' ? (
+                  <p className={css.uploadStatusError}>
+                    <FormattedMessage id="TransactionPanel.downloadFileFailed" />
+                  </p>
+                ) : null}
               </div>
             ) : null}
 
