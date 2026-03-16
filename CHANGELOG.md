@@ -25,6 +25,8 @@ way to update this template, but currently, we follow a pattern:
 - [add] Support custom metadata fields for listings and users. Metadata fields are
   operator-controlled (editable only via Console or Integration API) and can be used for search
   filtering and sorting. [#779](https://github.com/sharetribe/web-template/pull/779)
+- [add] Add support for sorting listings on the search page using custom numeric fields.
+  [#803](https://github.com/sharetribe/web-template/pull/803)
 
 ## [v10.14.1] 2026-03-18
 
