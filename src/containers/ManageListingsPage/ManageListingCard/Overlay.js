@@ -7,6 +7,7 @@ import css from './Overlay.module.css';
  * Overlay
  *
  * @param {Object} props
+ * @param {string} [props.as] - Root element: 'div' or 'button' (when 'button', overlay is clickable and onClick is used)
  * @param {string} [props.className] - Custom class that extends the default class for the root element
  * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
  * @param {string} [props.message] - The message
@@ -15,25 +16,26 @@ import css from './Overlay.module.css';
  * @returns {JSX.Element} Overlay component
  */
 const Overlay = props => {
-  const { className, rootClassName, message, errorMessage, children } = props;
+  const { as = 'div', className, rootClassName, message, errorMessage, children, onClick } = props;
 
-  const classes = classNames(rootClassName || css.root, className);
+  const Tag = as || 'div';
+  const tagProps = {
+    className: classNames(rootClassName || css.root, className),
+    onClick: event => {
+      event.preventDefault();
+      event.stopPropagation();
+    },
+  };
 
   return (
-    <div
-      className={classes}
-      onClick={event => {
-        event.preventDefault();
-        event.stopPropagation();
-      }}
-    >
+    <Tag {...tagProps}>
       <div className={css.overlay} />
       <div className={css.overlayContent}>
         {errorMessage ? <div className={css.errorMessage}>{errorMessage}</div> : null}
         {message ? <div className={css.message}>{message}</div> : null}
         {children}
       </div>
-    </div>
+    </Tag>
   );
 };
 
