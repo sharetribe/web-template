@@ -639,6 +639,8 @@
   "ManageListingCard.price": "{priceValue} {pricePerUnit}",
   "ManageListingCard.priceNotSet": "Price not set",
   "ManageListingCard.priceStartingFrom": "From {priceValue} {pricePerUnit}",
+  "ManageListingCard.screenreader.editListing": "Edit listing: {title}",
+  "ManageListingCard.screenreader.manageAvailability": "Manage availability: {title}",
   "ManageListingCard.screenreader.menu": "Listing menu",
   "ManageListingCard.screenreader.previewListing": "Preview listing: {title}",
   "ManageListingCard.screenreader.viewListing": "View listing: {title}",
