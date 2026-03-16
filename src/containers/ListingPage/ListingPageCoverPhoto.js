@@ -50,8 +50,9 @@ import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 // Shared components
 import {
-  H4,
+  H2,
   H3,
+  H4,
   Page,
   NamedLink,
   NamedRedirect,
@@ -408,9 +409,9 @@ export const ListingPageComponent = props => {
             <div className={showListingImage ? css.mobileHeading : css.noListingImageHeadingHero}>
               {showListingImage ? (
                 // add css logic here that applies larger margin on mobile view to push down title
-                <H4 as="h1" className={css.orderPanelTitle}>
+                <H2 as="h1" className={css.orderPanelTitle}>
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                </H4>
+                </H2>
               ) : (
                 <H3
                   as="h1"
