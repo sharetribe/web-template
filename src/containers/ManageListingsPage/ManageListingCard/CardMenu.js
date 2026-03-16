@@ -80,9 +80,12 @@ const CardMenu = props => {
           <MenuLabel
             className={css.menuLabel}
             isOpenClassName={css.listingMenuIsOpen}
-            ariaLabel={intl.formatMessage({
-              id: 'ManageListingCard.screenreader.menu',
-            })}
+            ariaLabel={intl.formatMessage(
+              {
+                id: 'ManageListingCard.screenreader.menu',
+              },
+              { title: listing.attributes.title }
+            )}
           >
             <div className={css.iconWrapper}>
               <MenuIcon className={css.menuIcon} isActive={isMenuOpen} />
