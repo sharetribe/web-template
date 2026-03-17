@@ -638,14 +638,14 @@ const getSortOptionsFromListingFields = listingFields => {
       options.push({
         key: `-${sortKey}`,
         labelTranslationKey: 'SortBy.numericSortOption',
-        values: { fieldLabel: label, direction: 'asc' },
+        translationValues: { fieldLabel: label, direction: 'asc' },
       });
     }
     if (sortingOrder.desc) {
       options.push({
         key: sortKey,
         labelTranslationKey: 'SortBy.numericSortOption',
-        values: { fieldLabel: label, direction: 'desc' },
+        translationValues: { fieldLabel: label, direction: 'desc' },
       });
     }
 
@@ -1555,8 +1555,8 @@ const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance, lis
     relevance: !hostedSortConfig?.relevance || omitRelevance,
   };
 
-  // In addition to the search configuration, sort options can be configured via an option
-  // in listing fields. getSortOptionsFromListingFields iterates through the listing fields
+  // In addition to the search configuration, additional sort options can be configured
+  // through listing fields. getSortOptionsFromListingFields iterates through the listing fields
   // and returns primaryOptions and secondaryOptions. primaryOptions are prepended to the
   // sort options and secondaryOptions are appended.
   const { primaryOptions, secondaryOptions } = getSortOptionsFromListingFields(listingFields);

@@ -73,7 +73,10 @@ const SortBy = props => {
     const translatedOption = option?.labelTranslationKey
       ? {
           key: option.key,
-          label: intl.formatMessage({ id: option.labelTranslationKey }, option.values),
+          label: intl.formatMessage(
+            { id: option.labelTranslationKey },
+            option.translationValues ?? {}
+          ),
           ...translationKeyLongMaybe,
         }
       : option;
