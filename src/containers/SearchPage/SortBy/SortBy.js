@@ -58,9 +58,7 @@ const SortBy = props => {
   const hasKeyworsFilter = config.search.defaultFilters.find(df => df.key === relevanceFilter);
   const isKeywordsFilterEnabled = isMainSearchKeywords || hasKeyworsFilter;
 
-  const activeOptions = isKeywordsFilterEnabled
-    ? Object.keys({ keywords: '', ...selectedFilters })
-    : Object.keys(selectedFilters);
+  const activeOptions = Object.keys(selectedFilters);
 
   const isRelevanceOptionActive = activeOptions.includes(relevanceFilter);
 
