@@ -1445,7 +1445,7 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const mergeSortConfig = (hostedSortConfig, defaultSortConfig) => {
+const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance) => {
   if (hostedSortConfig == null) {
     return {
       ...defaultSortConfig,
@@ -1460,7 +1460,7 @@ const mergeSortConfig = (hostedSortConfig, defaultSortConfig) => {
     '-createdAt': !hostedSortConfig?.oldest,
     '-price': !hostedSortConfig?.lowestPrice,
     price: !hostedSortConfig?.highestPrice,
-    relevance: !hostedSortConfig?.relevance,
+    relevance: !hostedSortConfig?.relevance || omitRelevance,
   };
 
   // Remove disabled sort options
@@ -1485,7 +1485,8 @@ const mergeSearchConfig = (
     ? {
         sortConfig: mergeSortConfig(
           hostedSearchConfig?.sorting?.defaultSortingOptions,
-          defaultSearchConfig.sortConfig
+          defaultSearchConfig.sortConfig,
+          hostedSearchConfig?.mainSearch?.searchType === 'location'
         ),
         // This just shows how to add custom built-in filters.
         // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
