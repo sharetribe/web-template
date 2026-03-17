@@ -246,7 +246,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     );
 
     // User-specified sort takes priority
-    if (sortParam !== undefined) {
+    if (sortParam !== undefined && sortParam !== sortConfig.relevanceKey) {
       return { sort: sortParam };
     }
 
