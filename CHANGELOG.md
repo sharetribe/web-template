@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Update moment-timezone to v0.6.1 (to take newest update from IANA time zone db)
+  [#809](https://github.com/sharetribe/web-template/pull/809)
+
 ## [v10.14.1] 2026-03-18
 
 - [fix] Fix SectionListings not loading correctly when a section has an anchor link
