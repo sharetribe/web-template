@@ -351,6 +351,32 @@ const server = app.listen(PORT, () => {
   }
 });
 
+// protecting testing environment from being indexed
+const basicAuth = require('express-basic-auth');
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    const host = req.headers.host;
+
+    // hard coded domain names
+    if (
+      host &&
+      (
+        host === 'test-patamali-com.onrender.com' ||
+        host === 'test.patamali.com'
+      )
+    ) {
+      res.set('X-Robots-Tag', 'noindex, nofollow');
+
+      return basicAuth({
+        users: { admin: 'test123' },
+        challenge: true,
+      })(req, res, next);
+    }
+
+    next();
+  });
+}
+
 // Graceful shutdown:
 // https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
 ['SIGINT', 'SIGTERM'].forEach(signal => {
