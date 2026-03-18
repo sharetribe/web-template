@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix SectionListings not loading correctly when a section has an anchor link
+  ID.[#807](https://github.com/sharetribe/web-template/pull/807)
 - [add] Add loading spinner to CheckoutPage.
   [#802](https://github.com/sharetribe/web-template/pull/802)
 - [fix] CheckoutPage: fix the initialState not initializing stripeCustomerFetchError.
