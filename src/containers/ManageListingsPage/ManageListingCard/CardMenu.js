@@ -1,12 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import {
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
   LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_PUBLISHED,
 } from '../../../util/types';
-import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { isBookingProcessAlias } from '../../../transactions/transaction';
+
 import { InlineTextButton, Menu, MenuContent, MenuItem, MenuLabel } from '../../../components';
 
 import MenuIcon from './MenuIcon';
@@ -15,20 +18,29 @@ import css from './CardMenu.module.css';
 const MENU_CONTENT_OFFSET = -12;
 const MOBILE_MAX_WIDTH = 550;
 
+const isOutOfStock = listing => {
+  const state = listing?.attributes?.state;
+  const publicData = listing?.attributes?.publicData;
+  const isBookable = isBookingProcessAlias(publicData.transactionProcessAlias);
+  const currentStock = listing?.currentStock?.attributes?.quantity;
+  return !isBookable && currentStock === 0 && state === LISTING_STATE_PUBLISHED;
+};
+
 /**
  * Returns an array of menu item keys that are relevant for the given listing state.
  * If the array is empty, the menu should not be shown.
  *
- * @param {string} state - Listing state (listing.attributes.state)
+ * @param {Object} listing - Listing entity (ownListing)
  * @returns {string[]} relevant menu item keys
  */
-const getMenuItemsForState = state => {
+const getMenuItems = listing => {
+  const state = listing?.attributes?.state;
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
 
   // Currently, we only show "close listing" for active listings
-  if (isDraft || isClosed || isPendingApproval) {
+  if (!listing || isDraft || isClosed || isPendingApproval || isOutOfStock(listing)) {
     return [];
   }
 
@@ -50,9 +62,7 @@ const getMenuItemsForState = state => {
 const CardMenu = props => {
   const { isMenuOpen, listing, inProgressListingId, onToggleMenu, onCloseListing } = props;
   const intl = useIntl();
-
-  const state = listing?.attributes?.state;
-  const menuItems = getMenuItemsForState(state);
+  const menuItems = getMenuItems(listing);
 
   if (menuItems.length === 0) {
     return null;
