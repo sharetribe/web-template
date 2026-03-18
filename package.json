@@ -118,7 +118,7 @@
     ]
   },
   "engines": {
-    "node": ">=16 <18"
+    "node": "20.x"
   },
   "prettier": {
     "singleQuote": true,
