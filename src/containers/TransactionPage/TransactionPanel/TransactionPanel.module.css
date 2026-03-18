@@ -524,3 +524,23 @@
     margin-top: 16px;
   }
 }
+
+.feedSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  & .sectionHeading {
+    margin-bottom: 0;
+  }
+}
+
+.videoCallButton {
+  width: auto;
+  min-height: unset;
+  padding: 8px 18px;
+  font-size: 14px;
+  line-height: 20px;
+  flex-shrink: 0;
+}

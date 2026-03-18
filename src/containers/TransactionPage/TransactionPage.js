@@ -686,6 +686,8 @@ export const TransactionPageComponent = props => {
       transitions={txTransitions}
       processName={processName}
       protectedData={transaction?.attributes?.protectedData}
+      metadata={transaction?.attributes?.metadata}
+      isCompleted={process ? process.getState(transaction) === process.states.DELIVERED : null}
       messages={messages}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}

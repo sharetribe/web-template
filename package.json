@@ -4,6 +4,8 @@
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
+    "@100mslive/roomkit-react": "^0.4.2",
+    "@100mslive/server-sdk": "^0.3.0",
     "@aws-sdk/client-s3": "^3.990.0",
     "@aws-sdk/s3-request-presigner": "^3.990.0",
     "@loadable/component": "^5.16.4",

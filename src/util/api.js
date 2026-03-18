@@ -176,3 +176,7 @@ export const getMuxAsset = (queryParams = {}) => {
 export const getMuxJwtToken = (queryParams = {}) => {
   return get('/api/mux/jwt-token?' + new URLSearchParams(queryParams).toString());
 };
+
+export const setupVideoConferenceRoom = body => {
+  return post('/api/video-conference/setup-room', body);
+};

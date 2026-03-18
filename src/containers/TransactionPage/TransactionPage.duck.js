@@ -26,6 +26,8 @@ import {
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
+import { transitions } from '../../transactions/transactionProcessBooking';
+import { getVideoParams } from './helper';
 
 const { UUID } = sdkTypes;
 
@@ -313,13 +315,21 @@ export const fetchTransaction = (id, txRole, config) => dispatch => {
 ////////////////////
 // makeTransition //
 ////////////////////
-const makeTransitionPayloadCreator = (
+const makeTransitionPayloadCreator = async (
   { txId, transitionName, params },
   { dispatch, rejectWithValue, extra: sdk, getState }
 ) => {
   const transaction = getState()?.marketplaceData?.entities?.transaction?.[txId?.uuid];
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
+
+  if (transitions.ACCEPT === transitionName) {
+    const res = await getVideoParams(transaction.id.uuid);
+
+    if (!res) {
+      return rejectWithValue(storableError(new Error('Failed to get video conference parameters')));
+    }
+  }
 
   // This calls the client app's server to make a privileged transition.
   const privilegedTransition = () =>

@@ -1,0 +1,500 @@
+/**
+ * Combine the given relationships objects
+ *
+ * See: http://jsonapi.org/format/#document-resource-object-relationships
+ */
+const combinedRelationships = (oldRels, newRels) => {
+  if (!oldRels && !newRels) {
+    // Special case to avoid adding an empty relationships object when
+    // none of the resource objects had any relationships.
+    return null;
+  }
+  return { ...oldRels, ...newRels };
+};
+
+/**
+ * Combine the given resource objects
+ *
+ * See: http://jsonapi.org/format/#document-resource-objects
+ */
+const combinedResourceObjects = (oldRes, newRes) => {
+  const { id, type } = oldRes;
+  if (newRes.id.uuid !== id.uuid || newRes.type !== type) {
+    throw new Error('Cannot merge resource objects with different ids or types');
+  }
+  const attributes = newRes.attributes || oldRes.attributes;
+  const attributesOld = oldRes.attributes || {};
+  const attributesNew = newRes.attributes || {};
+  // Allow (potentially) sparse attributes to update only relevant fields
+  const attrs = attributes ? { attributes: { ...attributesOld, ...attributesNew } } : null;
+  const relationships = combinedRelationships(oldRes.relationships, newRes.relationships);
+  const rels = relationships ? { relationships } : null;
+  return { id, type, ...attrs, ...rels };
+};
+
+/**
+ * Combine the resource objects form the given api response to the
+ * existing entities.
+ */
+const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) => {
+  const { data, included = [] } = apiResponse;
+  const objects = (Array.isArray(data) ? data : [data]).concat(included);
+
+  const newEntities = objects.reduce((entities, curr) => {
+    const { id, type } = curr;
+
+    // Some entities (e.g. listing and user) might include extended data,
+    // you should check if src/util/sanitize.js needs to be updated.
+    const current = curr;
+
+    entities[type] = entities[type] || {};
+    const entity = entities[type][id.uuid];
+    entities[type][id.uuid] = entity ? combinedResourceObjects({ ...entity }, current) : current;
+
+    return entities;
+  }, oldEntities);
+
+  return newEntities;
+};
+
+/**
+ * Denormalise the entities with the resources from the entities object
+ *
+ * This function calculates the dernormalised tree structure from the
+ * normalised entities object with all the relationships joined in.
+ *
+ * @param {Object} entities entities object in the SDK Redux store
+ * @param {Array<{ id, type }} resources array of objects
+ * with id and type
+ * @param {Boolean} throwIfNotFound wheather to skip a resource that
+ * is not found (false), or to throw an Error (true)
+ *
+ * @return {Array} the given resource objects denormalised that were
+ * found in the entities
+ */
+const denormalisedEntities = (entities, resources, throwIfNotFound = true) => {
+  const denormalised = resources.map(res => {
+    const { id, type } = res;
+    const entityFound = entities[type] && id && entities[type][id.uuid];
+    if (!entityFound) {
+      if (throwIfNotFound) {
+        throw new Error(`Entity with type "${type}" and id "${id ? id.uuid : id}" not found`);
+      }
+      return null;
+    }
+    const entity = entities[type][id.uuid];
+    const { relationships, ...entityData } = entity;
+
+    if (relationships) {
+      // Recursively join in all the relationship entities
+      return Object.entries(relationships).reduce((ent, [relName, relRef]) => {
+        // A relationship reference can be either a single object or
+        // an array of objects. We want to keep that form in the final
+        // result.
+        const hasMultipleRefs = Array.isArray(relRef.data);
+        const multipleRefsEmpty = hasMultipleRefs && relRef.data.length === 0;
+        if (!relRef.data || multipleRefsEmpty) {
+          ent[relName] = hasMultipleRefs ? [] : null;
+        } else {
+          const refs = hasMultipleRefs ? relRef.data : [relRef.data];
+
+          // If a relationship is not found, an Error should be thrown
+          const rels = denormalisedEntities(entities, refs, true);
+
+          ent[relName] = hasMultipleRefs ? rels : rels[0];
+        }
+        return ent;
+      }, entityData);
+    }
+    return entityData;
+  });
+  return denormalised.filter(e => !!e);
+};
+
+/**
+ * Denormalise the data from the given SDK response
+ *
+ * @param {Object} sdkResponse response object from an SDK call
+ *
+ * @return {Array} entities in the response with relationships
+ * denormalised from the included data
+ */
+const denormalisedResponseEntities = sdkResponse => {
+  const apiResponse = sdkResponse.data;
+  const data = apiResponse.data;
+  const resources = Array.isArray(data) ? data : [data];
+
+  if (!data || resources.length === 0) {
+    return [];
+  }
+
+  const entities = updatedEntities({}, apiResponse);
+  return denormalisedEntities(entities, resources);
+};
+
+/**
+ * Denormalize JSON object.
+ * NOTE: Currently, this only handles denormalization of image references
+ *
+ * @param {JSON} data from Asset API (e.g. page asset)
+ * @param {JSON} included array of asset references (currently only images supported)
+ * @returns deep copy of data with images denormalized into it.
+ */
+const denormalizeJsonData = (data, included) => {
+  let copy;
+
+  // Handle strings, numbers, booleans, null
+  if (data === null || typeof data !== 'object') {
+    return data;
+  }
+
+  // At this point the data has typeof 'object' (aka Array or Object)
+  // Array is the more specific case (of Object)
+  if (data instanceof Array) {
+    copy = data.map(datum => denormalizeJsonData(datum, included));
+    return copy;
+  }
+
+  // Generic Objects
+  if (data instanceof Object) {
+    copy = {};
+    Object.entries(data).forEach(([key, value]) => {
+      // Handle denormalization of image reference
+      const hasImageRefAsValue =
+        typeof value == 'object' && value?._ref?.type === 'imageAsset' && value?._ref?.id;
+      // If there is no image included,
+      // the _ref might contain parameters for image resolver (Asset Delivery API resolves image URLs on the fly)
+      const hasUnresolvedImageRef = typeof value == 'object' && value?._ref?.resolver === 'image';
+
+      if (hasImageRefAsValue) {
+        const foundRef = included.find(inc => inc.id === value._ref?.id);
+        copy[key] = foundRef;
+      } else if (hasUnresolvedImageRef) {
+        // Don't add faulty image ref
+        // Note: At the time of writing, assets can expose resolver configs,
+        //       which we don't want to deal with.
+      } else {
+        copy[key] = denormalizeJsonData(value, included);
+      }
+    });
+    return copy;
+  }
+
+  throw new Error("Unable to traverse data! It's not JSON.");
+};
+
+/**
+ * Denormalize asset json from Asset API.
+ * @param {JSON} assetJson in format: { data, included }
+ * @returns deep copy of asset data with images denormalized into it.
+ */
+const denormalizeAssetData = assetJson => {
+  const { data, included } = assetJson || {};
+  return denormalizeJsonData(data, included);
+};
+
+/**
+ * Limits the number of listing sections on a page to 10
+ *
+ * This function filters sections to enforce a maximum limit of listing sections
+ * while preserving all other section types. It maintains the original order of sections.
+ *
+ * @param {Object} data - Page data object containing sections array
+ *
+ * @return {Object} Filtered sections array
+ *
+ * @example
+ * const pageData = {
+ *   sections: [
+ *     { sectionType: 'hero' },
+ *     { sectionType: 'listings' },  // kept (1st listing section)
+ *     { sectionType: 'listings' },  // kept (2nd listing section)
+ *     // ... more listing sections up to 10th
+ *     { sectionType: 'listings' },  // removed (11th listing section)
+ *     { sectionType: 'footer' }     // kept (non-listing section)
+ *   ]
+ * };
+ * const limited = limitListingsSections(pageData);
+ */
+const limitListingsSections = data => {
+  let acc = 0;
+  const listingSectionLimit = 10;
+  const filteredSections = data.sections.filter(section => {
+    if (section.sectionType === 'listings') {
+      if (acc < listingSectionLimit) {
+        acc++;
+        return true; // Keep this listing section
+      }
+      return false; // Remove this listing section (limit exceeded)
+    }
+    // Keep all non-listing sections
+    return true;
+  });
+  return { ...data, sections: filteredSections };
+};
+
+/**
+ * Create a wrapper object to pass as a prop to PageBuilder.
+ * This helper wraps all the necessary data and functions related to featured listings.
+ *
+ * @param {String} pageId The ID of the current page
+ * @param {Object} props Component props containing featuredListingData, onFetchFeaturedListings, and getListingEntitiesById
+ *
+ * @return {Object} Object wrapper containing listing data and handlers for the specified page
+ */
+const getFeaturedListingsProps = (pageId, props) => {
+  const { featuredListingData, onFetchFeaturedListings, getListingEntitiesById } = props;
+
+  return {
+    featuredListingData: featuredListingData?.[pageId] || {},
+    parentPage: pageId,
+    onFetchFeaturedListings,
+    getListingEntitiesById,
+  };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} transaction entity object, which is to be ensured against null values
+ */
+const ensureTransaction = (transaction, booking = null, listing = null, provider = null) => {
+  const empty = {
+    id: null,
+    type: 'transaction',
+    attributes: {},
+    booking,
+    listing,
+    provider,
+  };
+  return { ...empty, ...transaction };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} booking entity object, which is to be ensured against null values
+ */
+const ensureBooking = booking => {
+  const empty = { id: null, type: 'booking', attributes: {} };
+  return { ...empty, ...booking };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} listing entity object, which is to be ensured against null values
+ */
+const ensureListing = listing => {
+  const empty = {
+    id: null,
+    type: 'listing',
+    attributes: { publicData: {} },
+    images: [],
+  };
+  return { ...empty, ...listing };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} listing entity object, which is to be ensured against null values
+ */
+const ensureOwnListing = listing => {
+  const empty = {
+    id: null,
+    type: 'ownListing',
+    attributes: { publicData: {} },
+    images: [],
+  };
+  return { ...empty, ...listing };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} user entity object, which is to be ensured against null values
+ */
+const ensureUser = user => {
+  const empty = { id: null, type: 'user', attributes: { profile: {} } };
+  return { ...empty, ...user };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} current user entity object, which is to be ensured against null values
+ */
+const ensureCurrentUser = user => {
+  const empty = { id: null, type: 'currentUser', attributes: { profile: {} }, profileImage: {} };
+  return { ...empty, ...user };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} time slot entity object, which is to be ensured against null values
+ */
+const ensureTimeSlot = timeSlot => {
+  const empty = { id: null, type: 'timeSlot', attributes: {} };
+  return { ...empty, ...timeSlot };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} availability exception entity object, which is to be ensured against null values
+ */
+const ensureDayAvailabilityPlan = availabilityPlan => {
+  const empty = { type: 'availability-plan/day', entries: [] };
+  return { ...empty, ...availabilityPlan };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} availability exception entity object, which is to be ensured against null values
+ */
+const ensureAvailabilityException = availabilityException => {
+  const empty = { id: null, type: 'availabilityException', attributes: {} };
+  return { ...empty, ...availabilityException };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} stripeCustomer entity from API, which is to be ensured against null values
+ */
+const ensureStripeCustomer = stripeCustomer => {
+  const empty = { id: null, type: 'stripeCustomer', attributes: {} };
+  return { ...empty, ...stripeCustomer };
+};
+
+/**
+ * Create shell objects to ensure that attributes etc. exists.
+ *
+ * @param {Object} stripeCustomer entity from API, which is to be ensured against null values
+ */
+const ensurePaymentMethodCard = stripePaymentMethod => {
+  const empty = {
+    id: null,
+    type: 'stripePaymentMethod',
+    attributes: { type: 'stripe-payment-method/card', card: {} },
+  };
+  const cardPaymentMethod = { ...empty, ...stripePaymentMethod };
+
+  if (cardPaymentMethod.attributes.type !== 'stripe-payment-method/card') {
+    throw new Error(`'ensurePaymentMethodCard' got payment method with wrong type.
+      'stripe-payment-method/card' was expected, received ${cardPaymentMethod.attributes.type}`);
+  }
+
+  return cardPaymentMethod;
+};
+
+/**
+ * Get the display name of the given user as string. This function handles
+ * missing data (e.g. when the user object is still being downloaded),
+ * fully loaded users, as well as banned users.
+ *
+ * For banned or deleted users, a translated name should be provided.
+ *
+ * @param {propTypes.user} user
+ * @param {String} defaultUserDisplayName
+ *
+ * @return {String} display name that can be rendered in the UI
+ */
+const userDisplayNameAsString = (user, defaultUserDisplayName) => {
+  const hasDisplayName = user?.attributes?.profile?.displayName;
+
+  if (hasDisplayName) {
+    return user.attributes.profile.displayName;
+  } else {
+    return defaultUserDisplayName || '';
+  }
+};
+
+/**
+ * DEPRECATED: Use userDisplayNameAsString function or UserDisplayName component instead
+ *
+ * @param {propTypes.user} user
+ * @param {String} bannedUserDisplayName
+ *
+ * @return {String} display name that can be rendered in the UI
+ */
+const userDisplayName = (user, bannedUserDisplayName) => {
+  console.warn(
+    `Function userDisplayName is deprecated!
+User function userDisplayNameAsString or component UserDisplayName instead.`
+  );
+
+  return userDisplayNameAsString(user, bannedUserDisplayName);
+};
+
+/**
+ * Get the abbreviated name of the given user. This function handles
+ * missing data (e.g. when the user object is still being downloaded),
+ * fully loaded users, as well as banned users.
+ *
+ * For banned  or deleted users, a default abbreviated name should be provided.
+ *
+ * @param {propTypes.user} user
+ * @param {String} defaultUserAbbreviatedName
+ *
+ * @return {String} abbreviated name that can be rendered in the UI
+ * (e.g. in Avatar initials)
+ */
+const userAbbreviatedName = (user, defaultUserAbbreviatedName) => {
+  const hasAttributes = user && user.attributes;
+  const hasProfile = hasAttributes && user.attributes.profile;
+  const hasDisplayName = hasProfile && user.attributes.profile.abbreviatedName;
+
+  if (hasDisplayName) {
+    return user.attributes.profile.abbreviatedName;
+  } else {
+    return defaultUserAbbreviatedName || '';
+  }
+};
+
+/**
+ * Humanizes a line item code. Strips the "line-item/" namespace
+ * definition from the beginnign, replaces dashes with spaces and
+ * capitalizes the first character.
+ *
+ * @param {string} code a line item code
+ *
+ * @return {string} returns the line item code humanized
+ */
+const humanizeLineItemCode = code => {
+  if (!/^line-item\/.+/.test(code)) {
+    throw new Error(`Invalid line item code: ${code}`);
+  }
+  const lowercase = code.replace(/^line-item\//, '').replace(/-/g, ' ');
+
+  return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
+};
+
+module.exports = {
+  combinedRelationships,
+  combinedResourceObjects,
+  updatedEntities,
+  denormalisedEntities,
+  denormalisedResponseEntities,
+  denormalizeAssetData,
+  limitListingsSections,
+  getFeaturedListingsProps,
+  ensureTransaction,
+  ensureBooking,
+  ensureListing,
+  ensureOwnListing,
+  ensureUser,
+  ensureCurrentUser,
+  ensureTimeSlot,
+  ensureDayAvailabilityPlan,
+  ensureAvailabilityException,
+  ensureStripeCustomer,
+  ensurePaymentMethodCard,
+  userDisplayNameAsString,
+  userDisplayName,
+  userAbbreviatedName,
+  humanizeLineItemCode,
+};

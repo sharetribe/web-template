@@ -345,6 +345,9 @@ export class TransactionPanelComponent extends Component {
               fetchMessagesError={fetchMessagesError}
               activityFeed={activityFeed}
               isConversation={isInquiryProcess}
+              metadata={this.props.metadata}
+              isCustomer={isCustomer}
+              isCompleted={this.props.isCompleted}
             />
             {showSendMessageForm ? (
               <SendMessageForm
