@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.14.1] 2026-03-18
+
 - [fix] Fix SectionListings not loading correctly when a section has an anchor link
   ID.[#807](https://github.com/sharetribe/web-template/pull/807)
 - [add] Add loading spinner to CheckoutPage.
@@ -24,6 +26,8 @@ way to update this template, but currently, we follow a pattern:
   [#801](https://github.com/sharetribe/web-template/pull/801)
 - [add] Add currently available translations for DE, ES, FR.
   [#804](https://github.com/sharetribe/web-template/pull/804)
+
+  [v10.14.1]: https://github.com/sharetribe/web-template/compare/v10.14.0...v10.14.1
 
 ## [v10.14.0] 2026-03-10
 
