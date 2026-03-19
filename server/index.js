@@ -218,6 +218,30 @@ if (!dev) {
   }
 }
 
+
+// protecting testing environment from being indexed
+const basicAuth = require('express-basic-auth');
+
+app.use((req, res, next) => {
+  const host = req.headers.host || '';
+  const normalizedHost = host.split(':')[0];
+
+  if (
+    normalizedHost === 'test.patamali.com' ||
+    normalizedHost === 'test-patamali-com.onrender.com' ||
+    normalizedHost === 'localhost'
+  ) {
+    res.set('X-Robots-Tag', 'noindex, nofollow');
+
+    return basicAuth({
+      users: { admin: 'test123' },
+      challenge: true,
+    })(req, res, next);
+  }
+
+  next();
+});
+
 // Initialize Passport.js  (http://www.passportjs.org/)
 // Passport is authentication middleware for Node.js
 // We use passport to enable authenticating with
@@ -350,30 +374,6 @@ const server = app.listen(PORT, () => {
     console.log(`Open http://localhost:${PORT}/ and start hacking!\n`);
   }
 });
-
-
-// protecting testing environment from being indexed
-const basicAuth = require('express-basic-auth');
-if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-    const host = req.headers.host;
-    const normalizedHost = host.replace(/^https?:\/\//, '').split(':')[0];
-
-  if (
-    normalizedHost === 'test.patamali.com' ||
-    normalizedHost === 'test-patamali-com.onrender.com' 
-  ) {
-      res.set('X-Robots-Tag', 'noindex, nofollow');
-
-      return basicAuth({
-        users: { admin: 'test123' },
-        challenge: true,
-      })(req, res, next);
-    }
-
-    next();
-  });
-}
 
 // Graceful shutdown:
 // https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
