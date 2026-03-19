@@ -23,7 +23,18 @@ const updateTransactionMetadata = async (transactionId, metadata) => {
   return iSdk.transactions.updateMetadata({ id: transactionId, metadata });
 };
 
+/**
+ * Queries Sharetribe transactions using the Integration SDK.
+ * @param {Object} params - Query parameters (e.g. listingId, bookingStart, include)
+ * @returns {Promise<Object>} The raw SDK response
+ */
+const queryTransactions = async (params = {}) => {
+  const iSdk = getIntegrationSdk();
+  return iSdk.transactions.query(params);
+};
+
 module.exports = {
   getTransaction,
   updateTransactionMetadata,
+  queryTransactions,
 };
