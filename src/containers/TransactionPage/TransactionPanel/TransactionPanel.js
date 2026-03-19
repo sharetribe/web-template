@@ -191,6 +191,7 @@ export class TransactionPanelComponent extends Component {
       sendMessageFormFocused: false,
       fileDownloadInProgress: false,
       fileUploadStatus: 'idle',
+      fileUploadProgress: null,
       localUploadedFiles: [],
       fileDownloadError: null,
     };
@@ -291,11 +292,11 @@ export class TransactionPanelComponent extends Component {
     const fileUploadsApi = sdk?.fileUploads || sdk?.file_uploads;
     const messagesApi = sdk?.messages;
 
-    this.setState({ fileUploadStatus: 'uploading', fileDownloadError: null });
+    this.setState({ fileUploadStatus: 'uploading', fileUploadProgress: 0, fileDownloadError: null });
 
     if (!sdk || !transactionId) {
       console.error('SDK instance or transactionId is missing');
-      this.setState({ fileUploadStatus: 'failed' });
+      this.setState({ fileUploadStatus: 'failed', fileUploadProgress: null });
       return;
     }
 
@@ -304,6 +305,7 @@ export class TransactionPanelComponent extends Component {
       !ownFilesApi?.show ||
       !fileUploadsApi?.create ||
       !messagesApi?.send ||
+      !sdkFile?.metadata ||
       !sdkFile?.upload
     ) {
       console.error('Required SDK file APIs are missing', {
@@ -315,7 +317,7 @@ export class TransactionPanelComponent extends Component {
         hasFileUpload: !!sdkFile?.upload,
         sdkKeys: Object.keys(sdk || {}),
       });
-      this.setState({ fileUploadStatus: 'failed' });
+      this.setState({ fileUploadStatus: 'failed', fileUploadProgress: null });
       return;
     }
 
@@ -354,16 +356,92 @@ export class TransactionPanelComponent extends Component {
 
         const uploadAndVerify = (retryCount = 0) => {
           const target = new URL(url);
+          let uploadProgressEventCount = 0;
+          const uploadRuntimeDiagnostics = {
+            sdkFileUploadType: typeof sdkFile?.upload,
+            userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+            hasXMLHttpRequest: typeof XMLHttpRequest !== 'undefined',
+            hasXHRUpload:
+              typeof XMLHttpRequest !== 'undefined' ? 'upload' in new XMLHttpRequest() : false,
+            supportsXHRProgressEvents:
+              typeof XMLHttpRequest !== 'undefined' ? 'onprogress' in new XMLHttpRequest() : false,
+            adapterHint:
+              typeof window !== 'undefined' && typeof XMLHttpRequest !== 'undefined'
+                ? 'browser-xhr-expected'
+                : 'non-browser-runtime',
+            uploadHost: target.host,
+            uploadPath: target.pathname,
+            uploadMethod: method,
+            fileSize: file.size,
+          };
 
           return this
             .ensureAuthenticated(sdk)
-            .then(() => sdkFile.upload({ method, url, headers, file }))
+            .then(() => {
+              console.log('starting sdkFile.upload with onUploadProgress', {
+                host: target.host,
+                path: target.pathname,
+                method,
+                fileSize: file.size,
+              });
+              console.log('sdk upload runtime diagnostics', uploadRuntimeDiagnostics);
+
+              return (
+              sdkFile.upload({
+                method,
+                url,
+                headers,
+                file,
+                onUploadProgress: progressEvent => {
+                  uploadProgressEventCount += 1;
+                  const loaded = progressEvent?.loaded || 0;
+                  const total = progressEvent?.total || file.size;
+                  const progress = total
+                    ? Math.min(100, Math.round((loaded / total) * 100))
+                    : null;
+
+                  console.log('upload progress event', {
+                    count: uploadProgressEventCount,
+                    loaded,
+                    total: progressEvent?.total,
+                    totalUsedForProgress: total,
+                    lengthComputable: progressEvent?.lengthComputable,
+                    progress,
+                  });
+
+                  this.setState({ fileUploadProgress: progress });
+                },
+              })
+              );
+            })
             .then(uploadResponse => {
+              if (uploadProgressEventCount === 0) {
+                console.warn('onUploadProgress did not fire during upload', {
+                  host: target.host,
+                  path: target.pathname,
+                  method,
+                  fileSize: file.size,
+                });
+              }
+
               const responseHeaders = {
                 etag: uploadResponse?.headers?.etag,
                 xAmzRequestId: uploadResponse?.headers?.['x-amz-request-id'],
                 xAmzId2: uploadResponse?.headers?.['x-amz-id-2'],
                 server: uploadResponse?.headers?.server,
+              };
+
+              const requestDiagnostics = {
+                requestType: uploadResponse?.request?.constructor?.name || typeof uploadResponse?.request,
+                hasXhrUpload: !!uploadResponse?.request?.upload,
+                responseURL: uploadResponse?.request?.responseURL,
+                adapterType: typeof uploadResponse?.config?.adapter,
+                adapterName:
+                  typeof uploadResponse?.config?.adapter === 'function'
+                    ? uploadResponse.config.adapter.name || 'anonymous'
+                    : Array.isArray(uploadResponse?.config?.adapter)
+                    ? uploadResponse.config.adapter.join(',')
+                    : String(uploadResponse?.config?.adapter),
               };
 
               console.log('file upload response', {
@@ -372,6 +450,7 @@ export class TransactionPanelComponent extends Component {
                 status: uploadResponse?.status,
                 statusText: uploadResponse?.statusText,
                 responseHeaders,
+                requestDiagnostics,
               });
 
               console.log('upload request metadata', {
@@ -379,7 +458,7 @@ export class TransactionPanelComponent extends Component {
                 expiresAt,
                 headerKeys: Object.keys(headers || {}),
               });
-              this.setState({ fileUploadStatus: 'verifying' });
+              this.setState({ fileUploadStatus: 'verifying', fileUploadProgress: 100 });
               return this.waitForFileAvailable(ownFilesApi, fileId);
             })
             .catch(error => {
@@ -423,6 +502,7 @@ export class TransactionPanelComponent extends Component {
         event.target.value = '';
         this.setState(prevState => ({
           fileUploadStatus: 'success',
+          fileUploadProgress: null,
           localUploadedFiles: prevState.localUploadedFiles.concat({
             fileId: ownFileIdString,
             fileName: file.name,
@@ -440,6 +520,7 @@ export class TransactionPanelComponent extends Component {
         if (isPendingUploadTimeout && uploadedFileIdString) {
           this.setState(prevState => ({
             fileUploadStatus: 'verificationPending',
+            fileUploadProgress: null,
             localUploadedFiles: prevState.localUploadedFiles.concat({
               fileId: uploadedFileIdString,
               fileName: file.name,
@@ -449,7 +530,7 @@ export class TransactionPanelComponent extends Component {
           return;
         }
 
-        this.setState({ fileUploadStatus: 'failed' });
+        this.setState({ fileUploadStatus: 'failed', fileUploadProgress: null });
       });
   }
 
@@ -547,8 +628,13 @@ export class TransactionPanelComponent extends Component {
       transactionFieldsComponent,
     } = this.props;
 
-    const { fileDownloadInProgress, fileUploadStatus, localUploadedFiles, fileDownloadError } =
-      this.state;
+    const {
+      fileDownloadInProgress,
+      fileUploadStatus,
+      fileUploadProgress,
+      localUploadedFiles,
+      fileDownloadError,
+    } = this.state;
 
     const hasTransitions = transitions.length > 0;
     const isCustomer = transactionRole === 'customer';
@@ -715,6 +801,7 @@ export class TransactionPanelComponent extends Component {
                 {fileUploadStatus === 'uploading' ? (
                   <p className={css.uploadStatus}>
                     <FormattedMessage id="TransactionPanel.uploadStatusUploading" />
+                    {typeof fileUploadProgress === 'number' ? ` ${fileUploadProgress}%` : null}
                   </p>
                 ) : null}
                 {fileUploadStatus === 'verifying' ? (
