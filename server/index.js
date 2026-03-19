@@ -218,7 +218,6 @@ if (!dev) {
   }
 }
 
-
 // protecting testing environment from being indexed
 const basicAuth = require('express-basic-auth');
 
@@ -228,8 +227,7 @@ app.use((req, res, next) => {
 
   if (
     normalizedHost === 'test.patamali.com' ||
-    normalizedHost === 'test-patamali-com.onrender.com' ||
-    normalizedHost === 'localhost'
+    normalizedHost === 'test-patamali-com.onrender.com'   
   ) {
     res.set('X-Robots-Tag', 'noindex, nofollow');
 
