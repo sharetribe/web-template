@@ -58,7 +58,7 @@
     "sitemap": "^9.0.0",
     "smoothscroll-polyfill": "^0.4.0",
     "source-map-support": "^0.5.21",
-    "to-fast-properties": "^4.0.0",
+    "to-fast-properties": "2.0.0",
     "unified": "^9.2.2"
   },
   "devDependencies": {
