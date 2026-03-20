@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -493,56 +492,87 @@ export const AuthenticationPageComponent = props => {
   );
 };
 
-const mapStateToProps = state => {
-  const { isAuthenticated, loginError, signupError, confirmError } = state.auth;
-  const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
-  const { pageAssetsData, inProgress: pageAssetsFetchInProgress, error: pageAssetsFetchError } =
-    state.hostedAssets || {};
-  const featuredListingData = state.featuredListings || {};
+/**
+ * The AuthenticationPage "container" component.
+ * This component handles props (state and dispatch actions) and passes them to the AuthenticationPageComponent.
+ *
+ * @component
+ * @param {Object} props from the router (routeConfiguration.js and Routes.js).
+ * @returns {JSX.Element}
+ */
+const AuthenticationPage = props => {
+  const dispatch = useDispatch();
 
-  const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
+  const authInProgress = useSelector(state => authenticationInProgress(state));
+  const currentUser = useSelector(state => state.user?.currentUser);
+  const isAuthenticated = useSelector(state => state.auth?.isAuthenticated);
+  const loginError = useSelector(state => state.auth?.loginError);
+  const signupError = useSelector(state => state.auth?.signupError);
+  const confirmError = useSelector(state => state.auth?.confirmError);
+  const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
 
-  return {
-    authInProgress: authenticationInProgress(state),
-    currentUser,
-    isAuthenticated,
-    loginError,
-    scrollingDisabled: isScrollingDisabled(state),
-    signupError,
-    confirmError,
-    sendVerificationEmailInProgress,
-    sendVerificationEmailError,
-    pageAssetsData,
-    pageAssetsFetchInProgress,
-    pageAssetsFetchError,
-    featuredListingData,
-    getListingEntitiesById,
-  };
+  const sendVerificationEmailInProgress = useSelector(
+    state => state.user?.sendVerificationEmailInProgress
+  );
+  const sendVerificationEmailError = useSelector(state => state.user?.sendVerificationEmailError);
+
+  const hostedAssets = useSelector(state => state.hostedAssets || {});
+  const pageAssetsData = hostedAssets.pageAssetsData;
+  const pageAssetsFetchInProgress = hostedAssets.inProgress;
+  const pageAssetsFetchError = hostedAssets.error;
+
+  const featuredListingData = useSelector(state => state.featuredListings || {});
+  const entities = useSelector(state => state.marketplaceData?.entities || {});
+
+  const getListingEntitiesById = useCallback(
+    listingIds => getListingsById({ marketplaceData: { entities } }, listingIds),
+    [entities]
+  );
+
+  const submitLogin = useCallback(({ email, password }) => dispatch(login(email, password)), [
+    dispatch,
+  ]);
+  const submitSignup = useCallback(params => dispatch(signup(params)), [dispatch]);
+  const submitSingupWithIdp = useCallback(params => dispatch(signupWithIdp(params)), [dispatch]);
+  const onResendVerificationEmail = useCallback(() => dispatch(sendVerificationEmail()), [
+    dispatch,
+  ]);
+  const onManageDisableScrolling = useCallback(
+    (componentId, disableScrolling) =>
+      dispatch(manageDisableScrolling(componentId, disableScrolling)),
+    [dispatch]
+  );
+  const onFetchFeaturedListings = useCallback(
+    (sectionId, parentPage, listingImageConfig, allSections) =>
+      dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
+    [dispatch]
+  );
+
+  return (
+    <AuthenticationPageComponent
+      {...props}
+      authInProgress={authInProgress}
+      currentUser={currentUser}
+      isAuthenticated={isAuthenticated}
+      loginError={loginError}
+      scrollingDisabled={scrollingDisabled}
+      signupError={signupError}
+      confirmError={confirmError}
+      submitLogin={submitLogin}
+      submitSignup={submitSignup}
+      submitSingupWithIdp={submitSingupWithIdp}
+      sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+      sendVerificationEmailError={sendVerificationEmailError}
+      onResendVerificationEmail={onResendVerificationEmail}
+      onManageDisableScrolling={onManageDisableScrolling}
+      pageAssetsData={pageAssetsData}
+      pageAssetsFetchInProgress={pageAssetsFetchInProgress}
+      pageAssetsFetchError={pageAssetsFetchError}
+      featuredListingData={featuredListingData}
+      getListingEntitiesById={getListingEntitiesById}
+      onFetchFeaturedListings={onFetchFeaturedListings}
+    />
+  );
 };
-
-const mapDispatchToProps = dispatch => ({
-  submitLogin: ({ email, password }) => dispatch(login(email, password)),
-  submitSignup: params => dispatch(signup(params)),
-  submitSingupWithIdp: params => dispatch(signupWithIdp(params)),
-  onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
-  onManageDisableScrolling: (componentId, disableScrolling) =>
-    dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  onFetchFeaturedListings: (sectionId, parentPage, listingImageConfig, allSections) =>
-    dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
-});
-
-// Note: it is important that the withRouter HOC is **outside** the
-// connect HOC, otherwise React Router won't rerender any Route
-// components since connect implements a shouldComponentUpdate
-// lifecycle hook.
-//
-// See: https://github.com/ReactTraining/react-router/issues/4671
-const AuthenticationPage = compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(AuthenticationPageComponent);
 
 export default AuthenticationPage;
