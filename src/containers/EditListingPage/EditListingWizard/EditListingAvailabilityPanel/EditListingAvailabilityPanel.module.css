@@ -102,3 +102,7 @@
 .error {
   color: var(--colorFail);
 }
+
+.calendarSection {
+  margin: 24px 0 32px 0;
+}
