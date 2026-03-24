@@ -353,6 +353,8 @@ export const getDetailCustomFieldValue = (
     ? { key, value: getBooleanMessage(value), label }
     : schemaType === 'long'
     ? { key, value, label }
+    : schemaType === 'shortText'
+    ? { key, value, label }
     : null;
 };
 
