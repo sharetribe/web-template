@@ -55,7 +55,7 @@ const CustomListingFields = props => {
     const { key, schemaType, enumOptions, showConfig = {} } = config;
     const listingType = publicData.listingType;
     const isTargetListingType = isFieldForListingType(listingType, config);
-    const isTargetCategory = isFieldForCategory(config);
+    const isTargetCategory = isFieldForCategory(currentCategories, config);
 
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
