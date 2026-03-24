@@ -893,7 +893,15 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
 const validTransactionFields = transactionFields => {
   const keys = transactionFields.map(d => d.key);
   const scopeOptions = ['protected'];
-  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
+  const validSchemaTypes = [
+    'enum',
+    'multi-enum',
+    'shortText',
+    'text',
+    'long',
+    'boolean',
+    'youtubeVideoUrl',
+  ];
 
   return transactionFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
@@ -955,7 +963,15 @@ const validUserTypes = userTypes => {
 const validUserFields = (userFields, userTypesInUse) => {
   const keys = userFields.map(d => d.key);
   const scopeOptions = ['public', 'private', 'protected', 'metadata'];
-  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
+  const validSchemaTypes = [
+    'enum',
+    'multi-enum',
+    'shortText',
+    'text',
+    'long',
+    'boolean',
+    'youtubeVideoUrl',
+  ];
 
   return userFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
