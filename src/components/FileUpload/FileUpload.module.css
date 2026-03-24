@@ -1,0 +1,11 @@
+.root {
+  display: flex;
+  padding: var(--spacing-lg, 12px);
+  align-items: flex-start;
+  gap: var(--spacing-md, 8px);
+  align-self: stretch;
+
+  border-radius: var(--medium, 4px);
+  border: 1px solid var(--neutral-gray-100, #e5e5e6);
+  background: var(--neutral-base-white, #fff);
+}
