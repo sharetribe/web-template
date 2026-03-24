@@ -15,6 +15,7 @@ import {
   isMainSearchTypeKeywords,
   isOriginInUse,
   getQueryParamNames,
+  constructQueryParamName,
 } from '../../util/search';
 import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
@@ -86,9 +87,9 @@ const getSelectedSecondaryFiltersCount = (
       })
     : {};
 
-  const relevantQueryParamNames = customSecondaryFilters.map(f => {
-    return f.scope === 'public' ? `pub_${f.key}` : f.key;
-  });
+  const relevantQueryParamNames = customSecondaryFilters.map(f =>
+    constructQueryParamName(f.key, f.scope)
+  );
   const pickRelevant = name => relevantQueryParamNames.includes(name);
   const selectedSecondaryFilters = Object.keys(potentialSecondaryFilters).filter(pickRelevant);
   return selectedSecondaryFilters?.length;
