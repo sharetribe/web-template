@@ -105,6 +105,7 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      files: [],
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -113,6 +114,9 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
+
+    this.onUploadFileToState = this.onUploadFileToState.bind(this);
+    this.onRemoveFileFromState = this.onRemoveFileFromState.bind(this);
   }
 
   componentDidMount() {
@@ -131,9 +135,30 @@ export class TransactionPanelComponent extends Component {
     this.setState({ sendMessageFormFocused: false });
   }
 
+  // This function handles uploading the file from the user's device
+  // to the component state. The SDK upload process happens in a separate function.
+  onUploadFileToState(file) {
+    if (file) {
+      const tempId = `${Date.now()}-${Math.random()}`;
+      this.setState(prevState => ({
+        files: [...prevState.files, { file, tempId }],
+      }));
+    }
+  }
+
+  // This function handles removing the file from the component state.
+  onRemoveFileFromState(tempId) {
+    this.setState(prevState => ({
+      files: prevState.files.filter(f => f.tempId !== tempId),
+    }));
+  }
+
   onMessageSubmit(values, form) {
     const message = values.message ? values.message.trim() : null;
     const { transactionId, onSendMessage, config } = this.props;
+
+    const { files } = this.state;
+    console.log({ files });
 
     if (!message) {
       return;
@@ -141,6 +166,7 @@ export class TransactionPanelComponent extends Component {
     onSendMessage(transactionId, message, config)
       .then(messageId => {
         form.reset();
+        this.setState({ files: [] });
         this.scrollToMessage(messageId);
       })
       .catch(e => {
@@ -351,6 +377,9 @@ export class TransactionPanelComponent extends Component {
                 onFocus={this.onSendMessageFormFocus}
                 onBlur={this.onSendMessageFormBlur}
                 onSubmit={this.onMessageSubmit}
+                files={this.state.files}
+                onFileUpload={this.onUploadFileToState}
+                onRemoveFile={this.onRemoveFileFromState}
               />
             ) : (
               <div className={css.sendingMessageNotAllowed}>

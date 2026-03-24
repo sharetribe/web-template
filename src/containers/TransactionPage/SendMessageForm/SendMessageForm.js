@@ -1,16 +1,43 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { Form as FinalForm } from 'react-final-form';
+import { Field, Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 
-import { Form, FieldTextInput, SecondaryButtonInline } from '../../../components';
+import { Form, FieldTextInput, FileUpload, SecondaryButtonInline } from '../../../components';
 
 import css from './SendMessageForm.module.css';
 
 const BLUR_TIMEOUT_MS = 100;
+
+const FieldAddFile = props => {
+  const { formApi, onFileUpload, showFileLink, ...rest } = props;
+  if (!showFileLink) {
+    return null;
+  }
+
+  return (
+    <Field form={null} {...rest}>
+      {fieldprops => {
+        const { input, label, className } = fieldprops;
+        const { name, type } = input;
+        const onChange = e => {
+          const file = e.target.files[0];
+          onFileUpload(file);
+        };
+        const inputProps = { id: name, name, onChange, type };
+        return (
+          <label className={className}>
+            <input {...inputProps} className={css.hiddenFileInput} />
+            {label}
+          </label>
+        );
+      }}
+    </Field>
+  );
+};
 
 const IconSendMessage = () => {
   return (
@@ -90,6 +117,9 @@ class SendMessageFormComponent extends Component {
             invalid,
             form,
             formId,
+            files,
+            onFileUpload,
+            onRemoveFile,
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
@@ -106,6 +136,11 @@ class SendMessageFormComponent extends Component {
                 onFocus={this.handleFocus}
                 onBlur={this.handleBlur}
               />
+              <div className={css.files}>
+                {files.map(f => (
+                  <FileUpload item={f} key={f.tempId} onRemoveFile={onRemoveFile} />
+                ))}
+              </div>
               <div className={css.submitContainer}>
                 <div className={css.errorContainer}>
                   {sendMessageError ? (
@@ -114,16 +149,29 @@ class SendMessageFormComponent extends Component {
                     </p>
                   ) : null}
                 </div>
-                <SecondaryButtonInline
-                  className={css.submitButton}
-                  inProgress={submitInProgress}
-                  disabled={submitDisabled}
-                  onFocus={this.handleFocus}
-                  onBlur={this.handleBlur}
-                >
-                  <IconSendMessage />
-                  <FormattedMessage id="SendMessageForm.sendMessage" />
-                </SecondaryButtonInline>
+
+                <div className={css.messageActions}>
+                  <FieldAddFile
+                    id="addFile"
+                    name="addFile"
+                    label={<FormattedMessage id="TransactionPage.attachFile" />}
+                    type="file"
+                    onFileUpload={onFileUpload}
+                    formApi={form}
+                    className={css.fileLink}
+                    showFileLink={true}
+                  />
+                  <SecondaryButtonInline
+                    className={css.submitButton}
+                    inProgress={submitInProgress}
+                    disabled={submitDisabled}
+                    onFocus={this.handleFocus}
+                    onBlur={this.handleBlur}
+                  >
+                    <IconSendMessage />
+                    <FormattedMessage id="SendMessageForm.sendMessage" />
+                  </SecondaryButtonInline>
+                </div>
               </div>
             </Form>
           );
