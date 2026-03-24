@@ -5,6 +5,7 @@ import { useIntl } from '../../util/reactIntl';
 import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_SHORT_TEXT,
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
@@ -83,6 +84,31 @@ const CustomFieldMultiEnum = props => {
       {...validateMaybe}
     />
   ) : null;
+};
+
+const CustomFieldShortText = props => {
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
+  const placeholder =
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+
+  return (
+    <FieldTextInput
+      className={css.customField}
+      id={formId ? `${formId}.${name}` : name}
+      name={name}
+      type="text"
+      maxLength={70}
+      label={label}
+      helpText={fieldConfig?.helpText}
+      placeholder={placeholder}
+      {...validateMaybe}
+    />
+  );
 };
 
 const CustomFieldText = props => {
@@ -244,6 +270,8 @@ const CustomExtendedDataField = props => {
     ? renderFieldComponent(CustomFieldEnum, props)
     : schemaType === SCHEMA_TYPE_MULTI_ENUM && enumOptions
     ? renderFieldComponent(CustomFieldMultiEnum, props)
+    : schemaType === SCHEMA_TYPE_SHORT_TEXT
+    ? renderFieldComponent(CustomFieldShortText, props)
     : schemaType === SCHEMA_TYPE_TEXT
     ? renderFieldComponent(CustomFieldText, props)
     : schemaType === SCHEMA_TYPE_LONG
