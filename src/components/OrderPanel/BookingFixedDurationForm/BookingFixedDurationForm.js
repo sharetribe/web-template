@@ -207,7 +207,14 @@ export const BookingFixedDurationForm = props => {
                 handleFetchLineItems={onHandleFetchLineItems}
               />
             ) : null}
-            {seatsEnabled ? (
+
+            {startDate && endDate && (
+              <div className={css.seatsDebug}>
+                <H6>Available Spots: {seatsOptions.length}</H6>
+              </div>
+            )}
+
+            {/* {seatsEnabled ? (
               <FieldSelect
                 name="seats"
                 id="seats"
@@ -235,7 +242,7 @@ export const BookingFixedDurationForm = props => {
                   </option>
                 ))}
               </FieldSelect>
-            ) : null}
+            ) : null} */}
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>

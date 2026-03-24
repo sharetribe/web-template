@@ -78,6 +78,23 @@
   }
 }
 
+.seatsDebug {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 24px;
+  margin: 18px 0 0 0;
+  background-color: var(--colorGrey50);
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0px 0;
+    /* margin: 24px 0 0 0; */
+  }
+}
+
 .fieldSeats {
   width: calc(100% - 48px);
   margin: 30px 24px 6px 24px;
