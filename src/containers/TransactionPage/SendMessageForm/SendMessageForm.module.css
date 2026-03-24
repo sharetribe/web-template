@@ -56,3 +56,19 @@
 .sendIcon {
   margin: -3px 5px 0 0;
 }
+
+.messageActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.fileLink {
+  /* WIP */
+  margin: 10px;
+  padding: 10px;
+}
+
+.hiddenFileInput {
+  display: none;
+}

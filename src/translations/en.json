@@ -1217,6 +1217,7 @@
   "TransactionPage.ActivityFeed.reviewLink": "Leave a review for {otherUsersName}.",
   "TransactionPage.ActivityFeed.showOlderMessages": "Show older",
   "TransactionPage.ActivityFeed.today": "Today",
+  "TransactionPage.attachFile": "Attach a file",
   "TransactionPage.detailNo": "No",
   "TransactionPage.detailYes": "Yes",
   "TransactionPage.Offer.counterOfferLabel": "Counter offer",
