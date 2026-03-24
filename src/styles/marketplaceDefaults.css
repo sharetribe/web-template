@@ -325,14 +325,15 @@ h3 {
 
 h4 {
   font-weight: var(--fontWeightBold);
-  font-size: 21px;
+  font-size: 16px;
   line-height: 30px;
-  padding: 1px 0 5px 0;
+  padding: 5px 0 1px 0;
   /* x * 6px */
   margin-top: 12px;
   margin-bottom: 6px;
 
   @media (--viewportMedium) {
+    font-size: 21px;
     line-height: 32px;
     padding: 0;
     /* x * 8px */
@@ -684,14 +685,15 @@ textarea {
 
 .h4 {
   font-weight: var(--fontWeightBold);
-  font-size: 21px;
+  font-size: 16px;
   line-height: 30px;
-  padding: 1px 0 5px 0;
+  padding: 5px 0 1px 0;
   /* x * 6px */
   margin-top: 12px;
   margin-bottom: 6px;
 
   @media (--viewportMedium) {
+    font-size: 21px;
     line-height: 32px;
     padding: 0;
     /* x * 8px */

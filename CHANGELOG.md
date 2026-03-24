@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix too-big font-size in mobile h4 heading and some too large margins.
+  [#806](https://github.com/sharetribe/web-template/pull/806)
 - [fix] StripePaymentForm: fix styleguide example.
   [#810](https://github.com/sharetribe/web-template/pull/810)
 - [add] Update moment-timezone to v0.6.1 (to take newest update from IANA time zone db)
