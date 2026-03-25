@@ -17,7 +17,6 @@ const readImage = file =>
     const reader = new FileReader();
     reader.onload = e => resolve(e.target.result);
     reader.onerror = e => {
-      // eslint-disable-next-line
       console.error('Error (', e, `) happened while reading ${file.name}: ${e.target.result}`);
       reject(new Error(`Error reading ${file.name}: ${e.target.result}`));
     };

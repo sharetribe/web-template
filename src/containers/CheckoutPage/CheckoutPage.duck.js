@@ -433,7 +433,7 @@ const checkoutPageSlice = createSlice({
         state.transaction = action.payload;
       })
       .addCase(initiateOrderThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.initiateOrderError = action.payload;
       })
       // Confirm Payment cases
@@ -444,7 +444,7 @@ const checkoutPageSlice = createSlice({
         // Payment confirmed successfully, no state change needed
       })
       .addCase(confirmPaymentThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.confirmPaymentError = action.payload;
       })
       // Speculate Transaction cases
@@ -464,7 +464,7 @@ const checkoutPageSlice = createSlice({
           Math.abs(lastTransitionedAt?.getTime() - localTime.getTime()) < minute;
       })
       .addCase(speculateTransactionThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.speculateTransactionInProgress = false;
         state.speculateTransactionError = action.payload;
       })
@@ -477,7 +477,7 @@ const checkoutPageSlice = createSlice({
         state.stripeCustomerFetched = true;
       })
       .addCase(stripeCustomerThunk.rejected, (state, action) => {
-        console.error(action.payload); // eslint-disable-line no-console
+        console.error(action.payload);
         state.stripeCustomerFetchError = action.payload;
       })
       // Initiate Inquiry cases
