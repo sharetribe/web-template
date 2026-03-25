@@ -1445,17 +1445,49 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
+const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance) => {
+  if (hostedSortConfig == null) {
+    return {
+      ...defaultSortConfig,
+      // Disable SortBy component if there are less than 2 options
+      active: defaultSortConfig.options.length > 1,
+    };
+  }
+
+  // Flag filters to remove if the default sorting option is toggled off in Console
+  const removeByKey = {
+    createdAt: !hostedSortConfig?.newest,
+    '-createdAt': !hostedSortConfig?.oldest,
+    '-price': !hostedSortConfig?.lowestPrice,
+    price: !hostedSortConfig?.highestPrice,
+    relevance: !hostedSortConfig?.relevance || omitRelevance,
+  };
+
+  // Remove disabled sort options
+  const options = defaultSortConfig.options.filter(option => !removeByKey[option.key]);
+
+  return {
+    ...defaultSortConfig,
+    // Disable SortBy component if there are less than 2 options
+    active: options.length > 1,
+    options: options,
+  };
+};
+
 const mergeSearchConfig = (
   hostedSearchConfig,
   defaultSearchConfig,
   categoryConfiguration,
   listingTypeConfig
 ) => {
-  // The sortConfig is not yet configurable through Console / hosted assets,
-  // but other default search configs come from hosted assets
+  // Default search configs come from hosted assets
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
-        sortConfig: defaultSearchConfig.sortConfig,
+        sortConfig: mergeSortConfig(
+          hostedSearchConfig?.sorting?.defaultSortingOptions,
+          defaultSearchConfig.sortConfig,
+          hostedSearchConfig?.mainSearch?.searchType === 'location'
+        ),
         // This just shows how to add custom built-in filters.
         // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
         listingTypeFilter: defaultSearchConfig.listingTypeFilter,

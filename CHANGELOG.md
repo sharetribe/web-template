@@ -20,6 +20,8 @@ way to update this template, but currently, we follow a pattern:
   [#810](https://github.com/sharetribe/web-template/pull/810)
 - [add] Update moment-timezone to v0.6.1 (to take newest update from IANA time zone db)
   [#809](https://github.com/sharetribe/web-template/pull/809)
+- [add] Add support for merging listing search sort config with default configs
+  [760](https://github.com/sharetribe/web-template/pull/760)
 
 ## [v10.14.1] 2026-03-18
 
