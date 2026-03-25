@@ -14,6 +14,14 @@ import {
 
 import { loadData } from './SearchPage.duck';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import SearchPageWithGrid from './SearchPageWithGrid';
+import SearchPageWithMap from './SearchPageWithMap';
+
+// `routeConfiguration` exposes SearchPage through `@loadable/component`, which can render an empty
+// tree until the dynamic import resolves. This test is not about routeConfiguration and
+// loadable components. We'll select the SearchPage variant directly here.
+const getConnectedSearchPageForTests = layout =>
+  layout?.searchPage?.variantType === 'map' ? SearchPageWithMap : SearchPageWithGrid;
 
 const { screen, userEvent, waitFor } = testingLibrary;
 
@@ -315,8 +323,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
@@ -401,8 +408,7 @@ describe('SearchPage', () => {
     const config = getConfig('map');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const {
       getByPlaceholderText,
@@ -502,8 +508,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
@@ -554,8 +559,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
@@ -593,10 +597,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps, params: { listingType: 'sell-bicycles' } };
-    const searchRouteConfig = routeConfiguration.find(
-      conf => conf.name === 'SearchPageWithListingType'
-    );
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
