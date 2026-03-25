@@ -687,7 +687,7 @@ export const TransactionPageComponent = props => {
       processName={processName}
       protectedData={transaction?.attributes?.protectedData}
       metadata={transaction?.attributes?.metadata}
-      isCompleted={process ? process.getState(transaction) === process.states.DELIVERED : null}
+      isCompleted={booking?.attributes?.end ? new Date(booking.attributes.end) < new Date() : null}
       messages={messages}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
