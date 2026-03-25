@@ -105,7 +105,6 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
-      files: [],
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -115,8 +114,8 @@ export class TransactionPanelComponent extends Component {
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
 
-    this.onUploadFileToState = this.onUploadFileToState.bind(this);
-    this.onRemoveFileFromState = this.onRemoveFileFromState.bind(this);
+    this.onUploadFile = this.onUploadFile.bind(this);
+    this.onRemoveFile = this.onRemoveFile.bind(this);
   }
 
   componentDidMount() {
@@ -135,38 +134,37 @@ export class TransactionPanelComponent extends Component {
     this.setState({ sendMessageFormFocused: false });
   }
 
-  // This function handles uploading the file from the user's device
-  // to the component state. The SDK upload process happens in a separate function.
-  onUploadFileToState(file) {
+  onUploadFile(file) {
     if (file) {
       const tempId = `${Date.now()}-${Math.random()}`;
-      this.setState(prevState => ({
-        files: [...prevState.files, { file, tempId }],
-      }));
+
+      this.props.onUploadFile(file, tempId);
     }
   }
 
-  // This function handles removing the file from the component state.
-  onRemoveFileFromState(tempId) {
-    this.setState(prevState => ({
-      files: prevState.files.filter(f => f.tempId !== tempId),
-    }));
+  onRemoveFile(tempId) {
+    this.props.onClearUploadedFiles([tempId]);
   }
 
   onMessageSubmit(values, form) {
     const message = values.message ? values.message.trim() : null;
-    const { transactionId, onSendMessage, config } = this.props;
+    const { transactionId, onSendMessage, config, fileUploads, onClearUploadedFiles } = this.props;
 
     const { files } = this.state;
-    console.log({ files });
 
     if (!message) {
       return;
     }
-    onSendMessage(transactionId, message, config)
+
+    const fileIds = fileUploads.map(f => ({
+      fileId: f.file.id,
+    }));
+
+    // TODO if there are failed or pending file ids, don't send message
+    onSendMessage(transactionId, message, config, fileIds)
       .then(messageId => {
         form.reset();
-        this.setState({ files: [] });
+        onClearUploadedFiles(files.map(f => f.tempId));
         this.scrollToMessage(messageId);
       })
       .catch(e => {
@@ -268,6 +266,8 @@ export class TransactionPanelComponent extends Component {
 
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
     const priceVariantName = protectedData?.priceVariantName;
+
+    const { fileUploads } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -377,9 +377,9 @@ export class TransactionPanelComponent extends Component {
                 onFocus={this.onSendMessageFormFocus}
                 onBlur={this.onSendMessageFormBlur}
                 onSubmit={this.onMessageSubmit}
-                files={this.state.files}
-                onFileUpload={this.onUploadFileToState}
-                onRemoveFile={this.onRemoveFileFromState}
+                files={fileUploads}
+                onFileUpload={this.onUploadFile}
+                onRemoveFile={this.onRemoveFile}
               />
             ) : (
               <div className={css.sendingMessageNotAllowed}>

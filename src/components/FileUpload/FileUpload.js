@@ -6,12 +6,17 @@ import css from './FileUpload.module.css';
 const FileUpload = props => {
   const { item, className, onRemoveFile } = props;
   const { file, tempId } = item;
-  const { size: sizeRaw } = file;
+
+  if (!file) {
+    return;
+  }
+
+  const { size: sizeRaw, name } = file?.attributes;
   const { size, unit } = calculateFileSize(sizeRaw);
 
   return (
     <div className={className || css.root}>
-      <span>{file.name}</span>
+      <span>{name}</span>
       <span>
         {size} {unit}
       </span>

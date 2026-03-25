@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import appSettings from '../../config/settings';
 import { isEmpty, pickBy } from '../../util/common';
-import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
+import { types as sdkTypes, file as sdkFile, createImageVariantConfig } from '../../util/sdkLoader';
 import {
   bookingTimeUnits,
   findNextBoundary,
@@ -419,7 +419,12 @@ const fetchMessagesPayloadCreator = (
   return sdk.messages
     .query({
       transaction_id: txId,
-      include: ['sender', 'sender.profileImage'],
+      include: [
+        'sender',
+        'sender.profileImage',
+        'publicFileAttachments',
+        'publicFileAttachments.file',
+      ],
       ...getImageVariants(config.layout.listingImage),
       ...paging,
     })
@@ -467,15 +472,118 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
   return dispatch(fetchMessagesThunk({ txId, page: nextPage, config }));
 };
 
+////////////////////
+// Upload File    //
+////////////////////
+const uploadFilePayloadCreator = ({ file, tempId }, { rejectWithValue, extra: sdk }) => {
+  let fileId;
+
+  ///////////////////////////////////
+  /// Step 1. Check file metadata ///
+  ///////////////////////////////////
+  const checkMetadataFn = file => {
+    if (!file) {
+      throw new Error('Missing file, cannot initiate upload.');
+    }
+    return sdkFile.metadata(file);
+  };
+
+  ////////////////////////////////////
+  /// Step 2. Create file resource ///
+  ////////////////////////////////////
+  const createFileResourceFn = metadataResp => {
+    return sdk.ownFiles.create({ ...metadataResp });
+  };
+
+  //////////////////////////////////////////
+  /// Step 3. Create URL for file upload ///
+  //////////////////////////////////////////
+  const createFileUploadUrlFn = ownFileResp => {
+    const createdFileId = ownFileResp?.data?.data?.id;
+    if (!createdFileId) {
+      throw new Error('Missing fileId, cannot get upload URL');
+    }
+
+    fileId = createdFileId;
+    return sdk.fileUploads
+      .create({ fileId: createdFileId })
+      .then(fileUploadResp => ({ fileId, fileUploadResp }));
+  };
+
+  ///////////////////////////////////////////////
+  /// Step 4. Upload file directly to storage ///
+  ///////////////////////////////////////////////
+  const uploadFileToStorageFn = ({ fileId, fileUploadResp }) => {
+    const { method = 'PUT', url, headers = {} } = fileUploadResp?.data?.data?.attributes;
+
+    if (!url) {
+      throw new Error('Missing upload URL, cannot upload file.');
+    }
+
+    const onUploadProgress = progressEvent => {
+      // TODO ADD PROGRESS EVENT
+      console.log(progressEvent);
+    };
+
+    return sdkFile.upload({
+      method,
+      url,
+      headers,
+      file,
+      onUploadProgress,
+    });
+  };
+
+  //////////////////////////////////////////////
+  /// Step 5. Return ids for future handling ///
+  //////////////////////////////////////////////
+  const handleFileUploadSuccessFn = () => {
+    console.log('[uploadFile] STEP 5: Need to call sdk.ownFiles.show({ id: fileId })');
+    console.log(
+      '[uploadFile] STEP 5: Expected response shape: { data: { data: { attributes: { name, mimeType, size, state } } } }'
+    );
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
+      const denormalisedResponse = denormalisedResponseEntities(resp);
+      const fileUpload = denormalisedResponse[0];
+      return { fileUpload, tempId };
+    });
+  };
+
+  const applyAsync = (acc, val) => acc.then(val);
+  const composeAsync = (...funcs) => x => funcs.reduce(applyAsync, Promise.resolve(x));
+
+  const handleFileUpload = composeAsync(
+    checkMetadataFn,
+    createFileResourceFn,
+    createFileUploadUrlFn,
+    uploadFileToStorageFn,
+    handleFileUploadSuccessFn
+  );
+
+  return handleFileUpload(file).catch(e => {
+    return rejectWithValue({ tempId, error: storableError(e) });
+  });
+};
+
+export const uploadFileThunk = createAsyncThunk(
+  'TransactionPage/uploadFile',
+  uploadFilePayloadCreator
+);
+
+// Backward-compatible wrapper
+export const uploadFile = (file, tempId) => dispatch => {
+  return dispatch(uploadFileThunk({ file, tempId })).unwrap();
+};
+
 /////////////////
 // sendMessage //
 /////////////////
 const sendMessagePayloadCreator = (
-  { txId, message, config },
+  { txId, message, config, fileIds },
   { dispatch, rejectWithValue, extra: sdk }
 ) => {
   return sdk.messages
-    .send({ transactionId: txId, content: message })
+    .send({ transactionId: txId, content: message, publicFileAttachments: fileIds })
     .then(response => {
       const messageId = response.data.data.id;
 
@@ -496,8 +604,8 @@ export const sendMessageThunk = createAsyncThunk(
 );
 
 // Backward compatible wrapper for sendMessage
-export const sendMessage = (txId, message, config) => dispatch => {
-  return dispatch(sendMessageThunk({ txId, message, config }));
+export const sendMessage = (txId, message, config, fileIds = null) => dispatch => {
+  return dispatch(sendMessageThunk({ txId, message, config, fileIds }));
 };
 
 ////////////////
@@ -651,6 +759,17 @@ const initialState = {
   lineItems: null,
   fetchLineItemsInProgress: false,
   fetchLineItemsError: null,
+  fileUploads: {
+    // [tempId]: {
+    //   inProgress: bool,
+    //   error: null | storable-error,
+    //   fileId: null | UUID,
+    //   name: null | string,
+    //   mimeType: null | string,
+    //   size: null | int,
+    //   fileState: null | string,   // FileState: uploadPending | pendingVerification | available | verificationFailed
+    // }
+  },
 };
 
 // Merge entity arrays using ids, so that conflicting items in newer array (b) overwrite old values (a).
@@ -668,6 +787,11 @@ const transactionPageSlice = createSlice({
   reducers: {
     setInitialValues: (state, action) => {
       return { ...initialState, ...action.payload };
+    },
+    clearUploadedFiles: (state, action) => {
+      action.payload.forEach(tempId => {
+        delete state.fileUploads[tempId];
+      });
     },
   },
   extraReducers: builder => {
@@ -769,6 +893,34 @@ const transactionPageSlice = createSlice({
         state.fetchLineItemsInProgress = false;
         state.fetchLineItemsError = action.payload;
       })
+      // uploadFile cases
+      .addCase(uploadFileThunk.pending, (state, action) => {
+        const { tempId } = action.meta.arg;
+        state.fileUploads[tempId] = {
+          inProgress: true,
+          error: null,
+          file: null,
+          tempId,
+        };
+      })
+      .addCase(uploadFileThunk.fulfilled, (state, action) => {
+        const { fileUpload, tempId } = action.payload;
+        state.fileUploads[tempId] = {
+          inProgress: false,
+          error: null,
+          file: fileUpload,
+          tempId,
+        };
+      })
+      .addCase(uploadFileThunk.rejected, (state, action) => {
+        const { tempId, error } = action.payload;
+        state.fileUploads[tempId] = {
+          inProgress: false,
+          error,
+          file: null,
+          tempId,
+        };
+      })
       // fetchTimeSlots cases
       .addCase(fetchTimeSlotsThunk.pending, (state, action) => {
         const { timeZone, options } = action.meta.arg;
@@ -833,7 +985,12 @@ const transactionPageSlice = createSlice({
   },
 });
 
-export const { setInitialValues } = transactionPageSlice.actions;
+export const { setInitialValues, clearUploadedFiles } = transactionPageSlice.actions;
+
+// ================ Selectors ================ //
+
+// Returns the fileUploads entries as an array, one item per selected file.
+export const selectFileUploads = state => Object.values(state.TransactionPage.fileUploads);
 
 export default transactionPageSlice.reducer;
 
