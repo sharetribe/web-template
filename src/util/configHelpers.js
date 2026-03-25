@@ -1,6 +1,7 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
 import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transactions/transaction';
 import { sanitizeText } from './sanitize';
+import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 // Generic helpers for validating config values
@@ -831,7 +832,6 @@ const validUserSaveConfig = config => {
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
   const scopeOptions = ['public', 'private', 'metadata'];
-  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
 
   return listingFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
@@ -855,7 +855,7 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
             : name === 'categoryConfig'
             ? validListingTypesForCategoryConfig(value, categoriesInUse)
             : name === 'schemaType'
-            ? validEnumString('schemaType', value, validSchemaTypes)
+            ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
             : name === 'filterConfig'
@@ -893,15 +893,6 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
 const validTransactionFields = transactionFields => {
   const keys = transactionFields.map(d => d.key);
   const scopeOptions = ['protected'];
-  const validSchemaTypes = [
-    'enum',
-    'multi-enum',
-    'shortText',
-    'text',
-    'long',
-    'boolean',
-    'youtubeVideoUrl',
-  ];
 
   return transactionFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
@@ -919,7 +910,7 @@ const validTransactionFields = transactionFields => {
             : name === 'numberConfig'
             ? validNumberConfig(value)
             : name === 'schemaType'
-            ? validEnumString('schemaType', value, validSchemaTypes)
+            ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
             : name === 'filterConfig'
@@ -963,15 +954,6 @@ const validUserTypes = userTypes => {
 const validUserFields = (userFields, userTypesInUse) => {
   const keys = userFields.map(d => d.key);
   const scopeOptions = ['public', 'private', 'protected', 'metadata'];
-  const validSchemaTypes = [
-    'enum',
-    'multi-enum',
-    'shortText',
-    'text',
-    'long',
-    'boolean',
-    'youtubeVideoUrl',
-  ];
 
   return userFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
@@ -989,7 +971,7 @@ const validUserFields = (userFields, userTypesInUse) => {
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
             : name === 'schemaType'
-            ? validEnumString('schemaType', value, validSchemaTypes)
+            ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
             : name === 'showConfig'
