@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+import React, { Component, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
 import classNames from 'classnames';
 
@@ -493,66 +492,53 @@ export class SearchPageComponent extends Component {
 }
 
 /**
- * SearchPage component with map layout
+ * SearchPage "container" (map layout): selects Redux state and dispatch handlers, then passes the
+ * same prop surface as before to `SearchPageComponent` via `SearchPageAccessWrapper`.
  *
- * @param {Object} props
- * @param {string} [props.activeListingId] - The active listing ID
- * @param {Object} [props.currentUser] - The current user
- * @param {Array<Object>} [props.listings] - The listings
- * @param {Object} [props.pagination] - The pagination
- * @param {boolean} [props.scrollingDisabled] - Whether the scrolling is disabled
- * @param {boolean} [props.searchInProgress] - Whether the search is in progress
- * @param {Object} [props.searchListingsError] - The search listings error
- * @param {Object} [props.searchParams] - The search params from the Redux state
- * @param {Function} [props.onActivateListing] - The function to activate a listing
- * @param {Function} [props.onManageDisableScrolling] - The function to manage the disable scrolling
+ * @param {Object} props - Router / route props from `routeConfiguration.js` and `Routes.js`
  * @returns {JSX.Element}
  */
-const EnhancedSearchPage = props => (
-  <SearchPageAccessWrapper {...props} PageComponent={SearchPageComponent} />
-);
+const SearchPage = props => {
+  const dispatch = useDispatch();
 
-const mapStateToProps = state => {
-  const { currentUser } = state.user;
+  const currentUser = useSelector(state => state.user?.currentUser);
   const {
-    currentPageResultIds,
     pagination,
     searchInProgress,
     searchListingsError,
     searchParams,
     activeListingId,
-  } = state.SearchPage;
-  const listings = getListingsById(state, currentPageResultIds);
+  } = useSelector(state => state.SearchPage);
+  const listings = useSelector(state =>
+    getListingsById(state, state.SearchPage.currentPageResultIds)
+  );
+  const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
 
-  return {
-    currentUser,
-    listings,
-    pagination,
-    scrollingDisabled: isScrollingDisabled(state),
-    searchInProgress,
-    searchListingsError,
-    searchParams,
-    activeListingId,
-  };
+  const onManageDisableScrolling = useCallback(
+    (componentId, disableScrolling) =>
+      dispatch(manageDisableScrolling(componentId, disableScrolling)),
+    [dispatch]
+  );
+  const onActivateListing = useCallback(listingId => dispatch(setActiveListing(listingId)), [
+    dispatch,
+  ]);
+
+  return (
+    <SearchPageAccessWrapper
+      {...props}
+      PageComponent={SearchPageComponent}
+      currentUser={currentUser}
+      listings={listings}
+      pagination={pagination}
+      scrollingDisabled={scrollingDisabled}
+      searchInProgress={searchInProgress}
+      searchListingsError={searchListingsError}
+      searchParams={searchParams}
+      activeListingId={activeListingId}
+      onManageDisableScrolling={onManageDisableScrolling}
+      onActivateListing={onActivateListing}
+    />
+  );
 };
-
-const mapDispatchToProps = dispatch => ({
-  onManageDisableScrolling: (componentId, disableScrolling) =>
-    dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  onActivateListing: listingId => dispatch(setActiveListing(listingId)),
-});
-
-// Note: it is important that the withRouter HOC is **outside** the
-// connect HOC, otherwise React Router won't rerender any Route
-// components since connect implements a shouldComponentUpdate
-// lifecycle hook.
-//
-// See: https://github.com/ReactTraining/react-router/issues/4671
-const SearchPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedSearchPage);
 
 export default SearchPage;
