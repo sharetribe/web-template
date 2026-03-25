@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v10.15.0] 2026-03-25
+
 - [fix] Fix too-big font-size in mobile h4 heading and some too large margins.
   [#806](https://github.com/sharetribe/web-template/pull/806)
 - [fix] StripePaymentForm: fix styleguide example.
@@ -27,6 +29,8 @@ way to update this template, but currently, we follow a pattern:
   filtering and sorting. [#779](https://github.com/sharetribe/web-template/pull/779)
 - [add] Add support for sorting listings on the search page using custom numeric fields.
   [#803](https://github.com/sharetribe/web-template/pull/803)
+
+  [v10.15.0]: https://github.com/sharetribe/web-template/compare/v10.14.1...v10.15.0
 
 ## [v10.14.1] 2026-03-18
 
