@@ -5,7 +5,7 @@ import { renderWithProviders as render } from '../../util/testHelpers';
 
 import FileUpload from './FileUpload';
 
-const createFakeFile = (name, size) => ({ name, size });
+const createFakeFile = (name, size) => ({ attributes: { name, size } });
 
 describe('FileUpload', () => {
   it('matches snapshot with Kb file size', () => {

@@ -136,11 +136,13 @@ class SendMessageFormComponent extends Component {
                 onFocus={this.handleFocus}
                 onBlur={this.handleBlur}
               />
-              <div className={css.files}>
-                {files.map(f => (
-                  <FileUpload item={f} key={f.tempId} onRemoveFile={onRemoveFile} />
-                ))}
-              </div>
+              {files?.length > 0 ? (
+                <div className={css.files}>
+                  {files.map(f => (
+                    <FileUpload item={f} key={f.tempId} onRemoveFile={onRemoveFile} />
+                  ))}
+                </div>
+              ) : null}
               <div className={css.submitContainer}>
                 <div className={css.errorContainer}>
                   {sendMessageError ? (
