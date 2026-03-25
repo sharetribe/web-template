@@ -160,7 +160,7 @@ const listingFieldsInquiry = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Cat',
       group: 'primary',
     },
@@ -188,7 +188,7 @@ const listingFieldsPurchase = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Cat',
       group: 'primary',
     },
@@ -212,7 +212,7 @@ const listingFieldsBooking = [
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',

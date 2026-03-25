@@ -10,7 +10,7 @@
 /**
  * Configuration options for listing fields (custom extended data fields):
  * - key:                           Unique key for the extended data field.
- * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
+ * - scope (optional):              Scope of the extended data can be 'public', 'private', or 'metadata'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
  * - schemaType (optional):         Schema for this extended data field.
@@ -83,7 +83,7 @@ export const listingFields = [
   //     categoryIds: ['cats'],
   //   },
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
   //     label: 'Bike type',
   //     group: 'primary',
@@ -113,7 +113,7 @@ export const listingFields = [
   //     { option: '18', label: '18' },
   //   ],
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     label: 'Tire size',
   //     group: 'secondary',
   //   },
@@ -143,7 +143,7 @@ export const listingFields = [
   //     { option: 'vermont', label: 'Vermont' },
   //   ],
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     label: 'Brand',
   //     group: 'secondary',
   //   },
@@ -169,7 +169,7 @@ export const listingFields = [
   //     { option: 'mudguard', label: 'Mudguard' },
   //   ],
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     label: 'Accessories',
   //     searchMode: 'has_all',
   //     group: 'secondary',
