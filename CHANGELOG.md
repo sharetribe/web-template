@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add support for a new user, listing, and transaction field schema type: shortText
+  [#812](https://github.com/sharetribe/web-template/pull/812)
+
 ## [v10.15.0] 2026-03-25
 
 - [fix] Fix too-big font-size in mobile h4 heading and some too large margins.

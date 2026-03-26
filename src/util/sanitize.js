@@ -145,7 +145,9 @@ export const sanitizeUser = (entity, config = {}) => {
 const sanitizedExtendedDataFields = (value, config) => {
   const { schemaType, enumOptions } = config;
   const sanitized =
-    schemaType === 'text'
+    schemaType === 'shortText'
+      ? sanitizeText(value)
+      : schemaType === 'text'
       ? sanitizeText(value)
       : schemaType === 'enum'
       ? sanitizeEnum(value, enumOptions)
