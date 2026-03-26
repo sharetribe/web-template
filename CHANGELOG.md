@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add support for a new user, listing, and transaction field schema type: shortText
+  [#812](https://github.com/sharetribe/web-template/pull/812)
 - [add] Add currently available translations for DE, ES, FR.
   [#818](https://github.com/sharetribe/web-template/pull/818)
 - [fix] Fix return value in CheckoutPage pay-and-save-card flow
