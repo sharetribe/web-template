@@ -78,6 +78,7 @@ import {
   uploadFile,
   clearUploadedFiles,
   selectFileUploads,
+  downloadFile,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
@@ -312,6 +313,7 @@ export const TransactionPageComponent = props => {
     onUploadFile,
     fileUploads,
     onClearUploadedFiles,
+    onDownloadFile,
     ...restOfProps
   } = props;
 
@@ -736,6 +738,7 @@ export const TransactionPageComponent = props => {
           onOpenReviewModal={onOpenReviewModal}
           onShowOlderMessages={() => onShowMoreMessages(transaction.id, config)}
           fetchMessagesInProgress={fetchMessagesInProgress}
+          onDownloadFile={onDownloadFile}
         />
       }
       transactionFieldsComponent={
@@ -1003,6 +1006,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
     onUploadFile: (file, tempId) => dispatch(uploadFile(file, tempId)),
     onClearUploadedFiles: tempIds => dispatch(clearUploadedFiles(tempIds)),
+    onDownloadFile: fileAttachmentId => dispatch(downloadFile(fileAttachmentId)),
   };
 };
 
