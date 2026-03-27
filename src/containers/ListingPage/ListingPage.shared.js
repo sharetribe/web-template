@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { LISTING_STATE_CLOSED, LISTING_STATE_PENDING_APPROVAL } from '../../util/types';
+import { LISTING_STATE_CLOSED } from '../../util/types';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
@@ -139,7 +139,6 @@ export const getDerivedRenderData = ({
   getListing,
   getOwnListing,
   showOwnListingsOnly,
-  showListingError,
   currentUser,
   config,
   intl,
@@ -165,21 +164,6 @@ export const getDerivedRenderData = ({
     ? LISTING_PAGE_PARAM_TYPE_DRAFT
     : LISTING_PAGE_PARAM_TYPE_EDIT;
   const listingTab = isDraftVariant ? 'photos' : 'details';
-
-  const isApproved =
-    currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
-
-  // If a /pending-approval URL is shared, the UI requires
-  // authentication and attempts to fetch the listing from own
-  // listings. This will fail with 403 Forbidden if the author is
-  // another user. We use this information to try to fetch the
-  // public listing.
-  const pendingOtherUsersListing =
-    (isPendingApprovalVariant || isDraftVariant) &&
-    showListingError &&
-    showListingError.status === 403;
-  const shouldShowPublicListingPage =
-    (isPendingApprovalVariant && isApproved) || pendingOtherUsersListing;
 
   const {
     description = '',
@@ -276,7 +260,6 @@ export const getDerivedRenderData = ({
     params,
     listingPathParamType,
     listingTab,
-    shouldShowPublicListingPage,
     description,
     geolocation,
     price,
