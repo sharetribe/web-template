@@ -20,22 +20,6 @@
   }
 }
 
-.message,
-.ownMessage {
-  /* Preserve newlines, but collapse other whitespace */
-  white-space: pre-line;
-  max-width: 433px;
-}
-
-.message {
-  display: flex;
-  flex-direction: row;
-}
-
-.ownMessage {
-  float: right;
-}
-
 .avatar {
   flex-shrink: 0;
   margin: 0px 12px 0 0;
@@ -196,7 +180,9 @@
 .showOlderButton {
 }
 
-.longWord {
-  word-break: break-word;
-  hyphens: auto;
+.fileLink {
+  display: flex;
+  height: 20px;
+  align-items: flex-start;
+  gap: var(--spacing-sm, 6px);
 }

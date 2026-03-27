@@ -5,7 +5,6 @@ import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import { useConfiguration } from '../../../context/configurationContext';
 import { formatMoney } from '../../../util/currency';
-import { richText } from '../../../util/richText';
 import { formatDateWithProximity } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import {
@@ -16,88 +15,14 @@ import {
   TX_TRANSITION_ACTOR_SYSTEM,
 } from '../../../transactions/transaction';
 
-import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../../components';
+import { InlineTextButton, ReviewRating, UserDisplayName } from '../../../components';
+import { Message, OwnMessage } from '../Message/Message';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 
 import css from './ActivityFeed.module.css';
 
 const { Money } = sdkTypes;
-
-const MIN_LENGTH_FOR_LONG_WORDS = 20;
-
-/**
- * Formats the content and format of the message for display. Replaces message content
- * with a marketplace text item if the sender is banned.
- * @param {Object} message The message to format
- * @param {Object} transaction The transaction where the message was sent
- * @param {Object} intl Intl
- * @returns A rich text version of the message content
- */
-const getMessageContent = (message, transaction, intl, richTextOptions = {}) => {
-  const { customer, provider } = transaction;
-  const customerBannedUuid = customer?.attributes.banned ? customer?.id.uuid : '';
-  const providerBannedUuid = provider?.attributes.banned ? provider?.id.uuid : '';
-
-  const isBannedSender = [customerBannedUuid, providerBannedUuid].includes(message.sender.id.uuid);
-  const content = isBannedSender
-    ? intl.formatMessage({
-        id: 'TransactionPage.messageSenderBanned',
-      })
-    : message.attributes.content;
-
-  return richText(content, {
-    linkify: true,
-    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-    longWordClass: css.longWord,
-    ...richTextOptions,
-  });
-};
-
-/**
- * @component
- * @param {Object} props - The props
- * @param {propTypes.message} props.message - The message
- * @param {string} props.formattedDate - The formatted date
- * @returns {JSX.Element} The Message component
- */
-const Message = props => {
-  const { message, formattedDate, transaction, intl } = props;
-  const content = getMessageContent(message, transaction, intl);
-
-  return (
-    <div className={css.message}>
-      <Avatar className={css.avatar} user={message.sender} />
-      <div>
-        <p className={css.messageContent}>{content}</p>
-        <p className={css.messageDate}>{formattedDate}</p>
-      </div>
-    </div>
-  );
-};
-
-/**
- * @component
- * @param {Object} props - The props
- * @param {propTypes.message} props.message - The message
- * @param {string} props.formattedDate - The formatted date
- * @returns {JSX.Element} The OwnMessage component
- */
-const OwnMessage = props => {
-  const { message, formattedDate, transaction, intl } = props;
-  const content = getMessageContent(message, transaction, intl, {
-    linkClass: css.ownMessageContentLink,
-  });
-
-  return (
-    <div className={css.ownMessage}>
-      <div className={css.ownMessageContentWrapper}>
-        <p className={css.ownMessageContent}>{content}</p>
-      </div>
-      <p className={css.ownMessageDate}>{formattedDate}</p>
-    </div>
-  );
-};
 
 /**
  * @component
@@ -291,6 +216,7 @@ export const ActivityFeed = props => {
     fetchMessagesInProgress,
     onOpenReviewModal,
     onShowOlderMessages,
+    onDownloadFile,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const processName = stateData.processName;
@@ -330,6 +256,7 @@ export const ActivityFeed = props => {
         formattedDate={formattedDate}
         transaction={transaction}
         intl={intl}
+        downloadFile={onDownloadFile}
       />
     ) : (
       <Message
@@ -337,6 +264,7 @@ export const ActivityFeed = props => {
         formattedDate={formattedDate}
         transaction={transaction}
         intl={intl}
+        downloadFile={onDownloadFile}
       />
     );
 

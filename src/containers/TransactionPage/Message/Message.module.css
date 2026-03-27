@@ -1,0 +1,20 @@
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.message,
+.ownMessage {
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+  max-width: 433px;
+}
+
+.message {
+  display: flex;
+  flex-direction: row;
+}
+
+.ownMessage {
+  float: right;
+}
