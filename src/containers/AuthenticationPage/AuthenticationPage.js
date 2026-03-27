@@ -57,12 +57,10 @@ import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.
 
 import css from './AuthenticationPage.module.css';
 
-const getTabHeading = isLogin => {
+const getTabHeading = ({ messageId, isSelected }) => {
   return (
-    <Heading as={isLogin ? 'h1' : 'h2'} rootClassName={css.tab}>
-      <FormattedMessage
-        id={isLogin ? 'AuthenticationPage.loginLinkText' : 'AuthenticationPage.signupLinkText'}
-      />
+    <Heading as={isSelected ? 'h1' : 'h2'} rootClassName={css.tab}>
+      <FormattedMessage id={messageId} />
     </Heading>
   );
 };
@@ -70,7 +68,10 @@ const getTabHeading = isLogin => {
 const getAuthenticationTabs = ({ isLogin, signupRouteName, userTypeMaybe, fromState }) => {
   return [
     {
-      text: getTabHeading(!isLogin),
+      text: getTabHeading({
+        messageId: 'AuthenticationPage.signupLinkText',
+        isSelected: !isLogin,
+      }),
       selected: !isLogin,
       linkProps: {
         name: signupRouteName,
@@ -79,7 +80,10 @@ const getAuthenticationTabs = ({ isLogin, signupRouteName, userTypeMaybe, fromSt
       },
     },
     {
-      text: getTabHeading(isLogin),
+      text: getTabHeading({
+        messageId: 'AuthenticationPage.loginLinkText',
+        isSelected: isLogin,
+      }),
       selected: isLogin,
       linkProps: {
         name: 'LoginPage',
