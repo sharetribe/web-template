@@ -54,7 +54,7 @@ import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import CustomListingFields from './CustomListingFields';
-import ActionBarMaybe from './ActionBarMaybe';
+import Notifications from './Notifications/Notifications';
 import ListingPageAccessWrapper from './ListingPageAccessWrapper';
 
 import css from './ListingPage.module.css';
@@ -227,36 +227,25 @@ export const ListingPageComponent = props => {
     setImageCarouselOpen(true);
   };
 
-  const actionBar =
-    mounted && currentListing.id && isOwnListing ? (
-      <>
-        {noPayoutDetailsSetWithOwnListing ? (
-          <ActionBarMaybe
-            className={classNames(css.actionBarForHeroLayout, {
-              [css.actionBarNoBorderRadiusOnMobile]: !showListingImage,
-            })}
-            isOwnListing={isOwnListing}
-            listing={currentListing}
-            showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
-            currentUser={currentUser}
-          />
-        ) : null}
-        <ActionBarMaybe
-          className={classNames(css.actionBarForHeroLayout, {
-            [css.actionBarNoBorderRadiusOnMobile]: !showListingImage,
-          })}
-          isOwnListing={isOwnListing}
-          listing={currentListing}
-          currentUser={currentUser}
-          editParams={{
-            id: listingId.uuid,
-            slug: listingSlug,
-            type: listingPathParamType,
-            tab: listingTab,
-          }}
-        />
-      </>
-    ) : null;
+  const actionBarClassName = classNames(css.actionBarForHeroLayout, {
+    [css.actionBarNoBorderRadiusOnMobile]: !showListingImage,
+  });
+  const actionBar = (
+    <Notifications
+      mounted={mounted}
+      listing={currentListing}
+      isOwnListing={isOwnListing}
+      noPayoutDetailsSetWithOwnListing={noPayoutDetailsSetWithOwnListing}
+      currentUser={currentUser}
+      className={actionBarClassName}
+      editParams={{
+        id: listingId.uuid,
+        slug: listingSlug,
+        type: listingPathParamType,
+        tab: listingTab,
+      }}
+    />
+  );
 
   return (
     <Page
@@ -294,7 +283,7 @@ export const ListingPageComponent = props => {
             actionBar={actionBar}
           />
         ) : (
-          isOwnListing && <div className={css.actionBarContainerForNoListingImage}>{actionBar}</div>
+          <div className={css.actionBarContainerForNoListingImage}>{actionBar}</div>
         )}
         <div className={css.contentWrapperForHeroLayout}>
           <div className={css.mainColumnForHeroLayout}>
