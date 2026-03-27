@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 
-// Contexts
-import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { FormattedMessage } from '../../util/reactIntl';
 import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -17,15 +13,7 @@ import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
-  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
-  NO_ACCESS_PAGE_VIEW_LISTINGS,
 } from '../../util/urlHelpers';
-import {
-  isErrorNoViewingPermission,
-  isErrorUserPendingApproval,
-  isForbiddenError,
-} from '../../util/errors.js';
-import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
 import { requireListingImage } from '../../util/configHelpers';
 import {
   ensureListing,
@@ -91,6 +79,7 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
+import ListingPageAccessWrapper from './ListingPageAccessWrapper';
 
 import css from './ListingPage.module.css';
 
@@ -502,62 +491,7 @@ export const ListingPageComponent = props => {
  * @returns {JSX.Element} listing page component
  */
 const EnhancedListingPage = props => {
-  const config = useConfiguration();
-  const routeConfiguration = useRouteConfiguration();
-  const intl = useIntl();
-  const history = useHistory();
-  const location = useLocation();
-
-  const showListingError = props.showListingError;
-  const isVariant = props.params?.variant != null;
-  const currentUser = props.currentUser;
-  if (isForbiddenError(showListingError) && !isVariant && !currentUser) {
-    // This can happen if private marketplace mode is active
-    return (
-      <NamedRedirect
-        name="SignupPage"
-        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
-      />
-    );
-  }
-
-  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
-  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
-  const hasNoViewingRights = currentUser && !hasPermissionToViewData(currentUser);
-  const hasUserPendingApprovalError = isErrorUserPendingApproval(showListingError);
-
-  if ((isPrivateMarketplace && isUnauthorizedUser) || hasUserPendingApprovalError) {
-    return (
-      <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
-      />
-    );
-  } else if (
-    (hasNoViewingRights && isForbiddenError(showListingError)) ||
-    isErrorNoViewingPermission(showListingError)
-  ) {
-    // If the user has no viewing rights, fetching anything but their own listings
-    // will return a 403 error. If that happens, redirect to NoAccessPage.
-    return (
-      <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
-      />
-    );
-  }
-
-  return (
-    <ListingPageComponent
-      config={config}
-      routeConfiguration={routeConfiguration}
-      intl={intl}
-      history={history}
-      location={location}
-      showOwnListingsOnly={hasNoViewingRights}
-      {...props}
-    />
-  );
+  return <ListingPageAccessWrapper {...props} PageComponent={ListingPageComponent} />;
 };
 
 const mapStateToProps = state => {
