@@ -5,18 +5,26 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { useIntl } from '../../util/reactIntl';
+import { LISTING_STATE_PENDING_APPROVAL } from '../../util/types';
+import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   isErrorNoViewingPermission,
   isErrorUserPendingApproval,
   isForbiddenError,
 } from '../../util/errors';
 import {
+  LISTING_PAGE_DRAFT_VARIANT,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
+  createSlug,
 } from '../../util/urlHelpers';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
+import { ensureListing, ensureOwnListing } from '../../util/data';
 
 import { NamedRedirect } from '../../components';
+
+const { UUID } = sdkTypes;
 
 /**
  * Shared access gating for ListingPage variants: forbidden, private marketplace,
@@ -70,6 +78,37 @@ const ListingPageAccessWrapper = ({ PageComponent, ...rest }) => {
       <NamedRedirect
         name="NoAccessPage"
         params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
+      />
+    );
+  }
+
+  const rawParams = rest.params || {};
+  const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
+  const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
+  const listingId = new UUID(rawParams.id);
+  const currentListing =
+    isPendingApprovalVariant || isDraftVariant || hasNoViewingRights
+      ? ensureOwnListing(rest.getOwnListing(listingId))
+      : ensureListing(rest.getListing(listingId));
+  const isApproved =
+    currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
+
+  // If a /pending-approval or /draft URL is shared, the UI may first fetch from own listings.
+  // If that returns 403 for another user's listing, redirect to the public listing page.
+  const pendingOtherUsersListing =
+    (isPendingApprovalVariant || isDraftVariant) &&
+    showListingError &&
+    showListingError.status === 403;
+  const shouldShowPublicListingPage =
+    (isPendingApprovalVariant && isApproved) || pendingOtherUsersListing;
+
+  if (shouldShowPublicListingPage) {
+    const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
+    return (
+      <NamedRedirect
+        name="ListingPage"
+        params={{ slug: listingSlug, ...rawParams }}
+        search={location.search}
       />
     );
   }

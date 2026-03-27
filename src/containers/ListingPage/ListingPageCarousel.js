@@ -20,7 +20,6 @@ import {
   H4,
   Page,
   NamedLink,
-  NamedRedirect,
   OrderPanel,
   LayoutSingleColumn,
   SectionText,
@@ -101,7 +100,6 @@ export const ListingPageComponent = props => {
     getListing,
     getOwnListing,
     showOwnListingsOnly,
-    showListingError,
     currentUser,
     config,
     intl,
@@ -119,7 +117,6 @@ export const ListingPageComponent = props => {
     params,
     listingPathParamType,
     listingTab,
-    shouldShowPublicListingPage,
     description,
     geolocation,
     price,
@@ -144,10 +141,6 @@ export const ListingPageComponent = props => {
     noIndexMaybe,
     hasInvalidListingData,
   } = derivedData;
-
-  if (shouldShowPublicListingPage) {
-    return <NamedRedirect name="ListingPage" params={params} search={location.search} />;
-  }
 
   const topbar = <TopbarContainer />;
 
