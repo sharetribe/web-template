@@ -5,21 +5,42 @@ import css from './FileUpload.module.css';
 
 const FileUpload = props => {
   const { item, className, onRemoveFile } = props;
-  const { file, tempId } = item;
+  const { file, tempId, progress, inProgress, sourceFile, error, verificationStatus } = item;
 
-  if (!file) {
-    return;
+  const name = file?.attributes?.name ?? sourceFile?.name;
+
+  const isPendingFile = inProgress && !file;
+  const hasError = !inProgress && error && sourceFile;
+  const hasCompletedUpload = file && !inProgress && !error;
+
+  const isKnownState = isPendingFile || hasError || hasCompletedUpload;
+  if (!isKnownState) {
+    return null;
   }
 
-  const { size: sizeRaw, name } = file?.attributes;
-  const { size, unit } = calculateFileSize(sizeRaw);
+  let statusContent;
+
+  if (isPendingFile && progress < 100) {
+    statusContent = <span>Uploading... | {progress} %</span>;
+  } else if (isPendingFile && progress === 100 && verificationStatus !== 'available') {
+    statusContent = <span>Verifying...</span>;
+  } else if (hasError) {
+    const errorMessage = error.message || 'Failed to upload.';
+    statusContent = <span>(!) {errorMessage}</span>;
+  } else if (hasCompletedUpload) {
+    const { size: sizeRaw } = file?.attributes;
+    const { size, unit } = calculateFileSize(sizeRaw);
+    statusContent = (
+      <span>
+        {size} {unit}
+      </span>
+    );
+  }
 
   return (
     <div className={className || css.root}>
       <span>{name}</span>
-      <span>
-        {size} {unit}
-      </span>
+      {statusContent}
       <span onClick={() => onRemoveFile(tempId)}>X</span>
     </div>
   );

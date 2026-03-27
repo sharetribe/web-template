@@ -150,8 +150,6 @@ export class TransactionPanelComponent extends Component {
     const message = values.message ? values.message.trim() : null;
     const { transactionId, onSendMessage, config, fileUploads, onClearUploadedFiles } = this.props;
 
-    const { files } = this.state;
-
     if (!message) {
       return;
     }
@@ -164,7 +162,7 @@ export class TransactionPanelComponent extends Component {
     onSendMessage(transactionId, message, config, fileIds)
       .then(messageId => {
         form.reset();
-        onClearUploadedFiles(files.map(f => f.tempId));
+        onClearUploadedFiles(fileUploads.map(f => f.tempId));
         this.scrollToMessage(messageId);
       })
       .catch(e => {
