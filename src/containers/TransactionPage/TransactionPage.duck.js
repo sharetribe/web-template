@@ -575,6 +575,41 @@ export const uploadFile = (file, tempId) => dispatch => {
   return dispatch(uploadFileThunk({ file, tempId })).unwrap();
 };
 
+////////////////////
+// downloadFile   //
+////////////////////
+const downloadFilePayloadCreator = ({ fileAttachmentId }, { rejectWithValue, extra: sdk }) => {
+  if (!fileAttachmentId) {
+    throw new Error('Missing fileAttachmentId, cannot initiate download.');
+  }
+  // Request a temporary download URL from the SDK
+  return sdk.fileDownloads
+    .create({ fileAttachmentId })
+    .then(downloadResp => {
+      // Trigger a browser file download
+      console.log('downloadResp', JSON.stringify(downloadResp, null, 2));
+      const { url } = downloadResp?.data?.data?.attributes || {};
+      if (!url) {
+        throw new Error('Missing download URL, cannot trigger file download.');
+      }
+
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return fileAttachmentId;
+    })
+    .catch(e => {
+      return rejectWithValue({ fileAttachmentId, error: storableError(e) });
+    });
+};
+
+export const downloadFileThunk = createAsyncThunk(
+  'TransactionPage/downloadFile',
+  downloadFilePayloadCreator
+);
+
+// Backward-compatible wrapper — mirrors uploadFile pattern
+export const downloadFile = fileAttachmentId => dispatch => {
+  return dispatch(downloadFileThunk({ fileAttachmentId })).unwrap();
+};
 /////////////////
 // sendMessage //
 /////////////////
@@ -770,6 +805,9 @@ const initialState = {
     //   fileState: null | string,   // FileState: uploadPending | pendingVerification | available | verificationFailed
     // }
   },
+  fileDownloads: {
+    // [fileId.uuid]: { inProgress: bool, error: null | storable-error }
+  },
 };
 
 // Merge entity arrays using ids, so that conflicting items in newer array (b) overwrite old values (a).
@@ -919,6 +957,28 @@ const transactionPageSlice = createSlice({
           error,
           file: null,
           tempId,
+        };
+      })
+      // downloadFile cases
+      .addCase(downloadFileThunk.pending, (state, action) => {
+        const { fileAttachmentId } = action.meta.arg;
+        state.fileDownloads[fileAttachmentId.uuid] = {
+          inProgress: true,
+          error: null,
+        };
+      })
+      .addCase(downloadFileThunk.fulfilled, (state, action) => {
+        const fileAttachmentId = action.payload;
+        state.fileDownloads[fileAttachmentId.uuid] = {
+          inProgress: false,
+          error: null,
+        };
+      })
+      .addCase(downloadFileThunk.rejected, (state, action) => {
+        const { fileAttachmentId, error } = action.payload;
+        state.fileDownloads[fileAttachmentId.uuid] = {
+          inProgress: false,
+          error,
         };
       })
       // fetchTimeSlots cases
