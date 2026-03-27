@@ -183,32 +183,32 @@ export const ListingPageComponent = props => {
     onSendInquiry,
     setInquiryModalOpen,
   });
-  // This is to navigate to MakeOfferPage when NegotiationForm is submitted
-  const onNavigateToMakeOfferPage = handleNavigateToMakeOfferPage({
-    ...commonParams,
-    getListing,
-  });
-  const onNavigateToRequestQuotePage = handleNavigateToRequestQuotePage({
-    ...commonParams,
-    getListing,
-  });
-  const onSubmit = handleSubmit({
-    ...commonParams,
-    currentUser,
-    callSetInitialValues,
-    getListing,
-    onInitializeCardPaymentData,
-  });
 
   const handleOrderSubmit = values => {
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
     if (isOwnListing || isCurrentlyClosed) {
       window.scrollTo(0, 0);
     } else if (isNegotiation && unitType === REQUEST) {
+      // This is to navigate to MakeOfferPage when NegotiationForm is submitted
+      const onNavigateToMakeOfferPage = handleNavigateToMakeOfferPage({
+        ...commonParams,
+        getListing,
+      });
       onNavigateToMakeOfferPage(values);
     } else if (isNegotiation && unitType === OFFER) {
+      const onNavigateToRequestQuotePage = handleNavigateToRequestQuotePage({
+        ...commonParams,
+        getListing,
+      });
       onNavigateToRequestQuotePage(values);
     } else {
+      const onSubmit = handleSubmit({
+        ...commonParams,
+        currentUser,
+        callSetInitialValues,
+        getListing,
+        onInitializeCardPaymentData,
+      });
       onSubmit(values);
     }
   };
