@@ -24,6 +24,7 @@ import {
   isBookingProcess,
   isNegotiationProcess,
 } from '../../transactions/transaction';
+import { MAX_FILE_SIZE } from '../../util/fileHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
@@ -470,7 +471,7 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
 ////////////////////
 // Upload File    //
 ////////////////////
-const uploadFilePayloadCreator = ({ file, tempId }, { rejectWithValue, extra: sdk }) => {
+const uploadFilePayloadCreator = ({ file, tempId }, { dispatch, rejectWithValue, extra: sdk }) => {
   let fileId;
 
   ///////////////////////////////////
@@ -479,6 +480,10 @@ const uploadFilePayloadCreator = ({ file, tempId }, { rejectWithValue, extra: sd
   const checkMetadataFn = file => {
     if (!file) {
       throw new Error('Missing file, cannot initiate upload.');
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error('File too large (max 1 GB).', file);
     }
     return sdkFile.metadata(file);
   };
@@ -516,8 +521,10 @@ const uploadFilePayloadCreator = ({ file, tempId }, { rejectWithValue, extra: sd
     }
 
     const onUploadProgress = progressEvent => {
-      // TODO ADD PROGRESS EVENT
-      console.log(progressEvent);
+      const loaded = progressEvent?.loaded || 0;
+      const total = progressEvent?.total || file.size;
+      const progress = total ? Math.min(100, Math.round((loaded / total) * 100)) : null;
+      dispatch(setUploadProgress({ tempId, progress }));
     };
 
     return sdkFile.upload({
@@ -532,12 +539,40 @@ const uploadFilePayloadCreator = ({ file, tempId }, { rejectWithValue, extra: sd
   //////////////////////////////////////////////
   /// Step 5. Return ids for future handling ///
   //////////////////////////////////////////////
-  const handleFileUploadSuccessFn = () => {
-    console.log('[uploadFile] STEP 5: Need to call sdk.ownFiles.show({ id: fileId })');
-    console.log(
-      '[uploadFile] STEP 5: Expected response shape: { data: { data: { attributes: { name, mimeType, size, state } } } }'
-    );
+
+  const waitForFileVerification = (fileId, attempt = 0) => {
+    const maxAttempts = 60;
+    const intervalMs = 1000;
+
     return sdk.ownFiles.show({ id: fileId }).then(resp => {
+      const ownFile = resp?.data?.data;
+      const fileState = ownFile?.attributes?.state;
+
+      dispatch(setVerificationStatus({ tempId, verificationStatus: fileState }));
+
+      if (fileState === 'available') {
+        return resp; // ← return full resp, not ownFile
+      }
+
+      if (fileState === 'verificationFailed') {
+        throw new Error('File verification failed');
+      }
+
+      if (attempt >= maxAttempts - 1) {
+        const error = new Error('Timed out waiting for file to become available');
+        error.code = 'file-availability-timeout';
+        error.fileState = fileState;
+        throw error;
+      }
+
+      return new Promise(resolve => setTimeout(resolve, intervalMs)).then(() =>
+        waitForFileVerification(fileId, attempt + 1)
+      );
+    });
+  };
+
+  const handleFileUploadSuccessFn = () => {
+    return waitForFileVerification(fileId).then(resp => {
       const denormalisedResponse = denormalisedResponseEntities(resp);
       const fileUpload = denormalisedResponse[0];
       return { fileUpload, tempId };
@@ -582,7 +617,6 @@ const downloadFilePayloadCreator = ({ fileAttachmentId }, { rejectWithValue, ext
     .create({ fileAttachmentId })
     .then(downloadResp => {
       // Trigger a browser file download
-      console.log('downloadResp', JSON.stringify(downloadResp, null, 2));
       const { url } = downloadResp?.data?.data?.attributes || {};
       if (!url) {
         throw new Error('Missing download URL, cannot trigger file download.');
@@ -791,13 +825,13 @@ const initialState = {
   fetchLineItemsError: null,
   fileUploads: {
     // [tempId]: {
-    //   inProgress: bool,
-    //   error: null | storable-error,
-    //   fileId: null | UUID,
-    //   name: null | string,
-    //   mimeType: null | string,
-    //   size: null | int,
-    //   fileState: null | string,   // FileState: uploadPending | pendingVerification | available | verificationFailed
+    // inProgress: bool,
+    // error: null | storable-error,
+    // file: null | SKD file,
+    // sourceFile: null | File
+    // progress: null | number,
+    // verificationStatus: null | number,
+    // tempId,
     // }
   },
   fileDownloads: {
@@ -825,6 +859,18 @@ const transactionPageSlice = createSlice({
       action.payload.forEach(tempId => {
         delete state.fileUploads[tempId];
       });
+    },
+    setUploadProgress: (state, action) => {
+      const { tempId, progress } = action.payload;
+      if (state.fileUploads[tempId]) {
+        state.fileUploads[tempId].progress = progress;
+      }
+    },
+    setVerificationStatus: (state, action) => {
+      const { tempId, verificationStatus } = action.payload;
+      if (state.fileUploads[tempId]) {
+        state.fileUploads[tempId].verificationStatus = verificationStatus;
+      }
     },
   },
   extraReducers: builder => {
@@ -928,29 +974,39 @@ const transactionPageSlice = createSlice({
       })
       // uploadFile cases
       .addCase(uploadFileThunk.pending, (state, action) => {
-        const { tempId } = action.meta.arg;
+        const { tempId, file } = action.meta.arg;
+        console.log('pending', { action });
         state.fileUploads[tempId] = {
           inProgress: true,
           error: null,
           file: null,
+          sourceFile: file, // Set source file so that other components can get the file name
+          progress: null,
+          verificationStatus: null,
           tempId,
         };
       })
       .addCase(uploadFileThunk.fulfilled, (state, action) => {
         const { fileUpload, tempId } = action.payload;
+        console.log('fulfilled', action);
         state.fileUploads[tempId] = {
           inProgress: false,
           error: null,
           file: fileUpload,
+          sourceFile: null, // Clear source file after upload is done
+          progress: null,
           tempId,
         };
       })
       .addCase(uploadFileThunk.rejected, (state, action) => {
         const { tempId, error } = action.payload;
+        const { file } = action.meta.arg;
+        console.log('rejected', action);
         state.fileUploads[tempId] = {
           inProgress: false,
           error,
           file: null,
+          sourceFile: file,
           tempId,
         };
       })
@@ -1040,7 +1096,12 @@ const transactionPageSlice = createSlice({
   },
 });
 
-export const { setInitialValues, clearUploadedFiles } = transactionPageSlice.actions;
+export const {
+  setInitialValues,
+  clearUploadedFiles,
+  setUploadProgress,
+  setVerificationStatus,
+} = transactionPageSlice.actions;
 
 // ================ Selectors ================ //
 
