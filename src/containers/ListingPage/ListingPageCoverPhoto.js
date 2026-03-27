@@ -5,31 +5,8 @@ import classNames from 'classnames';
 
 // Utils
 import { FormattedMessage } from '../../util/reactIntl';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import {
-  LISTING_PAGE_DRAFT_VARIANT,
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_EDIT,
-  createSlug,
-} from '../../util/urlHelpers';
-import { requireListingImage } from '../../util/configHelpers';
-import {
-  ensureListing,
-  ensureOwnListing,
-  ensureUser,
-  userDisplayNameAsString,
-} from '../../util/data';
-import { richText } from '../../util/richText';
-import {
-  OFFER,
-  REQUEST,
-  isBookingProcess,
-  isNegotiationProcess,
-  isPurchaseProcess,
-  resolveLatestProcessName,
-} from '../../transactions/transaction';
+import { LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import { OFFER, REQUEST } from '../../transactions/transaction';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -64,14 +41,13 @@ import {
 import {
   LoadingPage,
   ErrorPage,
-  priceData,
-  listingImages,
   handleContactUser,
   handleSubmitInquiry,
   handleNavigateToMakeOfferPage,
   handleNavigateToRequestQuotePage,
   handleSubmit,
   priceForSchemaMaybe,
+  getDerivedRenderData,
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
 import SectionReviews from './SectionReviews';
@@ -84,8 +60,6 @@ import ListingPageAccessWrapper from './ListingPageAccessWrapper';
 import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
-
-const { UUID } = sdkTypes;
 
 export const ListingPageComponent = props => {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
@@ -124,39 +98,54 @@ export const ListingPageComponent = props => {
     ...restOfProps
   } = props;
 
-  const listingConfig = config.listing;
-  const listingId = new UUID(rawParams.id);
-  const isVariant = rawParams.variant != null;
-  const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
-  const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
-  const currentListing =
-    isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
-      ? ensureOwnListing(getOwnListing(listingId))
-      : ensureListing(getListing(listingId));
-
-  const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
-  const params = { slug: listingSlug, ...rawParams };
-
-  const listingPathParamType = isDraftVariant
-    ? LISTING_PAGE_PARAM_TYPE_DRAFT
-    : LISTING_PAGE_PARAM_TYPE_EDIT;
-  const listingTab = isDraftVariant ? 'photos' : 'details';
-
-  const isApproved =
-    currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
-
-  const pendingIsApproved = isPendingApprovalVariant && isApproved;
-
-  // If a /pending-approval URL is shared, the UI requires
-  // authentication and attempts to fetch the listing from own
-  // listings. This will fail with 403 Forbidden if the author is
-  // another user. We use this information to try to fetch the
-  // public listing.
-  const pendingOtherUsersListing =
-    (isPendingApprovalVariant || isDraftVariant) &&
-    showListingError &&
-    showListingError.status === 403;
-  const shouldShowPublicListingPage = pendingIsApproved || pendingOtherUsersListing;
+  const derivedData = getDerivedRenderData({
+    rawParams,
+    getListing,
+    getOwnListing,
+    showOwnListingsOnly,
+    showListingError,
+    currentUser,
+    config,
+    intl,
+    location,
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE,
+    longWordClassName: css.longWord,
+    payoutDetailsWarningClassName: css.payoutDetailsWarning,
+  });
+  const {
+    listingConfig,
+    listingId,
+    isVariant,
+    currentListing,
+    listingSlug,
+    params,
+    listingPathParamType,
+    listingTab,
+    shouldShowPublicListingPage,
+    description,
+    geolocation,
+    price,
+    title,
+    publicData,
+    metadata,
+    richTitle,
+    isOwnListing,
+    showListingImage,
+    showDescription,
+    processType,
+    ensuredAuthor,
+    noPayoutDetailsSetWithOwnListing,
+    payoutDetailsWarning,
+    authorDisplayName,
+    schemaTitle,
+    facebookImages,
+    twitterImages,
+    schemaImages,
+    productURL,
+    availabilityMaybe,
+    noIndexMaybe,
+    hasInvalidListingData,
+  } = derivedData;
 
   if (shouldShowPublicListingPage) {
     return <NamedRedirect name="ListingPage" params={params} search={location.search} />;
@@ -175,74 +164,14 @@ export const ListingPageComponent = props => {
     return <LoadingPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
   }
 
-  const {
-    description = '',
-    geolocation = null,
-    price = null,
-    title = '',
-    publicData = {},
-    metadata = {},
-  } = currentListing.attributes;
-
-  const richTitle = (
-    <span>
-      {richText(title, {
-        longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE,
-        longWordClass: css.longWord,
-      })}
-    </span>
-  );
-
-  const authorAvailable = currentListing && currentListing.author;
-  const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
-  const isOwnListing =
-    userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
-
-  const { listingType, transactionProcessAlias, unitType } = publicData;
-  if (!(listingType && transactionProcessAlias && unitType)) {
+  if (hasInvalidListingData) {
     // Listing should always contain listingType, transactionProcessAlias and unitType)
     return (
       <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} invalidListing />
     );
   }
-  const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
-  const isBooking = isBookingProcess(processName);
-  const isPurchase = isPurchaseProcess(processName);
-  const isNegotiation = isNegotiationProcess(processName);
-  const processType = isBooking
-    ? 'booking'
-    : isPurchase
-    ? 'purchase'
-    : isNegotiation
-    ? 'negotiation'
-    : 'inquiry';
-
-  const validListingTypes = listingConfig.listingTypes;
-  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
-  const showListingImage = requireListingImage(foundListingTypeConfig);
-  const showDescription = foundListingTypeConfig?.defaultListingFields?.description;
-
-  const currentAuthor = authorAvailable ? currentListing.author : null;
-  const ensuredAuthor = ensureUser(currentAuthor);
-  const authorNeedsPayoutDetails =
-    ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
-  const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
-  const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
-    <span className={css.payoutDetailsWarning}>
-      <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
-      <NamedLink name="StripePayoutPage">
-        <FormattedMessage id="ListingPage.payoutDetailsWarningLink" />
-      </NamedLink>
-    </span>
-  ) : null;
-
-  // When user is banned or deleted the listing is also deleted.
-  // Because listing can be never showed with banned or deleted user we don't have to provide
-  // banned or deleted display names for the function
-  const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
-
-  const { formattedPrice } = priceData(price, config.currency, intl);
+  const unitType = publicData.unitType;
+  const isNegotiation = processType === 'negotiation';
 
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
@@ -290,32 +219,6 @@ export const ListingPageComponent = props => {
       onSubmit(values);
     }
   };
-
-  const facebookImages = listingImages(currentListing, 'facebook');
-  const twitterImages = listingImages(currentListing, 'twitter');
-  const schemaImages = listingImages(
-    currentListing,
-    `${config.layout.listingImage.variantPrefix}-2x`
-  ).map(img => img.url);
-  const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage(
-    { id: 'ListingPage.schemaTitle' },
-    { title, price: formattedPrice, marketplaceName }
-  );
-  // You could add reviews, sku, etc. into page schema
-  // Read more about product schema
-  // https://developers.google.com/search/docs/advanced/structured-data/product
-  const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
-  const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
-  const schemaAvailability = !currentListing.currentStock
-    ? null
-    : currentStock > 0
-    ? 'https://schema.org/InStock'
-    : 'https://schema.org/OutOfStock';
-
-  const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
-  const noIndexMaybe =
-    currentListing.attributes.state === LISTING_STATE_CLOSED ? { noIndex: true } : {};
 
   const handleViewPhotosClick = e => {
     // Stop event from bubbling up to prevent image click handler
