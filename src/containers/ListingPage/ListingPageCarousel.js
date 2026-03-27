@@ -49,7 +49,7 @@ import {
   priceForSchemaMaybe,
   getDerivedRenderData,
 } from './ListingPage.shared';
-import ActionBarMaybe from './ActionBarMaybe';
+import Notifications from './Notifications/Notifications';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
@@ -245,29 +245,20 @@ export const ListingPageComponent = props => {
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
-            {mounted && currentListing.id && noPayoutDetailsSetWithOwnListing ? (
-              <ActionBarMaybe
-                className={css.actionBarForProductLayout}
-                isOwnListing={isOwnListing}
-                listing={currentListing}
-                showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
-                currentUser={currentUser}
-              />
-            ) : null}
-            {mounted && currentListing.id ? (
-              <ActionBarMaybe
-                className={css.actionBarForProductLayout}
-                isOwnListing={isOwnListing}
-                listing={currentListing}
-                currentUser={currentUser}
-                editParams={{
-                  id: listingId.uuid,
-                  slug: listingSlug,
-                  type: listingPathParamType,
-                  tab: listingTab,
-                }}
-              />
-            ) : null}
+            <Notifications
+              mounted={mounted}
+              listing={currentListing}
+              isOwnListing={isOwnListing}
+              noPayoutDetailsSetWithOwnListing={noPayoutDetailsSetWithOwnListing}
+              currentUser={currentUser}
+              className={css.actionBarForProductLayout}
+              editParams={{
+                id: listingId.uuid,
+                slug: listingSlug,
+                type: listingPathParamType,
+                tab: listingTab,
+              }}
+            />
             {showListingImage && (
               <SectionGallery
                 listing={currentListing}

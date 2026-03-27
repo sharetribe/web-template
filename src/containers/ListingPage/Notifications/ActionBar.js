@@ -1,21 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage } from '../../util/reactIntl';
-import { generateLinkProps } from '../../util/routes';
+import { useConfiguration } from '../../../context/configurationContext';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { FormattedMessage } from '../../../util/reactIntl';
+import { generateLinkProps } from '../../../util/routes';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
   propTypes,
-} from '../../util/types';
+} from '../../../util/types';
 
-import { NamedLink, ExternalLink } from '../../components';
-import EditIcon from './EditIcon';
+import { NamedLink, ExternalLink } from '../../../components';
+import EditIcon from '../EditIcon';
 
-import css from './ListingPage.module.css';
+import css from '../ListingPage.module.css';
 
 /**
  * CTAButtonMaybe component renders a call-to-action (CTA) button if it is enabled.
@@ -57,7 +57,7 @@ const CTAButtonMaybe = props => {
 };
 
 /**
- * The ActionBarMaybe component.
+ * The ActionBar component.
  *
  * @component
  * @param {Object} props
@@ -72,9 +72,9 @@ const CTAButtonMaybe = props => {
  * @param {'edit' | 'draft'} props.editParams.type - The type
  * @param {string} props.editParams.tab - The tab (e.g. 'details' or 'pricing')
  * @param {boolean} props.showNoPayoutDetailsSet - Show info about missing payout details
- * @returns {JSX.Element} action bar maybe component
+ * @returns {JSX.Element} action bar component
  */
-export const ActionBarMaybe = props => {
+export const ActionBar = props => {
   const {
     rootClassName,
     className,
@@ -169,4 +169,4 @@ export const ActionBarMaybe = props => {
   return null;
 };
 
-export default ActionBarMaybe;
+export default ActionBar;

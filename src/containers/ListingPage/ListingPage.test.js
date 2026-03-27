@@ -29,7 +29,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 import reducer, { showListing, loadData, setInitialValues } from './ListingPage.duck';
 
-import ActionBarMaybe from './ActionBarMaybe';
+import ActionBar from './Notifications/ActionBar';
 
 const { UUID } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;
@@ -716,13 +716,13 @@ describe('Duck', () => {
   });
 });
 
-describe('ActionBarMaybe', () => {
+describe('ActionBar', () => {
   it('shows users own listing status', () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PUBLISHED,
     });
     render(
-      <ActionBarMaybe
+      <ActionBar
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
@@ -738,7 +738,7 @@ describe('ActionBarMaybe', () => {
       state: LISTING_STATE_PENDING_APPROVAL,
     });
     render(
-      <ActionBarMaybe
+      <ActionBar
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
@@ -753,7 +753,7 @@ describe('ActionBarMaybe', () => {
       state: LISTING_STATE_CLOSED,
     });
     render(
-      <ActionBarMaybe
+      <ActionBar
         isOwnListing
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
@@ -768,7 +768,7 @@ describe('ActionBarMaybe', () => {
       state: LISTING_STATE_CLOSED,
     });
     render(
-      <ActionBarMaybe
+      <ActionBar
         isOwnListing={false}
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
@@ -782,7 +782,7 @@ describe('ActionBarMaybe', () => {
       state: LISTING_STATE_PUBLISHED,
     });
     const actionBar = render(
-      <ActionBarMaybe
+      <ActionBar
         isOwnListing={false}
         listing={listing}
         editParams={{ id: 'id1', slug: 'asdf', type: 'edit', tab: 'details' }}
