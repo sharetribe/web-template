@@ -53,6 +53,63 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
+  {
+    key: 'listingCategory',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'entire-home', label: 'Entire Home' },
+      { option: 'room', label: 'Room' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectSingleFilter',
+      label: 'Listing type',
+      group: 'primary',
+    },
+    showConfig: { label: 'Listing type', isDetail: true },
+    saveConfig: {
+      label: 'Listing type',
+      isRequired: true,
+      requiredMessage: 'You need to select a listing type.',
+    },
+  },
+  {
+    key: 'bedrooms',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 0, maximum: 20 },
+    filterConfig: { indexForSearch: false, label: 'Bedrooms', group: 'primary' },
+    showConfig: { label: 'Bedrooms', isDetail: false },
+    saveConfig: { label: 'Bedrooms', isRequired: false },
+  },
+  {
+    key: 'bathrooms',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 0, maximum: 20 },
+    filterConfig: { indexForSearch: false, label: 'Bathrooms', group: 'primary' },
+    showConfig: { label: 'Bathrooms', isDetail: false },
+    saveConfig: { label: 'Bathrooms', isRequired: false },
+  },
+  {
+    key: 'beds',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 0, maximum: 50 },
+    filterConfig: { indexForSearch: false, label: 'Beds', group: 'primary' },
+    showConfig: { label: 'Beds', isDetail: false },
+    saveConfig: { label: 'Beds', isRequired: false },
+  },
+  {
+    key: 'guests',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 1, maximum: 50 },
+    filterConfig: { indexForSearch: false, label: 'Guests', group: 'primary' },
+    showConfig: { label: 'Guests', isDetail: false },
+    saveConfig: { label: 'Guests', isRequired: false },
+  },
   // {
   //   "scope": "public",
   //   "label": "Gears",
