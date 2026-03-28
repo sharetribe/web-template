@@ -54,8 +54,8 @@ const getTransactionInfo = props => {
       listingTypes.length === 1
         ? listingTypes[0]
         : preselectedListingType
-        ? listingTypes.find(conf => conf.listingType === preselectedListingType)
-        : {};
+          ? listingTypes.find(conf => conf.listingType === preselectedListingType)
+          : {};
     const { listingType: type, label, transactionType } = listingTypeConfig || {};
     if (!type) {
       // If listing type is not found (e.g. preselected listing type is not found among listingTypes),
@@ -202,21 +202,21 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
   return isBookingProcessAlias(processAlias)
     ? {}
     : {
-        availabilityPlan: {
-          type: 'availability-plan/time',
-          timezone: 'Etc/UTC',
-          entries: [
-            // Note: "no entries" is the same as seats=0 for every entry.
-            // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
-          ],
-        },
-      };
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          // Note: "no entries" is the same as seats=0 for every entry.
+          // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+    };
 };
 
 /**
@@ -269,7 +269,11 @@ const getInitialValues = (
       nestedCategories,
       listingFields
     ),
-  };
+    // Room fields saved directly in publicData - default to min values so FieldNumber always has a value
+    pub_bedrooms: publicData?.bedrooms != null ? publicData.bedrooms : 0,
+    pub_bathrooms: publicData?.bathrooms != null ? publicData.bathrooms : 1,
+    pub_beds: publicData?.beds != null ? publicData.beds : 1,
+    pub_guests: publicData?.guests != null ? publicData.guests : 1,  };
 };
 
 /**
@@ -358,15 +362,15 @@ const EditListingDetailsPanel = props => {
 
   const panelHeadingProps = isPublished
     ? {
-        id: 'EditListingDetailsPanel.title',
-        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
-        messageProps: { listingTitle: listing.attributes.title },
-      }
+      id: 'EditListingDetailsPanel.title',
+      values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+      messageProps: { listingTitle: listing.attributes.title },
+    }
     : {
-        id: 'EditListingDetailsPanel.createListingTitle',
-        values: { lineBreak: <br /> },
-        messageProps: {},
-      };
+      id: 'EditListingDetailsPanel.createListingTitle',
+      values: { lineBreak: <br /> },
+      messageProps: {},
+    };
 
   return (
     <main className={classes}>
@@ -396,7 +400,6 @@ const EditListingDetailsPanel = props => {
             } = values;
 
             const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
-            // Remove old categories by explicitly saving null for them.
             const cleanedNestedCategories = {
               ...[1, 2, 3].reduce((a, i) => ({ ...a, [`${categoryKey}${i}`]: null }), {}),
               ...nestedCategories,
@@ -415,7 +418,12 @@ const EditListingDetailsPanel = props => {
               nestedCategories,
               listingFields
             );
-            // New values for listing attributes
+
+            // Compute a human-readable bedroom label to save alongside the number
+            const bedroomCount = publicListingFields.bedrooms != null ? Number(publicListingFields.bedrooms) : 0;
+            const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms'];
+            const bedroomLabel = bedroomLabels[bedroomCount] || `${bedroomCount} Bedrooms`;
+
             const updateValues = {
               title: title.trim(),
               description,
@@ -425,6 +433,7 @@ const EditListingDetailsPanel = props => {
                 unitType,
                 ...cleanedNestedCategories,
                 ...publicListingFields,
+                bedroomLabel,
               },
               privateData: privateListingFields,
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
