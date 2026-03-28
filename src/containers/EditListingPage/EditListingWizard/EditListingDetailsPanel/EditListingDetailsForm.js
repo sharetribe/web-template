@@ -21,6 +21,7 @@ import {
   Button,
   FieldSelect,
   FieldTextInput,
+  FieldNumber,
   Heading,
   CustomExtendedDataField,
 } from '../../../../components';
@@ -244,6 +245,8 @@ const FieldSelectCategory = props => {
 };
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
+const ROOM_KEYS = ['bedrooms', 'bathrooms', 'beds', 'guests'];
+
 const AddListingFields = props => {
   const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
   const targetCategoryIds = Object.values(selectedCategories);
@@ -252,6 +255,9 @@ const AddListingFields = props => {
     const { key, schemaType, scope } = fieldConfig || {};
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
+    // Skip room fields — they are handled by the RoomsAndSpaces component
+    if (ROOM_KEYS.includes(key)) return pickedFields;
+
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isProviderScope = ['public', 'private'].includes(scope);
     const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
@@ -259,17 +265,17 @@ const AddListingFields = props => {
 
     return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory
       ? [
-          ...pickedFields,
-          <CustomExtendedDataField
-            key={namespacedKey}
-            name={namespacedKey}
-            fieldConfig={fieldConfig}
-            defaultRequiredMessage={intl.formatMessage({
-              id: 'EditListingDetailsForm.defaultRequiredMessage',
-            })}
-            formId={formId}
-          />,
-        ]
+        ...pickedFields,
+        <CustomExtendedDataField
+          key={namespacedKey}
+          name={namespacedKey}
+          fieldConfig={fieldConfig}
+          defaultRequiredMessage={intl.formatMessage({
+            id: 'EditListingDetailsForm.defaultRequiredMessage',
+          })}
+          formId={formId}
+        />,
+      ]
       : pickedFields;
   }, []);
 
@@ -280,6 +286,145 @@ const AddListingFields = props => {
 const getListingTypeConfig = (config, listingType) => {
   return config.listing.listingTypes?.find(config => config.listingType === listingType);
 };
+
+// Listing type toggle buttons (Entire Home / Room)
+const ListingTypeButtons = ({ formId, intl, listingTypes, formApi, onListingTypeChange }) => {
+  const options = listingTypes?.length > 0
+    ? listingTypes.map(config => ({ key: config.listingType, label: config.label }))
+    : [
+      { key: 'entire-home', label: intl.formatMessage({ id: 'EditListingDetailsForm.listingCategoryEntireHome', defaultMessage: 'Entire Home' }) },
+      { key: 'room', label: intl.formatMessage({ id: 'EditListingDetailsForm.listingCategoryRoom', defaultMessage: 'Room' }) },
+    ];
+
+  const handleSelect = (value) => {
+    formApi.change('listingType', value);
+    const selectedConfig = listingTypes?.find(c => c.listingType === value);
+    if (selectedConfig) {
+      formApi.change('transactionProcessAlias', selectedConfig.transactionProcessAlias);
+      formApi.change('unitType', selectedConfig.unitType);
+    }
+    if (onListingTypeChange && selectedConfig) {
+      onListingTypeChange(selectedConfig);
+    }
+  };
+
+  // Auto-select the first listing type on mount if none is already set
+  useEffect(() => {
+    const currentListingType = formApi.getFieldState('listingType')?.value;
+    if (!currentListingType && options.length > 0) {
+      handleSelect(options[0].key);
+    }
+  }, []);
+
+  return (
+    <div className={css.listingTypeSection}>
+      <Heading as="h5" rootClassName={css.sectionLabel}>
+        {intl.formatMessage({ id: 'EditListingDetailsForm.listingCategoryLabel', defaultMessage: 'Listing type' })}
+      </Heading>
+      <div className={css.listingTypeButtons}>
+        <Field name="listingType">
+          {({ input }) =>
+            options.map(opt => (
+              <button
+                key={opt.key}
+                type="button"
+                className={classNames(css.listingTypeButton, {
+                  [css.listingTypeButtonActive]: input.value === opt.key,
+                })}
+                onClick={() => handleSelect(opt.key)}
+              >
+                {opt.label}
+              </button>
+            ))
+          }
+        </Field>
+        <FieldHidden name="transactionProcessAlias" />
+        <FieldHidden name="unitType" />
+      </div>
+    </div>
+  );
+};
+
+// Rooms & spaces counter section
+const bedroomLabel = (count, intl) => {
+  const labels = {
+    0: intl.formatMessage({ id: 'EditListingDetailsForm.studioBadge', defaultMessage: 'Studio' }),
+    1: intl.formatMessage({ id: 'EditListingDetailsForm.oneBedroom', defaultMessage: 'One Bedroom' }),
+    2: intl.formatMessage({ id: 'EditListingDetailsForm.twoBedrooms', defaultMessage: 'Two Bedrooms' }),
+    3: intl.formatMessage({ id: 'EditListingDetailsForm.threeBedrooms', defaultMessage: 'Three Bedrooms' }),
+    4: intl.formatMessage({ id: 'EditListingDetailsForm.fourBedrooms', defaultMessage: 'Four Bedrooms' }),
+    5: intl.formatMessage({ id: 'EditListingDetailsForm.fiveBedrooms', defaultMessage: 'Five Bedrooms' }),
+  };
+  return labels[count] || `${count} Bedrooms`;
+};
+
+const RoomsAndSpaces = ({ formId, intl, bedroomsValue }) => {
+  const count = bedroomsValue != null ? Number(bedroomsValue) : 0;
+  const isStudio = count === 0;
+  const badgeText = bedroomLabel(count, intl);
+
+  return (
+    <div className={css.roomsSection}>
+      <Heading as="h5" rootClassName={css.sectionLabel}>
+        {intl.formatMessage({ id: 'EditListingDetailsForm.roomsAndSpacesLabel', defaultMessage: 'Rooms & spaces' })}
+      </Heading>
+      <div className={css.roomsContainer}>
+        <div className={css.roomRow}>
+          <span className={css.roomLabel}>
+            {intl.formatMessage({ id: 'EditListingDetailsForm.bedroomsLabel', defaultMessage: 'Bedrooms' })}
+            <span className={isStudio ? css.studioBadge : css.bedroomBadge}>
+              {badgeText}
+            </span>
+          </span>
+          <FieldNumber
+            id={`${formId}pub_bedrooms`}
+            name="pub_bedrooms"
+            minValue={0}
+            maxValue={20}
+          />
+        </div>
+        <div className={css.roomRow}>
+          <span className={css.roomLabel}>
+            {intl.formatMessage({ id: 'EditListingDetailsForm.bathroomsLabel', defaultMessage: 'Bathrooms' })}
+          </span>
+          <FieldNumber
+            id={`${formId}pub_bathrooms`}
+            name="pub_bathrooms"
+            minValue={0}
+            maxValue={20}
+            initialValue={1}
+          />
+        </div>
+        <div className={css.roomRow}>
+          <span className={css.roomLabel}>
+            {intl.formatMessage({ id: 'EditListingDetailsForm.bedsLabel', defaultMessage: 'Beds' })}
+          </span>
+          <FieldNumber
+            id={`${formId}pub_beds`}
+            name="pub_beds"
+            minValue={0}
+            maxValue={50}
+            initialValue={1}
+          />
+        </div>
+        <div className={css.roomRow}>
+          <span className={css.roomLabel}>
+            {intl.formatMessage({ id: 'EditListingDetailsForm.guestsLabel', defaultMessage: 'Guests' })}
+          </span>
+          <FieldNumber
+            id={`${formId}pub_guests`}
+            name="pub_guests"
+            minValue={1}
+            maxValue={50}
+            initialValue={1}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 
 /**
  * Form that asks title, description, transaction process and unit type for pricing
@@ -343,7 +488,6 @@ const EditListingDetailsForm = props => (
       const intl = useIntl();
       const { listingType, transactionProcessAlias, unitType } = values;
       const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
-
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
       });
@@ -398,15 +542,15 @@ const EditListingDetailsForm = props => (
         <Form className={classes} onSubmit={handleSubmit}>
           <ErrorMessage fetchErrors={fetchErrors} />
 
-          <FieldSelectListingType
-            name="listingType"
-            listingTypes={selectableListingTypes}
-            hasPredefinedListingType={hasPredefinedListingType}
-            onListingTypeChange={onListingTypeChange}
-            formApi={formApi}
+          <ListingTypeButtons
             formId={formId}
             intl={intl}
+            listingTypes={selectableListingTypes}
+            formApi={formApi}
+            onListingTypeChange={onListingTypeChange}
           />
+
+          <RoomsAndSpaces formId={formId} intl={intl} bedroomsValue={values.pub_bedrooms} />
 
           {showCategories && isCompatibleCurrency && (
             <FieldSelectCategory
@@ -463,6 +607,7 @@ const EditListingDetailsForm = props => (
               intl={intl}
             />
           )}
+
 
           {!isCompatibleCurrency && listingType && (
             <p className={css.error}>
