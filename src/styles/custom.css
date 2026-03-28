@@ -17,12 +17,11 @@
   text-align: center;
 }
 
-/* TEXT CONTAINER */
+
 #section-5 .BlockDefault_text__gZoKS {
   margin-top: 3px;
 }
 
-/* 🔥 ACTUAL TEXT SIZE CONTROL */
 #section-5 .P_p__7YjWB {
   font-size: 18px;   /* reduce text size */
   line-height: 1.4;  /* tighter spacing */
@@ -34,7 +33,6 @@
 .SectionFooter_grid__Nm4WB {
   margin-top: -60px; /* 🔥 key fix */
 }
-
 
 
 
