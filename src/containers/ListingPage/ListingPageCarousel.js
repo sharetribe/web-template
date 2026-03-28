@@ -90,6 +90,7 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
+import SectionRoomsAndSpaces from './SectionRoomsAndSpaces';
 
 import css from './ListingPage.module.css';
 
@@ -225,10 +226,10 @@ export const ListingPageComponent = props => {
   const processType = isBooking
     ? 'booking'
     : isPurchase
-    ? 'purchase'
-    : isNegotiation
-    ? 'negotiation'
-    : 'inquiry';
+      ? 'purchase'
+      : isNegotiation
+        ? 'negotiation'
+        : 'inquiry';
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
@@ -319,8 +320,8 @@ export const ListingPageComponent = props => {
   const schemaAvailability = !currentListing.currentStock
     ? null
     : currentStock > 0
-    ? 'https://schema.org/InStock'
-    : 'https://schema.org/OutOfStock';
+      ? 'https://schema.org/InStock'
+      : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
   const noIndexMaybe =
@@ -403,6 +404,8 @@ export const ListingPageComponent = props => {
               categoryConfiguration={config.categoryConfiguration}
               intl={intl}
             />
+
+            <SectionRoomsAndSpaces publicData={publicData} />
 
             <SectionMapMaybe
               geolocation={geolocation}
