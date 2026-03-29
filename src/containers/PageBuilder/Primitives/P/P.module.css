@@ -9,10 +9,7 @@
   & + p,
   & + ul,
   & + ol,
-  & + pre {
-    margin-top: 8px; /* reduced from 24px */
-  }
-
+  & + pre,
   & + div,
   & + h1,
   & + h2,
@@ -20,6 +17,6 @@
   & + h4,
   & + h5,
   & + h6 {
-    margin-top: 24px; /* keep headers as-is */
+    margin-top: 24px;
   }
 }
