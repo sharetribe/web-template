@@ -334,6 +334,8 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
       const { orderId, paymentMethodSaved } = response;
       setSubmitting(false);
 
+      console.log('Checkout with payment successful, orderId:', orderId, response);
+
       const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
         id: orderId.uuid,
       });
