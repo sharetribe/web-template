@@ -331,13 +331,13 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
-      const { orderId, paymentMethodSaved } = response;
+      const { orderId, paymentMethodSaved, id } = response;
       setSubmitting(false);
 
-      console.log('Checkout with payment successful, orderId:', orderId, response);
+      console.log('Checkout with payment successful, orderId:', response);
 
       const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
-        id: orderId.uuid,
+        id: orderId?.uuid || id?.uuid,
       });
       const initialValues = {
         savePaymentMethodFailed: !paymentMethodSaved,
