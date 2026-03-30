@@ -269,11 +269,11 @@ const getInitialValues = (
       nestedCategories,
       listingFields
     ),
-    // Room fields saved directly in publicData - default to min values so FieldNumber always has a value
-    pub_bedrooms: publicData?.bedrooms != null ? publicData.bedrooms : 0,
-    pub_bathrooms: publicData?.bathrooms != null ? publicData.bathrooms : 1,
-    pub_beds: publicData?.beds != null ? publicData.beds : 1,
-    pub_guests: publicData?.guests != null ? publicData.guests : 1,  };
+    // Room fields — load from saved publicData so counters show correct values on edit
+    pub_bedrooms: publicData?.bedrooms != null ? Number(publicData.bedrooms) : 0,
+    pub_bathrooms: publicData?.bathrooms != null ? Number(publicData.bathrooms) : 1,
+    pub_beds: publicData?.beds != null ? Number(publicData.beds) : 1,
+    pub_guests: publicData?.guests != null ? Number(publicData.guests) : 1,  };
 };
 
 /**
@@ -396,6 +396,10 @@ const EditListingDetailsPanel = props => {
               listingType,
               transactionProcessAlias,
               unitType,
+              pub_bedrooms,
+              pub_bathrooms,
+              pub_beds,
+              pub_guests,
               ...rest
             } = values;
 
@@ -419,10 +423,16 @@ const EditListingDetailsPanel = props => {
               listingFields
             );
 
-            // Compute a human-readable bedroom label to save alongside the number
-            const bedroomCount = publicListingFields.bedrooms != null ? Number(publicListingFields.bedrooms) : 0;
-            const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms'];
-            const bedroomLabel = bedroomLabels[bedroomCount] || `${bedroomCount} Bedrooms`;
+            // Read room values — use form value if set, otherwise fall back to existing publicData
+            const existingPublicData = listing?.attributes?.publicData || {};
+            const bedrooms = pub_bedrooms != null ? Number(pub_bedrooms) : (existingPublicData.bedrooms ?? 0);
+            const bathrooms = pub_bathrooms != null ? Number(pub_bathrooms) : (existingPublicData.bathrooms ?? 1);
+            const beds = pub_beds != null ? Number(pub_beds) : (existingPublicData.beds ?? 1);
+            const guests = pub_guests != null ? Number(pub_guests) : (existingPublicData.guests ?? 1);
+
+            // Compute bedroom type string from the actual bedroom count
+            const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms', 'Six Bedrooms', 'Seven Bedrooms', 'Eight Bedrooms', 'Nine Bedrooms', 'Ten Bedrooms'];
+            const bedroomType = bedroomLabels[bedrooms] || `${bedrooms} Bedrooms`;
 
             const updateValues = {
               title: title.trim(),
@@ -433,7 +443,11 @@ const EditListingDetailsPanel = props => {
                 unitType,
                 ...cleanedNestedCategories,
                 ...publicListingFields,
-                bedroomLabel,
+                bedrooms,
+                bathrooms,
+                beds,
+                guests,
+                bedroomType,
               },
               privateData: privateListingFields,
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),

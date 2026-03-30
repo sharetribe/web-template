@@ -57,15 +57,14 @@ const RoomStat = ({ label, value }) => (
 
 const SectionRoomsAndSpaces = ({ publicData }) => {
   const intl = useIntl();
-
-  const { bedrooms, bathrooms, beds, guests, bedroomLabel } = publicData || {};
+  const { bedrooms, bathrooms, beds, guests, bedroomType } = publicData || {};
 
   const hasAny = bedrooms != null || bathrooms != null || beds != null || guests != null;
   if (!hasAny) return null;
 
-  // Use saved bedroomLabel if available, otherwise compute fallback
-  const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms'];
-  const displayBedroomLabel = bedroomLabel || (bedrooms != null ? (bedroomLabels[bedrooms] || `${bedrooms} Bedrooms`) : 'Studio');
+  // Fallback if listing was saved before bedroomType was introduced
+  const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms', 'Six Bedrooms', 'Seven Bedrooms', 'Eight Bedrooms', 'Nine Bedrooms', 'Ten Bedrooms'];
+  const displayBedroomType = bedroomType || (bedrooms != null ? (bedroomLabels[bedrooms] || `${bedrooms} Bedrooms`) : 'Studio');
 
   return (
     <div style={styles.root}>
@@ -74,7 +73,7 @@ const SectionRoomsAndSpaces = ({ publicData }) => {
       </h2>
       <div style={styles.statsGrid}>
         {bedrooms != null && (
-          <RoomStat value={displayBedroomLabel} label={null} />
+          <RoomStat value={displayBedroomType} label={null} />
         )}
         {bathrooms != null && (
           <RoomStat
