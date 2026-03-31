@@ -312,13 +312,13 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       return onSavePaymentMethod(ensuredStripeCustomer, pi.payment_method)
         .then(response => {
           if (response.errors) {
-            return { ...fnParams, paymentMethodSaved: false };
+            return { orderId, paymentMethodSaved: false };
           }
-          return { ...fnParams, paymentMethodSaved: true };
+          return { orderId, paymentMethodSaved: true };
         })
         .catch(e => {
           // Real error cases are catched already in paymentMethods page.
-          return { ...fnParams, paymentMethodSaved: false };
+          return { orderId, paymentMethodSaved: false };
         });
     } else {
       return Promise.resolve({ orderId, paymentMethodSaved: true });
