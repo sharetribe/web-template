@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix return value in CheckoutPage pay-and-save-card flow
+  [#816](https://github.com/sharetribe/web-template/pull/816)
+
 ## [v10.15.0] 2026-03-25
 
 - [fix] Fix too-big font-size in mobile h4 heading and some too large margins.
