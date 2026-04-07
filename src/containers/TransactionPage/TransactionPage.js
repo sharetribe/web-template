@@ -327,7 +327,7 @@ export const TransactionPageComponent = props => {
   };
 
   const redirectToCheckoutPageWithInitialValues = (initialValues, currentListing) => {
-    // Customize checkout page state with current listing and selected bookingDates
+    // Customize the state of the CheckoutPage with the current transaction, listing and the selected orderData
     const { setInitialValues } = findRouteByRouteName('CheckoutPage', routeConfiguration);
     callSetInitialValues(setInitialValues, initialValues);
 

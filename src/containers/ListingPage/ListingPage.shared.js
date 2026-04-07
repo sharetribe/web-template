@@ -297,9 +297,9 @@ export const handleContactUser = parameters => () => {
     params,
     currentUser,
     callSetInitialValues,
+    setInitialValues,
     location,
     routes,
-    setInitialValues,
     setInquiryModalOpen,
   } = parameters;
 
@@ -475,9 +475,8 @@ export const handleSubmit = parameters => values => {
 
   const saveToSessionStorage = !currentUser;
 
-  // Customize checkout page state with current listing and selected orderData
+  // Customize the state of the CheckoutPage with the current listing and the selected orderData
   const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
-
   callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
 
   // Clear previous Stripe errors from store if there is any

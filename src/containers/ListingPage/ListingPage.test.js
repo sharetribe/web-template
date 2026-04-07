@@ -208,6 +208,7 @@ describe('ListingPage variants', () => {
     scrollingDisabled: false,
     onManageDisableScrolling: noop,
     callSetInitialValues: noop,
+    setInitialValues: noop,
     onFetchTransactionLineItems: noop,
     onSendInquiry: noop,
     onInitializeCardPaymentData: noop,
