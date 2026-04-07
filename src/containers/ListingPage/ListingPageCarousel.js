@@ -169,8 +169,8 @@ export const ListingPageComponent = props => {
     ...commonParams,
     currentUser,
     callSetInitialValues,
+    setInitialValues, // from ListingPage.duck.js (set initial values for the listing page)
     location,
-    setInitialValues,
     setInquiryModalOpen,
   });
   // Note: this is for inquire transition to inquiry state in booking, purchase and negotiation processes.
@@ -361,7 +361,7 @@ export const ListingPageComponent = props => {
  * @param {boolean} props.scrollingDisabled - Whether scrolling is disabled
  * @param {string} props.inquiryModalOpenForListingId - The inquiry modal open for the specific listing id
  * @param {propTypes.error} props.showListingError - The show listing error
- * @param {Function} props.callSetInitialValues - The call setInitialValues function, which is given to this function as a parameter
+ * @param {Function} props.callSetInitialValues - The call page-specific setInitialValues function, which is given to this function as a parameter
  * @param {Array<propTypes.review>} props.reviews - The reviews
  * @param {propTypes.error} props.fetchReviewsError - The fetch reviews error
  * @param {Object<string, Object>} props.monthlyTimeSlots - The monthly time slots. E.g. { '2019-11': { timeSlots: [], fetchTimeSlotsInProgress: false, fetchTimeSlotsError: null } }
