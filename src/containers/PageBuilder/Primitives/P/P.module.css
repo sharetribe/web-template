@@ -1,11 +1,11 @@
 .p {
-  max-width: 82ch;
-  line-height: 1.45;
+  max-width: 80ch;
+  line-height: 1.66;
   margin-top: 0;
   margin-bottom: 0;
   letter-spacing: 0;
-  font-size: 15px;
 
+  /* Handle margin-top of next adjacent element against this p element */
   & + p,
   & + ul,
   & + ol,

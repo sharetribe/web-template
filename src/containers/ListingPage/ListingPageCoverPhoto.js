@@ -237,8 +237,13 @@ export const ListingPageComponent = props => {
   const ensuredAuthor = ensureUser(currentAuthor);
   const authorNeedsPayoutDetails =
     ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
+  const hasManualPayoutDetails =
+    !!currentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
+    isOwnListing &&
+    authorNeedsPayoutDetails &&
+    !currentUser?.attributes?.stripeConnected &&
+    !hasManualPayoutDetails;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />

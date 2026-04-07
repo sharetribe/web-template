@@ -73,6 +73,12 @@ const defaultConfig = {
   //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLocalizations func)
   localization: {
     locale: 'en-US',
+    
+    // TODO: Replace hardcoded timezone with a host-facing timezone selector in the UI.
+    // When expanding to new regions (e.g. Nigeria), this should be user-selectable
+    // rather than hardcoded.
+    timeZone: 'Africa/Nairobi',
+    
     // First day of week
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#return_value
     // 1: Monday
