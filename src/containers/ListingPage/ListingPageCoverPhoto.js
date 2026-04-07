@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { useCallback } from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import classNames from 'classnames';
 
 // Utils
@@ -402,12 +402,11 @@ export const ListingPageComponent = props => {
 
  * @returns {JSX.Element} listing page component
  */
-const EnhancedListingPage = props => {
-  return <ListingPageAccessWrapper {...props} PageComponent={ListingPageComponent} />;
-};
+const ListingPage = props => {
+  const dispatch = useDispatch();
+  const store = useStore();
 
-const mapStateToProps = state => {
-  const { isAuthenticated } = state.auth;
+  const { isAuthenticated } = useSelector(state => state.auth);
   const {
     showListingError,
     reviews,
@@ -420,64 +419,83 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     inquiryModalOpenForListingId,
-  } = state.ListingPage;
-  const { currentUser } = state.user;
+  } = useSelector(state => state.ListingPage);
+  const currentUser = useSelector(state => state.user?.currentUser);
+  const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
 
-  const getListing = id => {
-    const ref = { id, type: 'listing' };
-    const listings = getMarketplaceEntities(state, [ref]);
-    return listings.length === 1 ? listings[0] : null;
-  };
+  const getListing = useCallback(
+    id => {
+      const state = store.getState();
+      const ref = { id, type: 'listing' };
+      const listings = getMarketplaceEntities(state, [ref]);
+      return listings.length === 1 ? listings[0] : null;
+    },
+    [store]
+  );
+  const getOwnListing = useCallback(
+    id => {
+      const state = store.getState();
+      const ref = { id, type: 'ownListing' };
+      const listings = getMarketplaceEntities(state, [ref]);
+      return listings.length === 1 ? listings[0] : null;
+    },
+    [store]
+  );
 
-  const getOwnListing = id => {
-    const ref = { id, type: 'ownListing' };
-    const listings = getMarketplaceEntities(state, [ref]);
-    return listings.length === 1 ? listings[0] : null;
-  };
+  const onManageDisableScrolling = useCallback(
+    (componentId, disableScrolling) =>
+      dispatch(manageDisableScrolling(componentId, disableScrolling)),
+    [dispatch]
+  );
+  const callSetInitialValues = useCallback(
+    (setInitialValuesFn, values, saveToSessionStorage) =>
+      dispatch(setInitialValuesFn(values, saveToSessionStorage)),
+    [dispatch]
+  );
+  const onFetchTransactionLineItems = useCallback(
+    params => dispatch(fetchTransactionLineItems(params)),
+    [dispatch]
+  );
+  const onSendInquiry = useCallback((listing, message) => dispatch(sendInquiry(listing, message)), [
+    dispatch,
+  ]);
+  const onInitializeCardPaymentData = useCallback(() => dispatch(initializeCardPaymentData()), [
+    dispatch,
+  ]);
+  const onFetchTimeSlots = useCallback(
+    (listingId, start, end, timeZone, options) =>
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
+    [dispatch]
+  );
 
-  return {
-    isAuthenticated,
-    currentUser,
-    getListing,
-    getOwnListing,
-    scrollingDisabled: isScrollingDisabled(state),
-    inquiryModalOpenForListingId,
-    showListingError,
-    reviews,
-    fetchReviewsError,
-    monthlyTimeSlots, // for OrderPanel
-    timeSlotsForDate, // for OrderPanel
-    lineItems, // for OrderPanel
-    fetchLineItemsInProgress, // for OrderPanel
-    fetchLineItemsError, // for OrderPanel
-    sendInquiryInProgress,
-    sendInquiryError,
-  };
+  return (
+    <ListingPageAccessWrapper
+      {...props}
+      PageComponent={ListingPageComponent}
+      isAuthenticated={isAuthenticated}
+      currentUser={currentUser}
+      getListing={getListing}
+      getOwnListing={getOwnListing}
+      scrollingDisabled={scrollingDisabled}
+      inquiryModalOpenForListingId={inquiryModalOpenForListingId}
+      showListingError={showListingError}
+      reviews={reviews}
+      fetchReviewsError={fetchReviewsError}
+      monthlyTimeSlots={monthlyTimeSlots}
+      timeSlotsForDate={timeSlotsForDate}
+      lineItems={lineItems}
+      fetchLineItemsInProgress={fetchLineItemsInProgress}
+      fetchLineItemsError={fetchLineItemsError}
+      sendInquiryInProgress={sendInquiryInProgress}
+      sendInquiryError={sendInquiryError}
+      onManageDisableScrolling={onManageDisableScrolling}
+      callSetInitialValues={callSetInitialValues}
+      onFetchTransactionLineItems={onFetchTransactionLineItems}
+      onSendInquiry={onSendInquiry}
+      onInitializeCardPaymentData={onInitializeCardPaymentData}
+      onFetchTimeSlots={onFetchTimeSlots}
+    />
+  );
 };
-
-const mapDispatchToProps = dispatch => ({
-  onManageDisableScrolling: (componentId, disableScrolling) =>
-    dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
-    dispatch(setInitialValues(values, saveToSessionStorage)),
-  onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)), // for OrderPanel
-  onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
-  onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-  onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
-    dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
-});
-
-// Note: it is important that the withRouter HOC is **outside** the
-// connect HOC, otherwise React Router won't rerender any Route
-// components since connect implements a shouldComponentUpdate
-// lifecycle hook.
-//
-// See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedListingPage);
 
 export default ListingPage;
