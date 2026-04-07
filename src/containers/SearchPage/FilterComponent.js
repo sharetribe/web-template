@@ -126,7 +126,7 @@ const FilterComponent = props => {
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          minimumNights={isNightlyMode ? 1 : 0}
+          minimumNights={isNightlyMode ? 1 : 29} // changed the minimum number of nights a guest can choose to be 30
           getAriaLabel={getAriaLabel}
           {...rest}
         />
