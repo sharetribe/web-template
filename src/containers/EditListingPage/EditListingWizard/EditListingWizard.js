@@ -716,12 +716,23 @@ class EditListingWizard extends Component {
               Please read and accept our Terms and Conditions before publishing your listing.
             </p>
 
+            {/* Scroll hint */}
+            <p
+              id="tc-hint"
+              style={{ fontSize: 12, color: '#999', marginBottom: 12, fontStyle: 'italic' }}
+            >
+              ↓ Scroll to the bottom to accept
+            </p>
+
             {/* Scrollable T&C box */}
             <div
               id="tc-scroll-box"
               onScroll={e => {
                 const el = e.target;
                 const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
+                
+                console.log('scrollHeight:', el.scrollHeight, 'scrollTop:', el.scrollTop, 'clientHeight:', el.clientHeight, 'atBottom:', atBottom);
+
                 if (atBottom) {
                   document.getElementById('tc-checkbox').disabled = false;
                   document.getElementById('tc-checkbox-label').style.color = '#333';
@@ -806,25 +817,20 @@ class EditListingWizard extends Component {
               Patamali may update these Terms from time to time. Continued use of the platform after updates constitutes acceptance of the revised Terms.
             </div>
 
-            {/* Scroll hint */}
-            <p
-              id="tc-hint"
-              style={{ fontSize: 12, color: '#999', marginBottom: 12, fontStyle: 'italic' }}
-            >
-              ↓ Scroll to the bottom to accept
-            </p>
-
             {/* Checkbox */}
             <label
               id="tc-checkbox-label"
               style={{
-                display: 'flex',
-                alignItems: 'flex-start',
+                display: 'grid',
+                gridTemplateColumns: '16px 1fr',
                 gap: 10,
                 fontSize: 13,
                 color: '#999',
                 marginBottom: 24,
                 lineHeight: 1.6,
+                width: '100%',
+                boxSizing: 'border-box',
+                overflow: 'hidden',
               }}
             >
               <input
@@ -834,24 +840,25 @@ class EditListingWizard extends Component {
                 onChange={e => {
                   const btn = document.getElementById('tc-publish-btn');
                   const checked = e.target.checked;
-                  btn.disabled = !checked;
                   btn.style.backgroundColor = checked ? '#6e42e5' : '#f5f5f5';
                   btn.style.color = checked ? '#fff' : '#aaa';
                   btn.style.borderColor = checked ? '#6e42e5' : '#e0e0e0';
                   btn.style.cursor = checked ? 'pointer' : 'default';
-                  btn.style.pointerEvents = checked ? 'auto' : 'none';
                   document.getElementById('tc-checkbox-label').style.color = checked ? '#333' : '#999';
                 }}
-                style={{ marginTop: 3, flexShrink: 0 }}
+                style={{ marginTop: 3 }}
               />
-              I understand that payouts are made only 24 hours after the guest has checked in, and I agree to Patamali's Terms and Conditions.
+              <span style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                I understand that payouts are made only 24 hours after the guest has checked in, and I agree to Patamali's Terms and Conditions.
+              </span>
             </label>
 
             {/* Publish button */}
             <button
               id="tc-publish-btn"
-              disabled
               onClick={() => {
+                const checkbox = document.getElementById('tc-checkbox');
+                if (!checkbox.checked) return;
                 const hasManualPayoutDetails =
                   !!ensuredCurrentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
                 this.handleTCModalClose();
@@ -875,10 +882,9 @@ class EditListingWizard extends Component {
                 cursor: 'default',
                 fontFamily: 'inherit',
                 fontSize: 16,
-                pointerEvents: 'none',
               }}
             >
-              Publish listing
+              Accept & Continue
             </button>
           </div>
         </Modal>
