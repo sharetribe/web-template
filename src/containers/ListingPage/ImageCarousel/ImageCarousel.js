@@ -117,6 +117,7 @@ const ImageCarousel = props => {
         renderLeftNav={renderLeftNav}
         renderRightNav={renderRightNav}
         onSlide={handleSlide}
+        startIndex={currentIndex}
         {...IMAGE_GALLERY_OPTIONS}
       />
       {imageIndex}
