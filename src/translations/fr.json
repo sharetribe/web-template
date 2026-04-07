@@ -996,6 +996,7 @@
   "SortBy.highestPrice": "Prix le plus élevé",
   "SortBy.lowestPrice": "Prix le plus bas",
   "SortBy.newest": "Plus récentes",
+  "SortBy.numericSortOption": "{fieldLabel} ({direction, select, asc {plus petit au plus grand} desc {plus grand au plus petit} other {}})",
   "SortBy.oldest": "Plus anciennes",
   "SortBy.relevance": "Pertinence",
   "SortBy.relevanceLong": "Pertinence (Recherche par mot-clé)",
