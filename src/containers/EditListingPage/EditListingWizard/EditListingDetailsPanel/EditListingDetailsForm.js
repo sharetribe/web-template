@@ -332,7 +332,14 @@ const AmenityCheckbox = ({ amenityKey, label, checked, onChange }) => (
   </div>
 );
 
-const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange }) => (
+const PadlockIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </svg>
+);
+
+const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange, isRequired }) => (
   <div style={{ marginBottom: '28px' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
       <span style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '0.08em', color: '#6b6b6b', textTransform: 'uppercase' }}>
@@ -352,7 +359,7 @@ const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange 
         {badge}
       </span>
     </div>
-    {badge === 'MUST HAVE' && (
+    {isRequired && (
       <p style={{ fontSize: '13px', color: '#888', margin: '0 0 10px 0' }}>
         Your listing will not qualify without all of these.
       </p>
@@ -366,18 +373,34 @@ const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange 
       gridTemplateColumns: '1fr 1fr',
       gap: '0 24px',
     }}>
-      {amenities.map((a, i) => (
-        <div key={a.key} style={{
-          borderBottom: i < amenities.length - (amenities.length % 2 === 0 ? 2 : 1) ? '1px solid #f0f0f0' : 'none',
-        }}>
-          <AmenityCheckbox
-            amenityKey={a.key}
-            label={a.label}
-            checked={selected.includes(a.key)}
-            onChange={onChange}
-          />
-        </div>
-      ))}
+      {amenities.map((a, i) => {
+        const isChecked = selected.includes(a.key);
+        const showMissing = isRequired && !isChecked;
+        return (
+          <div key={a.key} style={{
+            borderBottom: i < amenities.length - (amenities.length % 2 === 0 ? 2 : 1) ? '1px solid #f0f0f0' : 'none',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 0' }}>
+              <input
+                type="checkbox"
+                id={`amenity-${a.key}`}
+                checked={isChecked}
+                onChange={e => onChange(a.key, e.target.checked)}
+                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#5c3ebc', flexShrink: 0 }}
+              />
+              <label htmlFor={`amenity-${a.key}`} style={{
+                fontSize: '15px',
+                color: showMissing ? '#e53e3e' : '#3d3d3d',
+                cursor: 'pointer',
+                flex: 1,
+              }}>
+                {a.label}
+              </label>
+              {isRequired && <PadlockIcon />}
+            </div>
+          </div>
+        );
+      })}
     </div>
   </div>
 );
@@ -436,7 +459,7 @@ const QualificationModal = ({ selected, onClose }) => {
   );
 };
 
-const AmenitiesSection = ({ formApi, values }) => {
+const AmenitiesSection = ({ formApi, values, missingRequiredCount }) => {
   const [showModal, setShowModal] = useState(false);
   const selected = values.pub_amenities || [];
 
@@ -456,9 +479,29 @@ const AmenitiesSection = ({ formApi, values }) => {
       <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '6px', color: '#1a1a1a' }}>
         Listing details
       </h2>
-      <p style={{ fontSize: '14px', color: '#666', marginBottom: '24px' }}>
+      <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
         Select all amenities that apply to your unit. Required amenities must be present for your listing to qualify.
       </p>
+
+      {missingRequiredCount > 0 && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '12px 16px',
+          background: '#fff5f5',
+          border: '1px solid #feb2b2',
+          borderRadius: '8px',
+          marginBottom: '20px',
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e53e3e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <p style={{ margin: 0, fontSize: '13px', color: '#c53030', fontWeight: '500' }}>
+            {missingRequiredCount} required {missingRequiredCount === 1 ? 'amenity is' : 'amenities are'} missing — your listing cannot be saved until all required amenities are selected.
+          </p>
+        </div>
+      )}
 
       <AmenityGroup
         title="Required Amenities"
@@ -467,6 +510,7 @@ const AmenitiesSection = ({ formApi, values }) => {
         amenities={REQUIRED_AMENITIES}
         selected={selected}
         onChange={handleChange}
+        isRequired={true}
       />
       <AmenityGroup
         title="Premium Amenities"
@@ -475,6 +519,7 @@ const AmenitiesSection = ({ formApi, values }) => {
         amenities={PREMIUM_AMENITIES}
         selected={selected}
         onChange={handleChange}
+        isRequired={false}
       />
       <AmenityGroup
         title="Optional Amenities"
@@ -483,19 +528,8 @@ const AmenitiesSection = ({ formApi, values }) => {
         amenities={OPTIONAL_AMENITIES}
         selected={selected}
         onChange={handleChange}
+        isRequired={false}
       />
-
-      <button
-        type="button"
-        onClick={() => setShowModal(true)}
-        style={{
-          padding: '12px 28px', background: '#5c3ebc', color: '#fff',
-          border: 'none', borderRadius: '8px', fontSize: '15px',
-          fontWeight: '600', cursor: 'pointer', marginBottom: '24px',
-        }}
-      >
-        Check qualification
-      </button>
 
       {showModal && (
         <QualificationModal selected={selected} onClose={() => setShowModal(false)} />
@@ -753,12 +787,20 @@ const EditListingDetailsForm = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
+
+      // Check all required amenities are selected
+      const selectedAmenities = values.pub_amenities || [];
+      const requiredAmenityKeys = REQUIRED_AMENITIES.map(a => a.key);
+      const hasAllRequiredAmenities = requiredAmenityKeys.every(k => selectedAmenities.includes(k));
+      const missingRequiredCount = requiredAmenityKeys.filter(k => !selectedAmenities.includes(k)).length;
+
       const submitDisabled =
         invalid ||
         disabled ||
         submitInProgress ||
         !hasMandatoryListingTypeData ||
-        !isCompatibleCurrency;
+        !isCompatibleCurrency ||
+        !hasAllRequiredAmenities;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -830,7 +872,7 @@ const EditListingDetailsForm = props => (
             />
           )}
 
-          <AmenitiesSection formApi={formApi} values={values} />
+          <AmenitiesSection formApi={formApi} values={values} missingRequiredCount={missingRequiredCount} />
 
 
           {!isCompatibleCurrency && listingType && (
@@ -841,6 +883,7 @@ const EditListingDetailsForm = props => (
               />
             </p>
           )}
+
           <Button
             className={css.submitButton}
             type="submit"
