@@ -81,6 +81,6 @@ exports.error = (e, code, data) => {
 
 exports.devLogger = (...args) => {
   if (DEV && VERBOSE) {
-    console.log(...args);
+    console.log(...args); // eslint-disable-line no-console
   }
 };

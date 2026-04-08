@@ -30,10 +30,11 @@ const configureEnv = () => {
   // https://github.com/motdotla/dotenv
   dotenvFiles.forEach(dotenvFile => {
     if (fs.existsSync(dotenvFile)) {
-      console.log('Loading env from file:' + dotenvFile);
-      require('dotenv-expand')(
+      console.log('Loading env from file:' + dotenvFile); // eslint-disable-line no-console
+      require('dotenv-expand').expand(
         require('dotenv').config({
           path: dotenvFile,
+          quiet: true,
         })
       );
     }

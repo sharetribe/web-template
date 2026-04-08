@@ -130,7 +130,7 @@ module.exports = (req, res) => {
       // Log error
       const is404 = e.status === 404;
       if (is404 && dev) {
-        console.log('robots-txt-render-failed-no-asset-found');
+        console.log('robots-txt-render-failed-no-asset-found'); // eslint-disable-line no-console
       }
       // TODO: This defaults to more permissive robots.txt due to backward compatibility.
       // You might want to change that.
