@@ -18,7 +18,6 @@ const SectionHero = props => {
   const {
     title,
     listing,
-    isOwnListing,
     handleViewPhotosClick,
     imageCarouselOpen,
     onImageCarouselClose,
@@ -44,7 +43,7 @@ const SectionHero = props => {
   return (
     <section className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
-        {mounted && listing.id && isOwnListing ? (
+        {mounted && listing.id ? (
           <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
             {actionBar}
           </div>
