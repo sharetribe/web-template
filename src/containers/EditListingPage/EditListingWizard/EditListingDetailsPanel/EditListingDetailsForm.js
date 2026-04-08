@@ -245,7 +245,7 @@ const FieldSelectCategory = props => {
 };
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
-const ROOM_KEYS = ['bedrooms', 'bathrooms', 'beds', 'guests'];
+const ROOM_KEYS = ['bedrooms', 'bathrooms', 'beds', 'guests', 'amenities', 'listingCategory'];
 
 const AddListingFields = props => {
   const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
@@ -280,6 +280,228 @@ const AddListingFields = props => {
   }, []);
 
   return <>{fields}</>;
+};
+
+// ─── Amenities Configuration ───────────────────────────────────────────────
+
+const REQUIRED_AMENITIES = [
+  { key: 'security-24hr', label: '24-hour manned security' },
+  { key: 'perimeter-wall', label: 'Perimeter wall + solid gate' },
+  { key: 'alarm-panic', label: 'Alarm system + panic button' },
+  { key: 'cctv', label: 'CCTV cameras' },
+  { key: 'water-storage', label: 'Water storage tank / borehole' },
+  { key: 'wifi', label: 'WiFi' },
+  { key: 'secure-parking', label: 'Secure parking (min. 1 space)' },
+  { key: 'kitchen', label: 'Kitchen' },
+  { key: 'washing-machine', label: 'Washing machine' },
+  { key: 'concierge', label: 'Concierge or estate management' },
+];
+
+const PREMIUM_AMENITIES = [
+  { key: 'generator', label: 'Backup generator or solar' },
+  { key: 'pool', label: 'Swimming pool' },
+  { key: 'gym', label: 'Gym / fitness centre' },
+  { key: 'rooftop', label: 'Rooftop or outdoor common area' },
+  { key: 'balcony', label: 'Private patio or balcony' },
+];
+
+const OPTIONAL_AMENITIES = [
+  { key: 'hot-water', label: 'Hot water supply' },
+  { key: 'tv', label: 'TV' },
+  { key: 'furnished', label: 'Fully furnished' },
+  { key: 'pet-friendly', label: 'Pet-friendly' },
+];
+
+const AmenityCheckbox = ({ amenityKey, label, checked, onChange }) => (
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    padding: '10px 0',
+  }}>
+    <input
+      type="checkbox"
+      id={`amenity-${amenityKey}`}
+      checked={checked}
+      onChange={e => onChange(amenityKey, e.target.checked)}
+      style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#5c3ebc' }}
+    />
+    <label htmlFor={`amenity-${amenityKey}`} style={{ fontSize: '15px', color: '#3d3d3d', cursor: 'pointer' }}>
+      {label}
+    </label>
+  </div>
+);
+
+const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange }) => (
+  <div style={{ marginBottom: '28px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+      <span style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '0.08em', color: '#6b6b6b', textTransform: 'uppercase' }}>
+        {title}
+      </span>
+      <span style={{
+        fontSize: '11px',
+        fontWeight: '700',
+        letterSpacing: '0.05em',
+        textTransform: 'uppercase',
+        padding: '2px 8px',
+        borderRadius: '4px',
+        background: badgeColor === 'red' ? '#fff0f0' : badgeColor === 'orange' ? '#fff7ed' : '#f0fdf4',
+        color: badgeColor === 'red' ? '#e53e3e' : badgeColor === 'orange' ? '#c05621' : '#2f855a',
+        border: `1px solid ${badgeColor === 'red' ? '#feb2b2' : badgeColor === 'orange' ? '#fbd38d' : '#9ae6b4'}`,
+      }}>
+        {badge}
+      </span>
+    </div>
+    {badge === 'MUST HAVE' && (
+      <p style={{ fontSize: '13px', color: '#888', margin: '0 0 10px 0' }}>
+        Your listing will not qualify without all of these.
+      </p>
+    )}
+    <div style={{
+      border: '1px solid #e0e0e0',
+      borderRadius: '12px',
+      padding: '0 20px',
+      background: '#fff',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '0 24px',
+    }}>
+      {amenities.map((a, i) => (
+        <div key={a.key} style={{
+          borderBottom: i < amenities.length - (amenities.length % 2 === 0 ? 2 : 1) ? '1px solid #f0f0f0' : 'none',
+        }}>
+          <AmenityCheckbox
+            amenityKey={a.key}
+            label={a.label}
+            checked={selected.includes(a.key)}
+            onChange={onChange}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const QualificationModal = ({ selected, onClose }) => {
+  const requiredKeys = REQUIRED_AMENITIES.map(a => a.key);
+  const missing = REQUIRED_AMENITIES.filter(a => !selected.includes(a.key));
+  const qualifies = missing.length === 0;
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      background: 'rgba(0,0,0,0.5)', zIndex: 1000,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }} onClick={onClose}>
+      <div style={{
+        background: '#fff', borderRadius: '16px', padding: '32px',
+        maxWidth: '480px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{ fontSize: '40px', textAlign: 'center', marginBottom: '12px' }}>
+          {qualifies ? '✅' : '❌'}
+        </div>
+        <h2 style={{ textAlign: 'center', fontSize: '20px', fontWeight: '700', marginBottom: '8px', color: '#1a1a1a' }}>
+          {qualifies ? 'Your listing qualifies!' : 'Not quite there yet'}
+        </h2>
+        <p style={{ textAlign: 'center', fontSize: '14px', color: '#666', marginBottom: '20px' }}>
+          {qualifies
+            ? 'Great — your listing meets all required amenity standards.'
+            : `You are missing ${missing.length} required amenit${missing.length > 1 ? 'ies' : 'y'}:`}
+        </p>
+        {!qualifies && (
+          <ul style={{ listStyle: 'none', padding: 0, marginBottom: '20px' }}>
+            {missing.map(a => (
+              <li key={a.key} style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '8px 12px', background: '#fff5f5', borderRadius: '8px',
+                marginBottom: '6px', fontSize: '14px', color: '#c53030',
+              }}>
+                <span>✗</span> {a.label}
+              </li>
+            ))}
+          </ul>
+        )}
+        <button
+          onClick={onClose}
+          style={{
+            width: '100%', padding: '12px', background: '#5c3ebc',
+            color: '#fff', border: 'none', borderRadius: '8px',
+            fontSize: '15px', fontWeight: '600', cursor: 'pointer',
+          }}
+        >
+          {qualifies ? 'Continue' : 'Go back and add them'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const AmenitiesSection = ({ formApi, values }) => {
+  const [showModal, setShowModal] = useState(false);
+  const selected = values.pub_amenities || [];
+
+  const handleChange = (key, checked) => {
+    const current = values.pub_amenities || [];
+    const updated = checked ? [...current, key] : current.filter(k => k !== key);
+    formApi.change('pub_amenities', updated);
+  };
+
+  return (
+    <div style={{ marginBottom: '32px' }}>
+      {/* Register pub_amenities with Final Form so it appears in submit values */}
+      <Field name="pub_amenities" initialValue={selected}>
+        {() => null}
+      </Field>
+
+      <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '6px', color: '#1a1a1a' }}>
+        Listing details
+      </h2>
+      <p style={{ fontSize: '14px', color: '#666', marginBottom: '24px' }}>
+        Select all amenities that apply to your unit. Required amenities must be present for your listing to qualify.
+      </p>
+
+      <AmenityGroup
+        title="Required Amenities"
+        badge="MUST HAVE"
+        badgeColor="red"
+        amenities={REQUIRED_AMENITIES}
+        selected={selected}
+        onChange={handleChange}
+      />
+      <AmenityGroup
+        title="Premium Amenities"
+        badge="BOOSTS LISTING"
+        badgeColor="orange"
+        amenities={PREMIUM_AMENITIES}
+        selected={selected}
+        onChange={handleChange}
+      />
+      <AmenityGroup
+        title="Optional Amenities"
+        badge="NICE TO HAVE"
+        badgeColor="green"
+        amenities={OPTIONAL_AMENITIES}
+        selected={selected}
+        onChange={handleChange}
+      />
+
+      <button
+        type="button"
+        onClick={() => setShowModal(true)}
+        style={{
+          padding: '12px 28px', background: '#5c3ebc', color: '#fff',
+          border: 'none', borderRadius: '8px', fontSize: '15px',
+          fontWeight: '600', cursor: 'pointer', marginBottom: '24px',
+        }}
+      >
+        Check qualification
+      </button>
+
+      {showModal && (
+        <QualificationModal selected={selected} onClose={() => setShowModal(false)} />
+      )}
+    </div>
+  );
 };
 
 // Return configuration for given listingType
@@ -608,6 +830,8 @@ const EditListingDetailsForm = props => (
             />
           )}
 
+          <AmenitiesSection formApi={formApi} values={values} />
+
 
           {!isCompatibleCurrency && listingType && (
             <p className={css.error}>
@@ -617,7 +841,6 @@ const EditListingDetailsForm = props => (
               />
             </p>
           )}
-
           <Button
             className={css.submitButton}
             type="submit"

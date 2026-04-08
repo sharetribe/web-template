@@ -110,6 +110,38 @@ export const listingFields = [
     showConfig: { label: 'Guests', isDetail: false },
     saveConfig: { label: 'Guests', isRequired: false },
   },
+  {
+    key: 'amenities',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      // Required
+      { option: 'security-24hr', label: '24-hour manned security' },
+      { option: 'perimeter-wall', label: 'Perimeter wall + solid gate' },
+      { option: 'alarm-panic', label: 'Alarm system + panic button' },
+      { option: 'cctv', label: 'CCTV cameras' },
+      { option: 'water-storage', label: 'Water storage tank / borehole' },
+      { option: 'wifi', label: 'WiFi' },
+      { option: 'secure-parking', label: 'Secure parking (min. 1 space)' },
+      { option: 'kitchen', label: 'Kitchen' },
+      { option: 'washing-machine', label: 'Washing machine' },
+      { option: 'concierge', label: 'Concierge or estate management' },
+      // Premium
+      { option: 'generator', label: 'Backup generator or solar' },
+      { option: 'pool', label: 'Swimming pool' },
+      { option: 'gym', label: 'Gym / fitness centre' },
+      { option: 'rooftop', label: 'Rooftop or outdoor common area' },
+      { option: 'balcony', label: 'Private patio or balcony' },
+      // Optional
+      { option: 'hot-water', label: 'Hot water supply' },
+      { option: 'tv', label: 'TV' },
+      { option: 'furnished', label: 'Fully furnished' },
+      { option: 'pet-friendly', label: 'Pet-friendly' },
+    ],
+    filterConfig: { indexForSearch: false, label: 'Amenities', group: 'secondary' },
+    showConfig: { label: 'Amenities', isDetail: false },
+    saveConfig: { label: 'Amenities', isRequired: false },
+  },
   // {
   //   "scope": "public",
   //   "label": "Gears",
