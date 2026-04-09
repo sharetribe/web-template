@@ -34,6 +34,7 @@ import {
   pickCategoryFields,
 } from '../../../util/fieldHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
+import { getDisplayAccountType } from '../../../util/stripeConnect';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../../transactions/transaction';
 
 // Import shared components
@@ -620,8 +621,7 @@ class EditListingWizard extends Component {
         hasRequirements(stripeAccountData, 'currently_due'));
 
     const savedCountry = stripeAccountData ? stripeAccountData.country : null;
-    const savedAccountType = stripeAccountData ? stripeAccountData.business_type : null;
-
+    const savedAccountType = stripeAccountData ? getDisplayAccountType(stripeAccountData) : null;
     const { marketplaceName } = config;
     const payoutModalInfo = stripeAccountData ? (
       <FormattedMessage id="EditListingWizard.payoutModalInfo" values={{ marketplaceName }} />

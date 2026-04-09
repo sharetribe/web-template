@@ -3,6 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
+import { getStripeAccountTokenInfo } from '../util/stripeConnect';
 
 // ================ Async thunks ================ //
 
@@ -30,7 +31,7 @@ const createStripeAccountPayloadCreator = (params, { extra: sdk, rejectWithValue
   const requestedCapabilities = ['card_payments', 'transfers'];
 
   const accountInfo = {
-    business_type: accountType,
+    ...getStripeAccountTokenInfo({ country, accountType }),
     tos_shown_and_accepted: true,
   };
 
