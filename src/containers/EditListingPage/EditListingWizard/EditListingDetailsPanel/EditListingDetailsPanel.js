@@ -273,7 +273,9 @@ const getInitialValues = (
     pub_bedrooms: publicData?.bedrooms != null ? Number(publicData.bedrooms) : 0,
     pub_bathrooms: publicData?.bathrooms != null ? Number(publicData.bathrooms) : 1,
     pub_beds: publicData?.beds != null ? Number(publicData.beds) : 1,
-    pub_guests: publicData?.guests != null ? Number(publicData.guests) : 1,  };
+    pub_guests: publicData?.guests != null ? Number(publicData.guests) : 1,
+    // Amenities — load from saved publicData
+    pub_amenities: publicData?.amenities ?? [],  };
 };
 
 /**
@@ -400,6 +402,7 @@ const EditListingDetailsPanel = props => {
               pub_bathrooms,
               pub_beds,
               pub_guests,
+              pub_amenities,
               ...rest
             } = values;
 
@@ -434,6 +437,14 @@ const EditListingDetailsPanel = props => {
             const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms', 'Six Bedrooms', 'Seven Bedrooms', 'Eight Bedrooms', 'Nine Bedrooms', 'Ten Bedrooms'];
             const bedroomType = bedroomLabels[bedrooms] || `${bedrooms} Bedrooms`;
 
+            // Save amenities — use form value (always an array from formApi.change)
+            const amenities = Array.isArray(pub_amenities)
+              ? pub_amenities
+              : Array.isArray(existingPublicData.amenities)
+                ? existingPublicData.amenities
+                : [];
+            console.log('[EditListingDetailsPanel] saving amenities:', amenities);
+
             const updateValues = {
               title: title.trim(),
               description,
@@ -448,6 +459,7 @@ const EditListingDetailsPanel = props => {
                 beds,
                 guests,
                 bedroomType,
+                amenities,
               },
               privateData: privateListingFields,
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),

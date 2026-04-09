@@ -90,8 +90,8 @@ import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
-import CustomListingFields from './CustomListingFields';
 import SectionRoomsAndSpaces from './SectionRoomsAndSpaces';
+import SectionAmenities from './SectionAmenities';
 
 import css from './ListingPage.module.css';
 
@@ -403,13 +403,7 @@ export const ListingPageComponent = props => {
             </div>
             {showDescription && <SectionText text={description} showAsIngress />}
 
-            <CustomListingFields
-              publicData={publicData}
-              metadata={metadata}
-              listingFieldConfigs={listingConfig.listingFields}
-              categoryConfiguration={config.categoryConfiguration}
-              intl={intl}
-            />
+            <SectionAmenities publicData={publicData} />
 
             <SectionRoomsAndSpaces publicData={publicData} />
 
