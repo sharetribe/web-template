@@ -248,24 +248,37 @@ const getInitialValues = (
   const listingType = publicData?.listingType || preselectedListingType;
 
   const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
+
+  // For new listings with multiple types, pre-select the first one so title/description show immediately
+  const transactionInfo = getTransactionInfo({ listingTypes, existingListingTypeInfo, preselectedListingType });
+  const defaultTransactionInfo = (!transactionInfo.listingType && listingTypes.length > 0)
+    ? (() => {
+      const first = listingTypes[0];
+      return {
+        listingType: first.listingType,
+        transactionProcessAlias: first.transactionType?.alias,
+        unitType: first.transactionType?.unitType,
+      };
+    })()
+    : transactionInfo;
+
   // Initial values for the form
   return {
     title,
     description,
     ...nestedCategories,
-    // Transaction type info: listingType, transactionProcessAlias, unitType
-    ...getTransactionInfo({ listingTypes, existingListingTypeInfo, preselectedListingType }),
+    ...defaultTransactionInfo,
     ...initialValuesForListingFields(
       publicData,
       'public',
-      listingType,
+      defaultTransactionInfo.listingType || listingType,
       nestedCategories,
       listingFields
     ),
     ...initialValuesForListingFields(
       privateData,
       'private',
-      listingType,
+      defaultTransactionInfo.listingType || listingType,
       nestedCategories,
       listingFields
     ),
@@ -275,7 +288,8 @@ const getInitialValues = (
     pub_beds: publicData?.beds != null ? Number(publicData.beds) : 1,
     pub_guests: publicData?.guests != null ? Number(publicData.guests) : 1,
     // Amenities — load from saved publicData
-    pub_amenities: publicData?.amenities ?? [],  };
+    pub_amenities: publicData?.amenities ?? [],
+  };
 };
 
 /**
@@ -474,7 +488,7 @@ const EditListingDetailsPanel = props => {
               includeLabel: true,
             })
           )}
-          hasPredefinedListingType={hasExistingListingType || !!validPreselectedListingType}
+          hasPredefinedListingType={!!validPreselectedListingType}
           selectableCategories={listingCategories}
           pickSelectedCategories={values =>
             pickCategoryFields(values, categoryKey, 1, listingCategories)

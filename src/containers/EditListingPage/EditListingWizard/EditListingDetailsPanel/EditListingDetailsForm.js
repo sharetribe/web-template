@@ -544,7 +544,7 @@ const getListingTypeConfig = (config, listingType) => {
 };
 
 // Listing type toggle buttons (Entire Home / Room)
-const ListingTypeButtons = ({ formId, intl, listingTypes, formApi, onListingTypeChange }) => {
+const ListingTypeButtons = ({ formId, intl, listingTypes, formApi }) => {
   const options = listingTypes?.length > 0
     ? listingTypes.map(config => ({ key: config.listingType, label: config.label }))
     : [
@@ -553,24 +553,13 @@ const ListingTypeButtons = ({ formId, intl, listingTypes, formApi, onListingType
     ];
 
   const handleSelect = (value) => {
-    formApi.change('listingType', value);
     const selectedConfig = listingTypes?.find(c => c.listingType === value);
+    formApi.change('listingType', value);
     if (selectedConfig) {
       formApi.change('transactionProcessAlias', selectedConfig.transactionProcessAlias);
       formApi.change('unitType', selectedConfig.unitType);
     }
-    if (onListingTypeChange && selectedConfig) {
-      onListingTypeChange(selectedConfig);
-    }
   };
-
-  // Auto-select the first listing type on mount if none is already set
-  useEffect(() => {
-    const currentListingType = formApi.getFieldState('listingType')?.value;
-    if (!currentListingType && options.length > 0) {
-      handleSelect(options[0].key);
-    }
-  }, []);
 
   return (
     <div className={css.listingTypeSection}>
@@ -794,13 +783,19 @@ const EditListingDetailsForm = props => (
       const hasAllRequiredAmenities = requiredAmenityKeys.every(k => selectedAmenities.includes(k));
       const missingRequiredCount = requiredAmenityKeys.filter(k => !selectedAmenities.includes(k)).length;
 
+      // All required fields must be filled before Next is enabled
+      const hasTitle = values.title && values.title.trim().length > 0;
+      const hasDescription = values.description && values.description.trim().length > 0;
+
       const submitDisabled =
         invalid ||
         disabled ||
         submitInProgress ||
         !hasMandatoryListingTypeData ||
         !isCompatibleCurrency ||
-        !hasAllRequiredAmenities;
+        !hasAllRequiredAmenities ||
+        !hasTitle ||
+        !hasDescription;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -811,7 +806,6 @@ const EditListingDetailsForm = props => (
             intl={intl}
             listingTypes={selectableListingTypes}
             formApi={formApi}
-            onListingTypeChange={onListingTypeChange}
           />
 
           <RoomsAndSpaces formId={formId} intl={intl} bedroomsValue={values.pub_bedrooms} />
@@ -840,7 +834,6 @@ const EditListingDetailsForm = props => (
               })}
               maxLength={TITLE_MAX_LENGTH}
               validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
-              autoFocus={autoFocus}
             />
           )}
 
