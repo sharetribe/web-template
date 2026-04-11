@@ -85,6 +85,7 @@ export const EditListingPricingForm = props => (
         invalid,
         pristine,
         saveActionMsg,
+        onSaveAndExit,
         updated,
         updateInProgress = false,
         fetchErrors,
@@ -177,15 +178,20 @@ export const EditListingPricingForm = props => (
             />
           ) : null}
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
+          <div className={css.buttonRow}>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+            <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+              Save &amp; exit
+            </button>
+          </div>
         </Form>
       );
     }}

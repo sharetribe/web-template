@@ -83,6 +83,7 @@ const EditListingPricingAndStockPanel = props => {
     disabled,
     ready,
     onSubmit,
+    onSaveAndExit,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -195,6 +196,7 @@ const EditListingPricingAndStockPanel = props => {
           listingType={listingTypeConfig}
           unitType={unitType}
           saveActionMsg={submitButtonText}
+          onSaveAndExit={onSaveAndExit}
           disabled={disabled}
           ready={ready}
           updated={panelUpdated}
