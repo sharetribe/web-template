@@ -184,6 +184,9 @@ const EditListingWizardTab = props => {
       onSubmit: values => {
         return onCompleteEditListingWizardTab(tab, values);
       },
+      onSaveAndExit: () => {
+        history.push(createResourceLocatorString('ManageListingsPage', routeConfiguration, {}, {}));
+      },
       intl,
       updatePageTitle: ({ panelHeading }) => (
         <Helmet>

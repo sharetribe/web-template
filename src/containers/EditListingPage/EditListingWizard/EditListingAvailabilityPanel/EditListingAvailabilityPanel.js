@@ -192,6 +192,7 @@ const EditListingAvailabilityPanel = props => {
     onSubmit,
     onManageDisableScrolling,
     onNextTab,
+    onSaveAndExit,
     submitButtonText,
     updateInProgress,
     errors,
@@ -347,13 +348,18 @@ const EditListingAvailabilityPanel = props => {
       ) : null}
 
       {!isPublished ? (
-        <Button
-          className={css.goToNextTabButton}
-          onClick={onNextTab}
-          disabled={!hasAvailabilityPlan}
-        >
-          {submitButtonText}
-        </Button>
+        <div className={css.buttonRow}>
+          <Button
+            className={css.goToNextTabButton}
+            onClick={onNextTab}
+            disabled={!hasAvailabilityPlan}
+          >
+            {submitButtonText}
+          </Button>
+          <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+            Save &amp; exit
+          </button>
+        </div>
       ) : null}
 
       {onManageDisableScrolling && isEditPlanModalOpen ? (

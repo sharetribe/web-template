@@ -71,14 +71,46 @@
   }
 }
 
-.goToNextTabButton {
+.buttonRow {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 12px;
   margin-top: auto;
   margin-bottom: 24px;
+
+  @media (--viewportLarge) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+}
+
+.goToNextTabButton {
   flex-shrink: 0;
 
   @media (--viewportLarge) {
     display: inline-block;
     width: 241px;
+  }
+}
+
+.saveAndExitButton {
+  background: none;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 4px;
+  color: var(--colorGrey600);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  text-decoration: none;
+  text-align: center;
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: var(--colorGrey500);
+    color: var(--colorGrey700);
   }
 }
 

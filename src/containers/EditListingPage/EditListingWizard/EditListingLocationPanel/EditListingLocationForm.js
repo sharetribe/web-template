@@ -60,6 +60,7 @@ export const EditListingLocationForm = props => (
         invalid,
         pristine,
         saveActionMsg,
+        onSaveAndExit,
         updated,
         updateInProgress = false,
         fetchErrors,
@@ -115,6 +116,7 @@ export const EditListingLocationForm = props => (
             useDefaultPredictions={false}
             format={identity}
             valueFromForm={values.location}
+            closeOnBlur
             validate={composeValidators(
               autocompleteSearchRequired(addressRequiredMessage),
               autocompletePlaceSelected(addressNotRecognizedMessage)
@@ -132,15 +134,29 @@ export const EditListingLocationForm = props => (
             })}
           />
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
+          <div className={css.privacyNote}>
+            <svg className={css.privacyNoteIcon} viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <p className={css.privacyNoteText}>
+              Your exact address is only shared with confirmed guests. Only your approximate neighbourhood is shown publicly.
+            </p>
+          </div>
+
+          <div className={css.buttonRow}>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+            <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+              Save &amp; exit
+            </button>
+          </div>
         </Form>
       );
     }}
