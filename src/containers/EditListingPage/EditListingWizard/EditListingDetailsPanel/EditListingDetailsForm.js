@@ -539,7 +539,13 @@ const getListingTypeConfig = (config, listingType) => {
 };
 
 // Listing type toggle buttons (Entire Home / Room)
-const ListingTypeButtons = ({ formId, intl, listingTypes, formApi }) => {
+const ListingTypeButtons = ({
+  formId,
+  intl,
+  listingTypes,
+  formApi,
+  onListingTypeChange,
+}) => {
   const options = listingTypes?.length > 0
     ? listingTypes.map(config => ({ key: config.listingType, label: config.label }))
     : [
@@ -547,14 +553,34 @@ const ListingTypeButtons = ({ formId, intl, listingTypes, formApi }) => {
       { key: 'room', label: intl.formatMessage({ id: 'EditListingDetailsForm.listingCategoryRoom', defaultMessage: 'Room' }) },
     ];
 
-  const handleSelect = (value) => {
+  const handleSelect = value => {
     const selectedConfig = listingTypes?.find(c => c.listingType === value);
     formApi.change('listingType', value);
+
     if (selectedConfig) {
       formApi.change('transactionProcessAlias', selectedConfig.transactionProcessAlias);
       formApi.change('unitType', selectedConfig.unitType);
     }
+
+    if (onListingTypeChange && selectedConfig) {
+      onListingTypeChange(selectedConfig);
+    }
   };
+
+  useEffect(() => {
+    const currentListingType = formApi.getFieldState('listingType')?.value;
+
+    if (currentListingType) {
+      const selectedConfig = listingTypes?.find(c => c.listingType === currentListingType);
+
+      if (onListingTypeChange && selectedConfig) {
+        onListingTypeChange(selectedConfig);
+      }
+    } else if (options.length > 0) {
+      handleSelect(options[0].key);
+    }
+  }, []);
+
 
   return (
     <div className={css.listingTypeSection}>
@@ -800,6 +826,7 @@ const EditListingDetailsForm = props => (
             intl={intl}
             listingTypes={selectableListingTypes}
             formApi={formApi}
+            onListingTypeChange={onListingTypeChange}
           />
 
           <RoomsAndSpaces formId={formId} intl={intl} bedroomsValue={values.pub_bedrooms} />

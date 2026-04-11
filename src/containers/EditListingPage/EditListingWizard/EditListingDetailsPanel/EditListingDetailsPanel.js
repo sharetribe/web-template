@@ -457,7 +457,6 @@ const EditListingDetailsPanel = props => {
               : Array.isArray(existingPublicData.amenities)
                 ? existingPublicData.amenities
                 : [];
-            console.log('[EditListingDetailsPanel] saving amenities:', amenities);
 
             const updateValues = {
               title: title.trim(),
@@ -479,7 +478,7 @@ const EditListingDetailsPanel = props => {
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
             };
 
-            onSubmit(updateValues);
+            return onSubmit(updateValues);
           }}
           selectableListingTypes={listingTypes.map(conf =>
             getTransactionInfo({

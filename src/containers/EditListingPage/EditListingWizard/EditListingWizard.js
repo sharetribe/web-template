@@ -243,9 +243,6 @@ const tabCompleted = (tab, listing, config) => {
 
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
-  console.log('[tabCompleted] tab:', tab, 'title:', title, 'listingType:', publicData?.listingType, 'transactionProcessAlias:', publicData?.transactionProcessAlias, 'unitType:', publicData?.unitType);
-  console.log('[tabCompleted] hasValidListingFields:', hasValidListingFieldsInExtendedData(publicData, privateData, config));
-
   switch (tab) {
     case DETAILS:
       return !!(
@@ -744,8 +741,6 @@ class EditListingWizard extends Component {
                 const el = e.target;
                 const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
                 
-                console.log('scrollHeight:', el.scrollHeight, 'scrollTop:', el.scrollTop, 'clientHeight:', el.clientHeight, 'atBottom:', atBottom);
-
                 if (atBottom) {
                   this.setState({ tcScrolled: true });
                   document.getElementById('tc-hint').style.display = 'none';
