@@ -10,13 +10,21 @@ export const apiBaseUrl = marketplaceRootURL => {
   const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
   const useDevApiServer = process.env.NODE_ENV === 'development' && !!port;
 
-  // In development, the dev API server is running in a different port
   if (useDevApiServer) {
     return `http://localhost:${port}`;
   }
 
-  // Otherwise, use the given marketplaceRootURL parameter or the same domain and port as the frontend
-  return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : `${window.location.origin}`;
+  // ✅ SSR-safe fallback
+  if (marketplaceRootURL) {
+    return marketplaceRootURL.replace(/\/$/, '');
+  }
+
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  // ✅ THIS is the critical fix for SSR
+  return process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 };
 
 // Application type handlers for JS SDK.

@@ -218,6 +218,28 @@ if (!dev) {
   }
 }
 
+// protecting testing environment from being indexed
+const basicAuth = require('express-basic-auth');
+
+app.use((req, res, next) => {
+  const host = req.headers.host || '';
+  const normalizedHost = host.split(':')[0];
+
+  if (
+    normalizedHost === 'test.patamali.com' ||
+    normalizedHost === 'test-patamali-com.onrender.com'   
+  ) {
+    res.set('X-Robots-Tag', 'noindex, nofollow');
+
+    return basicAuth({
+      users: { admin: 'test123' },
+      challenge: true,
+    })(req, res, next);
+  }
+
+  next();
+});
+
 // Initialize Passport.js  (http://www.passportjs.org/)
 // Passport is authentication middleware for Node.js
 // We use passport to enable authenticating with

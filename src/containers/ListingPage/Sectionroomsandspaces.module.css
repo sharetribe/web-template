@@ -1,0 +1,53 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  padding: 24px 0;
+  border-top: 1px solid var(--colorGrey100);
+  margin-bottom: 8px;
+}
+
+.sectionHeading {
+  composes: h4 from global;
+  color: var(--colorGrey900);
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+.roomStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--colorGrey50);
+  border: 1px solid var(--colorGrey100);
+  border-radius: 12px;
+  padding: 20px 12px;
+  text-align: center;
+}
+
+.roomValue {
+  font-size: 28px;
+  font-weight: var(--fontWeightBold);
+  color: var(--marketplaceColor);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.roomLabel {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey600);
+  font-weight: var(--fontWeightMedium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

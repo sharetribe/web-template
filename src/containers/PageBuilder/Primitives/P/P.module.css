@@ -10,7 +10,10 @@
   & + ul,
   & + ol,
   & + pre,
-  & + div,
+  & + div {
+    margin-top: 4px;
+  }
+
   & + h1,
   & + h2,
   & + h3,

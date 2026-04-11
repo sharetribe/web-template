@@ -89,7 +89,8 @@ import SectionHero from './SectionHero';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
-import CustomListingFields from './CustomListingFields';
+import SectionRoomsAndSpaces from './SectionRoomsAndSpaces';
+import SectionAmenities from './SectionAmenities';
 import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';
@@ -223,10 +224,10 @@ export const ListingPageComponent = props => {
   const processType = isBooking
     ? 'booking'
     : isPurchase
-    ? 'purchase'
-    : isNegotiation
-    ? 'negotiation'
-    : 'inquiry';
+      ? 'purchase'
+      : isNegotiation
+        ? 'negotiation'
+        : 'inquiry';
 
   const validListingTypes = listingConfig.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -237,8 +238,13 @@ export const ListingPageComponent = props => {
   const ensuredAuthor = ensureUser(currentAuthor);
   const authorNeedsPayoutDetails =
     ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
+  const hasManualPayoutDetails =
+    !!currentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
+    isOwnListing &&
+    authorNeedsPayoutDetails &&
+    !currentUser?.attributes?.stripeConnected &&
+    !hasManualPayoutDetails;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -321,8 +327,8 @@ export const ListingPageComponent = props => {
   const schemaAvailability = !currentListing.currentStock
     ? null
     : currentStock > 0
-    ? 'https://schema.org/InStock'
-    : 'https://schema.org/OutOfStock';
+      ? 'https://schema.org/InStock'
+      : 'https://schema.org/OutOfStock';
 
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
   const noIndexMaybe =
@@ -425,13 +431,9 @@ export const ListingPageComponent = props => {
             </div>
             {showDescription && <SectionText text={description} showAsIngress />}
 
-            <CustomListingFields
-              publicData={publicData}
-              metadata={metadata}
-              listingFieldConfigs={listingConfig.listingFields}
-              categoryConfiguration={config.categoryConfiguration}
-              intl={intl}
-            />
+            <SectionAmenities publicData={publicData} />
+
+            <SectionRoomsAndSpaces publicData={publicData} />
 
             <SectionMapMaybe
               geolocation={geolocation}

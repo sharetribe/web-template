@@ -21,6 +21,7 @@
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "express": "^5.2.1",
+    "express-basic-auth": "^1.2.1",
     "express-enforces-ssl": "^1.1.0",
     "final-form": "4.20.10",
     "final-form-arrays": "3.1.0",
@@ -51,6 +52,7 @@
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.1.0",
     "seedrandom": "^3.0.5",
+    "sharetribe-flex-integration-sdk": "^1.11.0",
     "sharetribe-flex-sdk": "^1.23.0",
     "sharetribe-scripts": "7.0.0",
     "sitemap": "^9.0.0",
@@ -117,7 +119,7 @@
     ]
   },
   "engines": {
-    "node": ">=22.22.0"
+    "node": "20.x"
   },
   "prettier": {
     "singleQuote": true,
