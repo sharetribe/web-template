@@ -471,11 +471,6 @@ const AmenitiesSection = ({ formApi, values, missingRequiredCount }) => {
 
   return (
     <div style={{ marginBottom: '32px' }}>
-      {/* Register pub_amenities with Final Form so it appears in submit values */}
-      <Field name="pub_amenities" initialValue={selected}>
-        {() => null}
-      </Field>
-
       <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '6px', color: '#1a1a1a' }}>
         Listing details
       </h2>
@@ -793,7 +788,6 @@ const EditListingDetailsForm = props => (
         submitInProgress ||
         !hasMandatoryListingTypeData ||
         !isCompatibleCurrency ||
-        !hasAllRequiredAmenities ||
         !hasTitle ||
         !hasDescription;
 

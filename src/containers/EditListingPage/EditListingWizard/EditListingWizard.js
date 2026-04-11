@@ -243,6 +243,9 @@ const tabCompleted = (tab, listing, config) => {
 
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
+  console.log('[tabCompleted] tab:', tab, 'title:', title, 'listingType:', publicData?.listingType, 'transactionProcessAlias:', publicData?.transactionProcessAlias, 'unitType:', publicData?.unitType);
+  console.log('[tabCompleted] hasValidListingFields:', hasValidListingFieldsInExtendedData(publicData, privateData, config));
+
   switch (tab) {
     case DETAILS:
       return !!(
@@ -250,8 +253,7 @@ const tabCompleted = (tab, listing, config) => {
         title &&
         listingType &&
         transactionProcessAlias &&
-        unitType &&
-        hasValidListingFieldsInExtendedData(publicData, privateData, config)
+        unitType
       );
     case PRICING:
       return !!price;
@@ -440,7 +442,7 @@ class EditListingWizard extends Component {
   }
 
   handlePublishListing(id) {
-    const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
+    const { onPublishListingDraft, currentUser, stripeAccount, listing, config, params } = this.props;
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
@@ -455,6 +457,13 @@ class EditListingWizard extends Component {
 
     const hasManualPayoutDetails =
       !!currentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
+
+    const listingTypeConf = getListingTypeConfig(listing, this.state.selectedListingType, config);
+    const processNameForTabs = transactionProcessAlias
+      ? transactionProcessAlias.split('/')[0]
+      : INQUIRY_PROCESS_NAME;
+    const tabs = tabsForListingType(processNameForTabs, listingTypeConf);
+    const isLastTab = params.tab === tabs[tabs.length - 1];
 
     if (
       isInquiryProcess ||
