@@ -285,7 +285,7 @@
   "EditListingDetailsPanel.noListingTypeSetTitle": "Algo salió mal!",
   "EditListingDetailsPanel.title": "Editar los detalles de {listingTitle}",
   "EditListingLocationForm.address": "Dirección",
-  "EditListingLocationForm.addressNotRecognized": "No encontramos esta ubicación. Por favor, inténtalo con otra.",
+  "EditListingLocationForm.addressNotRecognized": "No reconocimos este edificio/lugar. Por favor, intenta con otro.",
   "EditListingLocationForm.addressPlaceholder": "Calle Ejemplo 123",
   "EditListingLocationForm.addressRequired": "Necesitas proporcionar una ubicación.",
   "EditListingLocationForm.building": "Número de apartamento o puerta del edificio {optionalText}",

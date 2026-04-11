@@ -285,7 +285,7 @@
   "EditListingDetailsPanel.noListingTypeSetTitle": "Hoppla, etwas ist schiefgelaufen!",
   "EditListingDetailsPanel.title": "Bearbeite die Details von {listingTitle}",
   "EditListingLocationForm.address": "Adresse",
-  "EditListingLocationForm.addressNotRecognized": "Wir haben diesen Standort nicht erkannt. Bitte einen anderen Standort eingeben.",
+  "EditListingLocationForm.addressNotRecognized": "Wir haben dieses Gebäude/diesen Ort nicht erkannt. Bitte versuchen Sie einen anderen.",
   "EditListingLocationForm.addressPlaceholder": "Musterstraße 123",
   "EditListingLocationForm.addressRequired": "Du musst einen Standort angeben.",
   "EditListingLocationForm.building": "Wohnung, Gebäude # {optionalText}",

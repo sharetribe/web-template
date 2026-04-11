@@ -285,7 +285,7 @@
   "EditListingDetailsPanel.noListingTypeSetTitle": "Oops, something went wrong!",
   "EditListingDetailsPanel.title": "Edit the details of {listingTitle}",
   "EditListingLocationForm.address": "Address",
-  "EditListingLocationForm.addressNotRecognized": "We didn't recognize this location. Please try another location.",
+  "EditListingLocationForm.addressNotRecognized": "We didn't recognize this building/location. Please try another one.",
   "EditListingLocationForm.addressPlaceholder": "123 Example Street",
   "EditListingLocationForm.addressRequired": "You need to provide a location.",
   "EditListingLocationForm.building": "Apt, suite, building # {optionalText}",
