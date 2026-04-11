@@ -333,18 +333,25 @@ const AmenityCheckbox = ({ amenityKey, label, checked, onChange }) => (
 );
 
 const PadlockIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
-    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  <svg className={css.submitHelpIcon} viewBox="0 0 24 24" aria-hidden="true">
+  <rect x="3" y="11" width="18" height="11" rx="2" />
+  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 
-const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange, isRequired }) => (
-  <div style={{ marginBottom: '28px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-      <span style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '0.08em', color: '#6b6b6b', textTransform: 'uppercase' }}>
-        {title}
-      </span>
+const AmenityGroup = ({
+  title,
+  badge,
+  badgeColor,
+  amenities,
+  selected,
+  onChange,
+  isRequired,
+  missingRequiredCount = 0,
+}) => (
+  <div style={{ marginBottom: '16px' }}>
+    <div className={css.amenityGroupHeader}>
+      <span className={css.amenityGroupLabel}>{title}</span>
       <span style={{
         fontSize: '11px',
         fontWeight: '700',
@@ -359,10 +366,26 @@ const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange,
         {badge}
       </span>
     </div>
-    {isRequired && (
-      <p style={{ fontSize: '13px', color: '#888', margin: '0 0 10px 0' }}>
-        Your listing will not qualify without all of these.
-      </p>
+    {isRequired && missingRequiredCount > 0 && (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '12px 16px',
+          background: '#fff5f5',
+          border: '1px solid #feb2b2',
+          borderRadius: '8px',
+          margin: '0 0 16px 0',
+        }}
+      >
+        <PadlockIcon />
+        <p style={{ margin: 0, fontSize: '13px', color: '#c53030', fontWeight: '500' }}>
+          {missingRequiredCount} required{' '}
+          {missingRequiredCount === 1 ? 'amenity is' : 'amenities are'} missing — your listing
+          does not qualify, if you don&apos;t have these amenities.
+        </p>
+      </div>
     )}
     <div style={{
       border: '1px solid #e0e0e0',
@@ -375,7 +398,7 @@ const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange,
     }}>
       {amenities.map((a, i) => {
         const isChecked = selected.includes(a.key);
-        const showMissing = isRequired && !isChecked;
+        const showMissing = isRequired && !isChecked; // not being used at the moment
         return (
           <div key={a.key} style={{
             borderBottom: i < amenities.length - (amenities.length % 2 === 0 ? 2 : 1) ? '1px solid #f0f0f0' : 'none',
@@ -390,7 +413,7 @@ const AmenityGroup = ({ title, badge, badgeColor, amenities, selected, onChange,
               />
               <label htmlFor={`amenity-${a.key}`} style={{
                 fontSize: '15px',
-                color: showMissing ? '#e53e3e' : '#3d3d3d',
+                color: '#3d3d3d',
                 cursor: 'pointer',
                 flex: 1,
               }}>
@@ -472,31 +495,8 @@ const AmenitiesSection = ({ formApi, values, missingRequiredCount }) => {
   return (
     <div style={{ marginBottom: '32px' }}>
       <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '6px', color: '#1a1a1a' }}>
-        Listing details
+        Amenities
       </h2>
-      <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
-        Select all amenities that apply to your unit. Required amenities must be present for your listing to qualify.
-      </p>
-
-      {missingRequiredCount > 0 && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          padding: '12px 16px',
-          background: '#fff5f5',
-          border: '1px solid #feb2b2',
-          borderRadius: '8px',
-          marginBottom: '20px',
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e53e3e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          <p style={{ margin: 0, fontSize: '13px', color: '#c53030', fontWeight: '500' }}>
-            {missingRequiredCount} required {missingRequiredCount === 1 ? 'amenity is' : 'amenities are'} missing — your listing cannot be saved until all required amenities are selected.
-          </p>
-        </div>
-      )}
 
       <AmenityGroup
         title="Required Amenities"
@@ -506,6 +506,7 @@ const AmenitiesSection = ({ formApi, values, missingRequiredCount }) => {
         selected={selected}
         onChange={handleChange}
         isRequired={true}
+        missingRequiredCount={missingRequiredCount}
       />
       <AmenityGroup
         title="Premium Amenities"
@@ -537,6 +538,13 @@ const AmenitiesSection = ({ formApi, values, missingRequiredCount }) => {
 const getListingTypeConfig = (config, listingType) => {
   return config.listing.listingTypes?.find(config => config.listingType === listingType);
 };
+
+const renderRequiredLabel = (label, asteriskClassName) => (
+  <>
+    {label}
+    <span className={asteriskClassName}> *</span>
+  </>
+);
 
 // Listing type toggle buttons (Entire Home / Room)
 const ListingTypeButtons = ({
@@ -585,7 +593,13 @@ const ListingTypeButtons = ({
   return (
     <div className={css.listingTypeSection}>
       <Heading as="h5" rootClassName={css.sectionLabel}>
-        {intl.formatMessage({ id: 'EditListingDetailsForm.listingCategoryLabel', defaultMessage: 'Listing type' })}
+        {renderRequiredLabel(
+          intl.formatMessage({
+            id: 'EditListingDetailsForm.listingCategoryLabel',
+            defaultMessage: 'Listing type',
+          }),
+          css.requiredAsterisk
+        )}
       </Heading>
       <div className={css.listingTypeButtons}>
         <Field name="listingType">
@@ -632,7 +646,13 @@ const RoomsAndSpaces = ({ formId, intl, bedroomsValue }) => {
   return (
     <div className={css.roomsSection}>
       <Heading as="h5" rootClassName={css.sectionLabel}>
-        {intl.formatMessage({ id: 'EditListingDetailsForm.roomsAndSpacesLabel', defaultMessage: 'Rooms & spaces' })}
+        {renderRequiredLabel(
+          intl.formatMessage({
+            id: 'EditListingDetailsForm.roomsAndSpacesLabel',
+            defaultMessage: 'Rooms & spaces',
+          }),
+          css.requiredAsterisk
+        )}
       </Heading>
       <div className={css.roomsContainer}>
         <div className={css.roomRow}>
@@ -781,6 +801,7 @@ const EditListingDetailsForm = props => (
 
       const hasCategories = selectableCategories && selectableCategories.length > 0;
       const showCategories = listingType && hasCategories;
+      const needsCategorySelection = showCategories && !allCategoriesChosen;
 
       const showTitle = hasCategories ? allCategoriesChosen : listingType;
 
@@ -801,8 +822,12 @@ const EditListingDetailsForm = props => (
       // Check all required amenities are selected
       const selectedAmenities = values.pub_amenities || [];
       const requiredAmenityKeys = REQUIRED_AMENITIES.map(a => a.key);
-      const hasAllRequiredAmenities = requiredAmenityKeys.every(k => selectedAmenities.includes(k));
-      const missingRequiredCount = requiredAmenityKeys.filter(k => !selectedAmenities.includes(k)).length;
+      const hasAllRequiredAmenities = requiredAmenityKeys.every(k =>
+        selectedAmenities.includes(k)
+      );
+      const missingRequiredCount = requiredAmenityKeys.filter(
+        k => !selectedAmenities.includes(k)
+      ).length;
 
       // All required fields must be filled before Next is enabled
       const hasTitle = values.title && values.title.trim().length > 0;
@@ -814,8 +839,58 @@ const EditListingDetailsForm = props => (
         submitInProgress ||
         !hasMandatoryListingTypeData ||
         !isCompatibleCurrency ||
+        !hasAllRequiredAmenities ||
         !hasTitle ||
         !hasDescription;
+
+      const missingRequirements = [];
+
+      if (!hasMandatoryListingTypeData) {
+        missingRequirements.push(
+          intl.formatMessage({ id: 'EditListingDetailsForm.missingListingType' })
+        );
+      }
+
+      if (needsCategorySelection) {
+        missingRequirements.push(
+          intl.formatMessage({ id: 'EditListingDetailsForm.missingCategory' })
+        );
+      }
+
+      if (!hasTitle) {
+        missingRequirements.push(intl.formatMessage({ id: 'EditListingDetailsForm.missingTitle' }));
+      }
+
+      if (!hasDescription) {
+        missingRequirements.push(
+          intl.formatMessage({ id: 'EditListingDetailsForm.missingDescription' })
+        );
+      }
+
+      if (!hasAllRequiredAmenities) {
+        missingRequirements.push(
+          intl.formatMessage(
+            { id: 'EditListingDetailsForm.missingAmenities' },
+            { count: missingRequiredCount }
+          )
+        );
+      }
+
+      if (!isCompatibleCurrency && listingType) {
+        missingRequirements.push(
+          intl.formatMessage({ id: 'EditListingDetailsForm.missingCompatibleCurrency' })
+        );
+      }
+
+      const submitHelpIntro =
+        submitDisabled && missingRequirements.length > 0
+          ? intl.formatMessage({ id: 'EditListingDetailsForm.submitHelpIntro' })
+          : null;
+
+      const submitHelpItems =
+        submitDisabled && missingRequirements.length > 0
+          ? missingRequirements.join(', ')
+          : null;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -849,7 +924,10 @@ const EditListingDetailsForm = props => (
               name="title"
               className={css.title}
               type="text"
-              label={intl.formatMessage({ id: 'EditListingDetailsForm.title' })}
+              label={renderRequiredLabel(
+                intl.formatMessage({ id: 'EditListingDetailsForm.title' }),
+                css.requiredAsterisk
+              )}
               placeholder={intl.formatMessage({
                 id: 'EditListingDetailsForm.titlePlaceholder',
               })}
@@ -864,7 +942,10 @@ const EditListingDetailsForm = props => (
               name="description"
               className={css.description}
               type="textarea"
-              label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
+              label={renderRequiredLabel(
+                intl.formatMessage({ id: 'EditListingDetailsForm.description' }),
+                css.requiredAsterisk
+              )}
               placeholder={intl.formatMessage({
                 id: 'EditListingDetailsForm.descriptionPlaceholder',
               })}
@@ -897,6 +978,20 @@ const EditListingDetailsForm = props => (
               />
             </p>
           )}
+
+          {submitHelpIntro && submitHelpItems ? (
+            <div className={css.submitHelpCallout}>
+              <svg className={css.submitHelpIcon} viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <p className={css.submitHelpText}>
+                <span className={css.submitHelpIntro}>{submitHelpIntro}</span>{' '}
+                {submitHelpItems}
+              </p>
+            </div>
+          ) : null}
+
 
           <Button
             className={css.submitButton}

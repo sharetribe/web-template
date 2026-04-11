@@ -78,6 +78,22 @@
   margin-bottom: 12px;
 }
 
+.amenityGroupHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.amenityGroupLabel {
+  composes: sectionLabel;
+  margin-bottom: 0;
+}
+
+.requiredAsterisk {
+  color: var(--colorFail);
+}
+
 .listingTypeButtons {
   display: flex;
   gap: 12px;
@@ -165,16 +181,62 @@
   font-weight: 500;
 }
 
+.submitHelpCallout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+
+  @media (--viewportMedium) {
+    margin-top: 12px;
+    margin-bottom: 16px;
+  }
+}
+
+.submitHelpIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #e53e3e;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.submitHelpText {
+  margin: 0;
+  font-size: 13px;
+  color: #c53030;
+  font-weight: 500;
+  line-height: 1.4;
+  flex: 1;
+
+  @media (--viewportMedium) {
+    white-space: nowrap;
+  }
+}
+
+.submitHelpIntro {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
 
 
 .submitButton {
-  margin-top: auto;
+  margin-top: 24px;
   margin-bottom: 24px;
   flex-shrink: 0;
 
   @media (--viewportLarge) {
     display: inline-block;
     width: 241px;
-    margin-top: 100px;
+    margin-top: 24px;
   }
 }
