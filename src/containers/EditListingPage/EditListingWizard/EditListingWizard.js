@@ -417,6 +417,7 @@ class EditListingWizard extends Component {
       draftId: null,
       showPayoutDetails: false,
       showTCModal: false,
+      tcScrolled: false,  // this line was just added
       selectedListingType: null,
       mounted: false,
     };
@@ -458,12 +459,15 @@ class EditListingWizard extends Component {
     const hasManualPayoutDetails =
       !!currentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
 
-    const listingTypeConf = getListingTypeConfig(listing, this.state.selectedListingType, config);
-    const processNameForTabs = transactionProcessAlias
-      ? transactionProcessAlias.split('/')[0]
+    // Only show T&C modal on the last tab
+    const savedProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+    const processNameForTabs = savedProcessAlias
+      ? savedProcessAlias.split('/')[0]
       : INQUIRY_PROCESS_NAME;
-    const tabs = tabsForListingType(processNameForTabs, listingTypeConf);
+    const tabs = tabsForListingType(processNameForTabs, listingTypeConfig);
     const isLastTab = params.tab === tabs[tabs.length - 1];
+
+    if (!isLastTab) return;
 
     if (
       isInquiryProcess ||
@@ -481,7 +485,7 @@ class EditListingWizard extends Component {
   }
 
   handleTCModalClose() {
-    this.setState({ showTCModal: false });
+    this.setState({ showTCModal: false, tcScrolled: false });
   }
 
   render() {
@@ -743,8 +747,7 @@ class EditListingWizard extends Component {
                 console.log('scrollHeight:', el.scrollHeight, 'scrollTop:', el.scrollTop, 'clientHeight:', el.clientHeight, 'atBottom:', atBottom);
 
                 if (atBottom) {
-                  document.getElementById('tc-checkbox').disabled = false;
-                  document.getElementById('tc-checkbox-label').style.color = '#333';
+                  this.setState({ tcScrolled: true });
                   document.getElementById('tc-hint').style.display = 'none';
                 }
               }}
@@ -845,7 +848,7 @@ class EditListingWizard extends Component {
               <input
                 id="tc-checkbox"
                 type="checkbox"
-                disabled
+                disabled={!this.state.tcScrolled}
                 onChange={e => {
                   const btn = document.getElementById('tc-publish-btn');
                   const checked = e.target.checked;
