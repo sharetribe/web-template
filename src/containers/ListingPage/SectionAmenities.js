@@ -251,9 +251,9 @@ const SectionAmenities = ({ publicData }) => {
       <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#1a1a1a', margin: '0 0 20px 0' }}>
         {intl.formatMessage({ id: 'ListingPage.amenitiesTitle', defaultMessage: 'Amenities' })}
       </h2>
-      <AmenityGroup title="Required" amenities={REQUIRED_AMENITIES} selected={amenities} />
-      <AmenityGroup title="Premium" amenities={PREMIUM_AMENITIES} selected={amenities} />
-      <AmenityGroup title="Optional" amenities={OPTIONAL_AMENITIES} selected={amenities} />
+      <AmenityGroup title="UN-Grade Essentials" amenities={REQUIRED_AMENITIES} selected={amenities} />
+      <AmenityGroup title="Premium Amenities" amenities={PREMIUM_AMENITIES} selected={amenities} />
+      <AmenityGroup title="Additional Amenities" amenities={OPTIONAL_AMENITIES} selected={amenities} />
     </div>
   );
 };
