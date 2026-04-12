@@ -116,9 +116,15 @@ const SectionBuilder = props => {
     }
   };
 
+  // Resolve all section ids
+  const sectionsWithResolvedIds = sections.map((section, index) => ({
+    ...section,
+    sectionId: getUniqueSectionId(section.sectionId, index),
+  }));
+
   return (
     <>
-      {sections.map((section, index) => {
+      {sectionsWithResolvedIds.map((section, index) => {
         const Section = getComponent(section.sectionType);
         // If the default "dark" theme should be applied (when text color is white).
         // By default, this information is stored to customAppearance field
@@ -126,7 +132,7 @@ const SectionBuilder = props => {
           section?.appearance?.fieldType === 'customAppearance' &&
           section?.appearance?.textColor === 'white';
         const classes = classNames({ [css.darkTheme]: isDarkTheme });
-        const sectionId = getUniqueSectionId(section.sectionId, index);
+        const sectionId = section.sectionId;
 
         if (Section) {
           return (
@@ -138,7 +144,7 @@ const SectionBuilder = props => {
               options={{ ...otherOption, defaultClasses: DEFAULT_CLASSES }}
               {...section}
               sectionId={sectionId}
-              allSections={sections}
+              allSections={sectionsWithResolvedIds}
             />
           );
         } else {

@@ -593,7 +593,7 @@ propTypes.listingField = shape({
   schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
   enumOptions: propTypes.fieldEnumOptions,
   filterConfig: shape({
-    indexForSearch: bool,
+    showFilter: bool,
     label: string.isRequired,
     group: oneOf(['primary', 'secondary']),
     filterType: string,

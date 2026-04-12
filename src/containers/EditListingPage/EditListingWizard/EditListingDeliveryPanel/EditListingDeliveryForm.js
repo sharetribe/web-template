@@ -69,6 +69,7 @@ export const EditListingDeliveryForm = props => (
         marketplaceCurrency,
         allowOrdersOfMultipleItems = false,
         saveActionMsg,
+        onSaveAndExit,
         updated,
         updateInProgress,
         fetchErrors,
@@ -285,15 +286,20 @@ export const EditListingDeliveryForm = props => (
             ) : null}
           </div>
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
+          <div className={css.buttonRow}>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+            <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+              Save &amp; exit
+            </button>
+          </div>
         </Form>
       );
     }}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { useConfiguration } from '../../context/configurationContext';
@@ -106,6 +107,7 @@ export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
   const [discardDraftModalOpen, setDiscardDraftModalOpen] = useState(null);
   const [discardDraftModalId, setDiscardDraftModalId] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('all');
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
@@ -201,6 +203,26 @@ export const ManageListingsPageComponent = props => {
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
 
+  const allCount = listings.length;
+  const liveCount = listings.filter(l => l.attributes.state === 'published').length;
+  const draftCount = listings.filter(l => l.attributes.state === 'draft').length;
+  const archivedCount = listings.filter(l => l.attributes.state === 'closed').length;
+
+  const filteredListings = listings.filter(l => {
+    const state = l.attributes.state;
+    if (activeFilter === 'live') return state === 'published';
+    if (activeFilter === 'drafts') return state === 'draft';
+    if (activeFilter === 'archived') return state === 'closed';
+    return true;
+  });
+
+  const filterTabs = [
+    { key: 'all', label: `All (${allCount})` },
+    { key: 'live', label: `Live (${liveCount})` },
+    { key: 'drafts', label: `Drafts (${draftCount})` },
+    { key: 'archived', label: `Archived/Closed (${archivedCount})` },
+  ];
+
   return (
     <Page
       title={intl.formatMessage({ id: 'ManageListingsPage.title' })}
@@ -222,10 +244,26 @@ export const ManageListingsPageComponent = props => {
         {queryListingsError ? queryError : null}
 
         <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
+          <div className={css.headingRow}>
+            <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
+
+            {listingsAreLoaded && allCount > 0 ? (
+              <nav className={css.filterNav}>
+                {filterTabs.map(({ key, label }) => (
+                  <button
+                    key={key}
+                    className={classNames(css.filterTab, { [css.filterTabActive]: activeFilter === key })}
+                    onClick={() => setActiveFilter(key)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </nav>
+            ) : null}
+          </div>
 
           <div className={css.listingCards}>
-            {listings.map(l => (
+            {filteredListings.map(l => (
               <ManageListingCard
                 className={css.listingCard}
                 key={l.id.uuid}

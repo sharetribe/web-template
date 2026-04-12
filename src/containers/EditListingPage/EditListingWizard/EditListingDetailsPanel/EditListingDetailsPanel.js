@@ -54,8 +54,8 @@ const getTransactionInfo = props => {
       listingTypes.length === 1
         ? listingTypes[0]
         : preselectedListingType
-        ? listingTypes.find(conf => conf.listingType === preselectedListingType)
-        : {};
+          ? listingTypes.find(conf => conf.listingType === preselectedListingType)
+          : {};
     const { listingType: type, label, transactionType } = listingTypeConfig || {};
     if (!type) {
       // If listing type is not found (e.g. preselected listing type is not found among listingTypes),
@@ -202,21 +202,21 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
   return isBookingProcessAlias(processAlias)
     ? {}
     : {
-        availabilityPlan: {
-          type: 'availability-plan/time',
-          timezone: 'Etc/UTC',
-          entries: [
-            // Note: "no entries" is the same as seats=0 for every entry.
-            // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
-          ],
-        },
-      };
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          // Note: "no entries" is the same as seats=0 for every entry.
+          // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+    };
 };
 
 /**
@@ -248,27 +248,47 @@ const getInitialValues = (
   const listingType = publicData?.listingType || preselectedListingType;
 
   const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
+
+  // For new listings with multiple types, pre-select the first one so title/description show immediately
+  const transactionInfo = getTransactionInfo({ listingTypes, existingListingTypeInfo, preselectedListingType });
+  const defaultTransactionInfo = (!transactionInfo.listingType && listingTypes.length > 0)
+    ? (() => {
+      const first = listingTypes[0];
+      return {
+        listingType: first.listingType,
+        transactionProcessAlias: first.transactionType?.alias,
+        unitType: first.transactionType?.unitType,
+      };
+    })()
+    : transactionInfo;
+
   // Initial values for the form
   return {
     title,
     description,
     ...nestedCategories,
-    // Transaction type info: listingType, transactionProcessAlias, unitType
-    ...getTransactionInfo({ listingTypes, existingListingTypeInfo, preselectedListingType }),
+    ...defaultTransactionInfo,
     ...initialValuesForListingFields(
       publicData,
       'public',
-      listingType,
+      defaultTransactionInfo.listingType || listingType,
       nestedCategories,
       listingFields
     ),
     ...initialValuesForListingFields(
       privateData,
       'private',
-      listingType,
+      defaultTransactionInfo.listingType || listingType,
       nestedCategories,
       listingFields
     ),
+    // Room fields — load from saved publicData so counters show correct values on edit
+    pub_bedrooms: publicData?.bedrooms != null ? Number(publicData.bedrooms) : 0,
+    pub_bathrooms: publicData?.bathrooms != null ? Number(publicData.bathrooms) : 1,
+    pub_beds: publicData?.beds != null ? Number(publicData.beds) : 1,
+    pub_guests: publicData?.guests != null ? Number(publicData.guests) : 1,
+    // Amenities — load from saved publicData
+    pub_amenities: publicData?.amenities ?? [],
   };
 };
 
@@ -358,15 +378,15 @@ const EditListingDetailsPanel = props => {
 
   const panelHeadingProps = isPublished
     ? {
-        id: 'EditListingDetailsPanel.title',
-        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
-        messageProps: { listingTitle: listing.attributes.title },
-      }
+      id: 'EditListingDetailsPanel.title',
+      values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+      messageProps: { listingTitle: listing.attributes.title },
+    }
     : {
-        id: 'EditListingDetailsPanel.createListingTitle',
-        values: { lineBreak: <br /> },
-        messageProps: {},
-      };
+      id: 'EditListingDetailsPanel.createListingTitle',
+      values: { lineBreak: <br /> },
+      messageProps: {},
+    };
 
   return (
     <main className={classes}>
@@ -392,11 +412,15 @@ const EditListingDetailsPanel = props => {
               listingType,
               transactionProcessAlias,
               unitType,
+              pub_bedrooms,
+              pub_bathrooms,
+              pub_beds,
+              pub_guests,
+              pub_amenities,
               ...rest
             } = values;
 
             const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
-            // Remove old categories by explicitly saving null for them.
             const cleanedNestedCategories = {
               ...[1, 2, 3].reduce((a, i) => ({ ...a, [`${categoryKey}${i}`]: null }), {}),
               ...nestedCategories,
@@ -415,7 +439,25 @@ const EditListingDetailsPanel = props => {
               nestedCategories,
               listingFields
             );
-            // New values for listing attributes
+
+            // Read room values — use form value if set, otherwise fall back to existing publicData
+            const existingPublicData = listing?.attributes?.publicData || {};
+            const bedrooms = pub_bedrooms != null ? Number(pub_bedrooms) : (existingPublicData.bedrooms ?? 0);
+            const bathrooms = pub_bathrooms != null ? Number(pub_bathrooms) : (existingPublicData.bathrooms ?? 1);
+            const beds = pub_beds != null ? Number(pub_beds) : (existingPublicData.beds ?? 1);
+            const guests = pub_guests != null ? Number(pub_guests) : (existingPublicData.guests ?? 1);
+
+            // Compute bedroom type string from the actual bedroom count
+            const bedroomLabels = ['Studio', 'One Bedroom', 'Two Bedrooms', 'Three Bedrooms', 'Four Bedrooms', 'Five Bedrooms', 'Six Bedrooms', 'Seven Bedrooms', 'Eight Bedrooms', 'Nine Bedrooms', 'Ten Bedrooms'];
+            const bedroomType = bedroomLabels[bedrooms] || `${bedrooms} Bedrooms`;
+
+            // Save amenities — use form value (always an array from formApi.change)
+            const amenities = Array.isArray(pub_amenities)
+              ? pub_amenities
+              : Array.isArray(existingPublicData.amenities)
+                ? existingPublicData.amenities
+                : [];
+
             const updateValues = {
               title: title.trim(),
               description,
@@ -425,12 +467,18 @@ const EditListingDetailsPanel = props => {
                 unitType,
                 ...cleanedNestedCategories,
                 ...publicListingFields,
+                bedrooms,
+                bathrooms,
+                beds,
+                guests,
+                bedroomType,
+                amenities,
               },
               privateData: privateListingFields,
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
             };
 
-            onSubmit(updateValues);
+            return onSubmit(updateValues);
           }}
           selectableListingTypes={listingTypes.map(conf =>
             getTransactionInfo({
@@ -439,7 +487,7 @@ const EditListingDetailsPanel = props => {
               includeLabel: true,
             })
           )}
-          hasPredefinedListingType={hasExistingListingType || !!validPreselectedListingType}
+          hasPredefinedListingType={!!validPreselectedListingType}
           selectableCategories={listingCategories}
           pickSelectedCategories={values =>
             pickCategoryFields(values, categoryKey, 1, listingCategories)

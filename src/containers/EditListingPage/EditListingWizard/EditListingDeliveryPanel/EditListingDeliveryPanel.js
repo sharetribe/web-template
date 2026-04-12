@@ -109,6 +109,7 @@ const EditListingDeliveryPanel = props => {
     disabled,
     ready,
     onSubmit,
+    onSaveAndExit,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -210,6 +211,7 @@ const EditListingDeliveryPanel = props => {
           marketplaceCurrency={marketplaceCurrency}
           allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
           saveActionMsg={submitButtonText}
+          onSaveAndExit={onSaveAndExit}
           disabled={disabled}
           ready={ready}
           updated={panelUpdated}

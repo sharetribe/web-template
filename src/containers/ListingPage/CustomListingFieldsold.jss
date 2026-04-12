@@ -27,6 +27,11 @@ const CustomListingFields = props => {
   const categoriesObj = pickCategoryFields(publicData, categoryPrefix, 1, listingCategoriesConfig);
   const currentCategories = Object.values(categoriesObj);
 
+  // Fields are shown by default. Set showConfig.displayOnListingPage to false to explicitly hide a field.
+  const displayableFieldConfigs = listingFieldConfigs.filter(
+    fieldConfig => fieldConfig.showConfig?.displayOnListingPage !== false
+  );
+
   const isFieldForSelectedCategories = fieldConfig => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
     return isTargetCategory;
@@ -34,7 +39,7 @@ const CustomListingFields = props => {
   const propsForCustomFields =
     pickCustomFieldProps(
       { publicData, metadata },
-      listingFieldConfigs,
+      displayableFieldConfigs,
       'listingType',
       isFieldForSelectedCategories
     ) || [];
@@ -42,7 +47,7 @@ const CustomListingFields = props => {
   const sectionDetailsProps = {
     ...props,
     isFieldForCategory: isFieldForSelectedCategories,
-    fieldConfigs: listingFieldConfigs,
+    fieldConfigs: displayableFieldConfigs,
     heading: 'ListingPage.detailsTitle',
   };
 
@@ -50,12 +55,12 @@ const CustomListingFields = props => {
     const { key, schemaType, enumOptions, showConfig = {} } = config;
     const listingType = publicData.listingType;
     const isTargetListingType = isFieldForListingType(listingType, config);
-    const isTargetCategory = isFieldForCategory(config);
+    const isTargetCategory = isFieldForCategory(currentCategories, config);
 
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
-    const value = typeof publicDataValue != null ? publicDataValue : metadataValue;
+    const value = publicDataValue != null ? publicDataValue : metadataValue;
 
     if (isDetail && isTargetListingType && isTargetCategory && typeof value !== 'undefined') {
       const detailValue = getDetailCustomFieldValue(

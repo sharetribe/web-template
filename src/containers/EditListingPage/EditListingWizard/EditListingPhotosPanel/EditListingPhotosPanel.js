@@ -51,6 +51,7 @@ const EditListingPhotosPanel = props => {
     panelUpdated,
     updateInProgress,
     onSubmit,
+    onSaveAndExit,
     onRemoveImage,
     listingImageConfig,
     updatePageTitle: UpdatePageTitle,
@@ -110,6 +111,7 @@ const EditListingPhotosPanel = props => {
         }}
         onRemoveImage={onRemoveImage}
         saveActionMsg={submitButtonText}
+        onSaveAndExit={onSaveAndExit}
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         listingImageConfig={listingImageConfig}

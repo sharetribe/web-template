@@ -130,7 +130,9 @@ const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
   // NOTE: We use this with DatePicker and moment, the range should be 0 - 6 instead of 1-7.
   const firstDay = hostedLocalization?.firstDayOfWeek || defaultLocalization.firstDayOfWeek || 1;
   const firstDayInMomentRange = firstDay % 7;
-  return { locale, firstDayOfWeek: firstDayInMomentRange };
+  // Adding the timezone to the localization
+  const timeZone = hostedLocalization?.timeZone || defaultLocalization.timeZone || null;
+  return { locale, firstDayOfWeek: firstDayInMomentRange, timeZone };
 };
 
 /////////////////////
@@ -550,30 +552,113 @@ const validFilterConfig = (config, schemaType) => {
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: indexForSearch, label, filterType, searchMode, group
+  // Validate: indexForSearch, showFilter, label, filterType, searchMode, group
   const [isValidIndexForSearch, indexForSearch] = validBoolean(
     'indexForSearch',
     config.indexForSearch,
     false
   );
+  const [isValidShowFilter, showFilter] = validBoolean('showFilter', config.showFilter, false);
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
   const [isValidSearchMode, searchMode] = validSearchMode(config.searchMode, schemaType);
   const groupOptions = ['primary', 'secondary'];
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
+  // Validate sort-related fields (used by numeric public and metadata fields)
+  // Validate: showSorting, sortingOrder and sortingGroup
+  const [isValidShowSorting, showSorting] = validBoolean('showSorting', config.showSorting, false);
+
+  const sortingGroupOptions = ['primary', 'secondary'];
+  const [isValidSortingGroup, sortingGroup] = validEnumString(
+    'sortingGroup',
+    config.sortingGroup,
+    sortingGroupOptions,
+    'primary'
+  );
+
+  const [isValidSortingOrderAsc, { asc: sortingOrderAsc }] = validBoolean(
+    'asc',
+    config.sortingOrder?.asc,
+    false
+  );
+  const [isValidSortingOrderDesc, { desc: sortingOrderDesc }] = validBoolean(
+    'desc',
+    config.sortingOrder?.desc,
+    false
+  );
+  const isValidSortingOrder = isValidSortingOrderAsc && isValidSortingOrderDesc;
+  const sortingOrder = { asc: sortingOrderAsc, desc: sortingOrderDesc };
+
   const isValid =
-    isValidIndexForSearch && isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
+    isValidIndexForSearch &&
+    isValidShowFilter &&
+    isValidLabel &&
+    isValidFilterType &&
+    isValidSearchMode &&
+    isValidGroup &&
+    isValidShowSorting &&
+    isValidSortingGroup &&
+    isValidSortingOrder;
+
   const validValue = {
     filterConfig: {
       ...indexForSearch,
+      ...showFilter,
       ...label,
       ...filterType,
       ...searchMode,
       ...group,
+      ...showSorting,
+      ...sortingGroup,
+      sortingOrder,
     },
   };
   return [isValid, validValue];
+};
+
+// Build sort options derived from listing fields that have showSorting enabled.
+// Primary options are inserted before the default sort options and secondary after.
+const getSortOptionsFromListingFields = listingFields => {
+  const primaryOptions = [];
+  const secondaryOptions = [];
+
+  listingFields.forEach(field => {
+    const { key, scope, schemaType, filterConfig } = field;
+    // only add sort options for numeric fields and if showSorting is true
+    if (schemaType !== 'long' || !filterConfig?.showSorting) {
+      return;
+    }
+
+    const prefix = scope === 'metadata' ? 'meta_' : 'pub_';
+    const sortKey = `${prefix}${key}`;
+    const { label, sortingOrder, sortingGroup } = filterConfig;
+
+    const options = [];
+
+    if (sortingOrder.asc) {
+      options.push({
+        key: `-${sortKey}`,
+        labelTranslationKey: 'SortBy.numericSortOption',
+        translationValues: { fieldLabel: label, direction: 'asc' },
+      });
+    }
+    if (sortingOrder.desc) {
+      options.push({
+        key: sortKey,
+        labelTranslationKey: 'SortBy.numericSortOption',
+        translationValues: { fieldLabel: label, direction: 'desc' },
+      });
+    }
+
+    if (sortingGroup === 'secondary') {
+      secondaryOptions.push(...options);
+    } else {
+      primaryOptions.push(...options);
+    }
+  });
+
+  return { primaryOptions, secondaryOptions };
 };
 
 // listingFieldsConfig.showConfig
@@ -586,18 +671,25 @@ const validShowConfig = config => {
   // Validate: label, isDetail.
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidIsDetail, isDetail] = validBoolean('isDetail', config.isDetail, true);
+  const [isValidDisplayOnListingPage, isDisplayOnListingPage] = validBoolean(
+    'displayOnListingPage',
+    config.displayOnListingPage,
+    true
+  );
   const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
     'unselectedOptions',
     config.unselectedOptions,
     true
   );
 
-  const isValid = isValidLabel && isValidIsDetail && isValidUnselectedOptions;
+  const isValid =
+    isValidLabel && isValidIsDetail && isValidUnselectedOptions && isValidDisplayOnListingPage;
   const validValue = {
     showConfig: {
       ...label,
       ...isDetail,
       ...unselectedOptions,
+      ...isDisplayOnListingPage,
     },
   };
   return [isValid, validValue];
@@ -740,7 +832,7 @@ const validUserSaveConfig = config => {
 
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
-  const scopeOptions = ['public', 'private'];
+  const scopeOptions = ['public', 'private', 'metadata'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
 
   return listingFields.reduce((acc, data) => {
@@ -1047,6 +1139,7 @@ const restructureListingFields = hostedListingFields => {
         schemaType,
         enumOptions,
         label,
+        displayOnListingPage,
         filterConfig = {},
         showConfig = {},
         saveConfig = {},
@@ -1073,6 +1166,7 @@ const restructureListingFields = hostedListingFields => {
             showConfig: {
               ...showConfig,
               label: showConfig.label || defaultLabel,
+              displayOnListingPage,
             },
             saveConfig: {
               ...restSaveConfig,
@@ -1445,22 +1539,69 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
+const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance, listingFields) => {
+  if (hostedSortConfig == null) {
+    return {
+      ...defaultSortConfig,
+      // Disable SortBy component if there are less than 2 options
+      active: defaultSortConfig.options.length > 1,
+    };
+  }
+
+  // Flag filters to remove if the default sorting option is toggled off in Console
+  const removeByKey = {
+    createdAt: !hostedSortConfig?.newest,
+    '-createdAt': !hostedSortConfig?.oldest,
+    '-price': !hostedSortConfig?.lowestPrice,
+    price: !hostedSortConfig?.highestPrice,
+    relevance: !hostedSortConfig?.relevance || omitRelevance,
+  };
+
+  // In addition to the search configuration, additional sort options can be configured
+  // through listing fields. getSortOptionsFromListingFields iterates through the listing fields
+  // and returns primaryOptions and secondaryOptions. primaryOptions are prepended to the
+  // sort options and secondaryOptions are appended.
+  const { primaryOptions, secondaryOptions } = getSortOptionsFromListingFields(listingFields);
+  const filteredDefaults = defaultSortConfig.options.filter(option => !removeByKey[option.key]);
+  const options = [...primaryOptions, ...filteredDefaults, ...secondaryOptions];
+
+  return {
+    ...defaultSortConfig,
+    // Disable SortBy component if there are less than 2 options
+    active: options.length > 1,
+    options: options,
+  };
+};
+
 const mergeSearchConfig = (
   hostedSearchConfig,
   defaultSearchConfig,
   categoryConfiguration,
-  listingTypeConfig
+  listingTypeConfig,
+  listingFieldsConfig
 ) => {
-  // The sortConfig is not yet configurable through Console / hosted assets,
-  // but other default search configs come from hosted assets
+  // the mainSearch attribute (reflects whether the user has chosen keyword or location search) is required in Console if modifying search configuration, so its presence reliably indicates a hosted config exists.
+  // If absent, we still check listingFieldsConfig since numeric fields may contribute sort options.
+  // If neither is set, return defaultSearchConfig
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
-        sortConfig: defaultSearchConfig.sortConfig,
-        // This just shows how to add custom built-in filters.
+        sortConfig: mergeSortConfig(
+          hostedSearchConfig?.sorting?.defaultSortingOptions,
+          defaultSearchConfig.sortConfig,
+          hostedSearchConfig?.mainSearch?.searchType === 'location',
+          listingFieldsConfig
+        ),
+        // This is an example of how to load custom built-in filters through the configListing.js file
         // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
         listingTypeFilter: defaultSearchConfig.listingTypeFilter,
         categoryFilter: defaultSearchConfig.categoryFilter,
         ...hostedSearchConfig,
+      }
+    : listingFieldsConfig
+    ? {
+        // here we pass null since in this scenario no hosted search configuration exists
+        sortConfig: mergeSortConfig(null, defaultSearchConfig.sortConfig, listingFieldsConfig),
+        ...defaultSearchConfig,
       }
     : defaultSearchConfig;
 
@@ -1638,7 +1779,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
       configAsset.search,
       defaultConfigs.search,
       categoryConfiguration,
-      listingConfiguration.listingTypes
+      listingConfiguration.listingTypes,
+      listingConfiguration.listingFields
     ),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
