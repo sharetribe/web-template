@@ -34,6 +34,7 @@ const { UUID } = sdkTypes;
 const MESSAGES_PAGE_SIZE = 100;
 const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
 const MINUTE_IN_MS = 1000 * 60;
+export const MAX_FILE_UPLOAD_COUNT = 10;
 
 // Day-based time slots queries are cached for 1 minute.
 const removeOutdatedDateData = timeSlotsForDate => {
@@ -476,7 +477,11 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
 ////////////////////
 // Upload File    //
 ////////////////////
-const uploadFilePayloadCreator = ({ file, tempId }, { dispatch, rejectWithValue, extra: sdk }) => {
+
+const uploadFilePayloadCreator = (
+  { file, tempId },
+  { dispatch, rejectWithValue, extra: sdk, getState }
+) => {
   let fileId;
 
   ///////////////////////////////////
@@ -487,9 +492,14 @@ const uploadFilePayloadCreator = ({ file, tempId }, { dispatch, rejectWithValue,
       throw new Error('Missing file, cannot initiate upload.');
     }
 
+    if (Object.keys(getState().TransactionPage.fileUploads).length > MAX_FILE_UPLOAD_COUNT) {
+      throw new Error('Upload file count exceeded, cannot initiate upload.');
+    }
+
     if (file.size > MAX_FILE_SIZE) {
       throw new Error('File too large (max 1 GB).', file);
     }
+
     return sdkFile.metadata(file);
   };
 
