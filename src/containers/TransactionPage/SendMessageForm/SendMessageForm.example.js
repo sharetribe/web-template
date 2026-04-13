@@ -17,6 +17,12 @@ export const Empty = {
     onBlur: () => {
       console.log('blur on message form');
     },
+    onFileUpload: file => {
+      console.log('upload file:', file);
+    },
+    onRemoveFile: tempId => {
+      console.log('remove file:', tempId);
+    },
   },
   group: 'page:TransactionPage',
 };
@@ -30,6 +36,12 @@ export const InProgress = {
     onSubmit: values => {
       console.log('submit values:', values);
     },
+    onFileUpload: file => {
+      console.log('upload file:', file);
+    },
+    onRemoveFile: tempId => {
+      console.log('remove file:', tempId);
+    },
   },
   group: 'page:TransactionPage',
 };
@@ -42,6 +54,12 @@ export const Error = {
     sendMessageError: { type: 'error', name: 'ExampleError' },
     onSubmit: values => {
       console.log('submit values:', values);
+    },
+    onFileUpload: file => {
+      console.log('upload file:', file);
+    },
+    onRemoveFile: tempId => {
+      console.log('remove file:', tempId);
     },
   },
   group: 'page:TransactionPage',

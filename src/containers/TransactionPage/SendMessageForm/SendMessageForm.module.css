@@ -24,20 +24,13 @@
   fill: var(--colorSuccess);
 }
 
-.strokeMatter {
-  stroke: var(--colorGrey700);
-}
-
 .submitContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .errorContainer {
   display: block;
-  flex: 1;
-  text-align: right;
-  padding: 26px 24px 0 0;
 }
 
 .error {
@@ -45,28 +38,54 @@
 
   font-weight: var(--fontWeightMedium);
   color: var(--colorFail);
-  margin: 0;
+  margin: 0 0 8px 0;
 }
 
 .submitButton {
-  float: right;
-  min-width: 150px;
-}
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
 
-.sendIcon {
-  margin: -3px 5px 0 0;
+  @media (--viewportMedium) {
+    /* width: auto; */
+    width: 241px;
+  }
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+  }
 }
 
 .messageActions {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 16px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .fileLink {
-  /* WIP */
-  margin: 10px;
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--marketplaceColor);
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  white-space: nowrap;
+  cursor: pointer;
+  min-height: 56px;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 }
 
 .hiddenFileInput {
