@@ -351,7 +351,10 @@ const AmenityGroup = ({
 }) => (
   <div style={{ marginBottom: '16px' }}>
     <div className={css.amenityGroupHeader}>
-      <span className={css.amenityGroupLabel}>{title}</span>
+      <span className={css.amenityGroupLabel}>
+        {title}
+        {isRequired && <span style={{ color: '#e53e3e', marginLeft: '3px' }}>*</span>}
+      </span>
       <span style={{
         fontSize: '11px',
         fontWeight: '700',
@@ -382,7 +385,7 @@ const AmenityGroup = ({
         <PadlockIcon />
         <p style={{ margin: 0, fontSize: '13px', color: '#c53030', fontWeight: '500' }}>
           {missingRequiredCount} required{' '}
-          {missingRequiredCount === 1 ? 'amenity is' : 'amenities are'} missing — your listing
+          {missingRequiredCount === 1 ? 'amenity' : 'amenities'} — your listing
           does not qualify, if you don&apos;t have these amenities.
         </p>
       </div>
