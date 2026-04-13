@@ -123,8 +123,17 @@ class SendMessageFormComponent extends Component {
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
+
+          const formState = form.getState();
+          const hasMessage = !!formState.values.message;
+          const isAnyFileInProgress = files?.some(f => f.inProgress);
+          const hasAnyFileErrors = files?.some(f => !!f.error);
+
           const submitInProgress = inProgress;
-          const submitDisabled = invalid || submitInProgress;
+          const submitDisabled =
+            invalid || submitInProgress || !hasMessage || isAnyFileInProgress || hasAnyFileErrors;
+          const showFileLink = !files || files?.length < 10; // TODO add access control logic
+
           return (
             <Form className={classes} onSubmit={values => handleSubmit(values, form)}>
               <FieldTextInput
@@ -161,7 +170,7 @@ class SendMessageFormComponent extends Component {
                     onFileUpload={onFileUpload}
                     formApi={form}
                     className={css.fileLink}
-                    showFileLink={true}
+                    showFileLink={showFileLink}
                   />
                   <SecondaryButtonInline
                     className={css.submitButton}
