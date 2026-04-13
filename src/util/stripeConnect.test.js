@@ -6,12 +6,13 @@ import {
 
 describe('stripeConnect helpers', () => {
   it('flags restricted countries that require sole proprietorship onboarding', () => {
-    expect(requiresSoleProprietorshipAccount('GB')).toBe(true);
+    expect(requiresSoleProprietorshipAccount('NL')).toBe(true);
+    expect(requiresSoleProprietorshipAccount('GB')).toBe(false);
     expect(requiresSoleProprietorshipAccount('US')).toBe(false);
   });
 
   it('maps individual sellers in restricted countries to company sole proprietorship', () => {
-    expect(getStripeAccountTokenInfo({ country: 'DE', accountType: 'individual' })).toEqual({
+    expect(getStripeAccountTokenInfo({ country: 'NL', accountType: 'individual' })).toEqual({
       business_type: 'company',
       company: {
         structure: 'sole_proprietorship',
@@ -20,7 +21,7 @@ describe('stripeConnect helpers', () => {
   });
 
   it('keeps company sellers unchanged in restricted countries', () => {
-    expect(getStripeAccountTokenInfo({ country: 'DE', accountType: 'company' })).toEqual({
+    expect(getStripeAccountTokenInfo({ country: 'NL', accountType: 'company' })).toEqual({
       business_type: 'company',
     });
   });
