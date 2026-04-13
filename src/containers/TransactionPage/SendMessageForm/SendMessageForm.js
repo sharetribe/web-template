@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { propTypes } from '../../../util/types';
 
 import { Form, FieldTextInput, FileUpload, SecondaryButtonInline } from '../../../components';
+import { MAX_FILE_UPLOAD_COUNT } from '../TransactionPage.duck';
 
 import css from './SendMessageForm.module.css';
 
@@ -123,8 +124,17 @@ class SendMessageFormComponent extends Component {
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
+
+          const formState = formApi.getState();
+          const hasMessage = !!formState.values.message;
+          const isAnyFileInProgress = files?.some(f => f.inProgress);
+          const hasAnyFileErrors = files?.some(f => !!f.error);
+
           const submitInProgress = inProgress;
-          const submitDisabled = invalid || submitInProgress;
+          const submitDisabled =
+            invalid || submitInProgress || !hasMessage || isAnyFileInProgress || hasAnyFileErrors;
+          const showFileLink = !files || files?.length < MAX_FILE_UPLOAD_COUNT; // TODO add access control logic
+
           return (
             <Form className={classes} onSubmit={values => handleSubmit(values, formApi)}>
               <FieldTextInput
@@ -161,7 +171,7 @@ class SendMessageFormComponent extends Component {
                     onFileUpload={onFileUpload}
                     formApi={formApi}
                     className={css.fileLink}
-                    showFileLink={true}
+                    showFileLink={showFileLink}
                   />
                   <SecondaryButtonInline
                     className={css.submitButton}
