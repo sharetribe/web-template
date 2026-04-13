@@ -3,6 +3,7 @@ import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
+import { clearStoredReferralDataInSession } from '../util/sessionStorageHelpers';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
 const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
@@ -110,7 +111,11 @@ const signupThunk = createAsyncThunk(
       .then(() =>
         dispatch(loginThunk({ username: params.email, password: params.password })).unwrap()
       )
-      .then(() => params)
+      .then(() => {
+        // Clear potential referral data from session storage
+        clearStoredReferralDataInSession();
+        return params;
+      })
       .catch(e => {
         log.error(e, 'signup-failed', {
           email: params.email,
