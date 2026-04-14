@@ -245,7 +245,7 @@ describe('ManageListingCard', () => {
       />
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
-    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.closeListing')).not.toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.price')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -302,7 +302,7 @@ describe('ManageListingCard', () => {
       />
     );
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
-    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.closeListing')).not.toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.price')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -359,7 +359,7 @@ describe('ManageListingCard', () => {
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
-    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.closeListing')).not.toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.price')).toBeInTheDocument();
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -538,7 +538,7 @@ describe('ManageListingCard', () => {
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
-    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.closeListing')).not.toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.price')).toBeInTheDocument(); //fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
@@ -605,7 +605,7 @@ describe('ManageListingCard', () => {
     );
 
     expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
-    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.closeListing')).not.toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.price')).toBeInTheDocument(); //fakeIntl
     expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
     expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();

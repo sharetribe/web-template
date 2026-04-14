@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] ManageListingCard: refactor the component.
+  [#805](https://github.com/sharetribe/web-template/pull/805)
 - [change] ListingPage: refactor the page.
 
   - Add custom component to handle access control redirections (ListingPageAccessWrapper)
