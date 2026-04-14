@@ -468,9 +468,56 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
   return dispatch(fetchMessagesThunk({ txId, page: nextPage, config }));
 };
 
+////////////////////////////////
+// Poll For File Verification //
+////////////////////////////////
+
+const pollForFileVerificationPayloadCreator = (
+  { fileId, tempId },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
+  const maxAttempts = 60;
+  const intervalMs = 1000;
+
+  const poll = attempt => {
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
+      const fileState = resp?.data?.data?.attributes?.state;
+      dispatch(setVerificationStatus({ tempId, verificationStatus: fileState }));
+
+      if (fileState === 'available') {
+        const [fileUpload] = denormalisedResponseEntities(resp);
+        return { fileUpload, tempId };
+      }
+
+      if (fileState === 'verificationFailed') {
+        const [fileUpload] = denormalisedResponseEntities(resp);
+        return rejectWithValue({ tempId, reason: 'verificationFailed', fileUpload });
+      }
+
+      if (attempt >= maxAttempts - 1) {
+        return rejectWithValue({ tempId, reason: 'timeout' });
+      }
+
+      return delay(intervalMs).then(() => poll(attempt + 1));
+    });
+  };
+
+  return poll(0).catch(e => rejectWithValue({ tempId, error: storableError(e) }));
+};
+
+export const pollForFileVerificationThunk = createAsyncThunk(
+  'TransactionPage/pollForFileVerification',
+  pollForFileVerificationPayloadCreator
+);
+
+export const pollForFileVerification = (fileId, tempId) => dispatch => {
+  return dispatch(pollForFileVerificationThunk({ fileId, tempId }));
+};
+
 ////////////////////
 // Upload File    //
 ////////////////////
+
 const uploadFilePayloadCreator = ({ file, tempId }, { dispatch, rejectWithValue, extra: sdk }) => {
   let fileId;
 
@@ -540,39 +587,8 @@ const uploadFilePayloadCreator = ({ file, tempId }, { dispatch, rejectWithValue,
   /// Step 5. Return ids for future handling ///
   //////////////////////////////////////////////
 
-  const waitForFileVerification = (fileId, attempt = 0) => {
-    const maxAttempts = 60;
-    const intervalMs = 1000;
-
-    return sdk.ownFiles.show({ id: fileId }).then(resp => {
-      const ownFile = resp?.data?.data;
-      const fileState = ownFile?.attributes?.state;
-
-      dispatch(setVerificationStatus({ tempId, verificationStatus: fileState }));
-
-      if (fileState === 'available') {
-        return resp; // ← return full resp, not ownFile
-      }
-
-      if (fileState === 'verificationFailed') {
-        throw new Error('File verification failed');
-      }
-
-      if (attempt >= maxAttempts - 1) {
-        const error = new Error('Timed out waiting for file to become available');
-        error.code = 'file-availability-timeout';
-        error.fileState = fileState;
-        throw error;
-      }
-
-      return new Promise(resolve => setTimeout(resolve, intervalMs)).then(() =>
-        waitForFileVerification(fileId, attempt + 1)
-      );
-    });
-  };
-
   const handleFileUploadSuccessFn = () => {
-    return waitForFileVerification(fileId).then(resp => {
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
       const denormalisedResponse = denormalisedResponseEntities(resp);
       const fileUpload = denormalisedResponse[0];
       return { fileUpload, tempId };
@@ -590,9 +606,14 @@ const uploadFilePayloadCreator = ({ file, tempId }, { dispatch, rejectWithValue,
     handleFileUploadSuccessFn
   );
 
-  return handleFileUpload(file).catch(e => {
-    return rejectWithValue({ tempId, error: storableError(e) });
-  });
+  return handleFileUpload(file)
+    .then(resp => {
+      dispatch(pollForFileVerificationThunk({ fileId, tempId }));
+      return resp;
+    })
+    .catch(e => {
+      return rejectWithValue({ tempId, error: storableError(e) });
+    });
 };
 
 export const uploadFileThunk = createAsyncThunk(
@@ -825,12 +846,13 @@ const initialState = {
   fetchLineItemsError: null,
   fileUploads: {
     // [tempId]: {
-    // inProgress: bool,
+    // uploadInProgress: bool,
+    // verificationInProgress: bool,
     // error: null | storable-error,
     // file: null | SKD file,
     // sourceFile: null | File
     // progress: null | number,
-    // verificationStatus: null | number,
+    // verificationStatus: null | string,
     // tempId,
     // }
   },
@@ -870,6 +892,9 @@ const transactionPageSlice = createSlice({
       const { tempId, verificationStatus } = action.payload;
       if (state.fileUploads[tempId]) {
         state.fileUploads[tempId].verificationStatus = verificationStatus;
+        state.fileUploads[tempId].uploadInProgress = verificationStatus === 'pendingUpload';
+        state.fileUploads[tempId].verificationInProgress =
+          verificationStatus === 'pendingVerification';
       }
     },
   },
@@ -975,9 +1000,8 @@ const transactionPageSlice = createSlice({
       // uploadFile cases
       .addCase(uploadFileThunk.pending, (state, action) => {
         const { tempId, file } = action.meta.arg;
-        console.log('pending', { action });
         state.fileUploads[tempId] = {
-          inProgress: true,
+          uploadInProgress: true,
           error: null,
           file: null,
           sourceFile: file, // Set source file so that other components can get the file name
@@ -988,27 +1012,43 @@ const transactionPageSlice = createSlice({
       })
       .addCase(uploadFileThunk.fulfilled, (state, action) => {
         const { fileUpload, tempId } = action.payload;
-        console.log('fulfilled', action);
-        state.fileUploads[tempId] = {
-          inProgress: false,
-          error: null,
-          file: fileUpload,
-          sourceFile: null, // Clear source file after upload is done
-          progress: null,
-          tempId,
-        };
+        state.fileUploads[tempId].file = fileUpload;
+        state.fileUploads[tempId].sourceFile = null;
       })
       .addCase(uploadFileThunk.rejected, (state, action) => {
         const { tempId, error } = action.payload;
         const { file } = action.meta.arg;
-        console.log('rejected', action);
         state.fileUploads[tempId] = {
-          inProgress: false,
+          uploadInProgress: false,
           error,
           file: null,
           sourceFile: file,
           tempId,
         };
+      })
+      // pollForFileVerification cases
+      .addCase(pollForFileVerificationThunk.pending, (state, action) => {
+        const { tempId } = action.meta.arg;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = true;
+        }
+      })
+      .addCase(pollForFileVerificationThunk.fulfilled, (state, action) => {
+        const { tempId, fileUpload } = action.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = false;
+          state.fileUploads[tempId].file = fileUpload;
+        }
+      })
+      .addCase(pollForFileVerificationThunk.rejected, (state, action) => {
+        const { tempId, reason, fileUpload } = action.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = false;
+          state.fileUploads[tempId].error = { reason };
+          if (fileUpload) {
+            state.fileUploads[tempId].file = fileUpload;
+          }
+        }
       })
       // downloadFile cases
       .addCase(downloadFileThunk.pending, (state, action) => {

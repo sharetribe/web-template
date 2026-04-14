@@ -9,7 +9,8 @@ export const FileUploadUploading = {
   props: {
     item: {
       tempId: 'temp-uploading',
-      inProgress: true,
+      uploadInProgress: true,
+      verificationInProgress: false,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: 45,
@@ -25,7 +26,8 @@ export const FileUploadVerifying = {
   props: {
     item: {
       tempId: 'temp-verifying',
-      inProgress: true,
+      uploadInProgress: false,
+      verificationInProgress: true,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: 100,
@@ -41,7 +43,8 @@ export const FileUploadErrorWithMessage = {
   props: {
     item: {
       tempId: 'temp-error-message',
-      inProgress: false,
+      uploadInProgress: false,
+      verificationInProgress: false,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: null,
@@ -57,7 +60,8 @@ export const FileUploadErrorNoMessage = {
   props: {
     item: {
       tempId: 'temp-error-no-message',
-      inProgress: false,
+      uploadInProgress: false,
+      verificationInProgress: false,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: null,
@@ -73,7 +77,8 @@ export const FileUploadCompleted = {
   props: {
     item: {
       tempId: 'temp-completed',
-      inProgress: false,
+      uploadInProgress: false,
+      verificationInProgress: false,
       file: { attributes: { name: 'video.mp4', size: 2 * 1024 * 1024 } },
       sourceFile: null,
       progress: 100,

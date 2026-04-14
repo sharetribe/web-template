@@ -125,12 +125,12 @@ class SendMessageFormComponent extends Component {
 
           const formState = form.getState();
           const hasMessage = !!formState.values.message;
-          const isAnyFileInProgress = files?.some(f => f.inProgress);
+          const isAnyFileUploading = files?.some(f => f.uploadInProgress);
           const hasAnyFileErrors = files?.some(f => !!f.error);
 
           const submitInProgress = inProgress;
           const submitDisabled =
-            invalid || submitInProgress || !hasMessage || isAnyFileInProgress || hasAnyFileErrors;
+            invalid || submitInProgress || !hasMessage || isAnyFileUploading || hasAnyFileErrors;
           const showFileLink = !files || files?.length < 10; // TODO add access control logic
           const addFileLabel = (
             <>

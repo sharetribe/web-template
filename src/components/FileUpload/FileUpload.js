@@ -88,22 +88,31 @@ const IconCross = () => (
 
 const FileUpload = props => {
   const { item, className, onRemoveFile } = props;
-  const { file, tempId, progress, inProgress, sourceFile, error, verificationStatus } = item;
+  const {
+    file,
+    tempId,
+    progress,
+    uploadInProgress,
+    verificationInProgress,
+    sourceFile,
+    error,
+  } = item;
   const intl = useIntl();
 
   const name = file?.attributes?.name ?? sourceFile?.name;
 
-  const isPendingFile = inProgress && !file;
-  const hasError = !inProgress && error && sourceFile;
-  const hasCompletedUpload = file && !inProgress && !error;
+  const hasError = !uploadInProgress && !verificationInProgress && error && (sourceFile || file);
+  const hasCompletedUpload = !uploadInProgress && !error;
 
-  const isKnownState = isPendingFile || hasError || hasCompletedUpload;
+  const isKnownState =
+    uploadInProgress || verificationInProgress || hasError || (hasCompletedUpload && file);
   if (!isKnownState) {
     return null;
   }
 
   let statusIcon;
-  if (isPendingFile) {
+  if (uploadInProgress || verificationInProgress) {
+    // TODO include progress functionality
     statusIcon = <IconSpinner />;
   } else if (hasError) {
     statusIcon = <IconError />;
@@ -112,13 +121,22 @@ const FileUpload = props => {
   }
 
   let statusText;
-  if (isPendingFile && progress < 100) {
+  if (uploadInProgress) {
     statusText = <FormattedMessage id="FileUpload.uploading" />;
-  } else if (isPendingFile && progress === 100 && verificationStatus !== 'available') {
+  } else if (verificationInProgress) {
     statusText = <FormattedMessage id="FileUpload.verifying" />;
   } else if (hasError) {
-    statusText = error.message || <FormattedMessage id="FileUpload.uploadFailed" />;
-  } else if (hasCompletedUpload) {
+    statusText =
+      error.reason === 'verificationFailed' ? (
+        <FormattedMessage id="FileUpload.verificationFailed" />
+      ) : error.reason === 'timeout' ? (
+        <FormattedMessage id="FileUpload.verificationFailed" />
+      ) : error.message ? (
+        error.message
+      ) : (
+        <FormattedMessage id="FileUpload.uploadFailed" />
+      );
+  } else if (hasCompletedUpload && !verificationInProgress) {
     const { size: sizeRaw } = file?.attributes;
     const { size, unit } = calculateFileSize(sizeRaw);
     statusText = `${size} ${unit}`;
