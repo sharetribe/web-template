@@ -14,8 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] AuthenticationPage: refactor the component tree.
+
+  - Move SocialLoginButtons into a separate file
+  - Remove middle-layer components: AuthenticationForms, AuthenticationOrConfirmInfoForm
+  - The Redux-container functions connect, mapStateToProps, and mapDispatchToProps are deprecated.
+    This PR explores the option to create somewhat minimum change to start using hooks instead.
+
+  [#811](https://github.com/sharetribe/web-template/pull/811)
+
 - [change] Eject Template from sharetribe-scripts aka our Create React App fork. This is a big
-  change to build process and dependencies.
+  change for the build process and package.json.
   [#792](https://github.com/sharetribe/web-template/pull/792)
 - [change] Update Stripe Connect account requirements for Netherlands.
   [#824](https://github.com/sharetribe/web-template/pull/824)
