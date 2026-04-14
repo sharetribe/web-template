@@ -191,13 +191,11 @@ const isNumber = value => {
   return typeof value === 'number' && !isNaN(value);
 };
 
-/* eslint-disable no-underscore-dangle */
 // Detect if the given value is a goog.math.Long object
 // See: https://google.github.io/closure-library/api/goog.math.Long.html
 const isGoogleMathLong = value => {
   return typeof value === 'object' && isNumber(value.low_) && isNumber(value.high_);
 };
-/* eslint-enable no-underscore-dangle */
 
 /**
  * Convert Money to a number
@@ -218,7 +216,6 @@ export const convertMoneyToNumber = value => {
     // the Transit tooling in the Sharetribe JS SDK. This should be
     // removed when the value.amount will be a proper Decimal type.
 
-    // eslint-disable-next-line no-console
     console.warn('goog.math.Long value in money amount:', value.amount, value.amount.toString());
 
     amount = new Decimal(value.amount.toString());

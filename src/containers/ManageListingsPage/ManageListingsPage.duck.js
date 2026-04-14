@@ -196,7 +196,6 @@ const manageListingsPageSlice = createSlice({
         state.queryInProgress = false;
       })
       .addCase(queryOwnListingsThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload || action.error);
         state.queryInProgress = false;
         state.queryListingsError = action.payload;
@@ -215,7 +214,6 @@ const manageListingsPageSlice = createSlice({
         state.openingListing = null;
       })
       .addCase(openListingThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload || action.error);
         state.openingListingError = {
           listingId: state.openingListing,
@@ -237,7 +235,6 @@ const manageListingsPageSlice = createSlice({
         state.closingListing = null;
       })
       .addCase(closeListingThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload || action.error);
         state.closingListingError = {
           listingId: state.closingListing,
@@ -258,7 +255,6 @@ const manageListingsPageSlice = createSlice({
         state.discardingDraft = null;
       })
       .addCase(discardDraftThunk.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload || action.error);
         state.discardingDraftError = {
           listingId: state.discardingDraft,

@@ -128,7 +128,6 @@ if (typeof window !== 'undefined') {
     ? { assetCdnBaseUrl: appSettings.sdk.assetCdnBaseUrl }
     : {};
 
-  // eslint-disable-next-line no-underscore-dangle
   const preloadedState = window.__PRELOADED_STATE__ || '{}';
   const initialState = JSON.parse(preloadedState, sdkTypes.reviver);
   const sdk = createInstance({
