@@ -129,6 +129,17 @@ const LinkToStockOrAvailabilityTab = props => {
           className={css.manageLink}
           name="EditListingPage"
           params={{ id, slug, type: editListingLinkType, tab: 'pricing-and-stock' }}
+          ariaLabel={
+            currentStock != null
+              ? intl.formatMessage(
+                  { id: 'ManageListingCard.screenreader.manageStock' },
+                  { title, currentStock }
+                )
+              : intl.formatMessage(
+                  { id: 'ManageListingCard.screenreader.setPriceAndStock' },
+                  { title }
+                )
+          }
         >
           {currentStock != null ? (
             <FormattedMessage id="ManageListingCard.manageStock" values={{ currentStock }} />
