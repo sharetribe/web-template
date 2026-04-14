@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
-- [fix] DatePicker: fix the background color of selected dates to match the primary button color.
+- [change] Update Stripe Connect account requirements for Netherlands.
+  [#824](https://github.com/sharetribe/web-template/pull/824)
+- [fix] email verification badge: it was using the old success color.
   [#825](https://github.com/sharetribe/web-template/pull/825)
 - [add] Add support for a new user, listing, and transaction field schema type: shortText
   [#812](https://github.com/sharetribe/web-template/pull/812)
