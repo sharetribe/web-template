@@ -4,6 +4,12 @@
   position: relative;
   box-shadow: var(--boxShadowBottomForm);
 
+  display: flex;
+  flex-direction: column;
+  /* align-items: flex-start; */
+  gap: 16px;
+  align-self: stretch;
+
   @media (--viewportLarge) {
     box-shadow: none;
 
@@ -39,12 +45,14 @@
   font-weight: var(--fontWeightMedium);
   color: var(--colorFail);
   margin: 0 0 8px 0;
+  font-size: 16px;
 }
 
 .submitButton {
   margin-top: auto;
   flex-shrink: 0;
   width: 100%;
+  font-size: 16px;
 
   @media (--viewportMedium) {
     /* width: auto; */
@@ -59,14 +67,20 @@
 
 .messageActions {
   display: flex;
+  padding-top: 4px;
   flex-direction: column;
-  align-items: stretch;
-  padding-top: 16px;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
 
   @media (--viewportMedium) {
     flex-direction: row;
+
+    display: flex;
+    padding-top: 4px;
     justify-content: space-between;
     align-items: center;
+    align-self: stretch;
   }
 }
 
@@ -75,14 +89,12 @@
   align-items: center;
   gap: 8px;
   color: var(--marketplaceColor);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: var(--fontWeightMedium);
-  white-space: nowrap;
   cursor: pointer;
-  min-height: 56px;
+  justify-content: center;
 
   @media (--viewportMedium) {
-    font-size: 16px;
     padding-top: 12px;
     padding-bottom: 12px;
   }
@@ -90,4 +102,12 @@
 
 .hiddenFileInput {
   display: none;
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  align-self: stretch;
 }

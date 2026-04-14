@@ -1,11 +1,87 @@
 .root {
   display: flex;
-  padding: var(--spacing-lg, 12px);
-  align-items: flex-start;
-  gap: var(--spacing-md, 8px);
+  padding: 12px;
+  align-items: center;
+  gap: 8px;
   align-self: stretch;
 
-  border-radius: var(--medium, 4px);
-  border: 1px solid var(--neutral-gray-100, #e5e5e6);
-  background: var(--neutral-base-white, #fff);
+  border-radius: 4px;
+  border: 1px solid var(--colorGrey100);
+  background: var(--colorWhite);
+}
+
+.error {
+  background: var(--colorFailSubtle);
+  border-color: var(--colorFail);
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 549px) {
+  .fileInfoError {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+
+.fileName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.statusText {
+  white-space: nowrap;
+  color: var(--colorGrey500);
+}
+
+.error .statusText {
+  color: var(--colorFail);
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--colorGrey600);
+}
+
+.error .removeButton {
+  color: var(--colorFail);
+}
+
+.iconCheck {
+  color: var(--colorSuccess);
+  flex-shrink: 0;
+}
+
+.iconSpinner {
+  color: var(--marketplaceColor);
+  flex-shrink: 0;
+}
+
+.iconError {
+  color: var(--colorFail);
+  flex-shrink: 0;
 }

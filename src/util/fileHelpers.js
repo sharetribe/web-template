@@ -1,6 +1,6 @@
 const KILO = 1024;
 
-export const MAX_FILE_SIZE = KILO * KILO * KILO; // real max size
+export const MAX_FILE_SIZE = KILO * KILO * KILO;
 
 export const calculateFileSize = size => {
   const kbSize = Math.ceil(size / KILO);
@@ -8,5 +8,5 @@ export const calculateFileSize = size => {
 
   const useMb = mbSize > 1;
 
-  return useMb ? { size: mbSize, unit: 'Mb' } : { size: kbSize, unit: 'Kb' };
+  return useMb ? { size: mbSize, unit: 'MB' } : { size: kbSize, unit: 'KB' };
 };
