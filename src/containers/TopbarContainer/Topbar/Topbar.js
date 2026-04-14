@@ -228,10 +228,13 @@ const TopbarComponent = props => {
     ? 'sales'
     : 'orders';
 
-  const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
-    latlng: ['origin'],
-    latlngBounds: ['bounds'],
-  });
+  const { mobilemenu, mobilesearch, keywords, address, origin, bounds, dates, price } = parse(
+    location.search,
+    {
+      latlng: ['origin'],
+      latlngBounds: ['bounds'],
+    }
+  );
 
   // Custom links are sorted so that group="primary" are always at the beginning of the list.
   const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
@@ -276,6 +279,8 @@ const TopbarComponent = props => {
             selectedPlace: { address, origin, bounds },
           }
         : null,
+      dates: dates || null,
+      price: price || null,
     };
   };
   const initialSearchFormValues = topbarSearcInitialValues();

@@ -1,219 +1,202 @@
 @import '../../../../styles/customMediaQueries.css';
 
-.mobileInputRoot {
+/* ── Wrapper ── */
+/* NOTE: flex sizing (flex-grow, min-width) is owned by the parent .searchLink class
+   in TopbarDesktop.module.css. Only add non-conflicting properties here. */
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   width: 100%;
+  padding: 0 16px;
 }
 
-.desktopInputRoot {
-  height: var(--topbarHeightDesktop);
-}
-
-.mobileIcon {
-  margin-left: 24px;
-  padding: 11px 0 17px 0;
-
+/* ──────────────────────────────────────────────
+   COLLAPSED PILL
+────────────────────────────────────────────── */
+.collapsedPill {
   display: flex;
-  width: 24px;
-  align-self: stretch;
-  background-color: var(--colorWhite);
+  align-items: center;
+  background: var(--colorWhite);
+  border: 1px solid var(--colorGrey200);
+  border-radius: 40px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  padding: 0;
+  transition: box-shadow 0.2s ease;
+  max-width: 480px;
+  width: 100%;
 
-  @media (--viewportMedium) {
-    margin-left: 0;
-  }
-}
-
-.fontInput {
-  font-weight: var(--fontWeightBlack);
-  font-size: 24px;
-  line-height: 24px;
-
-  /* Layout */
-  margin: 0 24px 0 0;
-  padding: 4px 13px 10px 13px;
-
-  @media (--viewportMedium) {
-    font-size: 30px;
-    line-height: 40px;
-    padding: 5px 13px 15px 13px;
-    margin: 0;
-  }
-}
-
-.mobileInput {
-  /* Font */
-  composes: fontInput;
-
-  /* Layout */
-  height: 50px;
-
-  /* Borders */
-  border: 0;
-  border-radius: 0;
-
-  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
-  &::-webkit-input-placeholder {
-    line-height: normal;
+  &:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   }
 
-  &:hover,
   &:focus {
-    border-radius: 0;
-    border: 0;
-    outline: none;
-    box-shadow: none;
+    outline: 2px solid var(--marketplaceColor);
+    outline-offset: 2px;
   }
 }
 
-.desktopIcon {
-  height: var(--topbarHeightDesktop);
-  border: none;
-  padding-top: 2px;
-
-  display: flex;
-  width: 24px;
-  align-self: stretch;
-  background-color: var(--colorWhite);
-}
-
-.desktopInput {
-  composes: p from global;
-  flex-grow: 1;
-  /* Font */
-  height: var(--topbarHeightDesktop);
-  line-height: unset;
-  border: none;
-  padding-top: 0;
-  padding-bottom: 0;
-
-  /* Search text gets ellipsis if it's too wide */
+.pillSection {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey400);
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  overflow-x: hidden;
+  text-align: left;
+}
 
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 10px;
+/* Hide pill while expanded — keeps its space so topbar doesn't shift */
+.collapsedPillHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
 
-  &:hover,
-  &:focus {
-    border-bottom-color: var(--marketplaceColor);
-    outline: none;
-    border: 0;
-    box-shadow: none;
+.pillSectionFilled {
+  color: var(--colorGrey900);
+}
+
+.pillDivider {
+  width: 1px;
+  height: 20px;
+  background: var(--colorGrey200);
+  flex-shrink: 0;
+}
+
+.pillSearchButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--marketplaceColor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 6px 0 8px;
+  flex-shrink: 0;
+}
+
+.pillSearchIcon {
+  stroke: var(--colorWhite);
+  fill: none;
+  display: block;
+}
+
+/* ──────────────────────────────────────────────
+   EXPANDED BAR
+   Breaks out of the topbar flex constraint by
+   using position:fixed below the topbar.
+────────────────────────────────────────────── */
+
+@keyframes expandBarIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(0.96);
   }
-
-  &:hover::placeholder,
-  &:focus::placeholder {
-    color: var(--colorGrey700);
-  }
-
-  /* Placeholder text might be too wide */
-  &::placeholder {
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    transition: var(--transitionStyleButton);
-  }
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
   }
 }
 
-.mobilePredictions {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  /* searchContainer margin-top (94px) + mobileInput height (50px) = 144px */
-  min-height: calc(100vh - 144px);
-  width: 100%;
-  background-color: var(--marketplaceColor);
-  border-bottom-left-radius: var(--borderRadius);
-  border-bottom-right-radius: var(--borderRadius);
-  box-shadow: var(--boxShadowPopup);
-  z-index: calc(var(--zIndexPopup) + 1);
-
-  @media (--viewportMedium) {
-    min-height: unset;
-  }
-}
-
-.mobilePredictionsAttribution {
-  /* When using the Google Maps Places geocoder, the "Powered by Google"
-   text is hidden in Mobile Safari without giving some extra space to
-   it. */
-  margin-bottom: 100px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 0;
-  }
-}
-
-.desktopPredictions {
-  position: absolute;
-  width: 100%;
+/* OutsideClickHandler renders display:inline-block by default.
+   Override + break out of the topbar via fixed positioning. */
+.expandedWrapper {
+  display: block !important;
+  position: fixed;
   top: var(--topbarHeightDesktop);
   left: 0;
-  background-color: var(--marketplaceColor);
-  border-bottom-left-radius: var(--borderRadius);
-  border-bottom-right-radius: var(--borderRadius);
-  box-shadow: var(--boxShadowPopup);
-  z-index: calc(var(--zIndexPopup) + 1);
-
-  margin-top: 0;
-  max-width: 434px;
+  right: 0;
+  z-index: 99;
+  background: var(--colorWhite);
+  border-bottom: 1px solid var(--colorGrey100);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  padding: 12px 32px 16px;
+  transform-origin: top center;
+  animation: expandBarIn 0.22s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-/**
- * Keyword search
- */
-.keywordSearchWrapper {
-  position: relative;
+.expandedForm {
+  display: flex !important;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--colorWhite);
+  border: 1px solid var(--colorGrey200);
+  border-radius: 40px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  padding: 4px 0;
+  overflow: visible;
+}
+
+.expandedFields {
   display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
 }
 
-.searchSubmit {
-  position: relative;
-  border: 0;
-  padding: 0;
+.expandedField {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.expandedFieldDivider {
+  width: 1px;
+  height: 28px;
+  align-self: center;
+  background: var(--colorGrey200);
+  flex-shrink: 0;
+}
+
+.expandedSearchButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--marketplaceColor);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 8px 4px 8px;
+  flex-shrink: 0;
   cursor: pointer;
+  transition: background 0.2s ease;
 
-  &:hover,
+  &:hover {
+    background: var(--marketplaceColorDark);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   &:focus {
-    outline: none;
-
-    & .iconSvgGroup {
-      stroke: var(--colorGrey700);
-    }
-  }
-
-  /* This increases the size of the clicable area for better accessibility */
-  &:after {
-    content: '';
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: -24px;
-    right: 0px;
+    outline: 2px solid var(--marketplaceColor);
+    outline-offset: 2px;
   }
 }
 
-.icon {
-  display: flex;
-  width: 24px;
-  align-self: stretch;
-  border-bottom: 2px solid var(--marketplaceColor);
-  background-color: var(--colorWhite);
+.expandedSearchIcon {
+  stroke: var(--colorWhite);
+  fill: none;
+  display: block;
 }
 
+/* IconSearchDesktop uses these class names internally — must keep them defined */
 .iconSvg {
-  margin: auto;
+  display: block;
 }
 
 .iconSvgGroup {
-  stroke: var(--marketplaceColor);
-  stroke-width: 2.5px;
-
-  @media (--viewportMedium) {
-    stroke-width: 2px;
-  }
+  stroke: var(--colorWhite);
+  stroke-width: 2px;
 }

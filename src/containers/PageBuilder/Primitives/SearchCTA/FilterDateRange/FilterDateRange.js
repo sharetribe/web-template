@@ -36,9 +36,9 @@ const handleKeyDown = (isOpen, setIsOpen) => e => {
  */
 const FilterDateRange = props => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedDates, setSelectedDates] = useState(null);
   const toggleButtonRef = useRef(null);
-  const { className, rootClassName, config, alignLeft } = props;
+  const { className, rootClassName, config, alignLeft, initialDateLabel } = props;
+  const [selectedDates, setSelectedDates] = useState(initialDateLabel || null);
   const intl = useIntl();
 
   useEffect(() => {
