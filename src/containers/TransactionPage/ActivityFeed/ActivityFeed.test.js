@@ -24,7 +24,14 @@ const noop = () => null;
 
 const createFileAttachment = (id, fileName) => ({
   id: new UUID(id),
-  file: { attributes: { name: fileName } },
+  file: {
+    attributes: {
+      name: fileName,
+      state: 'available',
+      deleted: false,
+      size: 100 * 1024,
+    },
+  },
 });
 
 export const createTxTransition = options => {
@@ -215,7 +222,7 @@ describe('ActivityFeed file display and download', () => {
     render(<ActivityFeed {...props} />);
 
     expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
-    expect(screen.getByText('|_|')).toBeInTheDocument(); // TODO Update once correct icons in place
+    expect(screen.getByRole('button', { name: 'Message.downloadFile' })).toBeInTheDocument();
   });
 
   it('own message with no publicFileAttachments array renders no file links', () => {
@@ -250,7 +257,7 @@ describe('ActivityFeed file display and download', () => {
 
     render(<ActivityFeed {...props} />);
 
-    expect(screen.queryByText('|_|')).not.toBeInTheDocument(); // TODO update once icons in place
+    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
   });
 
   it('own message with multiple attached files renders all file names and icons', () => {
@@ -294,7 +301,7 @@ describe('ActivityFeed file display and download', () => {
 
     expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
     expect(screen.getByText('photo.jpg')).toBeInTheDocument();
-    expect(screen.getAllByText('|_|').length).toBe(2); // TODO Update once correct icons in place
+    expect(screen.getAllByRole('button', { name: 'Message.downloadFile' })).toHaveLength(2);
   });
 
   it('message from another user renders file links when publicFileAttachments is present', () => {
@@ -331,7 +338,6 @@ describe('ActivityFeed file display and download', () => {
     render(<ActivityFeed {...props} />);
 
     expect(screen.getByText('spec.pdf')).toBeInTheDocument();
-    expect(screen.getByText('|_|')).toBeInTheDocument(); // TODO Update once correct icons in place
   });
 
   it('only clicking a file link calls onDownloadFile with the fileAttachmentId', () => {

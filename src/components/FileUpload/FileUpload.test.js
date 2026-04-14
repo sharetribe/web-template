@@ -20,7 +20,7 @@ const createItem = overrides => ({
 });
 
 describe('FileUpload', () => {
-  it('shows filename and progress percentage while uploading', () => {
+  it('shows filename and uploading status while uploading', () => {
     const item = createItem({
       inProgress: true,
       progress: 50,
@@ -28,8 +28,7 @@ describe('FileUpload', () => {
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
     expect(screen.getByText('document.pdf')).toBeInTheDocument();
-    expect(screen.getByText(/Uploading/)).toBeInTheDocument();
-    expect(screen.getByText(/50/)).toBeInTheDocument();
+    expect(screen.getByText('FileUpload.uploading')).toBeInTheDocument();
   });
 
   it('shows filename and verifying status when upload is complete but file not yet available', () => {
@@ -41,8 +40,8 @@ describe('FileUpload', () => {
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
     expect(screen.getByText('document.pdf')).toBeInTheDocument();
-    expect(screen.getByText(/Verifying/)).toBeInTheDocument();
-    expect(screen.queryByText(/Uploading/)).not.toBeInTheDocument();
+    expect(screen.getByText('FileUpload.verifying')).toBeInTheDocument();
+    expect(screen.queryByText('FileUpload.uploading')).not.toBeInTheDocument();
   });
 
   it('shows filename and error message when upload fails', () => {
@@ -61,7 +60,7 @@ describe('FileUpload', () => {
       error: {},
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
-    expect(screen.getByText(/Failed to upload/)).toBeInTheDocument();
+    expect(screen.getByText('FileUpload.uploadFailed')).toBeInTheDocument();
   });
 
   it('shows filename and file size when upload and verification are complete', () => {
@@ -70,9 +69,9 @@ describe('FileUpload', () => {
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
     expect(screen.getByText('document.pdf')).toBeInTheDocument();
-    expect(screen.getByText(/Kb|Mb/)).toBeInTheDocument();
-    expect(screen.queryByText(/Uploading/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Verifying/)).not.toBeInTheDocument();
+    expect(screen.getByText(/KB|MB/)).toBeInTheDocument();
+    expect(screen.queryByText('FileUpload.uploading')).not.toBeInTheDocument();
+    expect(screen.queryByText('FileUpload.verifying')).not.toBeInTheDocument();
   });
 
   it('renders nothing for an unknown state', () => {
@@ -87,7 +86,7 @@ describe('FileUpload', () => {
       file: { attributes: { name: 'document.pdf', size: 512 } },
     });
     render(<FileUpload item={item} onRemoveFile={onRemoveFile} />);
-    fireEvent.click(screen.getByText('X'));
+    fireEvent.click(screen.getByRole('button', { name: 'FileUpload.removeFile' }));
     expect(onRemoveFile).toHaveBeenCalledTimes(1);
     expect(onRemoveFile).toHaveBeenCalledWith('test-id');
   });

@@ -46,6 +46,53 @@ export const InProgress = {
   group: 'page:TransactionPage',
 };
 
+export const WithFiles = {
+  component: SendMessageForm,
+  props: {
+    formId: 'SendMessageForm.WithFiles.Form',
+    messagePlaceholder: 'Send message to Juho…',
+    onSubmit: values => {
+      console.log('submit values:', values);
+    },
+    onFileUpload: file => {
+      console.log('upload file:', file);
+    },
+    onRemoveFile: tempId => {
+      console.log('remove file:', tempId);
+    },
+    files: [
+      {
+        tempId: 'example-in-progress',
+        inProgress: true,
+        file: null,
+        sourceFile: { name: 'presentation.pdf' },
+        progress: 60,
+        error: null,
+        verificationStatus: null,
+      },
+      {
+        tempId: 'example-completed',
+        inProgress: false,
+        file: { attributes: { name: 'photo.jpg', size: 320 * 1024 } },
+        sourceFile: null,
+        progress: 100,
+        error: null,
+        verificationStatus: 'available',
+      },
+      {
+        tempId: 'example-error',
+        inProgress: false,
+        file: null,
+        sourceFile: { name: 'video.mov' },
+        progress: null,
+        error: { message: 'File too large.' },
+        verificationStatus: null,
+      },
+    ],
+  },
+  group: 'page:TransactionPage',
+};
+
 export const Error = {
   component: SendMessageForm,
   props: {
