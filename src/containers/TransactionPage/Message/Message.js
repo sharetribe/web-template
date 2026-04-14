@@ -2,7 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
-import { calculateFileSize } from '../../../util/fileHelpers';
+import {
+  analyseFileName,
+  calculateFileSize,
+  messageHasPendingFiles,
+  messageHasFailedFiles,
+} from '../../../util/fileHelpers';
 import { richText } from '../../../util/richText';
 import { propTypes } from '../../../util/types';
 
@@ -54,6 +59,8 @@ const FileAttachment = props => {
   const isDeleted = !file || file.attributes.deleted;
 
   const name = file?.attributes?.name;
+  // File name truncates on overflow, extension should be displayed when possible
+  const { baseName, extension } = analyseFileName(name);
 
   const rootClass = classNames(css.fileAttachment, isAvailable && css.fileAttachmentAvailable);
 
@@ -68,7 +75,10 @@ const FileAttachment = props => {
         <span className={css.fileAttachmentIcon}>
           <IconDownload />
         </span>
-        <span className={css.fileAttachmentName}>{name}</span>
+        <span className={css.fileAttachmentName}>
+          <span className={css.fileAttachmentBaseName}>{baseName}</span>
+          {extension ? <span className={css.fileAttachmentExtension}>{extension}</span> : null}
+        </span>
         <span className={css.fileAttachmentStatus}>
           {size} {unit}
         </span>
@@ -82,7 +92,10 @@ const FileAttachment = props => {
         <span className={css.fileAttachmentIcon}>
           <IconSpinnerSmall />
         </span>
-        <span className={css.fileAttachmentName}>{name}</span>
+        <span className={css.fileAttachmentName}>
+          <span className={css.fileAttachmentBaseName}>{baseName}</span>
+          {extension ? <span className={css.fileAttachmentExtension}>{extension}</span> : null}
+        </span>
         <span className={css.fileAttachmentStatus}>
           <FormattedMessage id="Message.fileVerifying" />
         </span>
@@ -96,7 +109,10 @@ const FileAttachment = props => {
         <span className={css.fileAttachmentIcon}>
           <IconErrorSmall />
         </span>
-        <span className={css.fileAttachmentName}>{name}</span>
+        <span className={css.fileAttachmentName}>
+          <span className={css.fileAttachmentBaseName}>{baseName}</span>
+          {extension ? <span className={css.fileAttachmentExtension}>{extension}</span> : null}
+        </span>
         <span className={css.fileAttachmentStatus}>
           <FormattedMessage id="Message.fileSecurityCheckFailed" />
         </span>
@@ -128,8 +144,16 @@ const FileAttachment = props => {
  * @returns {JSX.Element} The Message component
  */
 export const Message = props => {
-  const { message, formattedDate, transaction, intl, downloadFile } = props;
+  const { message, formattedDate, transaction, intl, allowFiles, downloadFile } = props;
+
   const content = getMessageContent(message, transaction, intl);
+
+  const hasPendingFiles = messageHasPendingFiles(message);
+  const hasFailedFiles = messageHasFailedFiles(message);
+
+  if (hasPendingFiles || hasFailedFiles) {
+    return null;
+  }
 
   const { publicFileAttachments = [] } = message;
 
@@ -141,14 +165,16 @@ export const Message = props => {
           {content}
           {publicFileAttachments.length > 0 ? (
             <div className={css.fileAttachmentsContainer}>
-              {publicFileAttachments.map(f => (
-                <FileAttachment
-                  fileAttachment={f}
-                  key={f.id.uuid}
-                  downloadFile={downloadFile}
-                  intl={intl}
-                />
-              ))}
+              {allowFiles
+                ? publicFileAttachments.map(f => (
+                    <FileAttachment
+                      fileAttachment={f}
+                      key={f.id.uuid}
+                      downloadFile={downloadFile}
+                      intl={intl}
+                    />
+                  ))
+                : null}
             </div>
           ) : null}
         </div>
@@ -166,38 +192,53 @@ export const Message = props => {
  * @returns {JSX.Element} The OwnMessage component
  */
 export const OwnMessage = props => {
-  const { message, formattedDate, transaction, intl, downloadFile } = props;
+  const { message, formattedDate, transaction, intl, allowFiles, downloadFile } = props;
+
+  const hasPendingFiles = messageHasPendingFiles(message);
+  const hasFailedFiles = messageHasFailedFiles(message);
+
+  // Grey bubble while files are still verifying or have failed; purple once all verified.
+  const isUnverified = hasPendingFiles || hasFailedFiles;
+
   const content = getMessageContent(message, transaction, intl, {
-    linkClass: css.ownMessageContentLink,
+    linkClass: isUnverified ? undefined : css.ownMessageContentLink,
   });
 
   const { publicFileAttachments = [] } = message;
-  const hasVerifyingFile = publicFileAttachments.some(
-    f => f.file.attributes.state === 'pendingVerification'
+
+  const bubbleClass = classNames(
+    css.ownMessageContent,
+    isUnverified && css.ownMessageContentUnverified
   );
 
   return (
     <div className={css.ownMessage}>
       <div className={css.ownMessageContentWrapper}>
-        <div className={css.ownMessageContent}>
+        <div className={bubbleClass}>
           {content}
           {publicFileAttachments.length > 0 ? (
             <div className={css.fileAttachmentsContainer}>
-              {publicFileAttachments.map(f => (
-                <FileAttachment
-                  fileAttachment={f}
-                  key={f.id.uuid}
-                  downloadFile={downloadFile}
-                  intl={intl}
-                />
-              ))}
+              {allowFiles
+                ? publicFileAttachments.map(f => (
+                    <FileAttachment
+                      fileAttachment={f}
+                      key={f.id.uuid}
+                      downloadFile={downloadFile}
+                      intl={intl}
+                    />
+                  ))
+                : null}
             </div>
           ) : null}
         </div>
       </div>
-      {hasVerifyingFile ? (
+      {hasPendingFiles ? (
         <p className={css.pendingVerificationNote}>
           <FormattedMessage id="Message.pendingVerificationNote" />
+        </p>
+      ) : hasFailedFiles ? (
+        <p className={css.securityCheckFailedNote}>
+          <FormattedMessage id="Message.securityCheckFailedNote" />
         </p>
       ) : null}
       <p className={css.ownMessageDate}>{formattedDate}</p>

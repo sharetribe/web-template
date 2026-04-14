@@ -117,6 +117,10 @@ export const WithFiles = {
           ],
         }
       ),
+      // Note: other-party messages are hidden entirely while any attached file is still
+      // in 'pendingVerification' or 'verificationFailed' state — they only appear in the
+      // feed once all files have reached 'available'. Only 'available' and deleted files
+      // are shown here so this message is visible in the example.
       createMessage(
         'msg-other-with-files',
         { content: "Here's a message with files in different states." },
@@ -135,21 +139,101 @@ export const WithFiles = {
               },
             },
             {
-              id: { uuid: 'file-verifying' },
+              id: { uuid: 'file-other-deleted' },
+              file: {
+                attributes: {
+                  state: null,
+                  deleted: true,
+                  name: 'old-draft.docx',
+                  size: 95 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+    ],
+    hasOlderMessages: false,
+    onOpenReviewModal: noop,
+    onShowOlderMessages: noop,
+    allowFiles: true,
+    onDownloadFile: file => console.log('download file:', file),
+    fetchMessagesInProgress: false,
+  },
+  group: 'page:TransactionPage',
+};
+
+export const WithOwnMessagePendingFiles = {
+  component: ActivityFeed,
+  props: {
+    currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.INQUIRY,
+    },
+    messages: [
+      createMessage(
+        'msg-own-pending',
+        { content: 'Sending some files your way!' },
+        {
+          sender: createUser('user2'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-pending-1' },
               file: {
                 attributes: {
                   state: 'pendingVerification',
                   deleted: false,
-                  name: 'presentation.pptx',
-                  size: 800 * 1024,
+                  name: 'contract.pdf',
+                  size: 210 * 1024,
                 },
               },
             },
             {
-              id: { uuid: 'file-security-failed' },
+              id: { uuid: 'file-pending-2' },
               file: {
                 attributes: {
-                  state: 'securityCheckFailed',
+                  state: 'pendingVerification',
+                  deleted: false,
+                  name: 'schedule.xlsx',
+                  size: 88 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+    ],
+    hasOlderMessages: false,
+    onOpenReviewModal: noop,
+    onShowOlderMessages: noop,
+    allowFiles: true,
+    onDownloadFile: file => console.log('download file:', file),
+    fetchMessagesInProgress: false,
+  },
+  group: 'page:TransactionPage',
+};
+
+export const WithOwnMessageFailedFiles = {
+  component: ActivityFeed,
+  props: {
+    currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.INQUIRY,
+    },
+    messages: [
+      createMessage(
+        'msg-own-failed',
+        { content: 'Sending some files your way!' },
+        {
+          sender: createUser('user2'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-failed-1' },
+              file: {
+                attributes: {
+                  state: 'verificationFailed',
                   deleted: false,
                   name: 'suspicious.zip',
                   size: 450 * 1024,
@@ -163,6 +247,7 @@ export const WithFiles = {
     hasOlderMessages: false,
     onOpenReviewModal: noop,
     onShowOlderMessages: noop,
+    allowFiles: true,
     onDownloadFile: file => console.log('download file:', file),
     fetchMessagesInProgress: false,
   },

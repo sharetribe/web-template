@@ -10,3 +10,15 @@ export const calculateFileSize = size => {
 
   return useMb ? { size: mbSize, unit: 'MB' } : { size: kbSize, unit: 'KB' };
 };
+
+export const messageHasPendingFiles = message =>
+  message.publicFileAttachments?.some(f => f.file.attributes.state === 'pendingVerification');
+export const messageHasFailedFiles = message =>
+  message.publicFileAttachments?.some(f => f.file.attributes.state === 'verificationFailed');
+
+export const analyseFileName = name => {
+  const lastDot = name ? name.lastIndexOf('.') : -1;
+  const baseName = lastDot > 0 ? name.slice(0, lastDot) : name;
+  const extension = lastDot > 0 ? name.slice(lastDot) : '';
+  return { baseName, extension };
+};
