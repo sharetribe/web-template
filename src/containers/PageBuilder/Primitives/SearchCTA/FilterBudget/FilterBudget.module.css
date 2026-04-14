@@ -1,0 +1,128 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--borderRadiusMedium);
+  cursor: pointer;
+  color: var(--colorGrey700);
+  font-weight: 400;
+
+  @media (--viewportMedium) {
+    height: 48px;
+    padding: 0 16px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0;
+    padding: 10px 20px 10px 16px;
+  }
+
+  &:hover .label {
+    color: var(--colorBlack);
+  }
+}
+
+.iconBudget {
+  stroke: var(--colorGrey600);
+  fill: none;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.label {
+  transition: all 0.1s;
+  margin-left: 8px;
+  color: var(--colorGrey600);
+  white-space: nowrap;
+}
+
+.active {
+  color: var(--colorGrey700);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 32px);
+  min-width: 260px;
+  margin-top: 4px;
+  background-color: white;
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--boxShadowPopup);
+  z-index: 10;
+  padding: 16px 20px 12px 20px;
+
+  @media (--viewportLarge) {
+    top: 51px;
+    right: 0;
+    left: auto;
+    transform: none;
+    margin-top: 0;
+
+    &.alignLeft {
+      left: -8px;
+      right: auto;
+    }
+  }
+}
+
+.rangeLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.rangeItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.rangeItemRight {
+  text-align: right;
+}
+
+.rangeItemHeading {
+  font-size: 11px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey500);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.rangeItemValue {
+  font-size: 15px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey900);
+}
+
+.sliderWrapper {
+  padding: 8px 10px 4px 10px;
+}
+
+.clearButton {
+  display: block;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--colorGrey500);
+  padding: 8px 0 0 0;
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}

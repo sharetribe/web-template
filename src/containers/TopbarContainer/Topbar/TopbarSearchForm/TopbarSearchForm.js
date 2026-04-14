@@ -1,195 +1,218 @@
-import React, { useRef } from 'react';
-import { Form as FinalForm, Field } from 'react-final-form';
+import React, { useState } from 'react';
+import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
+import { useRouteConfiguration } from '../../../../context/routeConfigurationContext';
+import { useConfiguration } from '../../../../context/configurationContext';
 import { useIntl } from '../../../../util/reactIntl';
-import { isMainSearchTypeKeywords } from '../../../../util/search';
+import { createResourceLocatorString } from '../../../../util/routes';
+import { isOriginInUse } from '../../../../util/search';
+import { stringifyDateToISO8601, parseDateFromISO8601 } from '../../../../util/dates';
 
-import { Form, LocationAutocompleteInput } from '../../../../components';
+import { Form, OutsideClickHandler } from '../../../../components';
+
+import FilterLocation from '../../../PageBuilder/Primitives/SearchCTA/FilterLocation/FilterLocation';
+import FilterDateRange from '../../../PageBuilder/Primitives/SearchCTA/FilterDateRange/FilterDateRange';
+import FilterBudget, { PRICE_MIN, PRICE_MAX } from '../../../PageBuilder/Primitives/SearchCTA/FilterBudget/FilterBudget';
 
 import IconSearchDesktop from './IconSearchDesktop';
 import css from './TopbarSearchForm.module.css';
 
-const identity = v => v;
-
-const KeywordSearchField = props => {
-  const { keywordSearchWrapperClasses, iconClass, intl, isMobile = false, inputRef } = props;
-  return (
-    <div className={keywordSearchWrapperClasses}>
-      <button
-        className={css.searchSubmit}
-        aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
-      >
-        <div className={iconClass}>
-          <IconSearchDesktop />
-        </div>
-      </button>
-      <Field
-        name="keywords"
-        render={({ input, meta }) => {
-          return (
-            <input
-              className={isMobile ? css.mobileInput : css.desktopInput}
-              {...input}
-              id={isMobile ? 'keyword-search-mobile' : 'keyword-search'}
-              data-testid={isMobile ? 'keyword-search-mobile' : 'keyword-search'}
-              ref={inputRef}
-              type="text"
-              placeholder={intl.formatMessage({
-                id: 'TopbarSearchForm.placeholder',
-              })}
-              autoComplete="off"
-            />
-          );
-        }}
-      />
-    </div>
-  );
-};
-const SubmitButton = props => {
-  const intl = useIntl();
-  return (
-    <button
-      className={css.searchSubmit}
-      aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
-      type="submit"
-      {...props}
-    >
-      <IconSearchDesktop />
-    </button>
-  );
+// Format date range param ("2024-06-01,2024-06-30") into a short label
+const formatDateLabel = (datesParam, intl) => {
+  if (!datesParam) return null;
+  const [startStr, endStr] = datesParam.split(',');
+  if (!startStr || !endStr) return null;
+  try {
+    const start = parseDateFromISO8601(startStr);
+    const end = parseDateFromISO8601(endStr);
+    return intl.formatDateTimeRange(start, end, { month: 'short', day: 'numeric' });
+  } catch (e) {
+    return null;
+  }
 };
 
-const LocationSearchField = props => {
-  const { desktopInputRootClass, intl, isMobile = false, inputRef, onLocationChange } = props;
-  return (
-    <Field
-      name="location"
-      format={identity}
-      render={({ input, meta }) => {
-        const { onChange, ...restInput } = input;
-
-        // Merge the standard onChange function with custom behaviur. A better solution would
-        // be to use the FormSpy component from Final Form and pass onChange to the
-        // onChange prop but that breaks due to insufficient subscription handling.
-        // See: https://github.com/final-form/react-final-form/issues/159
-        const searchOnChange = value => {
-          onChange(value);
-          onLocationChange(value);
-        };
-
-        return (
-          <LocationAutocompleteInput
-            id={isMobile ? 'location-search-mobile' : 'location-search'}
-            className={isMobile ? css.mobileInputRoot : desktopInputRootClass}
-            iconClassName={isMobile ? css.mobileIcon : css.desktopIcon}
-            inputClassName={isMobile ? css.mobileInput : css.desktopInput}
-            predictionsClassName={isMobile ? css.mobilePredictions : css.desktopPredictions}
-            predictionsAttributionClassName={isMobile ? css.mobilePredictionsAttribution : null}
-            placeholder={intl.formatMessage({ id: 'TopbarSearchForm.placeholder' })}
-            closeOnBlur={!isMobile}
-            inputRef={inputRef}
-            input={{ ...restInput, onChange: searchOnChange }}
-            meta={meta}
-            submitButton={SubmitButton}
-            ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.search' })}
-          />
-        );
-      }}
-    />
-  );
+// Format price param ("500,2000") into "$500 – $2,000/mo"
+const formatBudgetLabel = priceParam => {
+  if (!priceParam) return null;
+  const [minStr, maxStr] = priceParam.split(',');
+  const min = parseInt(minStr, 10);
+  const max = parseInt(maxStr, 10);
+  if (isNaN(min) || isNaN(max)) return null;
+  const minLabel = `$${min.toLocaleString()}`;
+  const maxLabel = max >= PRICE_MAX ? `$${PRICE_MAX.toLocaleString()}+` : `$${max.toLocaleString()}`;
+  return `${minLabel} – ${maxLabel}/mo`;
 };
 
-/**
- * The main search form for the Topbar.
- *
- * @component
- * @param {Object} props
- * @param {string?} props.className add more style rules in addition to components own css.root
- * @param {string?} props.rootClassName overwrite components own css.root
- * @param {string?} props.desktopInputRoot root class for desktop form input
- * @param {Function} props.onSubmit
- * @param {boolean} props.isMobile
- * @param {Object} props.appConfig
- * @returns {JSX.Element} search form element
- */
+// Parse dates param ("2024-06-01,2024-06-30") into { startDate, endDate } for FinalForm
+const parseDateRangeInitialValue = datesParam => {
+  if (!datesParam) return undefined;
+  const [startStr, endStr] = datesParam.split(',');
+  if (!startStr || !endStr) return undefined;
+  try {
+    return {
+      startDate: parseDateFromISO8601(startStr),
+      endDate: parseDateFromISO8601(endStr),
+    };
+  } catch (e) {
+    return undefined;
+  }
+};
+
+// Parse price param into { minValue, maxValue } for the budget slider
+const parsePriceInitialValue = priceParam => {
+  if (!priceParam) return { minValue: PRICE_MIN, maxValue: PRICE_MAX };
+  const [minStr, maxStr] = priceParam.split(',');
+  const min = parseInt(minStr, 10);
+  const max = parseInt(maxStr, 10);
+  return {
+    minValue: isNaN(min) ? PRICE_MIN : min,
+    maxValue: isNaN(max) ? PRICE_MAX : max,
+  };
+};
+
 const TopbarSearchForm = props => {
-  const searchInpuRef = useRef(null);
+  const { className, rootClassName, initialValues = {} } = props;
+
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [locationSelected, setLocationSelected] = useState(
+    !!initialValues?.location?.selectedPlace
+  );
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+
+  const history = useHistory();
+  const routeConfiguration = useRouteConfiguration();
+  const config = useConfiguration();
   const intl = useIntl();
-  const { appConfig, onSubmit, ...restOfProps } = props;
 
-  const onChange = location => {
-    if (!isMainSearchTypeKeywords(appConfig) && location.selectedPlace) {
-      // Note that we use `onSubmit` instead of the conventional
-      // `handleSubmit` prop for submitting. We want to autosubmit
-      // when a place is selected, and don't require any extra
-      // validations for the form.
-      onSubmit({ location });
-      // blur search input to hide software keyboard
-      searchInpuRef?.current?.blur();
-    }
+  // Labels for the collapsed pill
+  const locationLabel = initialValues?.location?.search || null;
+  const dateLabel = formatDateLabel(initialValues?.dates, intl);
+  const budgetLabel = formatBudgetLabel(initialValues?.price);
+
+  // Initial values for the expanded FinalForm
+  const formInitialValues = {
+    location: initialValues.location || null,
+    dateRange: parseDateRangeInitialValue(initialValues.dates),
+    price: parsePriceInitialValue(initialValues.price),
   };
 
-  const onKeywordSubmit = values => {
-    if (isMainSearchTypeKeywords(appConfig)) {
-      onSubmit({ keywords: values.keywords });
-      // blur search input to hide software keyboard
-      searchInpuRef?.current?.blur();
+  const handleFormSubmit = values => {
+    let queryParams = {};
+
+    if (values.location?.selectedPlace) {
+      const {
+        search,
+        selectedPlace: { origin, bounds },
+      } = values.location;
+      queryParams.bounds = bounds;
+      queryParams.address = search;
+      if (isOriginInUse(config) && origin) {
+        queryParams.origin = `${origin.lat},${origin.lng}`;
+      }
     }
+
+    if (values.dateRange) {
+      const { startDate, endDate } = values.dateRange;
+      if (startDate && endDate) {
+        queryParams.dates = `${stringifyDateToISO8601(startDate)},${stringifyDateToISO8601(endDate)}`;
+      }
+    }
+
+    if (values.price) {
+      const { minValue = PRICE_MIN, maxValue = PRICE_MAX } = values.price;
+      const isDefault = minValue === PRICE_MIN && maxValue === PRICE_MAX;
+      if (!isDefault) {
+        queryParams.price = `${minValue},${maxValue}`;
+      }
+    }
+
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
+    setIsExpanded(false);
   };
 
-  const onLocationSubmit = values => {
-    // Allow submit button click for an empty location search form
-    if (!isMainSearchTypeKeywords(appConfig)) {
-      onSubmit({ location: values.location });
-    }
-  };
+  const classes = classNames(rootClassName, className, css.searchWrapper);
 
-  const isKeywordsSearch = isMainSearchTypeKeywords(appConfig);
-  const submit = isKeywordsSearch ? onKeywordSubmit : onLocationSubmit;
   return (
-    <FinalForm
-      {...restOfProps}
-      onSubmit={submit}
-      render={formRenderProps => {
-        const {
-          rootClassName,
-          className,
-          desktopInputRoot,
-          isMobile = false,
-          handleSubmit,
-        } = formRenderProps;
-        const classes = classNames(rootClassName, className);
-        const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
+    <div className={classes}>
+      {/* ── Collapsed pill — always rendered to keep topbar layout stable ── */}
+      <button
+        className={classNames(css.collapsedPill, { [css.collapsedPillHidden]: isExpanded })}
+        onClick={() => setIsExpanded(true)}
+        aria-label={intl.formatMessage({ id: 'TopbarSearchForm.expandSearch' })}
+        aria-expanded={isExpanded}
+      >
+        <span
+          className={classNames(css.pillSection, {
+            [css.pillSectionFilled]: !!locationLabel,
+          })}
+        >
+          {locationLabel || intl.formatMessage({ id: 'TopbarSearchForm.where' })}
+        </span>
+        <span className={css.pillDivider} />
+        <span
+          className={classNames(css.pillSection, {
+            [css.pillSectionFilled]: !!dateLabel,
+          })}
+        >
+          {dateLabel || intl.formatMessage({ id: 'TopbarSearchForm.when' })}
+        </span>
+        <span className={css.pillDivider} />
+        <span
+          className={classNames(css.pillSection, {
+            [css.pillSectionFilled]: !!budgetLabel,
+          })}
+        >
+          {budgetLabel || intl.formatMessage({ id: 'TopbarSearchForm.budget' })}
+        </span>
+        <span className={css.pillSearchButton}>
+          <IconSearchDesktop className={css.pillSearchIcon} />
+        </span>
+      </button>
 
-        const keywordSearchWrapperClasses = classNames(
-          css.keywordSearchWrapper,
-          isMobile ? css.mobileInputRoot : desktopInputRootClass
-        );
-
-        return (
-          <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="SearchPage">
-            {isKeywordsSearch ? (
-              <KeywordSearchField
-                keywordSearchWrapperClasses={keywordSearchWrapperClasses}
-                iconClass={classNames(isMobile ? css.mobileIcon : css.desktopIcon || css.icon)}
-                intl={intl}
-                isMobile={isMobile}
-                inputRef={searchInpuRef}
-              />
-            ) : (
-              <LocationSearchField
-                desktopInputRootClass={desktopInputRootClass}
-                intl={intl}
-                isMobile={isMobile}
-                inputRef={searchInpuRef}
-                onLocationChange={onChange}
-              />
+      {/* ── Expanded 3-field bar — fixed below the topbar, only when open ── */}
+      {isExpanded ? (
+        <OutsideClickHandler
+          className={css.expandedWrapper}
+          onOutsideClick={() => setIsExpanded(false)}
+        >
+          <FinalForm
+            initialValues={formInitialValues}
+            onSubmit={handleFormSubmit}
+            render={({ handleSubmit }) => (
+              <Form className={css.expandedForm} onSubmit={handleSubmit}>
+                <div className={css.expandedFields}>
+                  <div className={css.expandedField}>
+                    <FilterLocation
+                      setSubmitDisabled={setSubmitDisabled}
+                      onLocationSelected={setLocationSelected}
+                      alignLeft={true}
+                    />
+                  </div>
+                  <div className={css.expandedFieldDivider} />
+                  <div className={css.expandedField}>
+                    <FilterDateRange config={config} alignLeft={false} initialDateLabel={dateLabel} />
+                  </div>
+                  <div className={css.expandedFieldDivider} />
+                  <div className={css.expandedField}>
+                    <FilterBudget alignLeft={false} />
+                  </div>
+                </div>
+                <button
+                  className={css.expandedSearchButton}
+                  type="submit"
+                  disabled={submitDisabled}
+                  aria-label={intl.formatMessage({ id: 'TopbarSearchForm.search' })}
+                >
+                  <IconSearchDesktop className={css.expandedSearchIcon} />
+                </button>
+              </Form>
             )}
-          </Form>
-        );
-      }}
-    />
+          />
+        </OutsideClickHandler>
+      ) : null}
+    </div>
   );
 };
 
