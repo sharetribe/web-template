@@ -14,6 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] ListingPage: refactor the page.
+
+  - Add custom component to handle access control redirections (ListingPageAccessWrapper)
+  - Move shared functions and derived data to SearchPage.shared.js file
+    - getDerivedRenderData
+  - Add Notifications sub component to handle the rendering of ActionBar(s)
+  - Remove deprecated Redux functions: connect, mapStateToProps and mapDispatchToProps
+
+  [#819](https://github.com/sharetribe/web-template/pull/819)
+
 - [change] SearchPage(s): refactor the page.
 
   - Add custom component to handle access control redirections (SearchPageAccessWrapper)
