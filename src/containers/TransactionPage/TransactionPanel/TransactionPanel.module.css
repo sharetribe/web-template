@@ -446,6 +446,11 @@
   position: relative;
   margin: 46px 24px 0 24px;
 
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: stretch;
+
   @media (--viewportMedium) {
     margin: 49px 24px 0 24px;
     border-top: 0;

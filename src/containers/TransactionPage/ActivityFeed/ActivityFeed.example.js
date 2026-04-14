@@ -77,6 +77,98 @@ export const WithCurrentUser = {
   group: 'page:TransactionPage',
 };
 
+export const WithFiles = {
+  component: ActivityFeed,
+  props: {
+    currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.INQUIRY,
+    },
+    messages: [
+      createMessage(
+        'msg-own-with-files',
+        { content: 'Hey, here are some files!' },
+        {
+          sender: createUser('user2'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-own-available' },
+              file: {
+                attributes: {
+                  state: 'available',
+                  deleted: false,
+                  name: 'photo.jpg',
+                  size: 320 * 1024,
+                },
+              },
+            },
+            {
+              id: { uuid: 'file-own-deleted' },
+              file: {
+                attributes: {
+                  state: null,
+                  deleted: true,
+                  name: 'old-document.pdf',
+                  size: 128 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+      createMessage(
+        'msg-other-with-files',
+        { content: "Here's a message with files in different states." },
+        {
+          sender: createUser('user1'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-other-available' },
+              file: {
+                attributes: {
+                  state: 'available',
+                  deleted: false,
+                  name: 'document.pdf',
+                  size: 1.2 * 1024 * 1024,
+                },
+              },
+            },
+            {
+              id: { uuid: 'file-verifying' },
+              file: {
+                attributes: {
+                  state: 'pendingVerification',
+                  deleted: false,
+                  name: 'presentation.pptx',
+                  size: 800 * 1024,
+                },
+              },
+            },
+            {
+              id: { uuid: 'file-security-failed' },
+              file: {
+                attributes: {
+                  state: 'securityCheckFailed',
+                  deleted: false,
+                  name: 'suspicious.zip',
+                  size: 450 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+    ],
+    hasOlderMessages: false,
+    onOpenReviewModal: noop,
+    onShowOlderMessages: noop,
+    onDownloadFile: file => console.log('download file:', file),
+    fetchMessagesInProgress: false,
+  },
+  group: 'page:TransactionPage',
+};
+
 export const WithTransitions = {
   component: ActivityFeed,
   props: {
