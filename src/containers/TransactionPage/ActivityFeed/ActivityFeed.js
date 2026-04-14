@@ -216,6 +216,7 @@ export const ActivityFeed = props => {
     fetchMessagesInProgress,
     onOpenReviewModal,
     onShowOlderMessages,
+    allowFiles,
     onDownloadFile,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -256,6 +257,7 @@ export const ActivityFeed = props => {
         formattedDate={formattedDate}
         transaction={transaction}
         intl={intl}
+        allowFiles={allowFiles}
         downloadFile={onDownloadFile}
       />
     ) : (
@@ -264,6 +266,7 @@ export const ActivityFeed = props => {
         formattedDate={formattedDate}
         transaction={transaction}
         intl={intl}
+        allowFiles={allowFiles}
         downloadFile={onDownloadFile}
       />
     );

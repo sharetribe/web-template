@@ -9,7 +9,8 @@ export const FileUploadUploading = {
   props: {
     item: {
       tempId: 'temp-uploading',
-      inProgress: true,
+      uploadInProgress: true,
+      verificationInProgress: false,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: 45,
@@ -25,7 +26,8 @@ export const FileUploadVerifying = {
   props: {
     item: {
       tempId: 'temp-verifying',
-      inProgress: true,
+      uploadInProgress: false,
+      verificationInProgress: true,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: 100,
@@ -36,12 +38,64 @@ export const FileUploadVerifying = {
   },
 };
 
+export const FileUploadErrorMimeType = {
+  component: FileUpload,
+  props: {
+    item: {
+      tempId: 'temp-error-mime-type',
+      uploadInProgress: false,
+      verificationInProgress: false,
+      file: null,
+      sourceFile: { name: 'document.exe' },
+      progress: null,
+      error: { message: 'mimeTypeError' },
+      verificationStatus: null,
+    },
+    onRemoveFile,
+  },
+};
+
+export const FileUploadErrorVerificationFailed = {
+  component: FileUpload,
+  props: {
+    item: {
+      tempId: 'temp-error-verification-failed',
+      uploadInProgress: false,
+      verificationInProgress: false,
+      file: { attributes: { name: 'document.pdf' } },
+      sourceFile: null,
+      progress: 100,
+      error: { message: 'verificationFailed' },
+      verificationStatus: 'verificationFailed',
+    },
+    onRemoveFile,
+  },
+};
+
+export const FileUploadErrorTimeout = {
+  component: FileUpload,
+  props: {
+    item: {
+      tempId: 'temp-error-timeout',
+      uploadInProgress: false,
+      verificationInProgress: false,
+      file: null,
+      sourceFile: { name: 'document.pdf' },
+      progress: null,
+      error: { message: 'timeout' },
+      verificationStatus: null,
+    },
+    onRemoveFile,
+  },
+};
+
 export const FileUploadErrorWithMessage = {
   component: FileUpload,
   props: {
     item: {
       tempId: 'temp-error-message',
-      inProgress: false,
+      uploadInProgress: false,
+      verificationInProgress: false,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: null,
@@ -57,7 +111,8 @@ export const FileUploadErrorNoMessage = {
   props: {
     item: {
       tempId: 'temp-error-no-message',
-      inProgress: false,
+      uploadInProgress: false,
+      verificationInProgress: false,
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: null,
@@ -73,7 +128,8 @@ export const FileUploadCompleted = {
   props: {
     item: {
       tempId: 'temp-completed',
-      inProgress: false,
+      uploadInProgress: false,
+      verificationInProgress: false,
       file: { attributes: { name: 'video.mp4', size: 2 * 1024 * 1024 } },
       sourceFile: null,
       progress: 100,

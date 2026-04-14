@@ -34,6 +34,30 @@ const createFileAttachment = (id, fileName) => ({
   },
 });
 
+const createPendingFileAttachment = (id, fileName) => ({
+  id: new UUID(id),
+  file: {
+    attributes: {
+      name: fileName,
+      state: 'pendingVerification',
+      deleted: false,
+      size: 100 * 1024,
+    },
+  },
+});
+
+const createFailedFileAttachment = (id, fileName) => ({
+  id: new UUID(id),
+  file: {
+    attributes: {
+      name: fileName,
+      state: 'verificationFailed',
+      deleted: false,
+      size: 100 * 1024,
+    },
+  },
+});
+
 export const createTxTransition = options => {
   return {
     createdAt: new Date(Date.UTC(2023, 4, 1)),
@@ -215,14 +239,54 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
 
     render(<ActivityFeed {...props} />);
 
-    expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
+    expect(screen.getByText('invoice')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Message.downloadFile' })).toBeInTheDocument();
+  });
+  it('own message with one attached file renders no file links when files are not allowed', () => {
+    const customer = createUser('user1');
+    const provider = createUser('user2');
+    const listing = createListing('listing');
+
+    const props = {
+      messages: [
+        createMessage(
+          'msg1',
+          { content: 'hello', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+          { sender: provider, publicFileAttachments: [createFileAttachment('pf1', 'invoice.pdf')] }
+        ),
+      ],
+      transaction: createTransaction({
+        id: 'tx1',
+        customer,
+        provider,
+        listing,
+        lastTransitionedAt: new Date(Date.UTC(2023, 4, 1)),
+        transitions: [],
+      }),
+      stateData: { processName: 'default-purchase', processState: 'inquiry' },
+      currentUser: createCurrentUser('user2'),
+      hasOlderMessages: false,
+      fetchMessagesInProgress: false,
+      onOpenReviewModal: noop,
+      onShowOlderMessages: noop,
+      allowFiles: false,
+      onDownloadFile: noop,
+      intl: fakeIntl,
+    };
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.queryByText('invoice')).not.toBeInTheDocument();
+    expect(screen.queryByText('.pdf')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
   });
 
   it('own message with no publicFileAttachments array renders no file links', () => {
@@ -251,6 +315,7 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
@@ -293,14 +358,17 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
 
     render(<ActivityFeed {...props} />);
 
-    expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
-    expect(screen.getByText('photo.jpg')).toBeInTheDocument();
+    expect(screen.getByText('invoice')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
+    expect(screen.getByText('photo')).toBeInTheDocument();
+    expect(screen.getByText('.jpg')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Message.downloadFile' })).toHaveLength(2);
   });
 
@@ -331,13 +399,14 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
 
     render(<ActivityFeed {...props} />);
 
-    expect(screen.getByText('spec.pdf')).toBeInTheDocument();
+    expect(screen.getByText('spec')).toBeInTheDocument();
   });
 
   it('only clicking a file link calls onDownloadFile with the fileAttachmentId', () => {
@@ -370,6 +439,7 @@ describe('ActivityFeed file display and download', () => {
       hasOlderMessages: false,
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
+      allowFiles: true,
       onShowOlderMessages: noop,
       onDownloadFile,
       intl: fakeIntl,
@@ -378,7 +448,7 @@ describe('ActivityFeed file display and download', () => {
     render(<ActivityFeed {...props} />);
 
     expect(onDownloadFile).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByText('report.pdf'));
+    fireEvent.click(screen.getByText('report'));
     expect(onDownloadFile).toHaveBeenCalledTimes(1);
     expect(onDownloadFile).toHaveBeenCalledWith(expect.objectContaining({ uuid: 'pf-uuid-1' }));
   });
@@ -416,6 +486,7 @@ describe('ActivityFeed file display and download', () => {
       hasOlderMessages: false,
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
+      allowFiles: true,
       onShowOlderMessages: noop,
       onDownloadFile,
       intl: fakeIntl,
@@ -424,9 +495,134 @@ describe('ActivityFeed file display and download', () => {
     render(<ActivityFeed {...props} />);
 
     expect(onDownloadFile).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByText('second.pdf'));
+    fireEvent.click(screen.getByText('second'));
     expect(onDownloadFile).toHaveBeenCalledTimes(1);
     expect(onDownloadFile).toHaveBeenCalledWith(expect.objectContaining({ uuid: 'pf-uuid-2' }));
     expect(onDownloadFile).not.toHaveBeenCalledWith(expect.objectContaining({ uuid: 'pf-uuid-1' }));
+  });
+});
+
+describe('ActivityFeed file verification states', () => {
+  const customer = createUser('user1');
+  const provider = createUser('user2');
+
+  const makeBaseProps = messages => ({
+    messages,
+    transaction: createTransaction({
+      id: 'tx1',
+      customer,
+      provider,
+      listing: createListing('listing'),
+      lastTransitionedAt: new Date(Date.UTC(2023, 4, 1)),
+      transitions: [],
+    }),
+    stateData: { processName: 'default-purchase', processState: 'inquiry' },
+    currentUser: createCurrentUser('user2'),
+    hasOlderMessages: false,
+    fetchMessagesInProgress: false,
+    onOpenReviewModal: noop,
+    allowFiles: true,
+    onShowOlderMessages: noop,
+    onDownloadFile: noop,
+    intl: fakeIntl,
+  });
+
+  it('own message with pending files shows spinner icon and pending verification note', () => {
+    const props = makeBaseProps([
+      createMessage(
+        'msg1',
+        { content: 'hello', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+        {
+          sender: provider,
+          publicFileAttachments: [createPendingFileAttachment('pf-pending-1', 'contract.pdf')],
+        }
+      ),
+    ]);
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.getByText('contract')).toBeInTheDocument();
+    expect(screen.getByText('Message.pendingVerificationNote')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Message.securityCheckFailedNote')).not.toBeInTheDocument();
+  });
+
+  it('own message with failed files shows error icon and security check failed note', () => {
+    const props = makeBaseProps([
+      createMessage(
+        'msg1',
+        { content: 'hello', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+        {
+          sender: provider,
+          publicFileAttachments: [createFailedFileAttachment('pf-failed-1', 'suspicious.zip')],
+        }
+      ),
+    ]);
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.getByText('suspicious')).toBeInTheDocument();
+    expect(screen.getByText('Message.securityCheckFailedNote')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Message.pendingVerificationNote')).not.toBeInTheDocument();
+  });
+
+  it('own message with mixed available and pending files shows pending verification note', () => {
+    const props = makeBaseProps([
+      createMessage(
+        'msg1',
+        { content: 'hello', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+        {
+          sender: provider,
+          publicFileAttachments: [
+            createFileAttachment('pf-avail', 'ready.pdf'),
+            createPendingFileAttachment('pf-pending', 'pending.pdf'),
+          ],
+        }
+      ),
+    ]);
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.getByText('Message.pendingVerificationNote')).toBeInTheDocument();
+    expect(screen.queryByText('Message.securityCheckFailedNote')).not.toBeInTheDocument();
+  });
+
+  it('own message with all available files shows no verification note', () => {
+    const props = makeBaseProps([
+      createMessage(
+        'msg1',
+        { content: 'hello', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+        {
+          sender: provider,
+          publicFileAttachments: [createFileAttachment('pf-avail', 'report.pdf')],
+        }
+      ),
+    ]);
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.queryByText('Message.pendingVerificationNote')).not.toBeInTheDocument();
+    expect(screen.queryByText('Message.securityCheckFailedNote')).not.toBeInTheDocument();
+  });
+
+  it('other-party message with pending files is not shown in the feed', () => {
+    const props = makeBaseProps([
+      createMessage(
+        'msg1',
+        { content: 'hidden message', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+        {
+          sender: customer,
+          publicFileAttachments: [
+            createPendingFileAttachment('pf-pending-other', 'pending-file.pdf'),
+          ],
+        }
+      ),
+    ]);
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.queryByText('hidden message')).not.toBeInTheDocument();
+    expect(screen.queryByText('pending-file')).not.toBeInTheDocument();
   });
 });

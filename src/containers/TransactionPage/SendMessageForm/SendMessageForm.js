@@ -67,6 +67,7 @@ const IconAttachFile = () => {
  * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
  * @param {string} props.formId - The form id
  * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {boolean} props.showAttachFiles - Whether the attach files link is shown
  * @param {string} props.messagePlaceholder - The message placeholder
  * @param {Function} props.onSubmit - The on submit function
  * @param {Function} props.onFocus - The on focus function
@@ -117,6 +118,7 @@ class SendMessageFormComponent extends Component {
             invalid,
             form: formApi,
             formId,
+            showAttachFiles,
             files,
             onFileUpload,
             onRemoveFile,
@@ -126,13 +128,13 @@ class SendMessageFormComponent extends Component {
 
           const formState = formApi.getState();
           const hasMessage = !!formState.values.message;
-          const isAnyFileInProgress = files?.some(f => f.inProgress);
+          const isAnyFileUploading = files?.some(f => f.uploadInProgress);
           const hasAnyFileErrors = files?.some(f => !!f.error);
 
           const submitInProgress = inProgress;
           const submitDisabled =
-            invalid || submitInProgress || !hasMessage || isAnyFileInProgress || hasAnyFileErrors;
-          const showFileLink = !files || files?.length < MAX_FILE_UPLOAD_COUNT; // TODO add access control logic
+            invalid || submitInProgress || !hasMessage || isAnyFileUploading || hasAnyFileErrors;
+          const showFileLink = showAttachFiles && (!files || files?.length < MAX_FILE_UPLOAD_COUNT);
           const addFileLabel = (
             <>
               <IconAttachFile />
