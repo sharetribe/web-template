@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Eject Template from sharetribe-scripts aka our Create React App fork. This is a big
+  change to build process and dependencies.
+  [#792](https://github.com/sharetribe/web-template/pull/792)
 - [change] Update Stripe Connect account requirements for Netherlands.
   [#824](https://github.com/sharetribe/web-template/pull/824)
 - [fix] email verification badge: it was using the old success color.
