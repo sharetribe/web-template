@@ -1,6 +1,12 @@
 @import '../../../../../styles/customMediaQueries.css';
 
 .input {
+  /* Must grow to fill the flex row (icon + input) inside LocationAutocompleteInput.
+     The default LocationAutocompleteInput.css.input has flex-grow:1 and height:50px,
+     but since we pass inputClassName it replaces that class — so we re-declare here. */
+  flex: 1;
+  min-width: 0;
+  height: 48px;
   border: 0;
   padding-left: 8px;
   text-overflow: ellipsis;
@@ -51,12 +57,38 @@
 }
 
 .root {
+  position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
   height: 40px;
   @media (--viewportMedium) {
     height: 48px;
   }
+}
+
+.requiredMark {
+  color: var(--colorFail);
+  font-size: 16px;
+  line-height: 1;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.inputError {
+  border-bottom: 2px solid var(--colorFail) !important;
+}
+
+.errorMessage {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--colorFail);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .customField {
