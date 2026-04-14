@@ -11,7 +11,8 @@ const noop = () => null;
 const createItem = overrides => ({
   file: null,
   tempId: 'test-id',
-  inProgress: false,
+  uploadInProgress: false,
+  verificationInProgress: false,
   progress: null,
   sourceFile: null,
   error: null,
@@ -22,7 +23,7 @@ const createItem = overrides => ({
 describe('FileUpload', () => {
   it('shows filename and uploading status while uploading', () => {
     const item = createItem({
-      inProgress: true,
+      uploadInProgress: true,
       progress: 50,
       sourceFile: { name: 'document.pdf' },
     });
@@ -33,7 +34,8 @@ describe('FileUpload', () => {
 
   it('shows filename and verifying status when upload is complete but file not yet available', () => {
     const item = createItem({
-      inProgress: true,
+      uploadInProgress: false,
+      verificationInProgress: true,
       progress: 100,
       sourceFile: { name: 'document.pdf' },
       verificationStatus: 'pendingVerification',

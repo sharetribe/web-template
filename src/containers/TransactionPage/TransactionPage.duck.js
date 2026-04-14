@@ -24,7 +24,7 @@ import {
   isBookingProcess,
   isNegotiationProcess,
 } from '../../transactions/transaction';
-import { MAX_FILE_SIZE } from '../../util/fileHelpers';
+import { MAX_FILE_SIZE, messageHasPendingFiles } from '../../util/fileHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
@@ -34,6 +34,9 @@ const { UUID } = sdkTypes;
 const MESSAGES_PAGE_SIZE = 100;
 const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
 const MINUTE_IN_MS = 1000 * 60;
+const POLL_MAX_ATTEMPTS = 30;
+const POLL_INTERVAL_MS = 1000;
+
 export const MAX_FILE_UPLOAD_COUNT = 10;
 
 // Day-based time slots queries are cached for 1 minute.
@@ -87,6 +90,10 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
       // refresh failed, but we don't act upon it.
       console.log('error', e); // eslint-disable-line no-console
     });
+};
+
+const getNextPollingDelay = delayMs => {
+  return delayMs * 2 > MINUTE_IN_MS ? MINUTE_IN_MS : delayMs * 2;
 };
 
 // ================ Async Thunks ================ //
@@ -446,6 +453,11 @@ const fetchMessagesPayloadCreator = (
         });
       }
 
+      const messagesWithPendingFiles = messages.filter(messageHasPendingFiles);
+      messagesWithPendingFiles.forEach(m =>
+        dispatch(pollForMessageFileVerification(m.id.uuid, txId))
+      );
+
       return { messages, pagination };
     })
     .catch(e => {
@@ -472,6 +484,55 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
   const nextPage = hasMoreOldMessages ? oldestMessagePageFetched + 1 : oldestMessagePageFetched;
 
   return dispatch(fetchMessagesThunk({ txId, page: nextPage, config }));
+};
+
+////////////////////////////////
+// Poll For File Verification //
+////////////////////////////////
+
+const pollForFileVerificationPayloadCreator = (
+  { fileId, tempId },
+  { dispatch, rejectWithValue, extra: sdk, getState }
+) => {
+  const poll = (attempt, delayMs) => {
+    const fileExists = getState().TransactionPage.fileUploads[tempId];
+
+    if (!fileExists) {
+      return { tempId, sent: true };
+    }
+
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
+      const fileState = resp?.data?.data?.attributes?.state;
+      dispatch(setVerificationStatus({ tempId, verificationStatus: fileState }));
+
+      if (fileState === 'available') {
+        const [fileUpload] = denormalisedResponseEntities(resp);
+        return { fileUpload, tempId };
+      }
+
+      if (fileState === 'verificationFailed') {
+        const [fileUpload] = denormalisedResponseEntities(resp);
+        return rejectWithValue({ tempId, message: 'verificationFailed', fileUpload });
+      }
+
+      if (attempt >= POLL_MAX_ATTEMPTS - 1) {
+        return rejectWithValue({ tempId, message: 'timeout' });
+      }
+
+      return delay(delayMs).then(() => poll(attempt + 1, getNextPollingDelay(delayMs)));
+    });
+  };
+
+  return poll(0, POLL_INTERVAL_MS).catch(e => rejectWithValue({ tempId, error: storableError(e) }));
+};
+
+export const pollForFileVerificationThunk = createAsyncThunk(
+  'TransactionPage/pollForFileVerification',
+  pollForFileVerificationPayloadCreator
+);
+
+export const pollForFileVerification = (fileId, tempId) => dispatch => {
+  return dispatch(pollForFileVerificationThunk({ fileId, tempId }));
 };
 
 ////////////////////
@@ -507,7 +568,16 @@ const uploadFilePayloadCreator = (
   /// Step 2. Create file resource ///
   ////////////////////////////////////
   const createFileResourceFn = metadataResp => {
-    return sdk.ownFiles.create({ ...metadataResp });
+    return sdk.ownFiles.create({ ...metadataResp }).catch(e => {
+      const isMimeTypeError = e.data.errors.some(
+        e => e.status === 400 && e.source.path.some(p => p === 'mimeType')
+      );
+      if (isMimeTypeError) {
+        throw new Error('mimeTypeError');
+      } else {
+        throw e;
+      }
+    });
   };
 
   //////////////////////////////////////////
@@ -553,39 +623,8 @@ const uploadFilePayloadCreator = (
   /// Step 5. Return ids for future handling ///
   //////////////////////////////////////////////
 
-  const waitForFileVerification = (fileId, attempt = 0) => {
-    const maxAttempts = 60;
-    const intervalMs = 1000;
-
-    return sdk.ownFiles.show({ id: fileId }).then(resp => {
-      const ownFile = resp?.data?.data;
-      const fileState = ownFile?.attributes?.state;
-
-      dispatch(setVerificationStatus({ tempId, verificationStatus: fileState }));
-
-      if (fileState === 'available') {
-        return resp; // ← return full resp, not ownFile
-      }
-
-      if (fileState === 'verificationFailed') {
-        throw new Error('File verification failed');
-      }
-
-      if (attempt >= maxAttempts - 1) {
-        const error = new Error('Timed out waiting for file to become available');
-        error.code = 'file-availability-timeout';
-        error.fileState = fileState;
-        throw error;
-      }
-
-      return new Promise(resolve => setTimeout(resolve, intervalMs)).then(() =>
-        waitForFileVerification(fileId, attempt + 1)
-      );
-    });
-  };
-
   const handleFileUploadSuccessFn = () => {
-    return waitForFileVerification(fileId).then(resp => {
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
       const denormalisedResponse = denormalisedResponseEntities(resp);
       const fileUpload = denormalisedResponse[0];
       return { fileUpload, tempId };
@@ -603,9 +642,14 @@ const uploadFilePayloadCreator = (
     handleFileUploadSuccessFn
   );
 
-  return handleFileUpload(file).catch(e => {
-    return rejectWithValue({ tempId, error: storableError(e) });
-  });
+  return handleFileUpload(file)
+    .then(resp => {
+      dispatch(pollForFileVerificationThunk({ fileId, tempId }));
+      return resp;
+    })
+    .catch(e => {
+      return rejectWithValue({ tempId, error: storableError(e) });
+    });
 };
 
 export const uploadFileThunk = createAsyncThunk(
@@ -615,7 +659,67 @@ export const uploadFileThunk = createAsyncThunk(
 
 // Backward-compatible wrapper
 export const uploadFile = (file, tempId) => dispatch => {
-  return dispatch(uploadFileThunk({ file, tempId })).unwrap();
+  return dispatch(uploadFileThunk({ file, tempId }));
+};
+
+///////////////////////////////////////////
+// Poll For Message File Verification   //
+///////////////////////////////////////////
+
+const pollForMessageFileVerificationPayloadCreator = (
+  { messageId, txId },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
+  const poll = (attempt, delayMs) => {
+    if (document.hidden) {
+      // If the user is on another browser tab or window,
+      // skip the SDK poll and don't increment the delay
+      return delay(delayMs).then(() => poll(attempt + 1, delayMs));
+    }
+    return sdk.messages
+      .query({
+        transactionId: txId,
+        ids: [messageId],
+        include: ['publicFileAttachments', 'publicFileAttachments.file'],
+      })
+      .then(resp => {
+        const message = denormalisedResponseEntities(resp)[0];
+        if (!message) {
+          return rejectWithValue({ messageId, reason: 'messageNotFound' });
+        }
+
+        const hasPendingFiles = messageHasPendingFiles(message);
+
+        dispatch(setMessageFileVerificationStatus({ message }));
+
+        if (!hasPendingFiles) {
+          return { messageId };
+        }
+
+        if (attempt >= POLL_MAX_ATTEMPTS - 1) {
+          return rejectWithValue({ messageId, reason: 'timeout' });
+        }
+
+        return delay(delayMs).then(() => poll(attempt + 1, getNextPollingDelay(delayMs)));
+      });
+  };
+
+  return poll(0, POLL_INTERVAL_MS).catch(e =>
+    rejectWithValue({ messageId, error: storableError(e) })
+  );
+};
+
+export const pollForMessageFileVerificationThunk = createAsyncThunk(
+  'TransactionPage/pollForMessageFileVerification',
+  pollForMessageFileVerificationPayloadCreator,
+  {
+    condition: ({ messageId }, { getState }) =>
+      !getState().TransactionPage.messageFilePolling[messageId]?.inProgress,
+  }
+);
+
+export const pollForMessageFileVerification = (messageId, txId) => dispatch => {
+  return dispatch(pollForMessageFileVerificationThunk({ messageId, txId }));
 };
 
 ////////////////////
@@ -838,17 +942,21 @@ const initialState = {
   fetchLineItemsError: null,
   fileUploads: {
     // [tempId]: {
-    // inProgress: bool,
+    // uploadInProgress: bool,
+    // verificationInProgress: bool,
     // error: null | storable-error,
     // file: null | SKD file,
     // sourceFile: null | File
     // progress: null | number,
-    // verificationStatus: null | number,
+    // verificationStatus: null | string,
     // tempId,
     // }
   },
   fileDownloads: {
     // [fileId.uuid]: { inProgress: bool, error: null | storable-error }
+  },
+  messageFilePolling: {
+    // [messageId]: { inProgress: bool, error: null | storable-error }
   },
 };
 
@@ -883,6 +991,16 @@ const transactionPageSlice = createSlice({
       const { tempId, verificationStatus } = action.payload;
       if (state.fileUploads[tempId]) {
         state.fileUploads[tempId].verificationStatus = verificationStatus;
+        state.fileUploads[tempId].uploadInProgress = verificationStatus === 'pendingUpload';
+        state.fileUploads[tempId].verificationInProgress =
+          verificationStatus === 'pendingVerification';
+      }
+    },
+    setMessageFileVerificationStatus: (state, action) => {
+      const { message } = action.payload;
+      const stateMessage = state.messages.find(m => m.id.uuid === message.id.uuid);
+      if (stateMessage && stateMessage.publicFileAttachments) {
+        stateMessage.publicFileAttachments = message.publicFileAttachments;
       }
     },
   },
@@ -988,9 +1106,8 @@ const transactionPageSlice = createSlice({
       // uploadFile cases
       .addCase(uploadFileThunk.pending, (state, action) => {
         const { tempId, file } = action.meta.arg;
-        console.log('pending', { action });
         state.fileUploads[tempId] = {
-          inProgress: true,
+          uploadInProgress: true,
           error: null,
           file: null,
           sourceFile: file, // Set source file so that other components can get the file name
@@ -1001,27 +1118,43 @@ const transactionPageSlice = createSlice({
       })
       .addCase(uploadFileThunk.fulfilled, (state, action) => {
         const { fileUpload, tempId } = action.payload;
-        console.log('fulfilled', action);
-        state.fileUploads[tempId] = {
-          inProgress: false,
-          error: null,
-          file: fileUpload,
-          sourceFile: null, // Clear source file after upload is done
-          progress: null,
-          tempId,
-        };
+        state.fileUploads[tempId].file = fileUpload;
+        state.fileUploads[tempId].sourceFile = null;
       })
       .addCase(uploadFileThunk.rejected, (state, action) => {
         const { tempId, error } = action.payload;
         const { file } = action.meta.arg;
-        console.log('rejected', action);
         state.fileUploads[tempId] = {
-          inProgress: false,
+          uploadInProgress: false,
           error,
           file: null,
           sourceFile: file,
           tempId,
         };
+      })
+      // pollForFileVerification cases
+      .addCase(pollForFileVerificationThunk.pending, (state, action) => {
+        const { tempId } = action.meta.arg;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = true;
+        }
+      })
+      .addCase(pollForFileVerificationThunk.fulfilled, (state, action) => {
+        const { tempId, fileUpload } = action?.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = false;
+          state.fileUploads[tempId].file = fileUpload;
+        }
+      })
+      .addCase(pollForFileVerificationThunk.rejected, (state, action) => {
+        const { tempId, message, fileUpload } = action.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = false;
+          state.fileUploads[tempId].error = { message };
+          if (fileUpload) {
+            state.fileUploads[tempId].file = fileUpload;
+          }
+        }
       })
       // downloadFile cases
       .addCase(downloadFileThunk.pending, (state, action) => {
@@ -1044,6 +1177,19 @@ const transactionPageSlice = createSlice({
           inProgress: false,
           error,
         };
+      })
+      // pollForMessageFileVerification cases
+      .addCase(pollForMessageFileVerificationThunk.pending, (state, action) => {
+        const { messageId } = action.meta.arg;
+        state.messageFilePolling[messageId] = { inProgress: true, error: null };
+      })
+      .addCase(pollForMessageFileVerificationThunk.fulfilled, (state, action) => {
+        const { messageId } = action.payload;
+        state.messageFilePolling[messageId] = { inProgress: false, error: null };
+      })
+      .addCase(pollForMessageFileVerificationThunk.rejected, (state, action) => {
+        const { messageId, reason, error } = action.payload;
+        state.messageFilePolling[messageId] = { inProgress: false, error: error || { reason } };
       })
       // fetchTimeSlots cases
       .addCase(fetchTimeSlotsThunk.pending, (state, action) => {
@@ -1114,6 +1260,7 @@ export const {
   clearUploadedFiles,
   setUploadProgress,
   setVerificationStatus,
+  setMessageFileVerificationStatus,
 } = transactionPageSlice.actions;
 
 // ================ Selectors ================ //

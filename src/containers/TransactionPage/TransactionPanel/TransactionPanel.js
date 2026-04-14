@@ -213,6 +213,7 @@ export class TransactionPanelComponent extends Component {
       config,
       hasViewingRights,
       transactionFieldsComponent,
+      allowFiles,
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -256,6 +257,7 @@ export class TransactionPanelComponent extends Component {
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
+    const showAttachFiles = showSendMessageForm && allowFiles;
 
     // Only show order panel for users who have listing viewing rights, otherwise
     // show the detail card heading.
@@ -375,6 +377,7 @@ export class TransactionPanelComponent extends Component {
                 onFocus={this.onSendMessageFormFocus}
                 onBlur={this.onSendMessageFormBlur}
                 onSubmit={this.onMessageSubmit}
+                showAttachFiles={showAttachFiles}
                 files={fileUploads}
                 onFileUpload={this.onUploadFile}
                 onRemoveFile={this.onRemoveFile}

@@ -527,6 +527,8 @@ export const TransactionPageComponent = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
 
+  const allowFiles = config.accessControl.marketplace.fileUploadAndDownloadEnabled;
+
   const showListingImage = requireListingImage(foundListingTypeConfig);
 
   if (isDataAvailable && isProviderRole && !isOwnSale) {
@@ -705,6 +707,7 @@ export const TransactionPageComponent = props => {
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
+      allowFiles={allowFiles}
       onUploadFile={onUploadFile}
       fileUploads={fileUploads}
       onClearUploadedFiles={onClearUploadedFiles}
@@ -738,6 +741,7 @@ export const TransactionPageComponent = props => {
           onOpenReviewModal={onOpenReviewModal}
           onShowOlderMessages={() => onShowMoreMessages(transaction.id, config)}
           fetchMessagesInProgress={fetchMessagesInProgress}
+          allowFiles={allowFiles}
           onDownloadFile={onDownloadFile}
         />
       }
