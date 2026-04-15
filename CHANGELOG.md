@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update some dependencies - inclusing webpack and lodash.
+  [828](https://github.com/sharetribe/web-template/pull/828)
 - [fix] SearchPage variants: getListingsById creates a new array on every call. This adds a memoized
   selector factory and uses it instead. [#829](https://github.com/sharetribe/web-template/pull/829)
 
