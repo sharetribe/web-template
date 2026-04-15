@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] SearchPage variants: getListingsById creates a new array on every call. This adds a memoized
+  selector factory and uses it instead. [#829](https://github.com/sharetribe/web-template/pull/829)
+
 ## [v11.0.0] 2026-04-14
 
 This major release is centered on the template ejection from sharetribe-scripts (our fork of Create
