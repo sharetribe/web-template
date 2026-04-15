@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { updatedEntities, denormalisedEntities } from '../util/data';
 
 // ================ Redux Toolkit Slice ================ //
@@ -40,6 +40,27 @@ export const getListingsById = (state, listingIds) => {
   const throwIfNotFound = false;
   return denormalisedEntities(entities, resources, throwIfNotFound);
 };
+
+/**
+ * Create a memoized selector that returns denormalized listings for `listingIds`.
+ *
+ * Use this with `useMemo(makeGetListingsByIdSelector, [])` inside components
+ * so each component instance has a stable selector cache.
+ *
+ * @returns {(state: Object, listingIds: Array<UUID>) => Array<Object>}
+ */
+export const makeGetListingsByIdSelector = () =>
+  createSelector(
+    [state => state.marketplaceData?.entities, (_state, listingIds = []) => listingIds],
+    (entities = {}, listingIds = []) => {
+      const resources = listingIds.map(id => ({
+        id,
+        type: 'listing',
+      }));
+      const throwIfNotFound = false;
+      return denormalisedEntities(entities, resources, throwIfNotFound);
+    }
+  );
 
 /**
  * Get the denormalised entities from the given entity references.

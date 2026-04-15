@@ -1,4 +1,4 @@
-import React, { Component, useCallback } from 'react';
+import React, { Component, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
 import classNames from 'classnames';
@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { isOriginInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { makeGetListingsByIdSelector } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { ModalInMobile, Page } from '../../components';
@@ -500,6 +500,7 @@ export class SearchPageComponent extends Component {
  */
 const SearchPage = props => {
   const dispatch = useDispatch();
+  const selectListingsById = useMemo(makeGetListingsByIdSelector, []);
 
   const currentUser = useSelector(state => state.user?.currentUser);
   const {
@@ -510,7 +511,7 @@ const SearchPage = props => {
     activeListingId,
   } = useSelector(state => state.SearchPage);
   const listings = useSelector(state =>
-    getListingsById(state, state.SearchPage.currentPageResultIds)
+    selectListingsById(state, state.SearchPage.currentPageResultIds)
   );
   const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
 
