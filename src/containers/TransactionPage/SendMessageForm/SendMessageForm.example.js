@@ -5,6 +5,7 @@ export const Empty = {
   props: {
     formId: 'SendMessageForm.Empty.Form',
     messagePlaceholder: 'Send message to Juho…',
+    showAttachFiles: true,
     onChange: values => {
       console.log('values changed to:', values);
     },
@@ -32,6 +33,7 @@ export const InProgress = {
   props: {
     formId: 'SendMessageForm.InProgress.Form',
     messagePlaceholder: 'Send message to Juho…',
+    showAttachFiles: true,
     inProgress: true,
     onSubmit: values => {
       console.log('submit values:', values);
@@ -51,6 +53,7 @@ export const WithFiles = {
   props: {
     formId: 'SendMessageForm.WithFiles.Form',
     messagePlaceholder: 'Send message to Juho…',
+    showAttachFiles: true,
     onSubmit: values => {
       console.log('submit values:', values);
     },
@@ -121,9 +124,36 @@ export const Error = {
   props: {
     formId: 'SendMessageForm.Error.Form',
     messagePlaceholder: 'Send message to Juho…',
+    showAttachFiles: true,
     sendMessageError: { type: 'error', name: 'ExampleError' },
     onSubmit: values => {
       console.log('submit values:', values);
+    },
+    onFileUpload: file => {
+      console.log('upload file:', file);
+    },
+    onRemoveFile: tempId => {
+      console.log('remove file:', tempId);
+    },
+  },
+  group: 'page:TransactionPage',
+};
+
+// showAttachFiles: false — marketplace has file upload disabled via config.accessControl.
+export const WithAttachFilesDisabled = {
+  component: SendMessageForm,
+  props: {
+    formId: 'SendMessageForm.WithAttachFilesDisabled.Form',
+    messagePlaceholder: 'Send message to Juho…',
+    showAttachFiles: false,
+    onSubmit: values => {
+      console.log('submit values:', values);
+    },
+    onFocus: () => {
+      console.log('focus on message form');
+    },
+    onBlur: () => {
+      console.log('blur on message form');
     },
     onFileUpload: file => {
       console.log('upload file:', file);

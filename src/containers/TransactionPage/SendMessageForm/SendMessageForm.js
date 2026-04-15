@@ -66,6 +66,7 @@ const IconAttachFile = () => {
  * @param {string} [props.rootClassName] - Custom class that extends the default class for the root element
  * @param {string} props.formId - The form id
  * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {boolean} props.showAttachFiles - Whether the attach files link is shown
  * @param {string} props.messagePlaceholder - The message placeholder
  * @param {Function} props.onSubmit - The on submit function
  * @param {Function} props.onFocus - The on focus function
@@ -116,6 +117,7 @@ class SendMessageFormComponent extends Component {
             invalid,
             form,
             formId,
+            showAttachFiles,
             files,
             onFileUpload,
             onRemoveFile,
@@ -131,7 +133,7 @@ class SendMessageFormComponent extends Component {
           const submitInProgress = inProgress;
           const submitDisabled =
             invalid || submitInProgress || !hasMessage || isAnyFileUploading || hasAnyFileErrors;
-          const showFileLink = !files || files?.length < 10; // TODO add access control logic
+          const showFileLink = showAttachFiles && (!files || files?.length < 10);
           const addFileLabel = (
             <>
               <IconAttachFile />

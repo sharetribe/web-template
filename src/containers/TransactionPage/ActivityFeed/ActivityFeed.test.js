@@ -239,6 +239,7 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
@@ -248,6 +249,44 @@ describe('ActivityFeed file display and download', () => {
     expect(screen.getByText('invoice')).toBeInTheDocument();
     expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Message.downloadFile' })).toBeInTheDocument();
+  });
+  it('own message with one attached file renders no file links when files are not allowed', () => {
+    const customer = createUser('user1');
+    const provider = createUser('user2');
+    const listing = createListing('listing');
+
+    const props = {
+      messages: [
+        createMessage(
+          'msg1',
+          { content: 'hello', createdAt: new Date(Date.UTC(2023, 10, 9, 8, 12)) },
+          { sender: provider, publicFiles: [createFileAttachment('pf1', 'invoice.pdf')] }
+        ),
+      ],
+      transaction: createTransaction({
+        id: 'tx1',
+        customer,
+        provider,
+        listing,
+        lastTransitionedAt: new Date(Date.UTC(2023, 4, 1)),
+        transitions: [],
+      }),
+      stateData: { processName: 'default-purchase', processState: 'inquiry' },
+      currentUser: createCurrentUser('user2'),
+      hasOlderMessages: false,
+      fetchMessagesInProgress: false,
+      onOpenReviewModal: noop,
+      onShowOlderMessages: noop,
+      allowFiles: false,
+      onDownloadFile: noop,
+      intl: fakeIntl,
+    };
+
+    render(<ActivityFeed {...props} />);
+
+    expect(screen.queryByText('invoice')).not.toBeInTheDocument();
+    expect(screen.queryByText('.pdf')).not.toBeInTheDocument();
+    expect(screen.queryByRole('img', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
   });
 
   it('own message with no publicFiles array renders no file links', () => {
@@ -276,6 +315,7 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
@@ -318,6 +358,7 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
@@ -356,6 +397,7 @@ describe('ActivityFeed file display and download', () => {
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
+      allowFiles: true,
       onDownloadFile: noop,
       intl: fakeIntl,
     };
@@ -392,6 +434,7 @@ describe('ActivityFeed file display and download', () => {
       hasOlderMessages: false,
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
+      allowFiles: true,
       onShowOlderMessages: noop,
       onDownloadFile,
       intl: fakeIntl,
@@ -438,6 +481,7 @@ describe('ActivityFeed file display and download', () => {
       hasOlderMessages: false,
       fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
+      allowFiles: true,
       onShowOlderMessages: noop,
       onDownloadFile,
       intl: fakeIntl,
@@ -472,6 +516,7 @@ describe('ActivityFeed file verification states', () => {
     hasOlderMessages: false,
     fetchMessagesInProgress: false,
     onOpenReviewModal: noop,
+    allowFiles: true,
     onShowOlderMessages: noop,
     onDownloadFile: noop,
     intl: fakeIntl,
