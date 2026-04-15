@@ -24,7 +24,7 @@ import {
   isBookingProcess,
   isNegotiationProcess,
 } from '../../transactions/transaction';
-import { MAX_FILE_SIZE } from '../../util/fileHelpers';
+import { MAX_FILE_SIZE, messageHasPendingFiles } from '../../util/fileHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
@@ -34,6 +34,8 @@ const { UUID } = sdkTypes;
 const MESSAGES_PAGE_SIZE = 100;
 const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
 const MINUTE_IN_MS = 1000 * 60;
+const POLL_MAX_ATTEMPTS = 60; // TODO check with the team for a reasonable max attempt count
+const POLL_INTERVAL_MS = 1000;
 
 // Day-based time slots queries are cached for 1 minute.
 const removeOutdatedDateData = timeSlotsForDate => {
@@ -440,6 +442,11 @@ const fetchMessagesPayloadCreator = (
         });
       }
 
+      const messagesWithPendingFiles = messages.filter(messageHasPendingFiles);
+      messagesWithPendingFiles.forEach(m =>
+        dispatch(pollForMessageFileVerification(m.id.uuid, txId))
+      );
+
       return { messages, pagination };
     })
     .catch(e => {
@@ -476,9 +483,6 @@ const pollForFileVerificationPayloadCreator = (
   { fileId, tempId },
   { dispatch, rejectWithValue, extra: sdk }
 ) => {
-  const maxAttempts = 60;
-  const intervalMs = 1000;
-
   const poll = attempt => {
     return sdk.ownFiles.show({ id: fileId }).then(resp => {
       const fileState = resp?.data?.data?.attributes?.state;
@@ -494,11 +498,11 @@ const pollForFileVerificationPayloadCreator = (
         return rejectWithValue({ tempId, reason: 'verificationFailed', fileUpload });
       }
 
-      if (attempt >= maxAttempts - 1) {
+      if (attempt >= POLL_MAX_ATTEMPTS - 1) {
         return rejectWithValue({ tempId, reason: 'timeout' });
       }
 
-      return delay(intervalMs).then(() => poll(attempt + 1));
+      return delay(POLL_INTERVAL_MS).then(() => poll(attempt + 1));
     });
   };
 
@@ -624,6 +628,60 @@ export const uploadFileThunk = createAsyncThunk(
 // Backward-compatible wrapper
 export const uploadFile = (file, tempId) => dispatch => {
   return dispatch(uploadFileThunk({ file, tempId })).unwrap();
+};
+
+///////////////////////////////////////////
+// Poll For Message File Verification   //
+///////////////////////////////////////////
+
+const pollForMessageFileVerificationPayloadCreator = (
+  { messageId, txId },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
+  const poll = attempt => {
+    return sdk.messages
+      .query({
+        transactionId: txId,
+        ids: [messageId],
+        include: ['publicFiles', 'publicFiles.file'],
+      })
+      .then(resp => {
+        const message = denormalisedResponseEntities(resp)[0];
+        if (!message) {
+          return rejectWithValue({ messageId, reason: 'messageNotFound' });
+        }
+
+        const hasPendingFiles = messageHasPendingFiles(message);
+
+        dispatch(setMessageFileVerificationStatus({ message }));
+
+        if (!hasPendingFiles) {
+          return { messageId };
+        }
+
+        if (attempt >= POLL_MAX_ATTEMPTS - 1) {
+          return rejectWithValue({ messageId, reason: 'timeout' });
+        }
+
+        return delay(POLL_INTERVAL_MS).then(() => poll(attempt + 1));
+      });
+  };
+
+  return poll(0).catch(e => rejectWithValue({ messageId, error: storableError(e) }));
+};
+
+export const pollForMessageFileVerificationThunk = createAsyncThunk(
+  'TransactionPage/pollForMessageFileVerification',
+  pollForMessageFileVerificationPayloadCreator,
+  {
+    condition: ({ messageId }, { getState }) =>
+      !getState().TransactionPage.messageFilePolling[messageId]?.inProgress,
+  }
+);
+
+// Backward-compat wrapper — mirrors pollForFileVerification pattern
+export const pollForMessageFileVerification = (messageId, txId) => dispatch => {
+  return dispatch(pollForMessageFileVerificationThunk({ messageId, txId }));
 };
 
 ////////////////////
@@ -859,6 +917,9 @@ const initialState = {
   fileDownloads: {
     // [fileId.uuid]: { inProgress: bool, error: null | storable-error }
   },
+  messageFilePolling: {
+    // [messageId]: { inProgress: bool, error: null | storable-error }
+  },
 };
 
 // Merge entity arrays using ids, so that conflicting items in newer array (b) overwrite old values (a).
@@ -895,6 +956,13 @@ const transactionPageSlice = createSlice({
         state.fileUploads[tempId].uploadInProgress = verificationStatus === 'pendingUpload';
         state.fileUploads[tempId].verificationInProgress =
           verificationStatus === 'pendingVerification';
+      }
+    },
+    setMessageFileVerificationStatus: (state, action) => {
+      const { message } = action.payload;
+      const stateMessage = state.messages.find(m => m.id.uuid === message.id.uuid);
+      if (stateMessage && stateMessage.publicFiles) {
+        stateMessage.publicFiles = message.publicFiles;
       }
     },
   },
@@ -1072,6 +1140,19 @@ const transactionPageSlice = createSlice({
           error,
         };
       })
+      // pollForMessageFileVerification cases
+      .addCase(pollForMessageFileVerificationThunk.pending, (state, action) => {
+        const { messageId } = action.meta.arg;
+        state.messageFilePolling[messageId] = { inProgress: true, error: null };
+      })
+      .addCase(pollForMessageFileVerificationThunk.fulfilled, (state, action) => {
+        const { messageId } = action.payload;
+        state.messageFilePolling[messageId] = { inProgress: false, error: null };
+      })
+      .addCase(pollForMessageFileVerificationThunk.rejected, (state, action) => {
+        const { messageId, reason, error } = action.payload;
+        state.messageFilePolling[messageId] = { inProgress: false, error: error || { reason } };
+      })
       // fetchTimeSlots cases
       .addCase(fetchTimeSlotsThunk.pending, (state, action) => {
         const { timeZone, options } = action.meta.arg;
@@ -1141,6 +1222,7 @@ export const {
   clearUploadedFiles,
   setUploadProgress,
   setVerificationStatus,
+  setMessageFileVerificationStatus,
 } = transactionPageSlice.actions;
 
 // ================ Selectors ================ //
