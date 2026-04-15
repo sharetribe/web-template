@@ -14,6 +14,19 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v11.0.0] 2026-04-14
+
+This major release is centered on the template ejection from sharetribe-scripts (our fork of Create
+React App). In addition, we have refactored AuthenticationPage, SearchPage, ListingPage, and
+ManageListingCard.
+
+This also changes the Stripe Connect account requirements for Netherlands. Stripe can't support
+individual accounts for sellers in Netherlands. New accounts must be created with business type
+"company". (An individual account is mapped as a sole proprietorship in Stripe.)
+
+There's also a new field schema type: shortText. This allows short text inputs to be shown in the
+Details section of a listing and profile pages.
+
 - [change] ManageListingCard: refactor the component.
   [#805](https://github.com/sharetribe/web-template/pull/805)
 - [change] ListingPage: refactor the page.
@@ -61,6 +74,8 @@ way to update this template, but currently, we follow a pattern:
   [#818](https://github.com/sharetribe/web-template/pull/818)
 - [fix] Fix return value in CheckoutPage pay-and-save-card flow
   [#816](https://github.com/sharetribe/web-template/pull/816)
+
+  [v11.0.0]: https://github.com/sharetribe/web-template/compare/v10.15.0...v11.0.0
 
 ## [v10.15.0] 2026-03-25
 
