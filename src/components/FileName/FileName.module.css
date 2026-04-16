@@ -1,0 +1,19 @@
+.root {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.baseName {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.extension {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

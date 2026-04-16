@@ -9,16 +9,17 @@
 .ownMessage {
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
-  max-width: 433px;
 }
 
 .message {
   display: flex;
   flex-direction: row;
+  max-width: 433px;
 }
 
 .ownMessage {
   float: right;
+  max-width: min(433px, 100%);
 }
 
 .avatar {
@@ -28,6 +29,10 @@
   @media (--viewportMedium) {
     margin: 0px 12px 0 0;
   }
+}
+
+.messageContentWrapper {
+  min-width: 0;
 }
 
 .ownMessageContentWrapper {
@@ -47,7 +52,7 @@
   background-color: var(--colorWhite);
   border-radius: 8px;
   display: flex;
-  max-width: 420px;
+  /* max-width: 420px; */
   padding: var(--spacing-md, 8px) var(--spacing-lg, 12px);
   flex-direction: column;
   justify-content: center;
@@ -62,12 +67,14 @@
 
 .messageContent {
   flex: 1;
+  max-width: min(420px, 100%);
 }
 
 .ownMessageContent {
   background-color: var(--marketplaceColor);
   color: var(--colorWhite);
   float: right;
+  max-width: min(420px, 100%);
 }
 
 .ownMessageContentLink {
@@ -116,6 +123,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   cursor: default;
 }
 
@@ -127,27 +135,6 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-}
-
-.fileAttachmentName {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.fileAttachmentBaseName {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-  flex-shrink: 1;
-}
-
-.fileAttachmentExtension {
-  flex-shrink: 0;
-  white-space: nowrap;
 }
 
 .fileAttachmentStatus {

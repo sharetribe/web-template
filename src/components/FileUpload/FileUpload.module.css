@@ -39,15 +39,9 @@
   }
 }
 
-.fileName {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
 
 .statusText {
+  flex-shrink: 0;
   white-space: nowrap;
   color: var(--colorGrey500);
 }

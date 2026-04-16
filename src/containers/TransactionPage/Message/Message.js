@@ -3,7 +3,6 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import {
-  analyseFileName,
   calculateFileSize,
   messageHasPendingFiles,
   messageHasFailedFiles,
@@ -11,7 +10,7 @@ import {
 import { richText } from '../../../util/richText';
 import { propTypes } from '../../../util/types';
 
-import { Avatar } from '../../../components';
+import { Avatar, FileName } from '../../../components';
 
 import css from './Message.module.css';
 
@@ -135,8 +134,6 @@ const FileAttachment = props => {
   const isDeleted = !file || file.attributes.deleted;
 
   const name = file?.attributes?.name;
-  // File name truncates on overflow, extension should be displayed when possible
-  const { baseName, extension } = analyseFileName(name);
 
   const rootClass = classNames(css.fileAttachment, isAvailable && css.fileAttachmentAvailable);
 
@@ -151,10 +148,7 @@ const FileAttachment = props => {
         >
           <IconDownload />
         </span>
-        <span className={css.fileAttachmentName}>
-          <span className={css.fileAttachmentBaseName}>{baseName}</span>
-          {extension ? <span className={css.fileAttachmentExtension}>{extension}</span> : null}
-        </span>
+        <FileName name={name} />
         <span className={css.fileAttachmentStatus}>
           {size} {unit}
         </span>
@@ -172,10 +166,7 @@ const FileAttachment = props => {
         >
           <IconSpinnerSmall />
         </span>
-        <span className={css.fileAttachmentName}>
-          <span className={css.fileAttachmentBaseName}>{baseName}</span>
-          {extension ? <span className={css.fileAttachmentExtension}>{extension}</span> : null}
-        </span>
+        <FileName name={name} />
         <span className={css.fileAttachmentStatus}>
           <FormattedMessage id="Message.fileVerifying" />
         </span>
@@ -193,10 +184,7 @@ const FileAttachment = props => {
         >
           <IconErrorSmall />
         </span>
-        <span className={css.fileAttachmentName}>
-          <span className={css.fileAttachmentBaseName}>{baseName}</span>
-          {extension ? <span className={css.fileAttachmentExtension}>{extension}</span> : null}
-        </span>
+        <FileName name={name} />
         <span className={css.fileAttachmentStatus}>
           <FormattedMessage id="Message.fileSecurityCheckFailed" />
         </span>
@@ -248,7 +236,7 @@ export const Message = props => {
   return (
     <div className={css.message}>
       <Avatar className={css.avatar} user={message.sender} />
-      <div>
+      <div className={css.messageContentWrapper}>
         <div className={css.messageContent}>
           {content}
           {publicFiles.length > 0 ? (
