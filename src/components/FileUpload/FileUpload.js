@@ -146,7 +146,18 @@ const FileUpload = props => {
   const rootClass = classNames(className || css.root, hasError && css.error);
   const fileInfoClass = classNames(css.fileInfo, hasError && css.fileInfoError);
 
-  const fileNameElement = <FileName name={name} />;
+  const isDownloadable = hasCompletedUpload && !verificationInProgress;
+  const fileNameElement = isDownloadable ? (
+    <button
+      type="button"
+      className={classNames(css.fileNameDownloadable)}
+      onClick={() => onDownloadFile(file.id.uuid, true)}
+    >
+      <FileName name={name} />
+    </button>
+  ) : (
+    <FileName name={name} />
+  );
 
   return (
     <div className={rootClass}>

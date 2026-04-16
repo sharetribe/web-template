@@ -121,6 +121,7 @@ class SendMessageFormComponent extends Component {
             files,
             onFileUpload,
             onRemoveFile,
+            onDownloadFile,
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
@@ -155,7 +156,12 @@ class SendMessageFormComponent extends Component {
               {files?.length > 0 ? (
                 <div className={css.files}>
                   {files.map(f => (
-                    <FileUpload item={f} key={f.tempId} onRemoveFile={onRemoveFile} />
+                    <FileUpload
+                      item={f}
+                      key={f.tempId}
+                      onRemoveFile={onRemoveFile}
+                      onDownloadFile={onDownloadFile}
+                    />
                   ))}
                 </div>
               ) : null}
