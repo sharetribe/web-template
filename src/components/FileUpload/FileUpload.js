@@ -2,6 +2,7 @@ import React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { calculateFileSize } from '../../util/fileHelpers';
+import { FileName } from '../../components';
 
 import css from './FileUpload.module.css';
 
@@ -87,7 +88,7 @@ const IconCross = () => (
 );
 
 const FileUpload = props => {
-  const { item, className, onRemoveFile } = props;
+  const { item, className, onRemoveFile, onDownloadFile } = props;
   const {
     file,
     tempId,
@@ -147,11 +148,13 @@ const FileUpload = props => {
   const rootClass = classNames(className || css.root, hasError && css.error);
   const fileInfoClass = classNames(css.fileInfo, hasError && css.fileInfoError);
 
+  const fileNameElement = <FileName name={name} />;
+
   return (
     <div className={rootClass}>
       <span className={css.statusIcon}>{statusIcon}</span>
       <div className={fileInfoClass}>
-        <span className={css.fileName}>{name}</span>
+        {fileNameElement}
         <span className={css.statusText}>{statusText}</span>
       </div>
       <button
