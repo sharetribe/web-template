@@ -214,6 +214,7 @@ export class TransactionPanelComponent extends Component {
       hasViewingRights,
       transactionFieldsComponent,
       allowFiles,
+      onDownloadFile,
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -381,6 +382,7 @@ export class TransactionPanelComponent extends Component {
                 files={fileUploads}
                 onFileUpload={this.onUploadFile}
                 onRemoveFile={this.onRemoveFile}
+                onDownloadFile={onDownloadFile}
               />
             ) : (
               <div className={css.sendingMessageNotAllowed}>
