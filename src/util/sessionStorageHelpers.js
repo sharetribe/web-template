@@ -5,10 +5,24 @@ import { isAfterDate } from '../util/dates';
 export const REFERRAL_ID_SESSION_STORAGE_KEY = 'referralSource';
 const HOUR_IN_MS = 60 * 60 * 1000;
 
+/**
+ * Returns true if the referral data's expiry timestamp has passed.
+ *
+ * @param {Object} referralData
+ * @returns {boolean}
+ */
 const isReferralDataExpired = referralData => {
   return isAfterDate(new Date(), referralData.expiresAt);
 };
 
+/**
+ * Returns true if the given referral params are already stored in session storage
+ * with matching keys and values.
+ *
+ * @param {Object} storedData - Data currently in session storage - consist of sources and expiresAt params
+ * @param {Object} urlReferralParams - Filtered referral params from the current URL
+ * @returns {boolean}
+ */
 const isReferralDataStored = (storedData, urlReferralParams) => {
   if (storedData == null || storedData?.sources == null) {
     return false;
@@ -38,6 +52,14 @@ const isReferralDataStored = (storedData, urlReferralParams) => {
   return true;
 };
 
+/**
+ * Filters referral params down to only those whose keys match a referral source
+ * configured on any user type.
+ *
+ * @param {Object} referralData - Parsed query parameters from the signup URL
+ * @param {Array} userTypes - User type config
+ * @returns {Object} Filtered referral params
+ */
 export const filterValidReferralData = (referralData, userTypes) => {
   const validReferralSources = userTypes.flatMap(userType =>
     userType.referralSources ? Object.keys(userType.referralSources) : []
@@ -47,6 +69,16 @@ export const filterValidReferralData = (referralData, userTypes) => {
   );
 };
 
+/**
+ * Stores filtered referral data to session storage with a 1-hour expiry.
+ *
+ * Skips storage if the same data is already stored and has not expired. If the
+ * stored data has expired, it is overwritten with a fresh 1-hour expiry.
+ *
+ *
+ * @param {Object} referralData - Filtered referral params to store
+ * @param {boolean} clearOnExpiry - Indicates if automatic clearing should happen after expiry
+ */
 export const storeReferralDataToSession = (referralData, clearOnExpiry) => {
   const storedData = getStoredReferralDataFromSession();
 
@@ -82,6 +114,11 @@ export const storeReferralDataToSession = (referralData, clearOnExpiry) => {
   }
 };
 
+/**
+ * Retrieves and deserializes referral data from session storage.
+ *
+ * @returns {Object} Stored referral data or empty object if session storage is unavailable or no data is stored
+ */
 export const getStoredReferralDataFromSession = () => {
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser && window?.sessionStorage) {
@@ -103,6 +140,9 @@ export const getStoredReferralDataFromSession = () => {
   return {};
 };
 
+/**
+ * Removes referral data from session storage
+ */
 export const clearStoredReferralDataInSession = () => {
   const isBrowser = typeof window !== 'undefined';
 
@@ -111,6 +151,14 @@ export const clearStoredReferralDataInSession = () => {
   }
 };
 
+/**
+ * Returns the subset of stored referral data that is valid for the given user type. Returns an empty object if there is no stored data, the data
+ * has expired, or none of the stored keys match the user type's referral sources.
+ *
+ * @param {Object} userTypeConfig - Config object for the selected user type
+ * @param {Object} userTypeConfig.referralSources - Map of valid referral sources for this type
+ * @returns {Object} Referral key/value pairs to store in the user's private data
+ */
 export const pickReferralData = userTypeConfig => {
   const referralData = getStoredReferralDataFromSession();
 
@@ -128,6 +176,12 @@ export const pickReferralData = userTypeConfig => {
   return Object.fromEntries(entries);
 };
 
+/**
+ * Clears referral data from session storage if it has expired.
+ *
+ * Called on every page load (src/index.js) to ensure stale referral data does
+ * not persist across hard refreshes or cross-domain navigation within the same tab.
+ */
 export const clearReferralDataIfExpired = () => {
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser && window.sessionStorage) {
