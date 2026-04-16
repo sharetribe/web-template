@@ -28,7 +28,8 @@ describe('FileUpload', () => {
       sourceFile: { name: 'document.pdf' },
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
-    expect(screen.getByText('document.pdf')).toBeInTheDocument();
+    expect(screen.getByText('document')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByText('FileUpload.uploading')).toBeInTheDocument();
   });
 
@@ -41,7 +42,8 @@ describe('FileUpload', () => {
       verificationStatus: 'pendingVerification',
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
-    expect(screen.getByText('document.pdf')).toBeInTheDocument();
+    expect(screen.getByText('document')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByText('FileUpload.verifying')).toBeInTheDocument();
     expect(screen.queryByText('FileUpload.uploading')).not.toBeInTheDocument();
   });
@@ -52,7 +54,8 @@ describe('FileUpload', () => {
       error: { message: 'Upload failed.' },
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
-    expect(screen.getByText('document.pdf')).toBeInTheDocument();
+    expect(screen.getByText('document')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByText(/Upload failed/)).toBeInTheDocument();
   });
 
@@ -70,7 +73,8 @@ describe('FileUpload', () => {
       file: { attributes: { name: 'document.pdf', size: 512 } },
     });
     render(<FileUpload item={item} onRemoveFile={noop} />);
-    expect(screen.getByText('document.pdf')).toBeInTheDocument();
+    expect(screen.getByText('document')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByText(/KB|MB/)).toBeInTheDocument();
     expect(screen.queryByText('FileUpload.uploading')).not.toBeInTheDocument();
     expect(screen.queryByText('FileUpload.verifying')).not.toBeInTheDocument();

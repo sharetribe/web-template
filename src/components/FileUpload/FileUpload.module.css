@@ -39,17 +39,13 @@
   }
 }
 
-.fileName {
-  flex-grow: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-
 .statusText {
-  white-space: nowrap;
   color: var(--colorGrey500);
+  white-space: nowrap;
+
+  @media (min-width: 500px) {
+    flex-shrink: 1;
+  }
 }
 
 .error .statusText {
