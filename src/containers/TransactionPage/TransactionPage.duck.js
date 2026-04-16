@@ -725,13 +725,18 @@ export const pollForMessageFileVerification = (messageId, txId) => dispatch => {
 ////////////////////
 // downloadFile   //
 ////////////////////
-const downloadFilePayloadCreator = ({ fileAttachmentId }, { rejectWithValue, extra: sdk }) => {
+const downloadFilePayloadCreator = (
+  { fileAttachmentId, isOwnFile },
+  { rejectWithValue, extra: sdk }
+) => {
   if (!fileAttachmentId) {
     throw new Error('Missing fileAttachmentId, cannot initiate download.');
   }
   // Request a temporary download URL from the SDK
-  return sdk.fileDownloads
-    .create({ fileAttachmentId })
+  const downLoadFn = isOwnFile
+    ? sdk.ownFileDownloads.create({ fileId: fileAttachmentId })
+    : sdk.fileDownloads.create({ fileAttachmentId });
+  return downLoadFn
     .then(downloadResp => {
       // Trigger a browser file download
       const { url } = downloadResp?.data?.data?.attributes || {};
@@ -753,8 +758,8 @@ export const downloadFileThunk = createAsyncThunk(
 );
 
 // Backward-compatible wrapper — mirrors uploadFile pattern
-export const downloadFile = fileAttachmentId => dispatch => {
-  return dispatch(downloadFileThunk({ fileAttachmentId })).unwrap();
+export const downloadFile = (fileAttachmentId, isOwnFile = false) => dispatch => {
+  return dispatch(downloadFileThunk({ fileAttachmentId, isOwnFile })).unwrap();
 };
 /////////////////
 // sendMessage //

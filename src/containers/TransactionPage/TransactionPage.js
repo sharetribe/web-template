@@ -711,6 +711,7 @@ export const TransactionPageComponent = props => {
       onUploadFile={onUploadFile}
       fileUploads={fileUploads}
       onClearUploadedFiles={onClearUploadedFiles}
+      onDownloadFile={onDownloadFile}
       actionButtons={containerId => (
         <ActionButtons
           containerId={containerId}
@@ -1010,7 +1011,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
     onUploadFile: (file, tempId) => dispatch(uploadFile(file, tempId)),
     onClearUploadedFiles: tempIds => dispatch(clearUploadedFiles(tempIds)),
-    onDownloadFile: fileAttachmentId => dispatch(downloadFile(fileAttachmentId)),
+    onDownloadFile: (fileAttachmentId, isOwnFile) =>
+      dispatch(downloadFile(fileAttachmentId, isOwnFile)),
   };
 };
 
