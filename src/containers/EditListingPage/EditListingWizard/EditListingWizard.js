@@ -23,6 +23,7 @@ import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_SHORT_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
   SCHEMA_TYPE_YOUTUBE,
@@ -189,6 +190,8 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
         ? typeof savedListingField === 'string' && hasValidEnumValue(savedListingField)
         : schemaType === SCHEMA_TYPE_MULTI_ENUM
         ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
+        : schemaType === SCHEMA_TYPE_SHORT_TEXT
+        ? typeof savedListingField === 'string'
         : schemaType === SCHEMA_TYPE_TEXT
         ? typeof savedListingField === 'string'
         : schemaType === SCHEMA_TYPE_LONG
