@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fixes a bug where required short texts were not handled in EditListingWizard
+  [831](https://github.com/sharetribe/web-template/pull/831)
 - [change] Update some dependencies - inclusing webpack and lodash.
   [828](https://github.com/sharetribe/web-template/pull/828)
 - [fix] SearchPage variants: getListingsById creates a new array on every call. This adds a memoized
