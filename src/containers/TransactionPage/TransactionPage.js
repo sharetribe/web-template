@@ -219,6 +219,37 @@ const getDataValidationResult = (transaction, process) => {
 };
 
 /**
+ * Blocks React Router in-app navigation and browser-level navigation while `when` is true.
+ * Registers history.block() for React Router transitions and a beforeunload listener for
+ * browser-level events (refresh, tab close). Both are cleaned up when `when` becomes false.
+ *
+ * @param {boolean} isBlockNavigation - Whether to block navigation
+ * @param {Object} history - React Router history object (injected by withRouter)
+ * @param {string} message - Confirmation message shown in the React Router prompt dialog
+ */
+const useUploadNavigationBlock = (isBlockNavigation, history, message) => {
+  useEffect(() => {
+    if (!isBlockNavigation) {
+      return;
+    }
+
+    const unblock = history.block(message);
+
+    const handleBeforeUnload = e => {
+      e.preventDefault();
+      // Included for legacy support, e.g. Chrome/Edge < 119
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      unblock();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isBlockNavigation, history, message]);
+};
+
+/**
  * TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
  *
  * @component
@@ -316,6 +347,12 @@ export const TransactionPageComponent = props => {
     onDownloadFile,
     ...restOfProps
   } = props;
+
+  const hasUnsentUploads = fileUploads?.length > 0;
+  const blockMessage = intl.formatMessage({
+    id: 'TransactionPage.navigationBlockedBeforeFilesSent',
+  });
+  useUploadNavigationBlock(hasUnsentUploads, history, blockMessage);
 
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
