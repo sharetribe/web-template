@@ -17,3 +17,9 @@ yarn-error.log
 
 # environment configurations
 .env.local
+
+# Claude Code
+.claude/
+
+# npm lock file (using yarn)
+package-lock.json
