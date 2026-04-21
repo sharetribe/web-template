@@ -444,7 +444,7 @@
   "FieldSelectUserType.placeholder": "Choose a user type",
   "FieldSelectUserType.required": "You need to select a user type.",
   "FileUpload.mimeTypeError": "Upload failed. This file type isn't supported.",
-  "FileUpload.removeFile": "Remove file",
+  "FileUpload.removeFile": "Remove file {fileName}",
   "FileUpload.uploadFailed": "Upload failed. Please try again.",
   "FileUpload.uploading": "Uploading… Keep this tab open.",
   "FileUpload.verificationFailed": "Security check failed. Please contact support.",
