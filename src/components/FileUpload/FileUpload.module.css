@@ -1,9 +1,9 @@
 .root {
+  align-self: stretch;
   display: flex;
-  padding: 12px;
   align-items: center;
   gap: 8px;
-  align-self: stretch;
+  padding: 12px;
 
   border-radius: 4px;
   border: 1px solid var(--colorGrey100);
