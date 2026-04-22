@@ -60,8 +60,8 @@ const FileAttachment = props => {
   const name = file?.attributes?.name;
 
   if (isAvailable) {
-    const { size, unit } = calculateFileSize(file.attributes.size);
     const classes = classNames(css.fileAttachment, css.fileAttachmentAvailable);
+    const formattedSize = calculateFileSize(file.attributes.size, intl.locale);
     return (
       <button
         className={classes}
@@ -72,9 +72,7 @@ const FileAttachment = props => {
           <IconDownload />
         </span>
         <FileName name={name} />
-        <span className={css.fileAttachmentStatus}>
-          {size} {unit}
-        </span>
+        <span className={css.fileAttachmentStatus}>{formattedSize}</span>
       </button>
     );
   }

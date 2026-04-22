@@ -75,7 +75,7 @@ describe('FileUpload', () => {
     render(<FileUpload item={item} onRemoveFile={noop} />);
     expect(screen.getByText('document')).toBeInTheDocument();
     expect(screen.getByText('.pdf')).toBeInTheDocument();
-    expect(screen.getByText(/KB|MB/)).toBeInTheDocument();
+    expect(screen.getByText('1 kB')).toBeInTheDocument();
     expect(screen.queryByText('FileUpload.uploading')).not.toBeInTheDocument();
     expect(screen.queryByText('FileUpload.verifying')).not.toBeInTheDocument();
   });
