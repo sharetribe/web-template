@@ -33,6 +33,7 @@ const StatusText = props => {
     error,
     hasCompletedUpload,
     file,
+    locale,
   } = props;
   let statusText;
 
@@ -54,9 +55,8 @@ const StatusText = props => {
         <FormattedMessage id="FileUpload.uploadFailed" />
       );
   } else if (hasCompletedUpload && !verificationInProgress) {
-    const { size: sizeRaw } = file?.attributes;
-    const { size, unit } = calculateFileSize(sizeRaw);
-    statusText = `${size} ${unit}`;
+    const { size } = file?.attributes;
+    statusText = calculateFileSize(size, locale);
   }
 
   return <span className={css.statusText}>{statusText}</span>;
@@ -120,6 +120,7 @@ const FileUpload = props => {
           error={error}
           hasCompletedUpload={hasCompletedUpload}
           file={file}
+          locale={intl.locale}
         />
       </div>
       <button

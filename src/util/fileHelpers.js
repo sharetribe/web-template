@@ -3,13 +3,23 @@ const GIGA = KILO * KILO * KILO; // 2^30 aka gibibyte (GiB)
 
 export const MAX_FILE_SIZE = GIGA;
 
-export const calculateFileSize = size => {
+export const calculateFileSize = (size, locale) => {
   const kbSize = Math.ceil(size / KILO);
-  const mbSize = (kbSize / KILO).toFixed(1);
+  const mbSize = kbSize / KILO;
+  const useMb = mbSize >= 1;
 
-  const useMb = mbSize > 1;
-
-  return useMb ? { size: mbSize, unit: 'MB' } : { size: kbSize, unit: 'KB' };
+  return useMb
+    ? new Intl.NumberFormat(locale, {
+        style: 'unit',
+        unit: 'megabyte',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      }).format(mbSize)
+    : new Intl.NumberFormat(locale, {
+        style: 'unit',
+        unit: 'kilobyte',
+        maximumFractionDigits: 0,
+      }).format(kbSize);
 };
 
 export const messageHasPendingFiles = message =>
