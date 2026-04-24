@@ -13,6 +13,8 @@ const baseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL || 'https://flex-a
 // cdn.st-api.com
 // If assetCdnBaseUrl is used to initialize SDK (for proxy purposes), then that URL needs to be in CSP
 const assetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
+const fileStorageDomain =
+  process.env.REACT_APP_FILE_STORAGE_DOMAIN || 'sharetribe-prod-core-files.s3.amazonaws.com';
 
 exports.generateCSPNonce = (req, res, next) => {
   // Asynchronously generate a unique nonce for each request.
@@ -40,6 +42,7 @@ const defaultDirectives = {
     self,
     baseUrl,
     assetCdnBaseUrl,
+    fileStorageDomain,
     '*.st-api.com',
     'maps.googleapis.com',
     'places.googleapis.com',
