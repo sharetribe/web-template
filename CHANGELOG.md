@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fixes a bug where listing metadata fields were not shown in the sort dropdown if the default sorting config is missing
+  [#835](https://github.com/sharetribe/web-template/pull/835)
 - [add] Add currently available translations for DE, ES, FR.
   [#834](https://github.com/sharetribe/web-template/pull/834)
 
