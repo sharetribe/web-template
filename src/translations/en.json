@@ -38,6 +38,7 @@
   "BookingDateRangeFilter.labelSelectedPlain": "{dates}",
   "BookingDateRangeFilter.labelSelectedPopup": "{dates}",
   "BookingDatesForm.bookingEndTitle": "End date",
+  "BookingDatesForm.minimumStay": "Minimum 30-night stay",
   "BookingDatesForm.bookingStartTitle": "Start date",
   "BookingDatesForm.priceBreakdownTitle": "Booking breakdown",
   "BookingDatesForm.requestToBook": "Request to book",

@@ -714,6 +714,7 @@ export const BookingDatesForm = props => {
               className={css.bookingDates}
               name="bookingDates"
               isDaily={isDaily}
+              minimumNights={30}
               startDateId={`${formId}.bookingStartDate`}
               startDateLabel={intl.formatMessage({
                 id: 'BookingDatesForm.bookingStartTitle',
@@ -793,6 +794,9 @@ export const BookingDatesForm = props => {
                 });
               }}
             />
+            <p className={css.minimumStayHint}>
+              <FormattedMessage id="BookingDatesForm.minimumStay" />
+            </p>
 
             {seatsEnabled ? (
               <FieldSelect

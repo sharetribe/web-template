@@ -31,6 +31,17 @@
   z-index: 1;
 }
 
+.minimumStayHint {
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  color: var(--colorGrey500);
+  line-height: 1.4;
+
+  @media (--viewportMedium) {
+    margin-top: 8px;
+  }
+}
+
 .priceBreakdownContainer {
   padding: 0 24px;
   margin-top: 24px;

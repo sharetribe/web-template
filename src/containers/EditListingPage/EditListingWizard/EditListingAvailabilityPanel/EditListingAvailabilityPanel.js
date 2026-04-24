@@ -334,7 +334,9 @@ const EditListingAvailabilityPanel = props => {
             allExceptions={sortedAvailabilityExceptions}
             onAddAvailabilityException={onAddAvailabilityException}
             onDeleteAvailabilityException={onDeleteAvailabilityException}
+            onFetchExceptions={onFetchExceptions}
             listing={listing}
+            timeZone={availabilityPlan.timezone}
             updateInProgress={updateInProgress}
             errors={errors}
           />

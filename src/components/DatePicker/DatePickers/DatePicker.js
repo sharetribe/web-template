@@ -191,9 +191,6 @@ const CalendarMonth = props => {
                     (currentValue[0] < hoveredDate || !hoveredDate)
                       ? currentValue[0] < day &&
                         !hasMinimumNights({ start: currentValue[0], end: day })
-                      : !isCurrent && hasOneDateSelected && currentValue[0] > hoveredDate
-                      ? currentValue[0] > day &&
-                        !hasMinimumNights({ start: day, end: currentValue[0] })
                       : false;
 
                   const isoDateString = getISODateString(day);
