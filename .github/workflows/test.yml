@@ -39,7 +39,18 @@ jobs:
 
       - name: Run client tests
         id: client-tests
-        run: sharetribe-scripts test --runInBand --testResultsProcessor=jest-junit
+        run: |
+          echo "=== Diagnostics ==="
+          echo "Node: $(node --version)"
+          which sharetribe-scripts && echo "sharetribe-scripts in PATH" || echo "sharetribe-scripts NOT in PATH"
+          ls ./node_modules/.bin/sharetribe-scripts && echo "binary exists" || echo "binary NOT found"
+          echo "Test files found: $(find src -name '*.test.js' | wc -l)"
+          echo "=== Running tests ==="
+          mkdir -p test-results
+          ./node_modules/.bin/sharetribe-scripts test --runInBand --testResultsProcessor=jest-junit
+          echo "=== Exit code: $? ==="
+          echo "=== test-results contents ==="
+          ls -la test-results/ || echo "directory empty or missing"
         continue-on-error: true
         env:
           CI: true
