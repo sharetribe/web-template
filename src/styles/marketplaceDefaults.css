@@ -166,7 +166,7 @@
   --datepickerFgColor: var(--colorWhite);
   --datepickerBgColor: var(--marketplaceColor);
   --datepickerBorderColor: var(--colorGrey50);
-  --datepickerDisabledFgColor: var(--marketplaceColorDark);
+  --datepickerDisabledFgColor: rgba(255, 255, 255, 0.35);
   --datepickerDisabledTextDeco: unset;
   --datepickerHoveredFgColor: inherit;
   --datepickerHoveredBgColor: rgba(255, 255, 255, 0.2);

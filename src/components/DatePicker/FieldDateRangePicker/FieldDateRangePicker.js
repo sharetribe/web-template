@@ -20,6 +20,11 @@ import css from './FieldDateRangePicker.module.css';
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 
 const handleChange = (parentOnChange, fieldOnChange) => value => {
+  if (!Array.isArray(value) || value.length === 0) {
+    if (parentOnChange) parentOnChange({ startDate: null, endDate: null });
+    fieldOnChange({ startDate: null, endDate: null });
+    return;
+  }
   const [startDate, endDate] = value;
   // If "onChange" callback is passed through the props,
   // it can notify the parent when the content of the input has changed.

@@ -14,11 +14,11 @@
 
 .light {
   --datepickerFgColor: var(--colorGrey700);
-  --datepickerBgColor: transparent;
-  --datepickerBorderColor: transparent;
+  --datepickerBgColor: var(--colorWhite);
+  --datepickerBorderColor: var(--colorGrey200);
   --datepickerDisabledFgColor: var(--colorGrey300);
   --datepickerDisabledTextDeco: line-through;
-  --datepickerHoveredFgColor: inherit;
+  --datepickerHoveredFgColor: var(--colorGrey700);
   --datepickerHoveredBgColor: var(--colorGrey100);
   --datepickerHeaderFgColor: var(--colorGrey700);
   --datepickerHeaderFgColorDisabled: var(--colorGrey300);
@@ -26,10 +26,11 @@
   --datepickerDateOutline: auto;
   --datepickerButtonOutlineColor: var(--colorGrey600);
   --datepickerSelectedFgColor: var(--colorWhite);
-  --datepickerSelectedBgColor: var(--colorSuccess);
-  --datepickerSelectedBorder: solid 1px var(--colorSuccess);
+  --datepickerSelectedBgColor: var(--marketplaceColor);
+  --datepickerSelectedBorder: solid 1px var(--marketplaceColor);
   --datepickerSelectedHoveredFgColor: var(--colorWhite);
-  --datepickerSelectedHoveredBgColor: var(--colorSuccess);
+  --datepickerSelectedHoveredBgColor: var(--marketplaceColorLight);
+  --datepickerInRangeBgColor: rgba(105, 56, 239, 0.12);
 }
 
 .datepicker {
@@ -229,6 +230,18 @@
   height: 37px;
 }
 
+.dateInRange:not(.dateStart):not(.dateEnd) {
+  & .renderedDay {
+    background-color: var(--datepickerInRangeBgColor, var(--datepickerSelectedBgColor));
+    color: var(--datepickerFgColor);
+  }
+
+  &:hover .renderedDay {
+    background-color: var(--datepickerInRangeBgColor, var(--datepickerSelectedBgColor));
+    color: var(--datepickerFgColor);
+  }
+}
+
 .dateSelected {
   &:hover .renderedDay,
   & .renderedDay {
@@ -236,8 +249,15 @@
     justify-content: center;
     align-items: center;
     background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerSelectedFgColor);
+  }
+}
+
+/* Full circle only when a selected date is not a range boundary */
+.dateSelected:not(.dateStart):not(.dateEnd) {
+  &:hover .renderedDay,
+  & .renderedDay {
     border-radius: calc(37px / 2);
-    color: var(--datepickerFgColor);
   }
 }
 
@@ -248,12 +268,13 @@
     border-bottom-left-radius: 0;
     border-top-right-radius: calc(37px / 2);
     border-bottom-right-radius: calc(37px / 2);
+    background-color: var(--datepickerSelectedBgColor);
     color: var(--colorWhite);
   }
 
   &:hover .renderedDay {
-    background-color: var(--datepickerSelectedHoveredBgColor);
-    color: var(--datepickerSelectedHoveredFgColor);
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerSelectedFgColor);
   }
 }
 
@@ -264,30 +285,33 @@
     border-bottom-left-radius: calc(37px / 2);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    background-color: var(--datepickerSelectedBgColor);
     color: var(--colorWhite);
   }
 
   &:hover .renderedDay {
-    background-color: var(--datepickerSelectedHoveredBgColor);
-    color: var(--datepickerSelectedHoveredFgColor);
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerSelectedFgColor);
+  }
+}
+
+/* Higher specificity ensures start/end always beat in-range light purple */
+.light .dateStart,
+.light .dateEnd {
+  & .renderedDay {
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--colorWhite);
+  }
+
+  &:hover .renderedDay {
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerSelectedFgColor);
   }
 }
 
 .dateStart.dateEnd {
   & .renderedDay {
     border-radius: calc(37px / 2);
-  }
-}
-
-.dateInRange {
-  & .renderedDay {
-    background-color: var(--datepickerSelectedBgColor);
-    color: var(--datepickerSelectedFgColor);
-  }
-
-  &:hover .renderedDay {
-    background-color: var(--datepickerSelectedHoveredBgColor);
-    color: var(--datepickerSelectedHoveredFgColor);
   }
 }
 
@@ -329,12 +353,76 @@
   background-color: transparent;
 }
 
-.dateMinimumNights {
+/* Selected range endpoints can also be outside the normal availability day checks.
+   Keep them visually selected instead of letting the disabled rule wash them gray. */
+.light .dateDisabled.dateSelected.dateStart,
+.light .dateDisabled.dateSelected.dateEnd {
   & .renderedDay {
     background-color: var(--datepickerSelectedBgColor);
-    color: var(--datepickerDisabledFgColor);
-    opacity: 0.8;
+    color: var(--datepickerSelectedFgColor);
+    text-decoration: none;
   }
+
+  &:hover .renderedDay {
+    background-color: var(--datepickerSelectedBgColor);
+    color: var(--datepickerSelectedFgColor);
+    text-decoration: none;
+  }
+}
+
+.dateMinimumNights {
+  cursor: default;
+}
+
+.dateSelectionBlocked {
+  cursor: not-allowed;
+}
+
+.minimumNightsTooltip {
+  position: fixed;
+  transform: translateX(-50%);
+  background-color: #222222;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  margin-top: 6px;
+}
+
+/* Two-month side-by-side layout */
+.twoMonthsRoot {
+  min-width: 558px;
+  border-top: 1px solid var(--datepickerBorderColor);
+  border-radius: 6px 0 6px 6px;
+}
+
+.twoMonthsDatepicker {
+  width: auto;
+  min-width: 558px;
+}
+
+.twoMonthsHeader {
+  display: flex;
+  padding: 22px 1px 12px 1px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.twoMonthsHeaderMonths {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+}
+
+.twoMonthsBody {
+  display: flex;
+  gap: 24px;
+  padding: 0 1px 12px 1px;
 }
 
 .footer {
@@ -344,11 +432,24 @@
   justify-content: space-between;
 }
 
-.clearButton,
 .todayButton {
   color: var(--datepickerFgColor);
   padding: 4px 8px;
   border-radius: 2px;
+
+  &:focus {
+    outline: var(--datepickerButtonOutlineColor) solid 1px;
+  }
+}
+
+.clearButton {
+  color: var(--marketplaceColor);
+  padding: 4px 8px;
+  border-radius: 2px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 
   &:focus {
     outline: var(--datepickerButtonOutlineColor) solid 1px;

@@ -20,6 +20,7 @@ const DatePickerHeader = props => {
   const {
     monthClassName,
     currentDate,
+    secondDate,
     showMonthStepper,
     showPreviousMonthStepper,
     showNextMonthStepper,
@@ -43,6 +44,60 @@ const DatePickerHeader = props => {
     return intl.formatDate(currentDate, dateFormattingOptions);
   };
 
+  const months = getMonths(intl);
+  const monthYearLabel = date => `${months[date.getMonth()]} ${date.getFullYear()}`;
+
+  if (secondDate) {
+    return (
+      <div className={css.twoMonthsHeader}>
+        <span aria-atomic="true" aria-live="polite" className={css.hidden}>
+          {getTitle()}
+        </span>
+
+        {showMonthStepper && showPreviousMonthStepper ? (
+          <button
+            aria-label={intl.formatMessage({ id: 'DatePicker.screenreader.previousMonthButton' })}
+            className={css.previousMonthButton}
+            disabled={disabled}
+            onClick={previousMonth}
+            type="button"
+          >
+            <PrevIcon />
+          </button>
+        ) : showMonthStepper ? (
+          <span className={css.previousMonthSpacer}></span>
+        ) : null}
+
+        <div className={css.twoMonthsHeaderMonths}>
+          <span className={css.currentMonth}>
+            <strong className={classNames(css.monthName, monthClassName)}>
+              {monthYearLabel(currentDate)}
+            </strong>
+          </span>
+          <span className={css.currentMonth}>
+            <strong className={classNames(css.monthName, monthClassName)}>
+              {monthYearLabel(secondDate)}
+            </strong>
+          </span>
+        </div>
+
+        {showMonthStepper && showNextMonthStepper ? (
+          <button
+            aria-label={intl.formatMessage({ id: 'DatePicker.screenreader.nextMonthButton' })}
+            className={css.nextMonthButton}
+            disabled={disabled}
+            onClick={nextMonth}
+            type="button"
+          >
+            <NextIcon />
+          </button>
+        ) : showMonthStepper ? (
+          <span className={css.nextMonthSpacer}></span>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className={css.header}>
       <span aria-atomic="true" aria-live="polite" className={css.hidden}>
@@ -65,7 +120,7 @@ const DatePickerHeader = props => {
 
       <span className={css.currentMonth}>
         <strong className={classNames(css.monthName, monthClassName)}>
-          {getMonths(intl)[currentDate.getMonth()]} {currentDate.getFullYear()}
+          {months[currentDate.getMonth()]} {currentDate.getFullYear()}
         </strong>
       </span>
 

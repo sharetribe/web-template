@@ -8,7 +8,6 @@ import { required, bookingDatesRequired, composeValidators } from '../../../util
 import {
   getStartOf,
   addTime,
-  isSameDay,
   isDateSameOrAfter,
   isInRange,
   timeOfDayFromLocalToTimeZone,
@@ -30,6 +29,28 @@ import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 import css from './BookingDatesForm.module.css';
 
 const TODAY = new Date();
+const MIN_BOOKING_DAYS = 30;
+
+// Returns the earliest future available date from the listing's time slots.
+// Falls back to today in the listing timezone when no future slots exist.
+export const getFirstAvailableDate = (timeSlots, timeZone) => {
+  if (!Array.isArray(timeSlots) || timeSlots.length === 0) return null;
+  const todayStart = getStartOf(new Date(), 'day', timeZone);
+  const futureSlots = timeSlots.filter(ts => {
+    if (ts.attributes.seats < 1) return false;
+    return getStartOf(new Date(ts.attributes.end), 'day', timeZone) > todayStart;
+  });
+  if (futureSlots.length === 0) return null;
+  const earliest = futureSlots.reduce((min, ts) =>
+    new Date(ts.attributes.start) < new Date(min.attributes.start) ? ts : min
+  , futureSlots[0]);
+  const slotStart = getStartOf(new Date(earliest.attributes.start), 'day', timeZone);
+  return isDateSameOrAfter(slotStart, todayStart) ? slotStart : todayStart;
+};
+
+// Formats a Date as YYYY-MM-DD in the given IANA timezone (used for the DatePicker startDate prop).
+const toISODateInTimeZone = (date, timeZone) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone }).format(date);
 
 const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
   getStartOf(currentMoment, 'month', timeZone, offset, 'months');
@@ -115,23 +136,100 @@ const getAllTimeSlots = monthlyTimeSlots => {
  * @param {Moment} startDate start date (Moment)
  * @param {Moment} endDate end date (Moment)
  */
-const isBlockedBetween = (allTimeSlots, timeZone) => ([startDate, endDate]) => {
-  const localizedStartDay = timeOfDayFromLocalToTimeZone(startDate, timeZone);
-  const localizedEndDay = timeOfDayFromLocalToTimeZone(endDate, timeZone);
-  const foundTS = allTimeSlots.find(ts => {
-    const timeSlotRange = [ts.attributes.start, ts.attributes.end];
-    return isInRange(localizedStartDay, ...timeSlotRange, undefined, timeZone);
-  });
-
-  if (!foundTS) {
-    return true;
+const hasAvailabilityOnDay = (day, allTimeSlots, timeZone) => {
+  if (!Array.isArray(allTimeSlots)) {
+    return false;
   }
 
-  const timeSlotRange = [foundTS.attributes.start, foundTS.attributes.end];
-  // endDate should be included in the slot mapped with startDate
-  const isExcludedEnd = isSameDay(localizedEndDay, timeSlotRange[1], timeZone);
-  const isBlockedBetween = !(isInRange(localizedEndDay, ...timeSlotRange) || isExcludedEnd);
-  return isBlockedBetween;
+  const dayStart = getStartOf(day, 'day', timeZone).getTime();
+
+  return allTimeSlots.some(ts => {
+    if (ts.attributes.seats < 1) {
+      return false;
+    }
+
+    const slotStart = getStartOf(new Date(ts.attributes.start), 'day', timeZone).getTime();
+    const slotEnd = getStartOf(new Date(ts.attributes.end), 'day', timeZone).getTime();
+    return dayStart >= slotStart && dayStart < slotEnd;
+  });
+};
+
+export const hasAvailabilityOrCheckoutOnDay = (day, allTimeSlots, timeZone) => {
+  if (!Array.isArray(allTimeSlots)) {
+    return false;
+  }
+
+  const dayStart = getStartOf(day, 'day', timeZone).getTime();
+
+  return allTimeSlots.some(ts => {
+    if (ts.attributes.seats < 1) {
+      return false;
+    }
+
+    const slotStart = getStartOf(new Date(ts.attributes.start), 'day', timeZone).getTime();
+    const slotEnd = getStartOf(new Date(ts.attributes.end), 'day', timeZone).getTime();
+    return dayStart >= slotStart && dayStart <= slotEnd;
+  });
+};
+
+const hasMinimumBookableRange = (
+  startDay,
+  allTimeSlots,
+  monthlyTimeSlots,
+  timeZone,
+  isDaily,
+  minimumNights
+) => {
+  const minimumEndDay = getStartOf(startDay, 'day', timeZone, minimumNights, 'days');
+  const lastRequiredDay = isDaily
+    ? minimumEndDay
+    : getStartOf(minimumEndDay, 'day', timeZone, -1, 'days');
+
+  let day = getStartOf(startDay, 'day', timeZone);
+  while (isDateSameOrAfter(lastRequiredDay, day)) {
+    const dayMonthId = monthIdString(day, timeZone);
+    const monthFetched = Array.isArray(monthlyTimeSlots?.[dayMonthId]?.timeSlots);
+    if (!monthFetched) {
+      return true;
+    }
+
+    if (!hasAvailabilityOnDay(day, allTimeSlots, timeZone)) {
+      return false;
+    }
+    day = getStartOf(day, 'day', timeZone, 1, 'days');
+  }
+
+  return true;
+};
+
+const isBlockedBetween = (allTimeSlots, timeZone, isDaily) => ([startDate, endDate]) => {
+  const localizedStartDay = getStartOf(
+    timeOfDayFromLocalToTimeZone(startDate, timeZone),
+    'day',
+    timeZone
+  );
+  const localizedEndDay = getStartOf(
+    timeOfDayFromLocalToTimeZone(endDate, timeZone),
+    'day',
+    timeZone
+  );
+  const lastRequiredDay = isDaily
+    ? localizedEndDay
+    : getStartOf(localizedEndDay, 'day', timeZone, -1, 'days');
+
+  if (!isDateSameOrAfter(lastRequiredDay, localizedStartDay)) {
+    return false;
+  }
+
+  let day = localizedStartDay;
+  while (isDateSameOrAfter(lastRequiredDay, day)) {
+    if (!hasAvailabilityOnDay(day, allTimeSlots, timeZone)) {
+      return true;
+    }
+    day = getStartOf(day, 'day', timeZone, 1, 'days');
+  }
+
+  return false;
 };
 
 const isOneBoundaryeSelected = (hasTimeSlots, startDate, endDate) => {
@@ -222,6 +320,28 @@ const isOutsideRangeFn = (
     const timeOfDay = timeOfDayFromLocalToTimeZone(day, timeZone);
     const dayInListingTZ = getStartOf(timeOfDay, 'day', timeZone);
 
+    // When only one boundary is selected, use the combined slot for range check.
+    // If the day's month hasn't been fetched yet, treat it as in-range (optimistic).
+    if (oneBoundarySelected && startDate && !endDate) {
+      const dayMonthId = monthIdString(dayInListingTZ, timeZone);
+      const monthFetched = Array.isArray(monthlyTimeSlots?.[dayMonthId]?.timeSlots);
+      if (!monthFetched) {
+        return false;
+      }
+      // Use day-level comparison in listing timezone to handle UTC-offset mismatches
+      // (exceptions created in a different UTC offset may start a few hours into the day).
+      const dayTs = dayInListingTZ.getTime();
+      return !(
+        Array.isArray(allTimeSlots) &&
+        allTimeSlots.some(ts => {
+          if (ts.attributes.seats < 1) return false;
+          const slotStartDayTs = getStartOf(new Date(ts.attributes.start), 'day', timeZone).getTime();
+          const slotEndDayTs = getStartOf(new Date(ts.attributes.end), 'day', timeZone).getTime();
+          return dayTs >= slotStartDayTs && dayTs <= slotEndDayTs;
+        })
+      );
+    }
+
     // end the range so that the booking can end at latest on
     // - nightly booking: the day the next booking starts
     // - daily booking: the day before the next booking starts
@@ -252,26 +372,49 @@ const isDayBlockedFn = params => {
     const hasAvailabilityOnDay = timeSlotsData[dayIdString]?.hasAvailability === true;
 
     if (!isDaily && startDate) {
-      // Nightly
-      // For the unit type night, we check that the time slot of the selected startDate
-      // ends on a given _day_
-      const startDateIdString = stringifyDateToISO8601(startDate, timeZone);
-      const startDateTimeSlotsData = timeSlotsData[startDateIdString];
-      const startDateTimeSlot =
-        startDateTimeSlotsData == null ? true : startDateTimeSlotsData?.timeSlots?.[0];
-      const { start, end } = startDateTimeSlot?.attributes || {};
-      // If both startDate and endDate have been selected, we allow selecting other ranges
+      // If this day's month hasn't been fetched yet, don't block it (optimistic).
+      const dayMonthId = monthIdString(dayInListingTZ, timeZone);
+      const monthFetched = Array.isArray(monthlyTimeSlots?.[dayMonthId]?.timeSlots);
+      if (!monthFetched) {
+        return false;
+      }
       const hasAvailability =
-        startDate && endDate
-          ? hasAvailabilityOnDay
-          : isInRange(dayInListingTZ, start, end, 'day', timeZone);
-      const timeSlotEndsOnThisDay = end && isSameDay(dayInListingTZ, end, timeZone);
-
-      return !(hasAvailability || timeSlotEndsOnThisDay);
+        hasAvailabilityOnDay ||
+        hasAvailabilityOrCheckoutOnDay(dayInListingTZ, allTimeSlots, timeZone);
+      return !hasAvailability;
     }
 
     // Daily
     return !hasAvailabilityOnDay;
+  };
+};
+
+const isDateSelectionBlockedFn = params => {
+  const {
+    allTimeSlots,
+    monthlyTimeSlots,
+    isDaily,
+    startDate,
+    endDate,
+    timeZone,
+    minimumNights = 0,
+  } = params || {};
+
+  return day => {
+    const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
+    const dayInListingTZ = getStartOf(localizedDay, 'day', timeZone);
+    const isSelectingStartDate = !startDate || !!endDate;
+
+    return isSelectingStartDate && minimumNights > 0
+      ? !hasMinimumBookableRange(
+          dayInListingTZ,
+          allTimeSlots,
+          monthlyTimeSlots,
+          timeZone,
+          isDaily,
+          minimumNights
+        )
+      : false;
   };
 };
 
@@ -449,10 +592,19 @@ const findIndexOfLastConsecutiveTimeSlot = (timeSlots, index) =>
     : index;
 
 // Find and combine adjacent/consecutive timeslots into one timeslot
-const combineConsecutiveTimeSlots = (slots, startDate) => {
-  // Locate the index of the timeslot containing startDate
+const combineConsecutiveTimeSlots = (slots, startDate, timeZone) => {
+  // Locate the index of the timeslot containing startDate.
+  // Use day-level comparison in the listing timezone so that a slot starting a few hours
+  // after midnight (due to UTC-offset mismatch when the exception was created) is still found.
   const startIndex = slots.findIndex(({ attributes }) => {
     const { start, end } = attributes;
+    if (timeZone) {
+      // startDate is already getStartOf(day, timeZone); compare against slot day boundaries
+      const startDayTs = startDate.getTime();
+      const slotStartDayTs = getStartOf(new Date(start), 'day', timeZone).getTime();
+      const slotEndDayTs = getStartOf(new Date(end), 'day', timeZone).getTime();
+      return startDayTs >= slotStartDayTs && startDayTs < slotEndDayTs;
+    }
     const startTime = new Date(start).getTime();
     const endTime = new Date(end).getTime();
     return startDate.getTime() >= startTime && startDate.getTime() < endTime;
@@ -652,16 +804,19 @@ export const BookingDatesForm = props => {
         };
 
         const startOfToday = getStartOf(TODAY, 'day', timeZone);
-        const tomorrow = addTime(startOfToday, 1, 'days');
         const startDatePlaceholderText =
-          startDatePlaceholder || intl.formatDate(startOfToday, dateFormatOptions);
+          startDatePlaceholder || intl.formatDate(new Date(), dateFormatOptions);
         const endDatePlaceholderText =
-          endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
+          endDatePlaceholder || intl.formatDate(addTime(new Date(), 30, 'days'), dateFormatOptions);
 
         const relevantTimeSlots =
           startDate && !endDate
-            ? combineConsecutiveTimeSlots(allTimeSlots, startDate)
+            ? combineConsecutiveTimeSlots(allTimeSlots, startDate, timeZone)
             : allTimeSlots;
+
+        const twoMonths = typeof window !== 'undefined' && window.innerWidth >= 768;
+        const firstAvailableDate =
+          !startDate && !endDate ? getFirstAvailableDate(allTimeSlots, timeZone) : null;
 
         const onMonthClick = handleMonthClick(
           currentMonth,
@@ -678,6 +833,15 @@ export const BookingDatesForm = props => {
           startDate,
           endDate,
           timeZone,
+        });
+        const isDateSelectionBlocked = isDateSelectionBlockedFn({
+          allTimeSlots: relevantTimeSlots,
+          monthlyTimeSlots,
+          isDaily: lineItemUnitType === LINE_ITEM_DAY,
+          startDate,
+          endDate,
+          timeZone,
+          minimumNights: MIN_BOOKING_DAYS,
         });
         const isOutsideRange = isOutsideRangeFn(
           relevantTimeSlots,
@@ -714,7 +878,11 @@ export const BookingDatesForm = props => {
               className={css.bookingDates}
               name="bookingDates"
               isDaily={isDaily}
-              minimumNights={30}
+              minimumNights={MIN_BOOKING_DAYS}
+              twoMonths={twoMonths}
+              showClearButton={!!(startDate || endDate)}
+              startDate={firstAvailableDate ? toISODateInTimeZone(firstAvailableDate, timeZone) : undefined}
+              theme="light"
               startDateId={`${formId}.bookingStartDate`}
               startDateLabel={intl.formatMessage({
                 id: 'BookingDatesForm.bookingStartTitle',
@@ -753,8 +921,9 @@ export const BookingDatesForm = props => {
                 bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
               )}
               isDayBlocked={isDayBlocked}
+              isDateSelectionBlocked={isDateSelectionBlocked}
               isOutsideRange={isOutsideRange}
-              isBlockedBetween={isBlockedBetween(relevantTimeSlots, timeZone)}
+              isBlockedBetween={isBlockedBetween(relevantTimeSlots, timeZone, isDaily)}
               disabled={fetchLineItemsInProgress || (priceVariants.length > 0 && !priceVariantName)}
               showLabelAsDisabled={priceVariants.length > 0 && !priceVariantName}
               showPreviousMonthStepper={showPreviousMonthStepper(currentMonth, timeZone)}
