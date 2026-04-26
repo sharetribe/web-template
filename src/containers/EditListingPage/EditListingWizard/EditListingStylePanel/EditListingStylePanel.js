@@ -32,6 +32,7 @@ const EditListingStylePanel = props => {
     panelUpdated,
     updateInProgress,
     onSubmit,
+    onSaveAndExit,
     updatePageTitle: UpdatePageTitle,
     intl,
   } = props;
@@ -85,6 +86,7 @@ const EditListingStylePanel = props => {
           onSubmit(updateValues);
         }}
         saveActionMsg={submitButtonText}
+        onSaveAndExit={onSaveAndExit}
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         listingTitle={listing.attributes.title}

@@ -95,6 +95,7 @@ export const EditListingStyleForm = props => {
           handleSubmit,
           ready,
           saveActionMsg,
+          onSaveAndExit,
           updated,
           updateInProgress,
           values,
@@ -134,15 +135,20 @@ export const EditListingStyleForm = props => {
             <PublishListingError error={publishListingError} />
             <UpdateListingError error={updateListingError} />
 
-            <Button
-              className={css.submitButton}
-              inProgress={submitInProgress}
-              ready={submitReady}
-              disabled={submitDisabled}
-              type="submit"
-            >
-              {saveActionMsg}
-            </Button>
+            <div className={css.buttonRow}>
+              <Button
+                className={css.submitButton}
+                inProgress={submitInProgress}
+                ready={submitReady}
+                disabled={submitDisabled}
+                type="submit"
+              >
+                {saveActionMsg}
+              </Button>
+              <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+                Save &amp; exit
+              </button>
+            </div>
           </Form>
         );
       }}

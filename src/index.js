@@ -20,6 +20,7 @@ import { loadableReady } from '@loadable/component';
 // This ensures that the styles in marketplaceDefaults.css are included
 // as first ones in the final build CSS build file.
 import './styles/marketplaceDefaults.css';
+import './styles/custom.css';
 
 // Configs and store setup
 import appSettings from './config/settings';
@@ -175,6 +176,13 @@ if (CSP === 'report' && process.env.REACT_APP_ENV === 'production') {
   );
 }
 
+
+
+
+// Add this component somewhere in your app (e.g., in a layout or app wrapper)
+
+
+
 // Export the function for server side rendering.
 export default renderApp;
 
@@ -189,3 +197,5 @@ export {
   mergeConfig,
   fetchAppAssets,
 };
+
+

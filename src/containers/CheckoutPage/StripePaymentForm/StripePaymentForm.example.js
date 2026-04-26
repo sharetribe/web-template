@@ -24,6 +24,7 @@ export const Empty = {
     stripePaymentTokenInProgress: false,
     stripePaymentTokenError: null,
     stripePublishableKey: 'pk_test_asdfasdf',
+    transactionFieldConfigs: [],
   },
   group: 'forms',
 };

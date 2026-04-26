@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form as FinalForm } from 'react-final-form';
+/* Added FormSpy to the import to fix the white screen issue */
+import { Form as FinalForm, FormSpy } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
@@ -61,34 +62,7 @@ const ErrorMessages = props => {
   );
 };
 
-/**
- * The EditListingPricingForm component.
- *
- * @component
- * @param {Object} props
- * @param {string} [props.formId] - The form id
- * @param {string} [props.className] - Custom class that extends the default class for the root element
- * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
- * @param {string} props.unitType - The unitType from listing.attributes.publicData
- * @param {Object} [props.listingTypeConfig] - The listing type config that matches with listingType on publicData.
- * @param {Object} [props.listingTypeConfig.priceVariations] - The price variations config.
- * @param {boolean} props.listingTypeConfig.priceVariations.enabled - Whether the price variations are enabled.
- * @param {Object} [props.listingTypeConfig.transactionType] - The transaction type config.
- * @param {string} props.listingTypeConfig.transactionType.process - The transaction process config.
- * @param {string} props.marketplaceCurrency - The marketplace currency
- * @param {number} [props.listingMinimumPriceSubUnits] - The listing minimum price sub units
- * @param {boolean} [props.autoFocus] - Whether the input should be focused
- * @param {boolean} [props.disabled] - Whether the form is disabled
- * @param {boolean} [props.ready] - Whether the form is ready
- * @param {Function} props.onSubmit - The submit function
- * @param {boolean} [props.invalid] - Whether the form is invalid
- * @param {boolean} [props.pristine] - Whether the form is pristine
- * @param {string} props.saveActionMsg - The save action message
- * @param {boolean} [props.updated] - Whether the form is updated
- * @param {boolean} [props.updateInProgress] - Whether the form is updating
- * @param {Object} [props.fetchErrors] - The fetch errors
- * @returns {JSX.Element}
- */
+
 export const EditListingPricingForm = props => (
   <FinalForm
     mutators={{ ...arrayMutators }}
@@ -111,6 +85,7 @@ export const EditListingPricingForm = props => (
         invalid,
         pristine,
         saveActionMsg,
+        onSaveAndExit,
         updated,
         updateInProgress = false,
         fetchErrors,
@@ -154,21 +129,44 @@ export const EditListingPricingForm = props => (
               listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
             />
           ) : (
-            <FieldCurrencyInput
-              id={`${formId}price`}
-              name="price"
-              className={css.input}
-              autoFocus={autoFocus}
-              label={intl.formatMessage(
-                { id: 'EditListingPricingForm.pricePerProduct' },
-                { unitType }
-              )}
-              placeholder={intl.formatMessage({
-                id: 'EditListingPricingForm.priceInputPlaceholder',
-              })}
-              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-              validate={priceValidators}
-            />
+            <>
+              <FieldCurrencyInput
+                id={`${formId}price`}
+                name="price"
+                className={css.input}
+                autoFocus={autoFocus}
+                label={intl.formatMessage(
+                  { id: 'EditListingPricingForm.pricePerProduct' },
+                  { unitType }
+                )}
+                placeholder={intl.formatMessage({
+                  id: 'EditListingPricingForm.priceInputPlaceholder',
+                })}
+                currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+                validate={priceValidators}
+              />
+
+              <FormSpy subscription={{ values: true }}>
+                {({ values }) => {
+                  const amount = values?.price?.amount || 0;
+                  const currency = values?.price?.currency || marketplaceCurrency;
+
+                  const monthlyAmount = amount * 30;
+                  const formattedMonthly = formatMoney(intl, new Money(monthlyAmount, currency));
+
+                  return (
+                    <div style={{ marginTop: '4px', marginBottom: '4px' }}>
+                      <p style={{ fontWeight: 'bold', fontSize: '16px', margin: '0 0 8px 0' }}>
+                        Price for 30 days (per month): {formattedMonthly}
+                      </p>
+                      <p style={{ fontSize: '14px', color: '#555', lineHeight: '1.4' }}>
+                        IMPORTANT: The price should be your all inclusive price, including services like electricity, water, cleaning and internet.
+                      </p>
+                    </div>
+                  );
+                }}
+              </FormSpy>
+            </>
           )}
 
           {isFixedLengthBooking ? (
@@ -180,15 +178,20 @@ export const EditListingPricingForm = props => (
             />
           ) : null}
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
+          <div className={css.buttonRow}>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+            <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+              Save &amp; exit
+            </button>
+          </div>
         </Form>
       );
     }}

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Field } from 'react-final-form';
 import { useIntl } from '../../../../../util/reactIntl';
 import classNames from 'classnames';
@@ -14,7 +14,7 @@ const CustomIconLocation = () => {
 
 const LocationSearchField = props => {
   const [isCurrentLocation, setIsCurrentLocation] = useState(false);
-  const { inputRootClass, intl, inputRef, onLocationChange, alignLeft } = props;
+  const { inputRootClass, intl, inputRef, onLocationChange, alignLeft, hasError } = props;
   return (
     <Field
       name="location"
@@ -36,7 +36,10 @@ const LocationSearchField = props => {
             id="location-search-filter-location"
             className={css.customField}
             useDarkText={true}
-            inputClassName={isCurrentLocation ? css.inputWithCurrentLocation : inputRootClass}
+            inputClassName={classNames(
+              isCurrentLocation ? css.inputWithCurrentLocation : inputRootClass,
+              { [css.inputError]: hasError }
+            )}
             closeOnBlur={true}
             predictionsClassName={classNames(css.predictions, {
               [css.alignLeft]: alignLeft,
@@ -60,12 +63,15 @@ const LocationSearchField = props => {
 };
 
 const FilterLocation = props => {
-  const searchInpuRef = useRef(null);
+  const searchInputRef = useRef(null);
   const intl = useIntl();
   const {
     appConfig,
     onSubmit,
     setSubmitDisabled,
+    onLocationSelected,
+    showError,
+    onErrorClear,
     className,
     rootClassName,
     alignLeft,
@@ -74,11 +80,29 @@ const FilterLocation = props => {
   } = props;
   const classes = classNames(rootClassName || css.root, className);
 
+  // Focus the input and scroll it into view when error is triggered
+  useEffect(() => {
+    if (showError && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showError]);
+
   const onChange = location => {
     if (location?.search?.length > 0 && !location?.selectedPlace) {
       setSubmitDisabled(true);
-    } else {
+      onLocationSelected?.(false);
+    } else if (location?.selectedPlace) {
       setSubmitDisabled(false);
+      onLocationSelected?.(true);
+      onErrorClear?.();
+    } else {
+      // field cleared
+      setSubmitDisabled(false);
+      onLocationSelected?.(false);
+    }
+    // Clear error as soon as user starts interacting
+    if (showError) {
+      onErrorClear?.();
     }
   };
 
@@ -87,10 +111,17 @@ const FilterLocation = props => {
       <LocationSearchField
         inputRootClass={css.input}
         intl={intl}
-        inputRef={searchInpuRef}
+        inputRef={searchInputRef}
         onLocationChange={onChange}
         alignLeft={alignLeft}
+        hasError={showError}
       />
+      <span className={css.requiredMark} aria-hidden="true">*</span>
+      {showError ? (
+        <span className={css.errorMessage} role="alert">
+          {intl.formatMessage({ id: 'PageBuilder.SearchCTA.locationRequired' })}
+        </span>
+      ) : null}
     </div>
   );
 };

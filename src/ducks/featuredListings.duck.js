@@ -8,25 +8,18 @@ const MAX_LISTING_COUNT = 10;
 
 // ================ HELPERS ==================== //
 
-// Extract section object from array using section ID (e.g., 'section-1' → sections[0])
-const getSectionBySectionId = (sections, sectionId) => {
-  const sectionNumber = parseInt(sectionId.replace('section-', ''));
-  const sectionIndex = sectionNumber - 1;
-  return sections[sectionIndex];
-};
+// Find section by its resolved sectionId
+const getSectionBySectionId = (sections, sectionId) =>
+  sections.find(section => section.sectionId === sectionId);
 
-const getSectionKey = sectionIndex => `section-${sectionIndex + 1}`;
 const isListingsSection = section => section.sectionType === 'listings';
 
-// Get section keys for all listing sections that match a specific selection type
+// Get section ids for all listing sections that match a specific selection type
 // e.g., if selectionType is "newest", returns ['section-1', 'section-3'] for sections 1 and 3 if they're both listing sections with selection type "newest"
 const getSectionKeysBySelectionType = (allSections, selectionType) =>
   allSections
-    .map((section, index) => ({ section, key: getSectionKey(index) }))
-    .filter(
-      ({ section }) => isListingsSection(section) && section.listingSelection === selectionType
-    )
-    .map(({ key }) => key);
+    .filter(section => isListingsSection(section) && section.listingSelection === selectionType)
+    .map(section => section.sectionId);
 
 // ================ Async Thunks ================ //
 

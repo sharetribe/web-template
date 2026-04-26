@@ -14,6 +14,33 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#818](https://github.com/sharetribe/web-template/pull/818)
+- [fix] Fix return value in CheckoutPage pay-and-save-card flow
+  [#816](https://github.com/sharetribe/web-template/pull/816)
+
+## [v10.15.0] 2026-03-25
+
+- [fix] Fix too-big font-size in mobile h4 heading and some too large margins.
+  [#806](https://github.com/sharetribe/web-template/pull/806)
+- [fix] StripePaymentForm: fix styleguide example.
+  [#810](https://github.com/sharetribe/web-template/pull/810)
+- [add] Update moment-timezone to v0.6.1 (to take newest update from IANA time zone db)
+  [#809](https://github.com/sharetribe/web-template/pull/809)
+- [add] Add support for merging listing search sort config with default configs
+  [760](https://github.com/sharetribe/web-template/pull/760)
+- [add] Support custom metadata fields for listings and users. Metadata fields are
+  operator-controlled (editable only via Console or Integration API) and can be used for search
+  filtering and sorting. [#779](https://github.com/sharetribe/web-template/pull/779)
+- [add] Add support for sorting listings on the search page using custom numeric fields.
+  [#803](https://github.com/sharetribe/web-template/pull/803)
+
+  [v10.15.0]: https://github.com/sharetribe/web-template/compare/v10.14.1...v10.15.0
+
+## [v10.14.1] 2026-03-18
+
+- [fix] Fix SectionListings not loading correctly when a section has an anchor link
+  ID.[#807](https://github.com/sharetribe/web-template/pull/807)
 - [add] Add loading spinner to CheckoutPage.
   [#802](https://github.com/sharetribe/web-template/pull/802)
 - [fix] CheckoutPage: fix the initialState not initializing stripeCustomerFetchError.
@@ -22,6 +49,8 @@ way to update this template, but currently, we follow a pattern:
   [#801](https://github.com/sharetribe/web-template/pull/801)
 - [add] Add currently available translations for DE, ES, FR.
   [#804](https://github.com/sharetribe/web-template/pull/804)
+
+  [v10.14.1]: https://github.com/sharetribe/web-template/compare/v10.14.0...v10.14.1
 
 ## [v10.14.0] 2026-03-10
 

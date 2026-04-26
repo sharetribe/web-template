@@ -34,7 +34,13 @@ const SortBy = props => {
     ...rest
   } = props;
 
-  const { relevanceKey, relevanceFilter, queryParamName } = config.search.sortConfig;
+  // Don't render the component if there are no available options
+  if (config?.search?.sortConfig?.options?.length === 0) {
+    return null;
+  }
+
+  const sortConfig = config.search.sortConfig;
+  const { relevanceKey, relevanceFilter, queryParamName } = sortConfig;
 
   const mobileClassesMaybe =
     mode === 'mobile'
@@ -52,9 +58,7 @@ const SortBy = props => {
   const hasKeyworsFilter = config.search.defaultFilters.find(df => df.key === relevanceFilter);
   const isKeywordsFilterEnabled = isMainSearchKeywords || hasKeyworsFilter;
 
-  const activeOptions = isKeywordsFilterEnabled
-    ? Object.keys({ keywords: '', ...selectedFilters })
-    : Object.keys(selectedFilters);
+  const activeOptions = Object.keys(selectedFilters);
 
   const isRelevanceOptionActive = activeOptions.includes(relevanceFilter);
 
@@ -69,7 +73,10 @@ const SortBy = props => {
     const translatedOption = option?.labelTranslationKey
       ? {
           key: option.key,
-          label: intl.formatMessage({ id: option.labelTranslationKey }),
+          label: intl.formatMessage(
+            { id: option.labelTranslationKey },
+            option.translationValues ?? {}
+          ),
           ...translationKeyLongMaybe,
         }
       : option;
@@ -87,10 +94,17 @@ const SortBy = props => {
           },
         ];
   }, []);
-  const defaultValue = 'createdAt';
+
+  // we want the first item in the sort options list to be the default
+  const defaultValue = options[0]?.key;
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
+  const relevanceEnabled = sortConfig.options?.some(
+    option => option.key === sortConfig.relevanceKey
+  );
   const relevanceValue =
-    isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;
+    relevanceEnabled && isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0
+      ? relevanceKey
+      : null;
   const initialValue =
     hasConflictingFilters && !isConflictingFilterActive
       ? relevanceKey

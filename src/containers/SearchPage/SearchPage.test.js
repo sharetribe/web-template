@@ -86,7 +86,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Cat',
       group: 'primary',
     },
@@ -107,7 +107,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'boat_1', label: 'Boat 1' }, { option: 'boat_2', label: 'Boat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Boat',
       group: 'primary',
     },
@@ -124,7 +124,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       filterType: 'SelectSingleFilter',
       label: 'Single Select Test',
       group: 'primary',
@@ -142,7 +142,7 @@ const listingFields = [
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',

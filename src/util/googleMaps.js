@@ -112,6 +112,9 @@ export const getPlacePredictions = async (search, sessionToken, searchConfigurat
   }
 };
 
+
+
+
 /**
  * Deprecation: use function from src/util/maps.js
  * Cut some precision from bounds coordinates to tackle subtle map movements

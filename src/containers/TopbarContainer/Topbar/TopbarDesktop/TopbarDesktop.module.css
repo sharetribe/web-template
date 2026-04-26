@@ -36,12 +36,12 @@
 
 /* Search */
 .searchLink {
-  min-width: 320px;
+  flex: 1 1 0;
+  min-width: 280px;
   height: 100%;
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-left-color: var(--colorGrey100);
-  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spacer {

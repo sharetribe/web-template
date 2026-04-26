@@ -18,6 +18,11 @@ yarn-error.log
 # environment configurations
 .env.local
 
+# Claude Code
 .claude/
+
+# npm lock file (using yarn)
 package-lock.json
+
+# Local demo files
 public/30-day-minimum-plan.html

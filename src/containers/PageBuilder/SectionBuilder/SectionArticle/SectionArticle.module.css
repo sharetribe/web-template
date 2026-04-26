@@ -1,11 +1,21 @@
+@import '../../../../styles/customMediaQueries.css';
+
 .articleMain {
-  /* 720px + (2 * 32px) == 784 */
-  max-width: 784px;
+  max-width: 820px;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 32px;
+  gap: 0;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 24px;
+
+  @media (--viewportMedium) {
+    padding: 0 32px;
+  }
+}
+
+.articleMain strong,
+.articleMain b {
+  font-weight: 400;
 }
 
 .noSidePaddings {

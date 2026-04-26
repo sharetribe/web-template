@@ -20,6 +20,7 @@ import FilterCategories from './FilterCategories/FilterCategories';
 import FilterDateRange from './FilterDateRange/FilterDateRange';
 import FilterLocation from './FilterLocation/FilterLocation';
 import FilterKeyword from './FilterKeyword/FilterKeyword';
+import FilterBudget, { PRICE_MIN, PRICE_MAX } from './FilterBudget/FilterBudget';
 
 import css from './SearchCTA.module.css';
 
@@ -55,8 +56,12 @@ export const SearchCTA = React.forwardRef((props, ref) => {
   const config = useConfiguration();
 
   const { categories, dateRange, keywordSearch, locationSearch } = props.searchFields;
+  // keywordSearch slot is repurposed for the monthly budget filter
+  const budget = keywordSearch;
 
   const [submitDisabled, setSubmitDisabled] = useState(false);
+  const [locationSelected, setLocationSelected] = useState(false);
+  const [locationError, setLocationError] = useState(false);
 
   const categoryConfig = config.categoryConfiguration;
 
@@ -79,12 +84,27 @@ export const SearchCTA = React.forwardRef((props, ref) => {
         </div>
       ),
     },
+    budget: {
+      enabled: budget,
+      isValid: () => budget,
+      render: alignLeft => (
+        <div className={css.filterField} key="budget">
+          <FilterBudget alignLeft={alignLeft} />
+        </div>
+      ),
+    },
     locationSearch: {
       enabled: locationSearch,
       isValid: () => locationSearch,
       render: alignLeft => (
         <div className={css.filterField} key="locationSearch">
-          <FilterLocation setSubmitDisabled={setSubmitDisabled} alignLeft={alignLeft} />
+          <FilterLocation
+            setSubmitDisabled={setSubmitDisabled}
+            onLocationSelected={setLocationSelected}
+            showError={locationError}
+            onErrorClear={() => setLocationError(false)}
+            alignLeft={alignLeft}
+          />
         </div>
       ),
     },
@@ -116,9 +136,11 @@ export const SearchCTA = React.forwardRef((props, ref) => {
     });
   };
 
-  // Count the number search fields that are enabled
-  const fieldCountForGrid = Object.values(filters).filter(field => field.enabled && field.isValid())
-    .length;
+  // Count the number search fields that are enabled (excluding keywordSearch since budget replaces it)
+  const countableFilters = ['categories', 'locationSearch', 'dateRange', 'budget'];
+  const fieldCountForGrid = countableFilters.filter(
+    key => filters[key]?.enabled && filters[key]?.isValid()
+  ).length;
 
   //  If no search fields are enabled, we return null (Console won't allow you to enable 0 search fields)
   if (!fieldCountForGrid) {
@@ -126,6 +148,12 @@ export const SearchCTA = React.forwardRef((props, ref) => {
   }
 
   const onSubmit = values => {
+    // Require location before proceeding
+    if (locationSearch && !locationSelected) {
+      setLocationError(true);
+      return;
+    }
+
     // Convert form values to query parameters
     let queryParams = {};
 
@@ -146,6 +174,12 @@ export const SearchCTA = React.forwardRef((props, ref) => {
             if (isOriginInUse(config) && origin) {
               queryParams.origin = `${origin.lat},${origin.lng}`;
             }
+          }
+        } else if (key === 'price') {
+          const { minValue = PRICE_MIN, maxValue = PRICE_MAX } = value || {};
+          const isDefault = minValue === PRICE_MIN && maxValue === PRICE_MAX;
+          if (!isDefault) {
+            queryParams.price = `${minValue},${maxValue}`;
           }
         } else {
           queryParams[key] = value;
@@ -170,7 +204,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
               onSubmit={handleSubmit}
               className={classNames(css.gridContainer, getGridCount(fieldCountForGrid))}
             >
-              {addFilters(['categories', 'keywordSearch', 'locationSearch', 'dateRange'])}
+              {addFilters(['categories', 'locationSearch', 'dateRange', 'budget'])}
 
               <PrimaryButton disabled={submitDisabled} className={css.submitButton} type="submit">
                 <FormattedMessage id="PageBuilder.SearchCTA.buttonLabel" />
