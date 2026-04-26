@@ -23,5 +23,6 @@ yarn-error.log
 
 # npm lock file (using yarn)
 package-lock.json
-public/30-day-minimum-plan.html
+
+# Local demo files
 public/30-day-minimum-plan.html
