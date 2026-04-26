@@ -71,6 +71,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "10.1.0",
     "inquirer": "^8.2.6",
+    "jest-junit": "^17.0.0",
     "nodemon": "^3.1.11",
     "prettier": "^1.18.2"
   },
@@ -81,7 +82,11 @@
   "jest": {
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
-    }
+    },
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
   },
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",

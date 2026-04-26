@@ -5,6 +5,11 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   test:
     name: Run test suite
@@ -23,7 +28,33 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run tests
-        run: yarn test-ci
+      - name: Run server tests
+        id: server-tests
+        run: yarn test-server --runInBand
+        continue-on-error: true
         env:
           CI: true
+          JEST_JUNIT_OUTPUT_DIR: test-results
+          JEST_JUNIT_OUTPUT_NAME: junit-server.xml
+
+      - name: Run client tests
+        id: client-tests
+        run: sharetribe-scripts test --runInBand
+        continue-on-error: true
+        env:
+          CI: true
+          JEST_JUNIT_OUTPUT_DIR: test-results
+          JEST_JUNIT_OUTPUT_NAME: junit-client.xml
+
+      - name: Post test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results
+          path: test-results/junit-*.xml
+          reporter: jest-junit
+          fail-on-error: false
+
+      - name: Fail if tests failed
+        if: steps.server-tests.outcome == 'failure' || steps.client-tests.outcome == 'failure'
+        run: exit 1
