@@ -39,7 +39,7 @@ jobs:
 
       - name: Run client tests
         id: client-tests
-        run: sharetribe-scripts test --runInBand
+        run: sharetribe-scripts test --runInBand --reporters=default --reporters=jest-junit
         continue-on-error: true
         env:
           CI: true
