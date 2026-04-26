@@ -17,3 +17,7 @@ yarn-error.log
 
 # environment configurations
 .env.local
+
+.claude/
+package-lock.json
+public/30-day-minimum-plan.html
