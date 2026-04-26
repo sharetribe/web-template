@@ -49,6 +49,7 @@ export const DateRangePicker = props => {
     onClose,
     value,
     readOnly,
+    twoMonths,
     ...rest
   } = props;
 
@@ -84,6 +85,11 @@ export const DateRangePicker = props => {
       : {};
 
   const handleChange = value => {
+    if (value === null) {
+      setDateRangeData({ dateRange: [], formatted: ['', ''] });
+      if (onChange) onChange([]);
+      return;
+    }
     if (!Array.isArray(value)) {
       return;
     }
@@ -220,9 +226,11 @@ export const DateRangePicker = props => {
     ...(readOnly ? { readOnly } : {}),
     ...(disabled ? { disabled } : {}),
   };
-  const inputClasses = classNames(css.input, inputClassName, {
-    [css.inputPlaceholder]: !value || value.length === 0,
-  });
+  const startHasValue = Array.isArray(dateRangeData.dateRange) && dateRangeData.dateRange[0] instanceof Date && !isNaN(dateRangeData.dateRange[0]);
+  const endHasValue = Array.isArray(dateRangeData.dateRange) && dateRangeData.dateRange[1] instanceof Date && !isNaN(dateRangeData.dateRange[1]);
+  const endDateActive = startHasValue && !endHasValue && isOpen;
+  const startInputClasses = classNames(css.input, inputClassName, { [css.inputPlaceholder]: !startHasValue });
+  const endInputClasses = classNames(css.input, inputClassName, { [css.inputPlaceholder]: !endHasValue, [css.inputActive]: endDateActive });
 
   return (
     <OutsideClickHandler className={classes} onOutsideClick={handleBlur}>
@@ -231,7 +239,7 @@ export const DateRangePicker = props => {
           <div className={css.inputs}>
             <input
               id={startDateId}
-              className={inputClasses}
+              className={startInputClasses}
               placeholder={startDatePlaceholderText}
               value={dateRangeData.formatted[0] || ''}
               data-type={INPUT_START}
@@ -239,7 +247,7 @@ export const DateRangePicker = props => {
             />
             <input
               id={endDateId}
-              className={inputClasses}
+              className={endInputClasses}
               placeholder={endDatePlaceholderText}
               value={dateRangeData.formatted[1] || ''}
               data-type={INPUT_END}
@@ -248,7 +256,7 @@ export const DateRangePicker = props => {
           </div>
         </div>
 
-        <div className={popupClassName || css.popup}>
+        <div className={twoMonths ? css.popupWide : (popupClassName || css.popup)}>
           {isOpen ? (
             <DatePicker
               range={true}
@@ -258,8 +266,9 @@ export const DateRangePicker = props => {
               value={dateRangeData.dateRange}
               rangeStartHasValue={dateRangeData.formatted?.[0]?.length > 0}
               rangeEndHasValue={dateRangeData.formatted?.[1]?.length > 0}
-              {...startDateMaybe}
+              twoMonths={twoMonths}
               {...rest}
+              {...startDateMaybe}
             />
           ) : null}
         </div>

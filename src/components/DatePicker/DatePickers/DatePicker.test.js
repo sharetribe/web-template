@@ -203,6 +203,40 @@ describe('DatePicker', () => {
     expect(clicked15).toBeInTheDocument();
     expect(clicked15).not.toHaveClass('dateSelected');
   });
+
+  it('marks selection-blocked dates with dateSelectionBlocked class without aria-disabled', () => {
+    const startDate = '2026-07-01';
+    const isDateSelectionBlocked = d =>
+      d.getFullYear() === 2026 && d.getMonth() === 6 && d.getDate() === 15;
+
+    render(<DatePicker {...{ ...props, startDate, isDateSelectionBlocked }} />);
+
+    const july15 = new Date(2026, 6, 15);
+    const july15String = intl.formatDate(july15, { day: 'numeric', month: 'long' });
+    const dateCell = screen.getByRole('button', { name: `Choose ${july15String}` });
+    expect(dateCell).toHaveClass('dateSelectionBlocked');
+    // Selection-blocked dates are still clickable (not aria-disabled like truly blocked dates)
+    expect(dateCell).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('clear button resets calendar month back to startDate month after navigating away', async () => {
+    const startDate = '2026-07-01';
+    const user = userEvent.setup();
+    render(<DatePicker {...{ ...props, startDate, showClearButton: true }} />);
+
+    const months = getMonths(intl);
+    // Calendar opens on July 2026 (the startDate month)
+    expect(screen.getByText(`${months[6]} 2026`)).toBeInTheDocument();
+
+    // Select July 10, then navigate 5 weeks forward → lands in August
+    await user.click(screen.getByRole('button', { name: 'Choose July 10' }));
+    await user.keyboard('[ArrowDown][ArrowDown][ArrowDown][ArrowDown][ArrowDown]');
+    expect(screen.getByText(`${months[7]} 2026`)).toBeInTheDocument();
+
+    // Clear — calendar should return to July 2026 (startDate month)
+    await user.click(screen.getByRole('button', { name: 'DatePicker.clearButton' }));
+    expect(screen.getByText(`${months[6]} 2026`)).toBeInTheDocument();
+  });
 });
 
 describe('SingleDatePicker', () => {

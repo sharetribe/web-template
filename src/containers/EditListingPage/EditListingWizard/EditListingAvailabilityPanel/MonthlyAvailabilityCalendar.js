@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { getStartOf } from '../../../../util/dates';
+import React, { useState, useEffect } from 'react';
+import {
+  getStartOf,
+  timeOfDayFromLocalToTimeZone,
+  timeOfDayFromTimeZoneToLocal,
+} from '../../../../util/dates';
+import { endOfAvailabilityExceptionRange } from './availability.helpers';
 
 import css from './MonthlyAvailabilityCalendar.module.css';
 
@@ -42,13 +47,15 @@ const formatDate = d =>
 
 // ─── Convert Sharetribe allExceptions → internal ranges ──────────────────────
 
-const exceptionsToRanges = allExceptions =>
+// Converts UTC timestamps from the API to local-midnight Dates for the calendar grid,
+// using the listing's timezone so the displayed dates are correct regardless of browser tz.
+const exceptionsToRanges = (allExceptions, timeZone) =>
   allExceptions
     .filter(e => e.attributes.seats > 0)
     .map(e => ({
-      // Sharetribe stores end as exclusive — subtract 1 day for display
-      start: sod(e.attributes.start),
-      end: sod(new Date(e.attributes.end.getTime() - 86400000)),
+      start: sod(timeOfDayFromTimeZoneToLocal(e.attributes.start, timeZone)),
+      // end is exclusive in Sharetribe — subtract 1ms to land on the last inclusive day
+      end: sod(timeOfDayFromTimeZoneToLocal(new Date(e.attributes.end.getTime() - 1), timeZone)),
       exceptionId: e.id,
     }));
 
@@ -122,10 +129,22 @@ const MonthlyAvailabilityCalendar = props => {
     allExceptions = [],
     onAddAvailabilityException,
     onDeleteAvailabilityException,
+    onFetchExceptions,
     listing,
+    timeZone,
     updateInProgress,
     errors,
   } = props;
+
+  // Fetch all future exceptions when the component mounts so the calendar
+  // displays correctly even after a page refresh or a fresh navigation.
+  useEffect(() => {
+    if (listing?.id && onFetchExceptions && timeZone) {
+      const start = getStartOf(new Date(), 'day', timeZone);
+      const end = endOfAvailabilityExceptionRange(timeZone, new Date());
+      onFetchExceptions({ listingId: listing.id, start, end, timeZone });
+    }
+  }, [listing?.id]);
 
   const today = sod(new Date());
 
@@ -140,7 +159,7 @@ const MonthlyAvailabilityCalendar = props => {
   const [saving, setSaving] = useState(false);
 
   // Derive ranges from Sharetribe exceptions every render
-  const ranges = exceptionsToRanges(allExceptions);
+  const ranges = exceptionsToRanges(allExceptions, timeZone);
 
   // Second visible month
   const month2Year = viewMonth === 11 ? viewYear + 1 : viewYear;
@@ -186,13 +205,21 @@ const MonthlyAvailabilityCalendar = props => {
     setSaving(true);
     setError(null);
     try {
-      // Sharetribe end date is exclusive, so add 1 day
-      const exclusiveEnd = new Date(end.getTime() + 86400000);
+      // Convert local-midnight dates to listing-timezone midnight so the API
+      // timestamps align with the plan's timezone boundaries (Africa/Nairobi).
+      const tzStart = getStartOf(timeOfDayFromLocalToTimeZone(start, timeZone), 'day', timeZone);
+      const tzExclusiveEnd = getStartOf(
+        timeOfDayFromLocalToTimeZone(end, timeZone),
+        'day',
+        timeZone,
+        1,
+        'days'
+      );
       await onAddAvailabilityException({
         listingId: listing.id,
         seats: 1,
-        start,
-        end: exclusiveEnd,
+        start: tzStart,
+        end: tzExclusiveEnd,
       });
     } catch (e) {
       console.log('saveRange error:', e);

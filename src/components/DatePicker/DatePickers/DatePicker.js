@@ -69,16 +69,22 @@ const CalendarMonth = props => {
     rangeEndHasValue,
     disabled,
     isDayBlocked,
+    isDateSelectionBlocked,
     onClick,
     onKeyDown,
     hasMinimumNights,
+    minimumNights,
     visible,
     startDateOffset,
     endDateOffset,
+    hoveredDate: controlledHoveredDate,
+    onHoveredDateChange,
     intl,
   } = props;
-  const [hoveredDate, setHoveredDate] = useState(null);
+  const [internalHoveredDate, setInternalHoveredDate] = useState(null);
+  const hoveredDate = controlledHoveredDate !== undefined ? controlledHoveredDate : internalHoveredDate;
   const [keyboardUsed, setKeyboardUsed] = useState(false);
+  const [tooltip, setTooltip] = useState(null);
   const weekdays = getLocalizedWeekDays(firstDayOfWeek, intl);
   const calendarRows = getCalendarRows(currentMonth, firstDayOfWeek);
 
@@ -108,13 +114,44 @@ const CalendarMonth = props => {
       return;
     }
 
-    const date = getLocalDateFromISOString(event.target.closest('td').dataset.date);
+    const td = event.target.closest('td');
+    const date = getLocalDateFromISOString(td.dataset.date);
 
-    setHoveredDate(date);
+    if (onHoveredDateChange) {
+      onHoveredDateChange(date);
+    } else {
+      setInternalHoveredDate(date);
+    }
+
+    if (td.classList.contains(css.dateMinimumNights)) {
+      const rect = td.getBoundingClientRect();
+      setTooltip({ x: rect.left + rect.width / 2, y: rect.bottom, message: `Minimum ${minimumNights} days required` });
+    } else if (td.classList.contains(css.dateSelectionBlocked)) {
+      const rect = td.getBoundingClientRect();
+      setTooltip({ x: rect.left + rect.width / 2, y: rect.bottom, message: '30 nights not available' });
+    } else {
+      setTooltip(null);
+    }
   };
 
   const onMouseLeave = () => {
-    setHoveredDate(null);
+    if (onHoveredDateChange) {
+      onHoveredDateChange(null);
+    } else {
+      setInternalHoveredDate(null);
+    }
+    setTooltip(null);
+  };
+
+  const onTouchStart = event => {
+    if (disabled) return;
+    const td = event.target.closest('td');
+    if (!td) return;
+    if (td.classList.contains(css.dateSelectionBlocked)) {
+      const rect = td.getBoundingClientRect();
+      setTooltip({ x: rect.left + rect.width / 2, y: rect.bottom, message: '30 nights not available' });
+      setTimeout(() => setTooltip(null), 2000);
+    }
   };
 
   return (
@@ -124,7 +161,15 @@ const CalendarMonth = props => {
         [css.keyboardUsed]: keyboardUsed,
       })}
     >
-      <table className={css.calendarTable} onKeyDown={handleKeyDown} role="presentation">
+      {tooltip && (
+        <div
+          className={css.minimumNightsTooltip}
+          style={{ left: tooltip.x, top: tooltip.y }}
+        >
+          {tooltip.message}
+        </div>
+      )}
+      <table className={css.calendarTable} onKeyDown={handleKeyDown} onTouchStart={onTouchStart} role="presentation">
         <thead className={css.calendarHeader}>
           <tr className={css.weekdayRow} aria-hidden="true">
             {weekdays.map(weekday => (
@@ -155,16 +200,30 @@ const CalendarMonth = props => {
                     ? isSameDay(day, currentValue[0]) || isSameDay(day, currentValue[1])
                     : isSameDay(day, currentValue);
 
+                  const isToday = isSameDay(day, new Date());
+                  const isDisabled = isDayBlocked(day);
+                  const isSelectionBlocked = !isDisabled && isDateSelectionBlocked ? isDateSelectionBlocked(day) : false;
+
+                  const hasOneDateSelected =
+                    range && Array.isArray(currentValue) && currentValue.length === 1;
+                  const isDisabledMinimumNights =
+                    !isCurrent &&
+                    hasOneDateSelected &&
+                    (currentValue[0] <= hoveredDate || !hoveredDate)
+                      ? currentValue[0] < day &&
+                        !hasMinimumNights({ start: currentValue[0], end: day })
+                      : false;
+
+                  const hasStartDate = !!currentValue?.[0];
+                  const potentialRangeEnd = currentValue?.[1] || hoveredDate || currentDate;
+                  const currentDateVisible = keyboardUsed && currentDate;
+
                   const isInRange = !range
                     ? false
                     : isDateInRange(day, {
                         from: currentValue?.[0],
                         to: currentValue?.[1] || hoveredDate || currentDate,
                       });
-
-                  const hasStartDate = !!currentValue?.[0];
-                  const potentialRangeEnd = currentValue?.[1] || hoveredDate || currentDate;
-                  const currentDateVisible = keyboardUsed && currentDate;
                   const hasHoveredRange = hasStartDate && hoveredDate;
                   const hasKeyboardRange = hasStartDate && currentDateVisible;
                   const orderedValues =
@@ -180,21 +239,6 @@ const CalendarMonth = props => {
 
                   const isStart = range && startExist && isSameDay(orderedValues[0], day);
                   const isEnd = range && (isSameDay(orderedValues[1], day) || boundaryPointsToEnd);
-                  const isToday = isSameDay(day, new Date());
-                  const isDisabled = isDayBlocked(day);
-
-                  const hasOneDateSelected =
-                    range && Array.isArray(currentValue) && currentValue.length === 1;
-                  const isDisabledMinimumNights =
-                    !isCurrent &&
-                    hasOneDateSelected &&
-                    (currentValue[0] < hoveredDate || !hoveredDate)
-                      ? currentValue[0] < day &&
-                        !hasMinimumNights({ start: currentValue[0], end: day })
-                      : !isCurrent && hasOneDateSelected && currentValue[0] > hoveredDate
-                      ? currentValue[0] > day &&
-                        !hasMinimumNights({ start: day, end: currentValue[0] })
-                      : false;
 
                   const isoDateString = getISODateString(day);
                   const cellKey = `cell-${isoDateString}`;
@@ -202,8 +246,9 @@ const CalendarMonth = props => {
                   const classes = classNames({
                     [css.date]: true,
                     [css.dateCurrent]: isCurrent,
-                    [css.dateDisabled]: isDisabled || isDisabledMinimumNights,
+                    [css.dateDisabled]: isDisabled,
                     [css.dateMinimumNights]: isDisabledMinimumNights,
+                    [css.dateSelectionBlocked]: isSelectionBlocked,
                     [css.dateOverflowing]: isOverflowing,
                     [css.dateToday]: isToday,
                     [css.dateSelected]: isSelected,
@@ -278,6 +323,7 @@ const DatePicker = props => {
     disabled = false,
     firstDayOfWeek = defaultFirstDayOfWeek,
     minimumNights = 0,
+    twoMonths = false,
     range,
     rangeStartHasValue,
     rangeEndHasValue,
@@ -294,6 +340,7 @@ const DatePicker = props => {
     onChange,
     onMonthChange,
     isDayBlocked = () => false,
+    isDateSelectionBlocked = () => false,
     isBlockedBetween = () => false,
     hasFocusOnMount = true,
   } = props;
@@ -307,6 +354,7 @@ const DatePicker = props => {
   const [calendarIndex, setCalendarIndex] = useState(0);
   const [allowSlide, setAllowSlide] = useState(true);
   const [isMounted, setMounted] = useState(false);
+  const [sharedHoveredDate, setSharedHoveredDate] = useState(null);
 
   useEffect(() => {
     setMounted(true);
@@ -333,7 +381,7 @@ const DatePicker = props => {
       }
       // Update date range when range it exists and has been changed
       setCurrentValue(value);
-    } else if (range && isDateArray(value) && value.length === 0 && currentValue.length > 0) {
+    } else if (range && isDateArray(value) && value.length === 0 && currentValue?.length > 0) {
       // Update date range when range is set to empty
       setCurrentValue(value);
     }
@@ -388,7 +436,7 @@ const DatePicker = props => {
     Math.abs(start?.getTime() - end?.getTime()) >= minimumNights * 864e5;
 
   const onSelectDate = date => {
-    if (isDayBlocked(date)) {
+    if (isDayBlocked(date) || isDateSelectionBlocked(date)) {
       return;
     }
 
@@ -429,11 +477,19 @@ const DatePicker = props => {
   };
 
   const nextMonth = () => {
-    slide(1);
+    if (twoMonths) {
+      updateCurrentDate(getNextMonth(currentDate));
+    } else {
+      slide(1);
+    }
   };
 
   const previousMonth = () => {
-    slide(-1);
+    if (twoMonths) {
+      updateCurrentDate(getPreviousMonth(currentDate));
+    } else {
+      slide(-1);
+    }
   };
 
   const onShowToday = () => {
@@ -442,6 +498,7 @@ const DatePicker = props => {
 
   const onClear = () => {
     onCurrentValueChange(null);
+    setCurrentDate(getInitialStartDate(startDate));
   };
 
   const onClick = event => {
@@ -558,8 +615,10 @@ const DatePicker = props => {
     firstDayOfWeek,
     disabled,
     isDayBlocked,
+    isDateSelectionBlocked,
     range,
     hasMinimumNights,
+    minimumNights,
     onClick,
     onKeyDown,
     rangeStartHasValue,
@@ -578,6 +637,67 @@ const DatePicker = props => {
   const style = {
     transform: `translateX(${translateX(calendarIndex)}px)`,
   };
+
+  if (twoMonths) {
+    const secondMonthDate = getNextMonth(currentDate);
+    const twoMonthCommonProps = {
+      ...commonMonthProps,
+      hoveredDate: sharedHoveredDate,
+      onHoveredDateChange: setSharedHoveredDate,
+    };
+
+    return (
+      <div
+        aria-disabled={String(disabled)}
+        aria-label="Calendar"
+        aria-roledescription="datepicker"
+        className={classNames(css.root, css.twoMonthsRoot, {
+          [css.light]: theme === 'light',
+          [css.disabled]: disabled,
+        })}
+        role="application"
+      >
+        <div className={classNames(css.datepicker, css.twoMonthsDatepicker)} ref={pickerRef}>
+          <DatePickerHeader
+            secondDate={secondMonthDate}
+            monthClassName={null}
+            currentDate={currentDate}
+            showMonthStepper={showMonthStepper}
+            showPreviousMonthStepper={showPreviousMonthStepper}
+            showNextMonthStepper={showNextMonthStepper}
+            nextMonth={nextMonth}
+            previousMonth={previousMonth}
+            disabled={disabled}
+            intl={intl}
+          />
+
+          <div className={css.twoMonthsBody}>
+            <CalendarMonth
+              currentMonth={currentDate}
+              visible={true}
+              {...twoMonthCommonProps}
+            />
+            <CalendarMonth
+              currentMonth={secondMonthDate}
+              visible={true}
+              startDateOffset={startDateOffset}
+              endDateOffset={endDateOffset}
+              {...twoMonthCommonProps}
+            />
+          </div>
+
+          <DatePickerFooter
+            showFooter={showTodayButton || showClearButton}
+            showTodayButton={showTodayButton}
+            showClearButton={showClearButton}
+            disabled={disabled}
+            onShowToday={onShowToday}
+            onClear={onClear}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
