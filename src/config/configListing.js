@@ -10,7 +10,7 @@
 /**
  * Configuration options for listing fields (custom extended data fields):
  * - key:                           Unique key for the extended data field.
- * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
+ * - scope (optional):              Scope of the extended data can be 'public', 'private', or 'metadata'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
  * - schemaType (optional):         Schema for this extended data field.
@@ -53,6 +53,95 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
+  {
+    key: 'listingCategory',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'entire-home', label: 'Entire Home' },
+      { option: 'room', label: 'Room' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectSingleFilter',
+      label: 'Listing type',
+      group: 'primary',
+    },
+    showConfig: { label: 'Listing type', isDetail: true },
+    saveConfig: {
+      label: 'Listing type',
+      isRequired: true,
+      requiredMessage: 'You need to select a listing type.',
+    },
+  },
+  {
+    key: 'bedrooms',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 0, maximum: 20 },
+    filterConfig: { indexForSearch: false, label: 'Bedrooms', group: 'primary' },
+    showConfig: { label: 'Bedrooms', isDetail: false },
+    saveConfig: { label: 'Bedrooms', isRequired: false },
+  },
+  {
+    key: 'bathrooms',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 0, maximum: 20 },
+    filterConfig: { indexForSearch: false, label: 'Bathrooms', group: 'primary' },
+    showConfig: { label: 'Bathrooms', isDetail: false },
+    saveConfig: { label: 'Bathrooms', isRequired: false },
+  },
+  {
+    key: 'beds',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 0, maximum: 50 },
+    filterConfig: { indexForSearch: false, label: 'Beds', group: 'primary' },
+    showConfig: { label: 'Beds', isDetail: false },
+    saveConfig: { label: 'Beds', isRequired: false },
+  },
+  {
+    key: 'guests',
+    scope: 'public',
+    schemaType: 'long',
+    numberConfig: { minimum: 1, maximum: 50 },
+    filterConfig: { indexForSearch: false, label: 'Guests', group: 'primary' },
+    showConfig: { label: 'Guests', isDetail: false },
+    saveConfig: { label: 'Guests', isRequired: false },
+  },
+  {
+    key: 'amenities',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      // Required
+      { option: 'security-24hr', label: '24-hour manned security' },
+      { option: 'perimeter-wall', label: 'Perimeter wall + solid gate' },
+      { option: 'alarm-panic', label: 'Alarm system + panic button' },
+      { option: 'cctv', label: 'CCTV cameras' },
+      { option: 'water-storage', label: 'Water storage tank / borehole' },
+      { option: 'wifi', label: 'WiFi' },
+      { option: 'secure-parking', label: 'Secure parking (min. 1 space)' },
+      { option: 'kitchen', label: 'Kitchen' },
+      { option: 'washing-machine', label: 'Washing machine' },
+      { option: 'concierge', label: 'Concierge or estate management' },
+      // Premium
+      { option: 'generator', label: 'Backup generator or solar' },
+      { option: 'pool', label: 'Swimming pool' },
+      { option: 'gym', label: 'Gym / fitness centre' },
+      { option: 'rooftop', label: 'Rooftop or outdoor common area' },
+      { option: 'balcony', label: 'Private patio or balcony' },
+      // Optional
+      { option: 'hot-water', label: 'Hot water supply' },
+      { option: 'tv', label: 'TV' },
+      { option: 'furnished', label: 'Fully furnished' },
+      { option: 'pet-friendly', label: 'Pet-friendly' },
+    ],
+    filterConfig: { indexForSearch: false, label: 'Amenities', group: 'secondary' },
+    showConfig: { label: 'Amenities', isDetail: false },
+    saveConfig: { label: 'Amenities', isRequired: false },
+  },
   // {
   //   "scope": "public",
   //   "label": "Gears",
@@ -83,7 +172,7 @@ export const listingFields = [
   //     categoryIds: ['cats'],
   //   },
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
   //     label: 'Bike type',
   //     group: 'primary',
@@ -113,7 +202,7 @@ export const listingFields = [
   //     { option: '18', label: '18' },
   //   ],
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     label: 'Tire size',
   //     group: 'secondary',
   //   },
@@ -143,7 +232,7 @@ export const listingFields = [
   //     { option: 'vermont', label: 'Vermont' },
   //   ],
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     label: 'Brand',
   //     group: 'secondary',
   //   },
@@ -169,7 +258,7 @@ export const listingFields = [
   //     { option: 'mudguard', label: 'Mudguard' },
   //   ],
   //   filterConfig: {
-  //     indexForSearch: true,
+  //     showFilter: true,
   //     label: 'Accessories',
   //     searchMode: 'has_all',
   //     group: 'secondary',

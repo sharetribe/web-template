@@ -1,3 +1,4 @@
+const Stripe = require('stripe');
 const sharetribeSdk = require('sharetribe-flex-sdk');
 const { transactionLineItems } = require('../api-util/lineItems');
 const {
@@ -16,6 +17,16 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
+
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+const CAPTURE_TRANSITIONS = ['transition/accept', 'transition/operator-accept'];
+const CANCEL_TRANSITIONS = [
+  'transition/decline',
+  'transition/operator-decline',
+  'transition/expire',
+  'transition/cancel',
+];
 
 const { Money } = sharetribeSdk.types;
 
@@ -150,6 +161,21 @@ module.exports = (req, res) => {
       );
 
       metadataMaybe = getUpdatedMetadata(orderData, transitionName, existingMetadata);
+
+      const stripePaymentIntentId =
+        transaction.attributes.protectedData?.stripePaymentIntents?.default?.stripePaymentIntentId;
+
+      if (!isSpeculative && stripePaymentIntentId) {
+        if (CAPTURE_TRANSITIONS.includes(transitionName)) {
+          return stripe.paymentIntents
+            .capture(stripePaymentIntentId)
+            .then(() => getTrustedSdk(req));
+        } else if (CANCEL_TRANSITIONS.includes(transitionName)) {
+          return stripe.paymentIntents
+            .cancel(stripePaymentIntentId)
+            .then(() => getTrustedSdk(req));
+        }
+      }
 
       return getTrustedSdk(req);
     })

@@ -15,7 +15,7 @@
     }
   }
 }
-/* Handle margin-top of next adjacent element against this list element */
+
 .ul,
 .ol {
   & + p,
@@ -30,7 +30,7 @@
   & + h4,
   & + h5,
   & + h6 {
-    margin-top: 24px;
+    margin-top: 10px;
   }
 }
 

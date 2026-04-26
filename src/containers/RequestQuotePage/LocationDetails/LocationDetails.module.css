@@ -1,12 +1,12 @@
 @import '../../../styles/customMediaQueries.css';
 
 .locationContainer {
-  margin-top: 29px;
+  margin-top: 0px;
   margin-bottom: 34px;
   padding: 0 24px;
 
   @media (--viewportMedium) {
-    margin-top: 27px;
+    margin-top: 0px;
     margin-bottom: 30px;
   }
 

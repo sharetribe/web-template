@@ -110,7 +110,8 @@ class GeocoderGoogleMaps {
 
     return googleMapsUtil.getPlaceDetails(this.getPredictionId(prediction)).then(place => {
       this.sessionToken = null;
-      return place;
+      const predictionAddress = this.getPredictionAddress(prediction);
+      return { ...place, address: predictionAddress };
     });
   }
 }

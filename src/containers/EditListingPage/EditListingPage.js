@@ -166,7 +166,8 @@ export const EditListingPageComponent = props => {
   const isNewListingFlow = isNewURI || isDraftURI;
 
   const listingId = page.submittedListingId || (id ? new UUID(id) : null);
-  const currentListing = ensureOwnListing(getOwnListing(listingId));
+  const currentListing = ensureOwnListing(getOwnListing(listingId) || page.listingDraft);
+
   const { state: currentListingState } = currentListing.attributes;
 
   const hasPostingRights = hasPermissionToPostListings(currentUser);

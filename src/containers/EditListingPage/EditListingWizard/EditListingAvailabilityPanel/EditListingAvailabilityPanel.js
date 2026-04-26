@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -14,6 +14,9 @@ import { Button, H3, InlineTextButton, ListingLink, Modal } from '../../../../co
 import EditListingAvailabilityPlanForm from './EditListingAvailabilityPlanForm';
 import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExceptionForm';
 import WeeklyCalendar from './WeeklyCalendar/WeeklyCalendar';
+
+// Change for monthly calender
+import MonthlyAvailabilityCalendar from './MonthlyAvailabilityCalendar';
 
 import css from './EditListingAvailabilityPanel.module.css';
 
@@ -100,6 +103,25 @@ const createAvailabilityPlan = values => ({
   },
 });
 
+// Change for monthly calender
+// Converts a { start: Date, end: Date } range into an availability exception
+// with seats: 1 (available), then saves it via the SDK.
+const saveRangesAsExceptions = async (ranges, listingId, existingExceptions, onAddException, onDeleteException) => {
+  // Delete all existing exceptions first
+  for (const ex of existingExceptions) {
+    await onDeleteException({ id: ex.id });
+  }
+  // Create one exception per range
+  for (const range of ranges) {
+    await onAddException({
+      listingId,
+      seats: 1,
+      start: range.start,
+      end: range.end,
+    });
+  }
+};
+
 //////////////////////////////////
 // EditListingAvailabilityPanel //
 //////////////////////////////////
@@ -170,6 +192,7 @@ const EditListingAvailabilityPanel = props => {
     onSubmit,
     onManageDisableScrolling,
     onNextTab,
+    onSaveAndExit,
     submitButtonText,
     updateInProgress,
     errors,
@@ -183,6 +206,22 @@ const EditListingAvailabilityPanel = props => {
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
+
+  // Auto-save a default availability plan so the calendar shows immediately,
+  // without requiring the host to click "Set default schedule" manually.
+  useEffect(() => {
+    if (!hasAvailabilityPlan && listing?.id && !updateInProgress) {
+      const tz = config.localization.timeZone || defaultTimeZone();
+      // console.log('timezone being saved:', tz);
+      onSubmit({
+        availabilityPlan: {
+          type: 'availability-plan/time',
+          timezone: tz,
+          entries: [],
+        },
+      });
+    }
+  }, [listing?.id]);
 
   const firstDayOfWeek = config.localization.firstDayOfWeek;
   const classes = classNames(rootClassName || css.root, className);
@@ -287,58 +326,19 @@ const EditListingAvailabilityPanel = props => {
       </H3>
 
       <div className={css.planInfo}>
-        {!hasAvailabilityPlan ? (
-          <p>
-            <FormattedMessage id="EditListingAvailabilityPanel.availabilityPlanInfo" />
-          </p>
-        ) : null}
-
-        <InlineTextButton
-          id={EDIT_AVAILABILITY_PLAN_BUTTON}
-          className={css.editPlanButton}
-          onClick={() => setIsEditPlanModalOpen(true)}
-        >
-          {hasAvailabilityPlan ? (
-            <FormattedMessage id="EditListingAvailabilityPanel.editAvailabilityPlan" />
-          ) : (
-            <FormattedMessage id="EditListingAvailabilityPanel.setAvailabilityPlan" />
-          )}
-        </InlineTextButton>
       </div>
-
+   
       {hasAvailabilityPlan ? (
-        <>
-          <WeeklyCalendar
-            className={css.section}
-            headerClassName={css.sectionHeader}
-            listingId={listing.id}
-            availabilityPlan={availabilityPlan}
-            availabilityExceptions={sortedAvailabilityExceptions}
-            weeklyExceptionQueries={weeklyExceptionQueries}
-            isDaily={unitType === DAY}
-            useFullDays={useFullDays}
-            useMultipleSeats={useMultipleSeats}
+        <div className={css.calendarSection}>
+          <MonthlyAvailabilityCalendar
+            allExceptions={sortedAvailabilityExceptions}
+            onAddAvailabilityException={onAddAvailabilityException}
             onDeleteAvailabilityException={onDeleteAvailabilityException}
-            onFetchExceptions={onFetchExceptions}
-            params={params}
-            locationSearch={locationSearch}
-            firstDayOfWeek={firstDayOfWeek}
-            routeConfiguration={routeConfiguration}
-            history={history}
+            listing={listing}
+            updateInProgress={updateInProgress}
+            errors={errors}
           />
-
-          <section className={css.section}>
-            <InlineTextButton
-              id={EDIT_AVAILABILITY_EXCEPTIONS_BUTTON}
-              className={css.addExceptionButton}
-              onClick={() => setIsEditExceptionsModalOpen(true)}
-              disabled={disabled || !hasAvailabilityPlan}
-              ready={ready}
-            >
-              <FormattedMessage id="EditListingAvailabilityPanel.addException" />
-            </InlineTextButton>
-          </section>
-        </>
+        </div>
       ) : null}
 
       {errors.showListingsError ? (
@@ -348,13 +348,18 @@ const EditListingAvailabilityPanel = props => {
       ) : null}
 
       {!isPublished ? (
-        <Button
-          className={css.goToNextTabButton}
-          onClick={onNextTab}
-          disabled={!hasAvailabilityPlan}
-        >
-          {submitButtonText}
-        </Button>
+        <div className={css.buttonRow}>
+          <Button
+            className={css.goToNextTabButton}
+            onClick={onNextTab}
+            disabled={!hasAvailabilityPlan}
+          >
+            {submitButtonText}
+          </Button>
+          <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+            Save &amp; exit
+          </button>
+        </div>
       ) : null}
 
       {onManageDisableScrolling && isEditPlanModalOpen ? (

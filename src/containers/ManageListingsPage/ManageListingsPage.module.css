@@ -66,15 +66,7 @@
 }
 
 .heading {
-  margin: 0 24px 24px 24px;
-
-  @media (--viewportMedium) {
-    margin: 0 24px 32px 24px;
-  }
-
-  @media (--viewportLarge) {
-    margin: 0 36px 32px 36px;
-  }
+  margin: 0;
 }
 
 .createListingParagraph,
@@ -88,6 +80,60 @@
   @media (--viewportLarge) {
     margin: 0 0 8px 0;
   }
+}
+
+.headingRow {
+  display: flex;
+  flex-direction: column;
+  margin: 0 24px 24px 24px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0 36px 32px 36px;
+  }
+}
+
+.filterNav {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  margin-top: 16px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+  }
+}
+
+.filterTab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--colorGrey300);
+  color: var(--colorGrey700);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  margin-right: 24px;
+  padding: 0 0 10px 0;
+  transition: var(--transitionStyleButton);
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover {
+    border-bottom-color: var(--marketplaceColor);
+    color: var(--marketplaceColor);
+  }
+}
+
+.filterTabActive {
+  border-bottom-color: var(--marketplaceColor);
+  color: var(--marketplaceColor);
 }
 
 .listingCards {

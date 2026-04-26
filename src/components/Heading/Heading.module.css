@@ -1,25 +1,86 @@
 @import '../../styles/customMediaQueries.css';
 
 .h1 {
-  composes: h1 from global;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  font-weight: 800;
+  text-wrap: balance;
+
+  @media (--viewportMedium) {
+    font-size: 38px;
+  }
+
+  & + p,
+  & + a,
+  & + ul,
+  & + ol,
+  & + code,
+  & + div,
+  & + h1,
+  & + h2,
+  & + h3,
+  & + h4,
+  & + h5,
+  & + h6 {
+    margin-top: 8px;
+  }
 }
 
 .h2 {
-  composes: h2 from global;
+  font-size: 20px;
+  margin-top: 28px;
+
+  @media (--viewportMedium) {
+    font-size: 22px;
+  }
+
+  & + p,
+  & + a,
+  & + ul,
+  & + ol,
+  & + code,
+  & + div,
+  & + h1,
+  & + h2,
+  & + h3,
+  & + h4,
+  & + h5,
+  & + h6 {
+    margin-top: 4px;
+  }
 }
 
 .h3 {
-  composes: h3 from global;
+  font-size: 17px;
+  margin-top: 20px;
+
+  @media (--viewportMedium) {
+    font-size: 18px;
+  }
 }
 
 .h4 {
-  composes: h4 from global;
+  font-size: 15px;
+  margin-top: 16px;
 }
 
-.h5 {
-  composes: h5 from global;
-}
-
+.h3,
+.h4,
+.h5,
 .h6 {
-  composes: h6 from global;
+  & + p,
+  & + a,
+  & + ul,
+  & + ol,
+  & + code,
+  & + div,
+  & + h1,
+  & + h2,
+  & + h3,
+  & + h4,
+  & + h5,
+  & + h6 {
+    margin-top: 4px;
+  }
 }

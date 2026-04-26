@@ -98,7 +98,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
     },
     showConfig: {
       label: 'Cat',
@@ -119,7 +119,7 @@ const listingFields = [
       { option: 'feat_3', label: 'Feat 3' },
     ],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
     },
     showConfig: {
       label: 'Amenities',

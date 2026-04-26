@@ -196,24 +196,27 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
       startDate.getTime() >= possibleStartDate.getTime() &&
       startDate.getTime() <= endDate.getTime();
 
-    const dayCount = isEntireRangeAvailable ? daysBetween(startDate, endDate) : 1;
+    const dayCount = daysBetween(startDate, endDate);
     const day = 1440;
     const hour = 60;
-    // When entire range is required to be available, we count minutes of included date range,
-    // but there's a need to subtract one hour due to possibility of daylight saving time.
-    // If partial range is needed, then we just make sure that the shortest time unit supported
-    // is available within the range.
-    // You might want to customize this to match with your time units (e.g. day: 1440 - 60)
-    const minDuration = isEntireRangeAvailable ? dayCount * day - hour : hour;
+    const MIN_STAY_DAYS = 30;
+    // Always enforce minimum 30-day stay duration for this platform.
+    // Use the actual searched range if longer than 30 days.
+    const minDuration = Math.max(dayCount * day - hour, MIN_STAY_DAYS * day - hour);
+
+    console.log('Search params sent to API:', {
+      dayCount,
+      minDuration,
+      minDurationInDays: minDuration / 1440,
+      start: getProlongedStart(startDate),
+      end: getProlongedEnd(endDate),
+    });
+
     return hasValidDates
       ? {
-          start: getProlongedStart(startDate),
-          end: getProlongedEnd(endDate),
-          // Availability can be time-full or time-partial.
-          // However, due to prolonged time window, we need to use time-partial.
-          availability: 'time-partial',
-          // minDuration uses minutes
-          minDuration,
+          start: startDate,
+          end: endDate,
+          availability: 'time-full',
         }
       : {};
   };
@@ -237,6 +240,28 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     return hasDatesFilterInUse && seatsFilter ? { seats } : {};
   };
 
+  const sortSearchParams = (sortParam, hasKeywords) => {
+    const sortConfig = config?.search?.sortConfig || {};
+    // If no sort options are set, defaultSort will be undefined
+    const defaultSort = sortConfig?.options?.[0]?.key;
+    const relevanceEnabled = sortConfig.options?.some(
+      option => option.key === sortConfig.relevanceKey
+    );
+
+    // User-specified sort takes priority
+    if (sortParam !== undefined && sortParam !== sortConfig.relevanceKey) {
+      return { sort: sortParam };
+    }
+
+    // No sort parameter needed when keyword search is used or sort config is inactive
+    if (relevanceEnabled && (hasKeywords || !sortConfig.active)) {
+      return {};
+    }
+
+    // Fall back to default sort
+    return { sort: defaultSort };
+  };
+
   const {
     perPage,
     price,
@@ -254,7 +279,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
   const seatsMaybe = seatsSearchParams(seats, datesMaybe);
-  const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
+  const sortMaybe = sortSearchParams(sort, searchParams?.keywords !== undefined);
 
   const params = {
     // The params that are related to listing fields and categories are prepared here.

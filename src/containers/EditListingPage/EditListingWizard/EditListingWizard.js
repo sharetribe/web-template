@@ -40,6 +40,7 @@ import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../../transac
 import {
   Heading,
   Modal,
+  NamedLink,
   NamedRedirect,
   Tabs,
   StripeConnectAccountStatusBox,
@@ -249,8 +250,7 @@ const tabCompleted = (tab, listing, config) => {
         title &&
         listingType &&
         transactionProcessAlias &&
-        unitType &&
-        hasValidListingFieldsInExtendedData(publicData, privateData, config)
+        unitType
       );
     case PRICING:
       return !!price;
@@ -413,12 +413,15 @@ class EditListingWizard extends Component {
     this.state = {
       draftId: null,
       showPayoutDetails: false,
+      showTCModal: false,
+      tcScrolled: false,  // this line was just added
       selectedListingType: null,
       mounted: false,
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);
     this.handlePayoutModalClose = this.handlePayoutModalClose.bind(this);
+    this.handleTCModalClose = this.handleTCModalClose.bind(this);
   }
 
   componentDidMount() {
@@ -437,15 +440,11 @@ class EditListingWizard extends Component {
   }
 
   handlePublishListing(id) {
-    const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
+    const { onPublishListingDraft, currentUser, stripeAccount, listing, config, params } = this.props;
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
     const listingTypeConfig = getListingTypeConfig(listing, this.state.selectedListingType, config);
-    // Through hosted configs (listingTypeConfig.defaultListingFields?.payoutDetails),
-    // it's possible to publish listing without payout details set by provider.
-    // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
-    const isPayoutDetailsRequired = requirePayoutDetails(listingTypeConfig);
 
     const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
@@ -454,22 +453,36 @@ class EditListingWizard extends Component {
       (hasRequirements(stripeAccountData, 'past_due') ||
         hasRequirements(stripeAccountData, 'currently_due'));
 
+    const hasManualPayoutDetails =
+      !!currentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
+
+    // Only show T&C modal on the last tab
+    const savedProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+    const processNameForTabs = savedProcessAlias
+      ? savedProcessAlias.split('/')[0]
+      : INQUIRY_PROCESS_NAME;
+    const tabs = tabsForListingType(processNameForTabs, listingTypeConfig);
+    const isLastTab = params.tab === tabs[tabs.length - 1];
+
+    if (!isLastTab) return;
+
     if (
       isInquiryProcess ||
-      !isPayoutDetailsRequired ||
+      hasManualPayoutDetails ||
       (stripeConnected && !stripeRequirementsMissing)
     ) {
-      onPublishListingDraft(id);
+      this.setState({ draftId: id, showTCModal: true });
     } else {
-      this.setState({
-        draftId: id,
-        showPayoutDetails: true,
-      });
+      this.setState({ draftId: id, showTCModal: true, showPayoutDetails: false });
     }
   }
 
   handlePayoutModalClose() {
     this.setState({ showPayoutDetails: false });
+  }
+
+  handleTCModalClose() {
+    this.setState({ showTCModal: false, tcScrolled: false });
   }
 
   render() {
@@ -696,6 +709,194 @@ class EditListingWizard extends Component {
             );
           })}
         </Tabs>
+
+        {/* T&C Modal */}
+        <Modal
+          id="EditListingWizard.tcModal"
+          isOpen={this.state.showTCModal}
+          onClose={() => this.handleTCModalClose()}
+          onManageDisableScrolling={onManageDisableScrolling}
+          usePortal
+        >
+          <div className={css.modalPayoutDetailsWrapper}>
+            <Heading as="h2" rootClassName={css.modalTitle}>
+              One more thing
+            </Heading>
+            <p style={{ color: '#666', marginBottom: 16, lineHeight: 1.6 }}>
+              Please read and accept our Terms and Conditions before publishing your listing.
+            </p>
+
+            {/* Scroll hint */}
+            <p
+              id="tc-hint"
+              style={{ fontSize: 12, color: '#999', marginBottom: 12, fontStyle: 'italic' }}
+            >
+              ↓ Scroll to the bottom to accept
+            </p>
+
+            {/* Scrollable T&C box */}
+            <div
+              id="tc-scroll-box"
+              onScroll={e => {
+                const el = e.target;
+                const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
+                
+                if (atBottom) {
+                  this.setState({ tcScrolled: true });
+                  document.getElementById('tc-hint').style.display = 'none';
+                }
+              }}
+              style={{
+                height: 260,
+                overflowY: 'scroll',
+                border: '1px solid #e0e0e0',
+                borderRadius: 4,
+                padding: '16px',
+                fontSize: 13,
+                lineHeight: 1.8,
+                color: '#444',
+                marginBottom: 12,
+                backgroundColor: '#fafafa',
+              }}
+            >
+              <strong>Terms and Conditions</strong><br />
+              <em>Last updated: 14 March 2026</em>
+              <br /><br />
+              These Terms and Conditions ("Terms") govern the use of the Patamali platform ("Platform"), accessible via http://patamali.com, which connects guests seeking furnished mid-term accommodation with hosts offering such properties.
+              <br /><br />
+              By accessing or using the platform as a guest or host, you agree to comply with these Terms.
+              <br /><br />
+              <strong>1. About Patamali</strong><br />
+              Patamali operates an online platform that connects guests with furnished apartments available for stays of 30 days or longer. Patamali facilitates bookings and manages payments between guests and hosts in order to create a secure and reliable rental experience. Unless explicitly stated, Patamali does not own, operate, or manage the properties listed on the platform.
+              <br /><br />
+              <strong>2. Eligibility</strong><br />
+              To use the Patamali platform, users must: be at least 18 years of age, provide accurate and complete information when creating an account, and comply with all applicable laws and regulations. Patamali reserves the right to suspend or terminate accounts that violate these Terms.
+              <br /><br />
+              <strong>3. Bookings and Payments</strong><br />
+              All bookings must be made through the Patamali platform. To reduce fraud and protect both guests and hosts, Patamali collects payment from guests on behalf of hosts. Payments are held securely until the guest has checked into the property. Hosts receive payment one (1) day after the guest has successfully checked in. This payment structure applies even if a booking is made weeks or months in advance.
+              <br /><br />
+              <strong>4. Patamali Service Fee and Platform Integrity</strong><br />
+              Patamali charges hosts a 10% commission on the total booking amount paid by the guest. This commission is deducted before payment is transferred to the host. All bookings initiated through the Patamali platform must be completed through the platform's booking and payment system. Hosts and guests agree not to bypass or attempt to bypass the Patamali platform in order to avoid service fees or commissions. If Patamali determines that a user has attempted to circumvent the platform, the account may be suspended or permanently removed, active bookings may be cancelled, and Patamali may charge the applicable service fee that would have been due.
+              <br /><br />
+              <strong>5. Host Responsibilities</strong><br />
+              Hosts listing properties on Patamali agree to: provide accurate descriptions and information about their property, upload real and current photos of the actual unit offered, ensure they are the legal owner or authorized host of the property, maintain the property in a safe and habitable condition, and honor confirmed bookings made through the platform. Hosts are responsible for ensuring their listings comply with local laws and regulations.
+              <br /><br />
+              <strong>6. Host Misrepresentation and Removal</strong><br />
+              Patamali may remove hosts or listings from the platform if the property listed does not match the photos or description, the property offered is not the actual unit shown in the listing, the host is not the rightful owner or authorized host, the host attempts to move bookings off the platform, or the host engages in fraudulent or misleading behavior.
+              <br /><br />
+              <strong>7. Guest Responsibilities</strong><br />
+              Guests agree to provide accurate booking and contact information, respect the property and house rules provided by the host, and use the property only for lawful purposes. Guests must not attempt to arrange bookings outside the Patamali platform after discovering a property through Patamali.
+              <br /><br />
+              <strong>8. Verification and Trust</strong><br />
+              Patamali takes reasonable steps to review listings and verify host identities where possible. However, Patamali cannot guarantee the accuracy, legality, or safety of all listings, and users should report concerns immediately.
+              <br /><br />
+              <strong>9. Check-In Issues and Property Accuracy</strong><br />
+              If a guest encounters a serious issue at check-in or within the first two (2) days of the stay, the guest must notify Patamali immediately. Upon notification, Patamali will make reasonable efforts to assist the guest in securing alternative accommodation or provide a partial or full refund where appropriate.
+              <br /><br />
+              <strong>10. Cancellation Policy</strong><br />
+              More than 14 days before check-in: full refund. Within 14 days of check-in: 25% cancellation fee. Within 7 days of check-in: 50% cancellation fee. No-show or cancellation after check-in: no refund. Where a cancellation fee applies, Patamali deducts a 10% service commission from the cancellation amount, the remaining balance is paid to the host as compensation, and any remaining amount is refunded to the guest.
+              <br /><br />
+              <strong>11. Security Deposit</strong><br />
+              Some properties may require a security deposit, typically equal to one month of rent. Hosts are responsible for returning the security deposit within a reasonable period after check-out, provided the property is left in good condition, no damage has occurred, and all house rules have been respected.
+              <br /><br />
+              <strong>12. Payment Processing</strong><br />
+              Patamali may use third-party payment processors to facilitate transactions. Patamali is not responsible for delays caused by payment processors, banks, currency conversion providers, or technical issues outside Patamali's control.
+              <br /><br />
+              <strong>13. Platform Rules</strong><br />
+              Users may not attempt to bypass Patamali's payment system, engage in fraud or misrepresentation, or interfere with the operation or security of the platform.
+              <br /><br />
+              <strong>14. Termination of Accounts</strong><br />
+              Patamali reserves the right to suspend or terminate accounts that violate these Terms, engage in fraudulent activity, or attempt to circumvent the platform.
+              <br /><br />
+              <strong>15. Limitation of Liability</strong><br />
+              To the fullest extent permitted by law, Patamali and its affiliates shall not be liable for indirect, incidental, or consequential damages arising from the use of the platform. Patamali's total liability related to a booking shall not exceed the service fees paid to Patamali for that booking.
+              <br /><br />
+              <strong>16. Indemnification</strong><br />
+              Users agree to indemnify and hold harmless Patamali, its founders, employees, and affiliates from claims, damages, losses, or expenses arising from violation of these Terms, a host's listing or rental of a property, a guest's use of a property, property damage or personal injury during a stay, or disputes between hosts and guests.
+              <br /><br />
+              <strong>17. Force Majeure</strong><br />
+              Patamali shall not be liable for delays or failure to perform obligations due to events beyond its reasonable control, including natural disasters, government actions, political instability, internet outages, labor disputes, war, terrorism, or public health emergencies.
+              <br /><br />
+              <strong>18. Governing Law</strong><br />
+              These Terms shall be governed by and interpreted in accordance with the laws of Kenya. Any disputes arising from the use of the platform shall be subject to the courts of Kenya.
+              <br /><br />
+              <strong>19. Changes to These Terms</strong><br />
+              Patamali may update these Terms from time to time. Continued use of the platform after updates constitutes acceptance of the revised Terms.
+            </div>
+
+            {/* Checkbox */}
+            <label
+              id="tc-checkbox-label"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '16px 1fr',
+                gap: 10,
+                fontSize: 13,
+                color: '#999',
+                marginBottom: 24,
+                lineHeight: 1.6,
+                width: '100%',
+                boxSizing: 'border-box',
+                overflow: 'hidden',
+              }}
+            >
+              <input
+                id="tc-checkbox"
+                type="checkbox"
+                disabled={!this.state.tcScrolled}
+                onChange={e => {
+                  const btn = document.getElementById('tc-publish-btn');
+                  const checked = e.target.checked;
+                  btn.style.backgroundColor = checked ? '#6e42e5' : '#f5f5f5';
+                  btn.style.color = checked ? '#fff' : '#aaa';
+                  btn.style.borderColor = checked ? '#6e42e5' : '#e0e0e0';
+                  btn.style.cursor = checked ? 'pointer' : 'default';
+                  document.getElementById('tc-checkbox-label').style.color = checked ? '#333' : '#999';
+                }}
+                style={{ marginTop: 3 }}
+              />
+              <span style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                I understand that payouts are made only 24 hours after the guest has checked in, and I agree to Patamali's Terms and Conditions.
+              </span>
+            </label>
+
+            {/* Publish button */}
+            <button
+              id="tc-publish-btn"
+              onClick={() => {
+                const checkbox = document.getElementById('tc-checkbox');
+                if (!checkbox.checked) return;
+                const hasManualPayoutDetails =
+                  !!ensuredCurrentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
+                this.handleTCModalClose();
+                if (hasManualPayoutDetails) {
+                  this.props.onPublishListingDraft(this.state.draftId);
+                } else {
+                  this.setState({ showPayoutDetails: true });
+                }
+              }}
+              style={{
+                display: 'block',
+                width: '100%',
+                padding: '14px',
+                backgroundColor: '#f5f5f5',
+                color: '#aaa',
+                textAlign: 'center',
+                borderRadius: 4,
+                fontWeight: 500,
+                boxSizing: 'border-box',
+                border: '1px solid #e0e0e0',
+                cursor: 'default',
+                fontFamily: 'inherit',
+                fontSize: 16,
+              }}
+            >
+              Accept & Continue
+            </button>
+          </div>
+        </Modal>
+
+        {/* Payout Modal */}  
         <Modal
           id="EditListingWizard.payoutModal"
           isOpen={this.state.showPayoutDetails}
@@ -713,62 +914,28 @@ class EditListingWizard extends Component {
         >
           <div className={css.modalPayoutDetailsWrapper}>
             <Heading as="h2" rootClassName={css.modalTitle}>
-              <FormattedMessage id="EditListingWizard.payoutModalTitleOneMoreThing" />
-              <br />
-              <FormattedMessage id="EditListingWizard.payoutModalTitlePayoutPreferences" />
+              Payout details required
             </Heading>
-            {!currentUserLoaded ? (
-              <FormattedMessage id="StripePayoutPage.loadingData" />
-            ) : returnedAbnormallyFromStripe && !stripeAccountLinkError ? (
-              <p className={css.modalMessage}>
-                <RedirectToStripe redirectFn={handleGetStripeConnectAccountLink} />
-              </p>
-            ) : (
-              <>
-                <p className={css.modalMessage}>{payoutModalInfo}</p>
-                <StripeConnectAccountForm
-                  disabled={formDisabled}
-                  inProgress={payoutDetailsSaveInProgress}
-                  ready={payoutDetailsSaved}
-                  currentUser={currentUser}
-                  stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
-                  savedCountry={savedCountry}
-                  savedAccountType={savedAccountType}
-                  submitButtonText={intl.formatMessage({
-                    id: 'StripePayoutPage.submitButtonText',
-                  })}
-                  stripeAccountError={stripeAccountError}
-                  stripeAccountFetched={stripeAccountFetched}
-                  stripeAccountLinkError={stripeAccountLinkError}
-                  onChange={onPayoutDetailsChange}
-                  onSubmit={rest.onPayoutDetailsSubmit}
-                  stripeConnected={stripeConnected}
-                  authScopes={authScopes}
-                >
-                  {stripeConnected && !returnedAbnormallyFromStripe && showVerificationNeeded ? (
-                    <StripeConnectAccountStatusBox
-                      type="verificationNeeded"
-                      inProgress={getAccountLinkInProgress}
-                      onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_verification'
-                      )}
-                      disabled={limitedRights}
-                      title={stripeButtonTitle}
-                    />
-                  ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
-                    <StripeConnectAccountStatusBox
-                      type="verificationSuccess"
-                      inProgress={getAccountLinkInProgress}
-                      disabled={payoutDetailsSaveInProgress || limitedRights}
-                      onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_update'
-                      )}
-                      title={stripeButtonTitle}
-                    />
-                  ) : null}
-                </StripeConnectAccountForm>
-              </>
-            )}
+            <p style={{ color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
+              Don't worry — your listing has been saved as a draft. You need to add your payout details before publishing. Add them now, then come back here to publish.
+            </p>
+            <NamedLink
+              name="StripePayoutPage"
+              style={{
+                display: 'block',
+                width: '100%',
+                padding: '14px',
+                backgroundColor: '#6e42e5',
+                color: '#fff',
+                textAlign: 'center',
+                borderRadius: 4,
+                textDecoration: 'none',
+                fontWeight: 500,
+                boxSizing: 'border-box',
+              }}
+            >
+              Continue to payout details
+            </NamedLink>
           </div>
         </Modal>
       </div>

@@ -136,6 +136,7 @@ export const EditListingPricingAndStockForm = props => (
         listingMinimumPriceSubUnits = 0,
         listingType,
         saveActionMsg,
+        onSaveAndExit,
         updated,
         updateInProgress,
         fetchErrors,
@@ -235,15 +236,20 @@ export const EditListingPricingAndStockForm = props => (
           )}
           {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
+          <div className={css.buttonRow}>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+            <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+              Save &amp; exit
+            </button>
+          </div>
         </Form>
       );
     }}

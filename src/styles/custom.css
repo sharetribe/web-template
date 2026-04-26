@@ -1,0 +1,42 @@
+/* TARGET ONLY THIS SECTION */
+#section-5 .AspectRatioWrapper_root__ZLKbC {
+  max-width: 160px;
+  margin: 0 auto;
+}
+
+/* CONTROL IMAGE */
+#section-5 .Image_fieldImage__TqrGk img {
+  width: 80%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* CENTER BLOCK */
+#section-5 .BlockContainer_root__lXsml {
+  text-align: center;
+}
+
+
+#section-5 .BlockDefault_text__gZoKS {
+  margin-top: 3px;
+}
+
+#section-5 .P_p__7YjWB {
+  font-size: 18px;   /* reduce text size */
+  line-height: 1.4;  /* tighter spacing */
+  text-align: center !important;
+
+}
+
+
+.SectionFooter_grid__Nm4WB {
+  margin-top: -60px; /* 🔥 key fix */
+}
+
+
+
+
+
+
+

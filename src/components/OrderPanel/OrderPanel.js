@@ -51,12 +51,12 @@ const BookingDatesForm = loadable(() =>
 const BookingFixedDurationForm = loadable(() =>
   import(
     /* webpackChunkName: "BookingFixedDurationForm" */ './BookingFixedDurationForm/BookingFixedDurationForm'
-  )
+    )
 );
 const InquiryWithoutPaymentForm = loadable(() =>
   import(
     /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
-  )
+    )
 );
 const ProductOrderForm = loadable(() =>
   import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
@@ -69,7 +69,7 @@ const NegotiationForm = loadable(() =>
 const NegotiationRequestQuoteForm = loadable(() =>
   import(
     /* webpackChunkName: "NegotiationRequestQuoteForm" */ './NegotiationRequestQuoteForm/NegotiationRequestQuoteForm'
-  )
+    )
 );
 
 // This defines when ModalInMobile shows content as Modal
@@ -166,6 +166,12 @@ const PriceMaybe = props => {
     </span>
   );
 
+  // Monthly price = price per night * 30 (price.amount is in subunits e.g. cents)
+  const monthlyAmount = price ? (price.amount / 100) * 30 : null;
+  const monthlyPriceLabel = monthlyAmount
+    ? intl.formatNumber(monthlyAmount, { style: 'currency', currency: price.currency })
+    : null;
+
   // TODO: In CTA, we don't have space to show proper error message for a mismatch of marketplace currency
   //       Instead, we show the currency code in place of the price
   return showCurrencyMismatch ? (
@@ -185,6 +191,11 @@ const PriceMaybe = props => {
       <p className={css.price}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
       </p>
+      {monthlyPriceLabel && (
+        <p className={css.monthlyPrice}>
+          {monthlyPriceLabel} per month
+        </p>
+      )}
     </div>
   );
 };
@@ -309,7 +320,7 @@ const OrderPanel = props => {
 
   const publicData = listing?.attributes?.publicData || {};
   const { listingType, unitType, transactionProcessAlias = '', priceVariants, startTimeInterval } =
-    publicData || {};
+  publicData || {};
 
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
@@ -383,19 +394,19 @@ const OrderPanel = props => {
 
   const priceVariantsMaybe = isPriceVariationsInUse
     ? {
-        isPriceVariationsInUse,
-        priceVariants,
-        priceVariantFieldComponent: PriceVariantPicker,
-        preselectedPriceVariant,
-        isPublishedListing: isPublishedListing(listing),
-      }
+      isPriceVariationsInUse,
+      priceVariants,
+      priceVariantFieldComponent: PriceVariantPicker,
+      preselectedPriceVariant,
+      isPublishedListing: isPublishedListing(listing),
+    }
     : !isPriceVariationsInUse && showBookingFixedDurationForm
-    ? {
+      ? {
         isPriceVariationsInUse: false,
         priceVariants: [getCheapestPriceVariant(priceVariants)],
         priceVariantFieldComponent: PriceVariantPicker,
       }
-    : {};
+      : {};
 
   const showInvalidPriceVariantsMessage =
     isPriceVariationsInUse && !hasValidPriceVariants(priceVariants);

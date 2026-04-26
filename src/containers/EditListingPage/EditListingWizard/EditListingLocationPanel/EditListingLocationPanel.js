@@ -61,6 +61,7 @@ const EditListingLocationPanel = props => {
     disabled,
     ready,
     onSubmit,
+    onSaveAndExit,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -123,6 +124,7 @@ const EditListingLocationPanel = props => {
           onSubmit(updateValues);
         }}
         saveActionMsg={submitButtonText}
+        onSaveAndExit={onSaveAndExit}
         disabled={disabled}
         ready={ready}
         updated={panelUpdated}

@@ -479,7 +479,7 @@ class StripePaymentForm extends Component {
       marketplaceName,
       isBooking,
       isFuzzyLocation,
-      transactionFieldConfigs,
+      transactionFieldConfigs = [],
       showTransactionFields,
       values,
     } = formRenderProps;

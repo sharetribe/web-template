@@ -173,6 +173,7 @@ export const EditListingPhotosForm = props => {
           disabled,
           ready,
           saveActionMsg,
+          onSaveAndExit,
           updated,
           updateInProgress,
           touched,
@@ -284,15 +285,20 @@ export const EditListingPhotosForm = props => {
             <PublishListingError error={publishListingError} />
             <ShowListingsError error={showListingsError} />
 
-            <Button
-              className={css.submitButton}
-              type="submit"
-              inProgress={submitInProgress}
-              disabled={submitDisabled}
-              ready={submitReady}
-            >
-              {saveActionMsg}
-            </Button>
+            <div className={css.buttonRow}>
+              <Button
+                className={css.submitButton}
+                type="submit"
+                inProgress={submitInProgress}
+                disabled={submitDisabled}
+                ready={submitReady}
+              >
+                {saveActionMsg}
+              </Button>
+              <button type="button" className={css.saveAndExitButton} onClick={onSaveAndExit}>
+                Save &amp; exit
+              </button>
+            </div>
           </Form>
         );
       }}
