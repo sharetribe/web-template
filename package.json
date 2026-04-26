@@ -83,11 +83,7 @@
   "jest": {
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
-    },
-    "reporters": [
-      "default",
-      "jest-junit"
-    ]
+    }
   },
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",
