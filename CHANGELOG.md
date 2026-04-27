@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix an error in a negotiation email template
+  [#837](https://github.com/sharetribe/web-template/pull/837)
 - [change] Update README.md to mention the NODE_ENV environment variable.
   [#836](https://github.com/sharetribe/web-template/pull/836)
 - [add] Add currently available translations for DE, ES, FR.
