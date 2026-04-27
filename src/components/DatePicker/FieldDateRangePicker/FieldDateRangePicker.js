@@ -57,7 +57,6 @@ const FieldDateRangePickerComponent = props => {
     throw new Error('endDateId required when a endDateLabel is given');
   }
 
-  // eslint-disable-next-line no-unused-vars
   const { onChange: fieldOnChange, type, checked, value, ...restOfInput } = input;
   const isDate = d => d instanceof Date && !isNaN(d);
   const { startDate, endDate } = value || {};

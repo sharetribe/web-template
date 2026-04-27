@@ -1,0 +1,87 @@
+@import '../../../styles/customMediaQueries.css';
+
+.coverEverything {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.thumbnailWrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Root element for Thumbnail (button or div) – reset when button, fill space */
+.thumbnailTrigger {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: inherit;
+  text-align: inherit;
+}
+
+.rootForImage {
+  composes: coverEverything;
+  width: 100%;
+  border: solid 1px var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+}
+
+.menuOverlayWrapper {
+  composes: coverEverything;
+}
+
+.menuOverlay {
+  composes: coverEverything;
+
+  background-color: var(--colorGrey300);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: var(--transitionStyleButton);
+}
+
+.menuOverlayOpen {
+  opacity: 0.4;
+}
+
+.draftNoImage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--colorGrey700);
+}
+
+.openListingButton,
+.finishListingDraftLink {
+  composes: buttonPrimaryInline from global;
+
+  margin-top: 10px;
+  margin-bottom: 8px;
+
+  @media (--viewportMedium) {
+    margin-top: 10px;
+    margin-bottom: 14px;
+  }
+}
+
+.previewListingLink {
+  composes: a textSmall from global;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.alternativeActionText {
+  composes: h5 from global;
+  margin: 0px 24px;
+}
+
+.alternativeActionLink {
+  composes: a textSmall from global;
+}

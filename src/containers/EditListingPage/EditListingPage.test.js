@@ -1,6 +1,14 @@
 import React, { act } from 'react';
 import '@testing-library/jest-dom';
 
+// TopbarContainer uses @loadable/component, which triggers asynchronous state
+// updates (and thus React's act() warnings) in this test file. The Topbar is
+// not relevant to these tests, so we replace it with a simple stub here.
+jest.mock('../TopbarContainer/TopbarContainer', () => {
+  // eslint-disable-next-line react/display-name
+  return () => <div data-testid="topbar" />;
+});
+
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -40,6 +48,9 @@ const listingTypesBookingDay = [
     },
     unitType: 'day',
     availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesBookingDayWithSeats = [
@@ -51,6 +62,9 @@ const listingTypesBookingDayWithSeats = [
     },
     unitType: 'day',
     availabilityType: 'multipleSeats',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesBookingNightly = [
@@ -62,6 +76,9 @@ const listingTypesBookingNightly = [
     },
     unitType: 'night',
     availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesBookingHourly = [
@@ -73,6 +90,9 @@ const listingTypesBookingHourly = [
     },
     unitType: 'hour',
     availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 const listingTypesPurchase = [
@@ -84,6 +104,9 @@ const listingTypesPurchase = [
     },
     unitType: 'item',
     stockType: 'multipleItems',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 
@@ -96,6 +119,9 @@ const listingTypesInquiry = [
       alias: 'default-inquiry/release-1',
     },
     unitType: 'inquiry',
+    defaultListingFields: {
+      description: true,
+    },
   },
 ];
 
@@ -134,7 +160,7 @@ const listingFieldsInquiry = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Cat',
       group: 'primary',
     },
@@ -162,7 +188,7 @@ const listingFieldsPurchase = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Cat',
       group: 'primary',
     },
@@ -186,7 +212,7 @@ const listingFieldsBooking = [
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',
@@ -380,9 +406,8 @@ describe('EditListingPage', () => {
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
     expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
 
-    // Simulate user selecting subcategory
-    // first combobox is location searc, second the first category, third the subcategory
-    const selectSubcategory = screen.getAllByRole('combobox')[2];
+    // Simulate user selecting subcategory: second combobox is the subcategory
+    const selectSubcategory = screen.getAllByRole('combobox')[1];
     await user.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
 
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
@@ -511,9 +536,8 @@ describe('EditListingPage', () => {
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
     expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
 
-    // Simulate user interaction and select sub level category
-    // first combobox is location searc, second the first category, third the subcategory
-    const selectSubcategory = screen.getAllByRole('combobox')[2];
+    // Simulate user interaction and select sub level category: second combobox is subcategory
+    const selectSubcategory = screen.getAllByRole('combobox')[1];
     await user.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
 
     expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
@@ -1143,6 +1167,55 @@ describe('EditListingPage', () => {
       // Tab: panel title
       expect(getByText('EditListingDetailsPanel.title')).toBeInTheDocument();
     });
+  });
+
+  it('Purchase: edit flow with no description', async () => {
+    const listingTypesPurchaseNoDescription = [
+      {
+        ...listingTypesPurchase[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypesPurchaseNoDescription, listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
   });
 
   it('Booking (day): edit flow on details tab', async () => {
@@ -2282,6 +2355,175 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Booking (day): edit flow with no description', async () => {
+    const listingTypeDailyBookingNoDescription = [
+      {
+        ...listingTypesBookingDay[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypeDailyBookingNoDescription, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-day', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'rent-bicycles-daily',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'day',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('Booking (night): edit flow with no description', async () => {
+    const listingTypeNightlyBookingNoDescription = [
+      {
+        ...listingTypesBookingNightly[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypeNightlyBookingNoDescription, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-night', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-nightly',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'night',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('Booking (hour): edit flow with no description', async () => {
+    const listingTypesBookingHourlyNoDescription = [
+      {
+        ...listingTypesBookingHourly[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypesBookingHourlyNoDescription, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-hour', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-hourly',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'hour',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
   it('Inquiry: edit flow on details tab', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
@@ -2610,6 +2852,50 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Inquiry: edit flow with no description', async () => {
+    const listingTypesInquiryNoDescription = [
+      {
+        ...listingTypesInquiry[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+
+    const config = getConfig(listingTypesInquiryNoDescription, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-inquiry', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
+  });
+
   it('Negotiation: edit flow with only details and style panels', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesNegotiation, []);
@@ -2758,6 +3044,49 @@ describe('EditListingPage', () => {
 
     const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
     expect(queryByText(tabLabelPhotos)).not.toBeInTheDocument();
+  });
+
+  it('Negotiation: edit flow with no description', async () => {
+    const listingTypesNegotiationNoDescription = [
+      {
+        ...listingTypesNegotiation[0],
+        defaultListingFields: {
+          description: false,
+        },
+      },
+    ];
+    const config = getConfig(listingTypesNegotiationNoDescription, []);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-negotiation', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'negotiation-offer',
+        transactionProcessAlias: 'default-negotiation/release-1',
+        unitType: 'request',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    // Description should be hidden based on current listing type
+    expect(
+      queryByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).not.toBeInTheDocument();
   });
 });
 

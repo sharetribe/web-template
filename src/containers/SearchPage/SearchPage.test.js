@@ -14,6 +14,14 @@ import {
 
 import { loadData } from './SearchPage.duck';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import SearchPageWithGrid from './SearchPageWithGrid';
+import SearchPageWithMap from './SearchPageWithMap';
+
+// `routeConfiguration` exposes SearchPage through `@loadable/component`, which can render an empty
+// tree until the dynamic import resolves. This test is not about routeConfiguration and
+// loadable components. We'll select the SearchPage variant directly here.
+const getConnectedSearchPageForTests = layout =>
+  layout?.searchPage?.variantType === 'map' ? SearchPageWithMap : SearchPageWithGrid;
 
 const { screen, userEvent, waitFor } = testingLibrary;
 
@@ -86,7 +94,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Cat',
       group: 'primary',
     },
@@ -107,7 +115,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'boat_1', label: 'Boat 1' }, { option: 'boat_2', label: 'Boat 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Boat',
       group: 'primary',
     },
@@ -124,7 +132,7 @@ const listingFields = [
     schemaType: 'enum',
     enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       filterType: 'SelectSingleFilter',
       label: 'Single Select Test',
       group: 'primary',
@@ -142,7 +150,7 @@ const listingFields = [
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {
-      indexForSearch: true,
+      showFilter: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',
@@ -315,8 +323,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
@@ -401,8 +408,7 @@ describe('SearchPage', () => {
     const config = getConfig('map');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const {
       getByPlaceholderText,
@@ -502,8 +508,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
@@ -554,8 +559,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps };
-    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
@@ -593,10 +597,7 @@ describe('SearchPage', () => {
     const config = getConfig('grid');
     const routeConfiguration = getRouteConfiguration(config.layout);
     const props = { ...commonProps, params: { listingType: 'sell-bicycles' } };
-    const searchRouteConfig = routeConfiguration.find(
-      conf => conf.name === 'SearchPageWithListingType'
-    );
-    const SearchPage = searchRouteConfig.component;
+    const SearchPage = getConnectedSearchPageForTests(config.layout);
 
     const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,

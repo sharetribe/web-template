@@ -14,6 +14,160 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix an error in a negotiation email template
+  [#837](https://github.com/sharetribe/web-template/pull/837)
+- [change] Update README.md to mention the NODE_ENV environment variable.
+  [#836](https://github.com/sharetribe/web-template/pull/836)
+- [add] Add currently available translations for DE, ES, FR.
+  [#834](https://github.com/sharetribe/web-template/pull/834)
+
+## [v11.0.1] 2026-04-17
+
+- [fix] Fixes a bug where required short texts were not handled in EditListingWizard
+  [831](https://github.com/sharetribe/web-template/pull/831)
+- [change] Update some dependencies - inclusing webpack and lodash.
+  [828](https://github.com/sharetribe/web-template/pull/828)
+- [fix] SearchPage variants: getListingsById creates a new array on every call. This adds a memoized
+  selector factory and uses it instead. [#829](https://github.com/sharetribe/web-template/pull/829)
+
+  [v11.0.1]: https://github.com/sharetribe/web-template/compare/v11.0.0...v11.0.1
+
+## [v11.0.0] 2026-04-14
+
+This major release is centered on the template ejection from sharetribe-scripts (our fork of Create
+React App). In addition, we have refactored AuthenticationPage, SearchPage, ListingPage, and
+ManageListingCard.
+
+This also changes the Stripe Connect account requirements for Netherlands. Stripe can't support
+individual accounts for sellers in Netherlands. New accounts must be created with business type
+"company". (An individual account is mapped as a sole proprietorship in Stripe.)
+
+There's also a new field schema type: shortText. This allows short text inputs to be shown in the
+Details section of a listing and profile pages.
+
+- [change] ManageListingCard: refactor the component.
+  [#805](https://github.com/sharetribe/web-template/pull/805)
+- [change] ListingPage: refactor the page.
+
+  - Add custom component to handle access control redirections (ListingPageAccessWrapper)
+  - Move shared functions and derived data to SearchPage.shared.js file
+    - getDerivedRenderData
+  - Add Notifications sub component to handle the rendering of ActionBar(s)
+  - Remove deprecated Redux functions: connect, mapStateToProps and mapDispatchToProps
+
+  [#819](https://github.com/sharetribe/web-template/pull/819)
+
+- [change] SearchPage(s): refactor the page.
+
+  - Add custom component to handle access control redirections (SearchPageAccessWrapper)
+  - Move shared functions and derived data to SearchPage.shared.js file
+    - getDerivedRenderData
+    - onApplyFilters
+    - onSortBy
+    - onResetAll
+    - createFilterValueChangeHandler
+  - Remove deprecated Redux functions: connect, mapStateToProps and mapDispatchToProps
+
+  [#815](https://github.com/sharetribe/web-template/pull/815)
+
+- [change] AuthenticationPage: refactor the component tree.
+
+  - Move SocialLoginButtons into a separate file
+  - Remove middle-layer components: AuthenticationForms, AuthenticationOrConfirmInfoForm
+  - The Redux-container functions connect, mapStateToProps, and mapDispatchToProps are deprecated.
+    This PR explores the option to create somewhat minimum change to start using hooks instead.
+
+  [#811](https://github.com/sharetribe/web-template/pull/811)
+
+- [change] Eject Template from sharetribe-scripts aka our Create React App fork. This is a big
+  change for the build process and package.json.
+  [#792](https://github.com/sharetribe/web-template/pull/792)
+- [change] Update Stripe Connect account requirements for Netherlands.
+  [#824](https://github.com/sharetribe/web-template/pull/824)
+- [fix] email verification badge: it was using the old success color.
+  [#825](https://github.com/sharetribe/web-template/pull/825)
+- [add] Add support for a new user, listing, and transaction field schema type: shortText
+  [#812](https://github.com/sharetribe/web-template/pull/812)
+- [add] Add currently available translations for DE, ES, FR.
+  [#818](https://github.com/sharetribe/web-template/pull/818)
+- [fix] Fix return value in CheckoutPage pay-and-save-card flow
+  [#816](https://github.com/sharetribe/web-template/pull/816)
+
+  [v11.0.0]: https://github.com/sharetribe/web-template/compare/v10.15.0...v11.0.0
+
+## [v10.15.0] 2026-03-25
+
+- [fix] Fix too-big font-size in mobile h4 heading and some too large margins.
+  [#806](https://github.com/sharetribe/web-template/pull/806)
+- [fix] StripePaymentForm: fix styleguide example.
+  [#810](https://github.com/sharetribe/web-template/pull/810)
+- [add] Update moment-timezone to v0.6.1 (to take newest update from IANA time zone db)
+  [#809](https://github.com/sharetribe/web-template/pull/809)
+- [add] Add support for merging listing search sort config with default configs
+  [760](https://github.com/sharetribe/web-template/pull/760)
+- [add] Support custom metadata fields for listings and users. Metadata fields are
+  operator-controlled (editable only via Console or Integration API) and can be used for search
+  filtering and sorting. [#779](https://github.com/sharetribe/web-template/pull/779)
+- [add] Add support for sorting listings on the search page using custom numeric fields.
+  [#803](https://github.com/sharetribe/web-template/pull/803)
+
+  [v10.15.0]: https://github.com/sharetribe/web-template/compare/v10.14.1...v10.15.0
+
+## [v10.14.1] 2026-03-18
+
+- [fix] Fix SectionListings not loading correctly when a section has an anchor link
+  ID.[#807](https://github.com/sharetribe/web-template/pull/807)
+- [add] Add loading spinner to CheckoutPage.
+  [#802](https://github.com/sharetribe/web-template/pull/802)
+- [fix] CheckoutPage: fix the initialState not initializing stripeCustomerFetchError.
+  [#799](https://github.com/sharetribe/web-template/pull/799)
+- [fix] Improve tests (avoid warnings and other issues)
+  [#801](https://github.com/sharetribe/web-template/pull/801)
+- [add] Add currently available translations for DE, ES, FR.
+  [#804](https://github.com/sharetribe/web-template/pull/804)
+
+  [v10.14.1]: https://github.com/sharetribe/web-template/compare/v10.14.0...v10.14.1
+
+## [v10.14.0] 2026-03-10
+
+- [add] Support `helpText` from listing and user field asset configs. Displayed below form fields
+  via new HelpText component.[#778](https://github.com/sharetribe/web-template/pull/778)
+- [add] Add featured listings section type (SectionListings.js) that fetches and displays listings
+  in a carousel layout. [#712](https://github.com/sharetribe/web-template/pull/712)
+- [fix] Modify listing card price classes
+  [#796](https://github.com/sharetribe/web-template/pull/796)
+
+  [v10.14.0]: https://github.com/sharetribe/web-template/compare/v10.13.0...v10.14.0
+
+## [v10.13.0] 2026-02-26
+
+- [change] Hides listing description input/display when option is toggled off in Console > Listing
+  types > Default listing fields [#767](https://github.com/sharetribe/web-template/pull/767)
+- [change] ListingCard: refactor and add aria-label attribute to the component.
+  [#787](https://github.com/sharetribe/web-template/pull/787)
+- [fix] FieldSelectIntegerRange: fix aria-attributes.
+  [#786](https://github.com/sharetribe/web-template/pull/786)
+- [add] Add currently available translations for DE, ES, FR.
+  [#790](https://github.com/sharetribe/web-template/pull/790)
+
+  [v10.13.0]: https://github.com/sharetribe/web-template/compare/v10.12.1...v10.13.0
+
+## [v10.12.1] 2026-02-24
+
+- [fix] Fix submitting inquiry without transaction fields
+  [#788](https://github.com/sharetribe/web-template/pull/788)
+- [add] Prevent saving customer fields when provider is making an offer
+  [#785](https://github.com/sharetribe/web-template/pull/785)
+- [fix] Remove location heading for listing types with no location
+  [#783](https://github.com/sharetribe/web-template/pull/783)
+- [fix] Fix boolean support for transaction fields
+  [#782](https://github.com/sharetribe/web-template/pull/782)
+- [add] Fix a Marketplace text [#784](https://github.com/sharetribe/web-template/pull/784)
+- [add] Add currently available translations for DE, ES, FR.
+  [#781](https://github.com/sharetribe/web-template/pull/781)
+
+  [v10.12.0]: https://github.com/sharetribe/web-template/compare/v10.12.0...v10.12.1
+
 ## [v10.12.0] 2026-02-19
 
 - [add] Add transaction fields based on Console configuration

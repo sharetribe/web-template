@@ -1,0 +1,50 @@
+.root {
+  display: block;
+}
+
+.buttonIcon {
+  position: absolute;
+  left: 0;
+  margin-left: 20px;
+}
+
+.socialButtonWrapper {
+  margin-bottom: 6px;
+  @media (--viewportMedium) {
+    margin-top: 8px;
+  }
+}
+
+.socialButtonsOr {
+  width: 100%;
+  height: 32px;
+  margin: 28px 0 20px 0;
+  text-align: center;
+  position: relative;
+  background-color: var(--colorWhite);
+
+  &:after {
+    content: '';
+    width: 100%;
+    border-bottom: solid 1px #d2d2d2;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 1;
+  }
+
+  @media (--viewportMedium) {
+    height: 34px;
+    margin: 15px 0;
+  }
+}
+
+.socialButtonsOrText {
+  background-color: var(--colorWhite);
+  width: auto;
+  display: inline-block;
+  z-index: 3;
+  padding: 0 20px 0 20px;
+  position: relative;
+  margin: 0;
+}

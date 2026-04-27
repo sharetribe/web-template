@@ -31,19 +31,26 @@
   height: 100%;
 }
 
+.title.lightText {
+  color: var(--colorWhite);
+}
+
+.authorInfo.lightText {
+  color: var(--colorWhite);
+}
+
 .info {
   /* Layout */
   display: flex;
   flex-direction: column;
+  /* ⚠️ padding width is hardcoded in SectionListings.js calculateCarouselHeight() as cardInfoPadding*/
   padding: 14px 0 2px 0;
 }
 
+/* ⚠️ the total calculated height of this selector is hardcoded in SectionListings.js calculateCarouselHeight() as priceHeight*/
 .price {
   composes: textSmall from global;
   /* Layout */
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
   flex-shrink: 0;
   margin-bottom: 4px;
   color: var(--colorGrey700);
@@ -84,6 +91,7 @@
   flex-direction: column;
 }
 
+/* ⚠️ the calculated height of this selector is hardcoded in SectionListings.js calculateCarouselHeight() as titleHeightSingleLine */
 .title {
   /* Font */
   composes: textSmall from global;
@@ -92,6 +100,7 @@
   margin: 0;
 }
 
+/* ⚠️ the calculated height of this selector is hardcoded in SectionListings.js calculateCarouselHeight() as authorInfoHeight & authorInfoHeighMobile */
 .authorInfo {
   /* Font */
   composes: marketplaceTinyFontStyles from global;

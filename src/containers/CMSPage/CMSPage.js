@@ -6,6 +6,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
+import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { getFeaturedListingsProps } from '../../util/data';
+
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
@@ -24,6 +28,7 @@ export const CMSPageComponent = props => {
       pageAssetsData={pageAssetsData?.[pageId]?.data}
       inProgress={inProgress}
       schemaType="Article"
+      featuredListings={getFeaturedListingsProps(pageId, props)}
     />
   );
 };
@@ -35,8 +40,17 @@ CMSPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress, error };
+  const featuredListingData = state.featuredListings || {};
+
+  const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
+
+  return { pageAssetsData, featuredListingData, getListingEntitiesById, inProgress, error };
 };
+
+const mapDispatchToProps = dispatch => ({
+  onFetchFeaturedListings: (sectionId, parentPage, listingImageConfig, allSections) =>
+    dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
+});
 
 // Note: it is important that the withRouter HOC is **outside** the
 // connect HOC, otherwise React Router won't rerender any Route
@@ -46,7 +60,10 @@ const mapStateToProps = state => {
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const CMSPage = compose(
   withRouter,
-  connect(mapStateToProps)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(CMSPageComponent);
 
 export default CMSPage;

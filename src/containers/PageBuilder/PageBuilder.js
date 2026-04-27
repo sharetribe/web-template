@@ -108,6 +108,7 @@ const PageBuilder = props => {
     schemaType,
     options,
     currentPage,
+    featuredListings,
     ...pageProps
   } = props;
 
@@ -140,7 +141,7 @@ const PageBuilder = props => {
                 {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
-                  <SectionBuilder sections={sections} options={options} />
+                  <SectionBuilder sections={sections} options={{ ...options, featuredListings }} />
                 )}
               </Main>
               <Footer>

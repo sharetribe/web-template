@@ -10,7 +10,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FieldArray } from 'react-final-form-arrays';
-import { FieldCheckbox, ValidationError } from '../../components';
+import { FieldCheckbox, ValidationError, HelpText } from '../../components';
 
 import css from './FieldCheckboxGroup.module.css';
 
@@ -19,6 +19,7 @@ const FieldCheckboxRenderer = props => {
     className,
     rootClassName,
     label,
+    helpText,
     optionLabelClassName,
     twoColumns,
     id,
@@ -52,6 +53,7 @@ const FieldCheckboxRenderer = props => {
           );
         })}
       </ul>
+      <HelpText helpText={helpText} />
       <ValidationError fieldMeta={{ ...meta }} />
     </Tag>
   );

@@ -28,7 +28,7 @@ import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.du
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
 // Import shared components
-import { NamedRedirect, Page, TopbarSimplified } from '../../components';
+import { IconSpinner, NamedRedirect, Page, TopbarSimplified } from '../../components';
 
 // Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
 import { storeData, clearData, handlePageData } from './CheckoutPageSessionHelpers';
@@ -47,6 +47,7 @@ import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import css from './CheckoutPage.module.css';
 
 const STORAGE_KEY = 'CheckoutPage';
 
@@ -132,7 +133,6 @@ const EnhancedCheckoutPage = props => {
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
   if (shouldRedirect) {
-    // eslint-disable-next-line no-console
     console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
       listing,
     });
@@ -211,6 +211,7 @@ const EnhancedCheckoutPage = props => {
   ) : (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <TopbarSimplified />
+      <IconSpinner className={css.spinner} />
     </Page>
   );
 };

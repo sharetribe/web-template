@@ -237,6 +237,28 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     return hasDatesFilterInUse && seatsFilter ? { seats } : {};
   };
 
+  const sortSearchParams = (sortParam, hasKeywords) => {
+    const sortConfig = config?.search?.sortConfig || {};
+    // If no sort options are set, defaultSort will be undefined
+    const defaultSort = sortConfig?.options?.[0]?.key;
+    const relevanceEnabled = sortConfig.options?.some(
+      option => option.key === sortConfig.relevanceKey
+    );
+
+    // User-specified sort takes priority
+    if (sortParam !== undefined && sortParam !== sortConfig.relevanceKey) {
+      return { sort: sortParam };
+    }
+
+    // No sort parameter needed when keyword search is used or sort config is inactive
+    if (relevanceEnabled && (hasKeywords || !sortConfig.active)) {
+      return {};
+    }
+
+    // Fall back to default sort
+    return { sort: defaultSort };
+  };
+
   const {
     perPage,
     price,
@@ -254,7 +276,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
   const seatsMaybe = seatsSearchParams(seats, datesMaybe);
-  const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
+  const sortMaybe = sortSearchParams(sort, searchParams?.keywords !== undefined);
 
   const params = {
     // The params that are related to listing fields and categories are prepared here.
@@ -340,7 +362,6 @@ const searchPageSlice = createSlice({
         state.searchInProgress = false;
       })
       .addCase(searchListings.rejected, (state, action) => {
-        // eslint-disable-next-line no-console
         console.error(action.payload);
         state.searchInProgress = false;
         state.searchListingsError = action.payload;

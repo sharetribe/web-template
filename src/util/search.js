@@ -1,4 +1,12 @@
 /**
+ * Check if a listing field should be shown as a filter.
+ * showFilter takes priority and falls back to indexForSearch.
+ */
+export const isFilterEnabled = filterConfig => {
+  return filterConfig.showFilter === true;
+};
+
+/**
  * SelectMultipleFilter needs to parse values from format
  * "has_all:a,b,c,d" or "a,b,c,d"
  */
@@ -22,7 +30,8 @@ export const parseSelectFilterOptions = uriComponentValue => {
  * @param {String} scope Scope extracted from listingExtendData config.
  */
 export const constructQueryParamName = (key, scope) => {
-  const prefixedKey = scope === 'meta' ? `meta_${key}` : `pub_${key}`;
+  // we check both meta and metadata to ensure backwards compatibility (assets use metadata)
+  const prefixedKey = ['meta', 'metadata'].includes(scope) ? `meta_${key}` : `pub_${key}`;
   return prefixedKey.replace(/\s/g, '_');
 };
 
@@ -47,7 +56,7 @@ export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) =>
   }, []);
   const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
-    return config.filterConfig?.indexForSearch ? [...params, param] : params;
+    return isFilterEnabled(config.filterConfig) ? [...params, param] : params;
   }, []);
   return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingFields];
 };

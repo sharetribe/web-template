@@ -1,10 +1,16 @@
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
+import { omit } from '../../util/common';
 import { createResourceLocatorString, matchPathname } from '../../util/routes';
 import {
   isAnyFilterActive,
+  isFilterEnabled,
+  isMainSearchTypeKeywords,
+  isOriginInUse,
+  getQueryParamNames,
   parseSelectFilterOptions,
   constructQueryParamName,
 } from '../../util/search';
+import { showCreateListingLinkForUser } from '../../util/userHelpers';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import {
   getStartOf,
@@ -176,8 +182,8 @@ export const validURLParamForExtendedData = (
 export const validFilterParams = (params, filterConfigs, dropNonFilterParams = true) => {
   const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
 
-  const listingFieldFiltersConfig = listingFieldsConfig.filter(
-    config => config.filterConfig?.indexForSearch
+  const listingFieldFiltersConfig = listingFieldsConfig.filter(config =>
+    isFilterEnabled(config.filterConfig)
   );
   const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
     constructQueryParamName(f.key, f.scope)
@@ -255,7 +261,6 @@ export const validUrlQueryParamsFromProps = props => {
     currentPathParams,
   };
 
-  // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
@@ -461,7 +466,7 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
     (grouped, config) => {
       const [primary, secondary] = grouped;
       const { listingTypeConfig = {}, filterConfig } = config;
-      const isIndexed = filterConfig?.indexForSearch === true;
+      const isIndexed = isFilterEnabled(filterConfig);
       const isActiveListingTypes =
         !listingTypeConfig.limitToListingTypeIds ||
         listingTypeConfig.listingTypeIds.some(lt => activeListingTypes.includes(lt));
@@ -528,6 +533,372 @@ export const createSearchResultSchema = (
       mainEntity: [schemaMainEntity],
     },
   };
+};
+
+const getSelectedSecondaryFiltersCount = (
+  validQueryParams,
+  filterConfigs,
+  customSecondaryFilters
+) => {
+  const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
+  const potentialSecondaryFilters = hasSecondaryFilters
+    ? validFilterParams(validQueryParams, {
+        ...filterConfigs,
+        listingFieldsConfig: customSecondaryFilters,
+      })
+    : {};
+
+  const relevantQueryParamNames = customSecondaryFilters.map(f =>
+    constructQueryParamName(f.key, f.scope)
+  );
+  const pickRelevant = name => relevantQueryParamNames.includes(name);
+  const selectedSecondaryFilters = Object.keys(potentialSecondaryFilters).filter(pickRelevant);
+  return selectedSecondaryFilters?.length;
+};
+
+/**
+ * Derives URL, filter, pagination, and SEO values shared by SearchPage map and grid variants.
+ *
+ * @param {Object} params
+ * @param {Object} params.intl - react-intl API
+ * @param {Object} params.location - React Router location
+ * @param {Object} params.config - marketplace config
+ * @param {Array} params.routeConfiguration
+ * @param {Object} [params.searchParams]
+ * @param {Object} [params.pagination]
+ * @param {Array} [params.listings]
+ * @param {boolean} [params.searchInProgress]
+ * @param {Object} [params.currentPathParams]
+ * @param {Object} [params.currentUser]
+ * @returns {Object} Derived values used by map and grid variants in render
+ */
+export const getDerivedRenderData = ({
+  intl,
+  location,
+  config,
+  routeConfiguration,
+  searchParams = {},
+  pagination,
+  listings = [],
+  searchInProgress,
+  currentPathParams = {},
+  currentUser,
+}) => {
+  const { listingType: listingTypePathParam } = currentPathParams;
+
+  const { listingFields } = config?.listing || {};
+  const { defaultFilters: defaultFiltersRaw, sortConfig, mainSearch } = config?.search || {};
+
+  const activeListingTypes = config?.listing?.listingTypes.map(c => c.listingType);
+  const defaultFiltersConfig = listingTypePathParam
+    ? defaultFiltersRaw.filter(f => f.key !== 'listingType')
+    : defaultFiltersRaw;
+
+  const marketplaceCurrency = config.currency;
+  const categoryConfiguration = config.categoryConfiguration;
+  const listingCategories = categoryConfiguration.categories;
+  const listingFieldsConfig = pickListingFieldFilters({
+    listingFields,
+    locationSearch: location.search,
+    categoryConfiguration,
+    activeListingTypes,
+    currentPathParams,
+  });
+  const filterConfigs = {
+    listingFieldsConfig,
+    defaultFiltersConfig,
+    listingCategories,
+    activeListingTypes,
+    currentPathParams,
+    mainSearch,
+  };
+
+  const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
+    location.search,
+    searchParams,
+    filterConfigs,
+    sortConfig,
+    mainSearch,
+    isOriginInUse(config)
+  );
+
+  const validQueryParams = urlQueryParams;
+
+  const isKeywordSearch = isMainSearchTypeKeywords(config);
+  const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
+    ['categoryLevel', 'listingType'].includes(f.key)
+  );
+  const builtInFilters = isKeywordSearch
+    ? defaultFiltersConfig.filter(
+        f => !['keywords', 'categoryLevel', 'listingType'].includes(f.key)
+      )
+    : defaultFiltersConfig.filter(f => !['categoryLevel', 'listingType'].includes(f.key));
+  const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
+    listingFieldsConfig,
+    activeListingTypes
+  );
+  const availablePrimaryFilters = [
+    ...builtInPrimaryFilters,
+    ...customPrimaryFilters,
+    ...builtInFilters,
+  ];
+  const availableFilters = [
+    ...builtInPrimaryFilters,
+    ...customPrimaryFilters,
+    ...builtInFilters,
+    ...customSecondaryFilters,
+  ];
+
+  const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
+
+  const selectedFilters = validQueryParams;
+  const keysOfSelectedFilters = Object.keys(selectedFilters);
+  const selectedFiltersCountForMobile = isKeywordSearch
+    ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
+    : keysOfSelectedFilters.length;
+  const isValidDatesFilter =
+    searchParamsInURL.dates == null ||
+    (searchParamsInURL.dates != null && searchParamsInURL.dates === selectedFilters.dates);
+
+  const selectedSecondaryFiltersCount = getSelectedSecondaryFiltersCount(
+    validQueryParams,
+    filterConfigs,
+    customSecondaryFilters
+  );
+
+  const hasPaginationInfo = !!pagination && pagination.totalItems != null;
+  const totalItems =
+    searchParamsAreInSync && hasPaginationInfo
+      ? pagination.totalItems
+      : pagination?.paginationUnsupported
+      ? listings.length
+      : 0;
+  const listingsAreLoaded =
+    !searchInProgress &&
+    searchParamsAreInSync &&
+    !!(hasPaginationInfo || pagination?.paginationUnsupported);
+
+  const conflictingFilterActive = isAnyFilterActive(
+    sortConfig.conflictingFilters,
+    validQueryParams,
+    filterConfigs
+  );
+
+  const showCreateListingsLink = showCreateListingLinkForUser(config, currentUser);
+
+  const pageHeading = searchInProgress
+    ? intl.formatMessage({ id: 'MainPanelHeader.loadingResults' })
+    : intl.formatMessage({ id: 'MainPanelHeader.foundResults' }, { count: totalItems });
+
+  const { title, description, schema } = createSearchResultSchema(
+    listings,
+    searchParamsInURL || {},
+    intl,
+    routeConfiguration,
+    config,
+    pageHeading
+  );
+
+  return {
+    listingTypePathParam,
+    sortConfig,
+    validQueryParams,
+    searchParamsInURL,
+    customSecondaryFilters,
+    availablePrimaryFilters,
+    availableFilters,
+    hasSecondaryFilters,
+    selectedFilters,
+    selectedFiltersCountForMobile,
+    isValidDatesFilter,
+    selectedSecondaryFiltersCount,
+    totalItems,
+    listingsAreLoaded,
+    conflictingFilterActive,
+    showCreateListingsLink,
+    title,
+    description,
+    schema,
+    marketplaceCurrency,
+    listingCategories,
+  };
+};
+
+/**
+ * Reset all filter query parameters and navigate to the cleaned URL.
+ *
+ * @param {Object} ctx
+ * @param {Function} ctx.history
+ * @param {Array} ctx.routeConfiguration
+ * @param {Object} ctx.config
+ * @param {Object} ctx.location
+ * @param {Object} ctx.urlQueryParams - Result of `validUrlQueryParamsFromProps(props)`
+ * @param {Function} ctx.setState - Component setState
+ */
+export const onResetAll = ({
+  history,
+  routeConfiguration,
+  config,
+  location,
+  urlQueryParams,
+  setState,
+}) => {
+  const { listingFields: listingFieldsConfig } = config?.listing || {};
+  const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+
+  const filterQueryParamNames = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
+
+  setState({ currentQueryParams: {} });
+
+  const queryParams = omit(urlQueryParams, filterQueryParamNames);
+
+  const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+    routeConfiguration,
+    location
+  );
+
+  history.push(createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams));
+};
+
+/**
+ * Apply secondary filters (draft `currentQueryParams`) to the URL.
+ *
+ * @param {Object} ctx
+ */
+export const onApplyFilters = ({
+  history,
+  routeConfiguration,
+  config,
+  location,
+  currentPathParams,
+  urlQueryParams,
+  currentQueryParams,
+}) => {
+  const { listingFields: listingFieldsConfig } = config?.listing || {};
+  const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+  const activeListingTypes = config?.listing?.listingTypes.map(c => c.listingType);
+  const listingCategories = config.categoryConfiguration.categories;
+  const filterConfigs = {
+    listingFieldsConfig,
+    defaultFiltersConfig,
+    listingCategories,
+    activeListingTypes,
+    currentPathParams,
+  };
+
+  const searchParams = { ...urlQueryParams, ...currentQueryParams };
+  const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
+
+  const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+    routeConfiguration,
+    location
+  );
+
+  history.push(createResourceLocatorString(routeName, routeConfiguration, pathParams, search));
+};
+
+/**
+ * Returns the filter change handler used by `FilterComponent` (live edit + optional history push).
+ *
+ * @param {Object} ctx
+ * @param {Function} ctx.getState - Returns current component state (for `setState` callback; must read post-update `currentQueryParams`)
+ * @param {boolean} useHistoryPush
+ * @returns {Function}
+ */
+export const createFilterValueChangeHandler = (
+  {
+    history,
+    routeConfiguration,
+    config,
+    location,
+    currentPathParams = {},
+    urlQueryParams,
+    setState,
+    getState,
+  },
+  useHistoryPush
+) => {
+  const { listingFields: listingFieldsConfig } = config?.listing || {};
+  const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+  const activeListingTypes = config?.listing?.listingTypes.map(c => c.listingType);
+  const listingCategories = config.categoryConfiguration.categories;
+  const filterConfigs = {
+    listingFieldsConfig,
+    defaultFiltersConfig,
+    listingCategories,
+    activeListingTypes,
+    currentPathParams,
+  };
+
+  return updatedURLParams => {
+    const updater = prevState => {
+      const { address, bounds, keywords } = urlQueryParams;
+      const mergedQueryParams = { ...urlQueryParams, ...prevState.currentQueryParams };
+
+      const keywordsMaybe = isMainSearchTypeKeywords(config) ? { keywords } : {};
+
+      const datesAndSeatsMaybe = getDatesAndSeatsMaybe(mergedQueryParams, updatedURLParams);
+
+      return {
+        currentQueryParams: omitLimitedListingFieldParams(
+          {
+            ...mergedQueryParams,
+            ...updatedURLParams,
+            ...keywordsMaybe,
+            ...datesAndSeatsMaybe,
+            address,
+            bounds,
+          },
+          filterConfigs
+        ),
+      };
+    };
+
+    const callback = () => {
+      if (useHistoryPush) {
+        const searchParams = getState().currentQueryParams;
+        const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
+
+        const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+          routeConfiguration,
+          location
+        );
+
+        history.push(
+          createResourceLocatorString(routeName, routeConfiguration, pathParams, search)
+        );
+      }
+    };
+
+    setState(updater, callback);
+  };
+};
+
+/**
+ * Update sort query param and navigate.
+ *
+ * @param {Object} ctx
+ * @param {string} urlParam
+ * @param {*} values
+ */
+export const onSortBy = ({
+  history,
+  routeConfiguration,
+  location,
+  urlQueryParams,
+  urlParam,
+  values,
+}) => {
+  const queryParams = values
+    ? { ...urlQueryParams, [urlParam]: values }
+    : omit(urlQueryParams, urlParam);
+
+  const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+    routeConfiguration,
+    location
+  );
+
+  history.push(createResourceLocatorString(routeName, routeConfiguration, pathParams, queryParams));
 };
 
 export const getDatesAndSeatsMaybe = (currentParams, newParams) => {

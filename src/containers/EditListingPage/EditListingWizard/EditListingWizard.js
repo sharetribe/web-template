@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { displayDescription } from '../../../util/configHelpers.js';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
@@ -22,6 +23,7 @@ import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
   SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_SHORT_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
   SCHEMA_TYPE_YOUTUBE,
@@ -33,6 +35,7 @@ import {
   pickCategoryFields,
 } from '../../../util/fieldHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
+import { getDisplayAccountType } from '../../../util/stripeConnect';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../../transactions/transaction';
 
 // Import shared components
@@ -187,6 +190,8 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
         ? typeof savedListingField === 'string' && hasValidEnumValue(savedListingField)
         : schemaType === SCHEMA_TYPE_MULTI_ENUM
         ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
+        : schemaType === SCHEMA_TYPE_SHORT_TEXT
+        ? typeof savedListingField === 'string'
         : schemaType === SCHEMA_TYPE_TEXT
         ? typeof savedListingField === 'string'
         : schemaType === SCHEMA_TYPE_LONG
@@ -233,12 +238,19 @@ const tabCompleted = (tab, listing, config) => {
     cardStyle,
     digitalAssets,
   } = publicData || {};
-  // const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
+  const listingTypeConfig = config.listing.listingTypes.find(
+    config => config.listingType === listingType
+  );
+
+  const descriptionRequired = displayDescription(listingTypeConfig);
+  const hasValidDescription = descriptionRequired ? description : true;
+
+  const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DETAILS:
       return !!(
-        description &&
+        (!descriptionRequired || hasValidDescription) &&
         title &&
         listingType &&
         transactionProcessAlias &&
@@ -557,6 +569,7 @@ class EditListingWizard extends Component {
         .reverse()
         .find(t => tabsStatus[t]);
 
+      // eslint-disable-next-line no-console
       console.log(
         `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`
       );
@@ -614,8 +627,7 @@ class EditListingWizard extends Component {
         hasRequirements(stripeAccountData, 'currently_due'));
 
     const savedCountry = stripeAccountData ? stripeAccountData.country : null;
-    const savedAccountType = stripeAccountData ? stripeAccountData.business_type : null;
-
+    const savedAccountType = stripeAccountData ? getDisplayAccountType(stripeAccountData) : null;
     const { marketplaceName } = config;
     const payoutModalInfo = stripeAccountData ? (
       <FormattedMessage id="EditListingWizard.payoutModalInfo" values={{ marketplaceName }} />

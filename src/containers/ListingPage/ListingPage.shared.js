@@ -1,18 +1,38 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
+import { LISTING_STATE_CLOSED } from '../../util/types';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
+import { requireListingImage } from '../../util/configHelpers';
+import { richText } from '../../util/richText';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import {
+  ensureListing,
+  ensureOwnListing,
+  ensureUser,
+  userDisplayNameAsString,
+} from '../../util/data';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  LISTING_PAGE_DRAFT_VARIANT,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
 } from '../../util/urlHelpers';
-import { REQUEST } from '../../transactions/transaction';
+import {
+  OFFER,
+  REQUEST,
+  isBookingProcess,
+  isNegotiationProcess,
+  isPurchaseProcess,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
 
-import { Page, LayoutSingleColumn } from '../../components';
+import { Page, LayoutSingleColumn, NamedLink } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
@@ -97,6 +117,176 @@ export const listingImages = (listing, variantName) =>
     .filter(variant => variant != null);
 
 /**
+ * Collect listing-page derived variables shared by carousel/cover variants.
+ * Keeps view components focused on layout-specific rendering.
+ *
+ * @param {Object} props
+ * @param {Object} props.rawParams - The raw parameters from the URL
+ * @param {Function} props.getListing - The function to get the listing
+ * @param {Function} props.getOwnListing - The function to get the own listing
+ * @param {boolean} props.showOwnListingsOnly - Whether to show only own listings
+ * @param {Object} props.currentUser - The current user
+ * @param {Object} props.config - The configuration
+ * @param {Object} props.intl - The internationalization object
+ * @param {Object} props.location - The location object
+ * @param {number} props.longWordMinLength - The minimum length for a long word
+ * @param {string} props.longWordClassName - The class name for the long word
+ * @param {string} props.payoutDetailsWarningClassName - The class name for the payout details warning
+ * @returns {Object} render data and early-branch helpers
+ */
+export const getDerivedRenderData = ({
+  rawParams,
+  getListing,
+  getOwnListing,
+  showOwnListingsOnly,
+  currentUser,
+  config,
+  intl,
+  location,
+  longWordMinLength,
+  longWordClassName,
+  payoutDetailsWarningClassName,
+}) => {
+  const listingConfig = config.listing;
+  const listingId = new UUID(rawParams.id);
+  const isVariant = rawParams.variant != null;
+  const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
+  const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
+  const currentListing =
+    isPendingApprovalVariant || isDraftVariant || showOwnListingsOnly
+      ? ensureOwnListing(getOwnListing(listingId))
+      : ensureListing(getListing(listingId));
+
+  const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
+  const params = { slug: listingSlug, ...rawParams };
+
+  const listingPathParamType = isDraftVariant
+    ? LISTING_PAGE_PARAM_TYPE_DRAFT
+    : LISTING_PAGE_PARAM_TYPE_EDIT;
+  const listingTab = isDraftVariant ? 'photos' : 'details';
+
+  const {
+    description = '',
+    geolocation = null,
+    price = null,
+    title = '',
+    publicData = {},
+    metadata = {},
+  } = currentListing.attributes;
+
+  const richTitle = (
+    <span>
+      {richText(title, {
+        longWordMinLength,
+        longWordClass: longWordClassName,
+      })}
+    </span>
+  );
+
+  const authorAvailable = currentListing && currentListing.author;
+  const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
+  const isOwnListing =
+    userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
+
+  const { listingType, transactionProcessAlias, unitType } = publicData;
+  const hasInvalidListingData = !(listingType && transactionProcessAlias && unitType);
+
+  const validListingTypes = listingConfig.listingTypes;
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const showListingImage = requireListingImage(foundListingTypeConfig);
+  const showDescription = foundListingTypeConfig?.defaultListingFields?.description;
+
+  const processName = resolveLatestProcessName(transactionProcessAlias?.split('/')[0]);
+  const isBooking = isBookingProcess(processName);
+  const isPurchase = isPurchaseProcess(processName);
+  const isNegotiation = isNegotiationProcess(processName);
+  const processType = isBooking
+    ? 'booking'
+    : isPurchase
+    ? 'purchase'
+    : isNegotiation
+    ? 'negotiation'
+    : 'inquiry';
+
+  const currentAuthor = authorAvailable ? currentListing.author : null;
+  const ensuredAuthor = ensureUser(currentAuthor);
+  const authorNeedsPayoutDetails =
+    ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
+  const noPayoutDetailsSetWithOwnListing =
+    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
+
+  const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
+    <span className={payoutDetailsWarningClassName}>
+      <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
+      <NamedLink name="StripePayoutPage">
+        <FormattedMessage id="ListingPage.payoutDetailsWarningLink" />
+      </NamedLink>
+    </span>
+  ) : null;
+
+  const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
+  const { formattedPrice } = priceData(price, config.currency, intl);
+
+  const facebookImages = listingImages(currentListing, 'facebook');
+  const twitterImages = listingImages(currentListing, 'twitter');
+  const schemaImages = listingImages(
+    currentListing,
+    `${config.layout.listingImage.variantPrefix}-2x`
+  ).map(img => img.url);
+  const marketplaceName = config.marketplaceName;
+  const schemaTitle = intl.formatMessage(
+    { id: 'ListingPage.schemaTitle' },
+    { title, price: formattedPrice, marketplaceName }
+  );
+
+  const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
+  const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
+  const schemaAvailability = !currentListing.currentStock
+    ? null
+    : currentStock > 0
+    ? 'https://schema.org/InStock'
+    : 'https://schema.org/OutOfStock';
+
+  const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
+  const noIndexMaybe =
+    currentListing.attributes.state === LISTING_STATE_CLOSED ? { noIndex: true } : {};
+
+  return {
+    listingConfig,
+    listingId,
+    isVariant,
+    currentListing,
+    listingSlug,
+    params,
+    listingPathParamType,
+    listingTab,
+    description,
+    geolocation,
+    price,
+    title,
+    publicData,
+    metadata,
+    richTitle,
+    isOwnListing,
+    showListingImage,
+    showDescription,
+    processType,
+    ensuredAuthor,
+    noPayoutDetailsSetWithOwnListing,
+    payoutDetailsWarning,
+    authorDisplayName,
+    schemaTitle,
+    facebookImages,
+    twitterImages,
+    schemaImages,
+    productURL,
+    availabilityMaybe,
+    noIndexMaybe,
+    hasInvalidListingData,
+  };
+};
+
+/**
  * Callback for the "contact" button on ListingPage to open inquiry modal.
  *
  * @param {Object} parameters all the info needed to open inquiry modal.
@@ -107,9 +297,9 @@ export const handleContactUser = parameters => () => {
     params,
     currentUser,
     callSetInitialValues,
+    setInitialValues,
     location,
     routes,
-    setInitialValues,
     setInquiryModalOpen,
   } = parameters;
 
@@ -285,9 +475,8 @@ export const handleSubmit = parameters => values => {
 
   const saveToSessionStorage = !currentUser;
 
-  // Customize checkout page state with current listing and selected orderData
+  // Customize the state of the CheckoutPage with the current listing and the selected orderData
   const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
-
   callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
 
   // Clear previous Stripe errors from store if there is any

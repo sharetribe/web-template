@@ -104,6 +104,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
       }
     })
     .catch(() => {
+      // eslint-disable-next-line no-console
       console.log(
         'Authenticating with idp failed. User needs to confirm creating sign up in frontend.'
       );
