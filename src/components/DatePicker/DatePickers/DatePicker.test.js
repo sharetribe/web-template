@@ -204,6 +204,45 @@ describe('DatePicker', () => {
     expect(clicked15).not.toHaveClass('dateSelected');
   });
 
+  it('blocks dates within minimumNights of the selected range start', async () => {
+    // June 15 start, minimumNights=30 → end must be >= 30 nights later (July 15)
+    const startDate = '2024-06-15';
+    const minimumNights = 30;
+    const user = userEvent.setup();
+    render(<DatePicker {...{ ...props, startDate, range: true, minimumNights }} />);
+
+    await user.click(screen.getByRole('button', { name: 'Choose June 15' }));
+
+    // June 16 (1 night after start) — blocked by minimum nights requirement
+    const june16 = screen.getByRole('button', {
+      name: intl.formatMessage(
+        { id: 'DatePicker.screenreader.blockedDate' },
+        { date: intl.formatDate(new Date(2024, 5, 16), { day: 'numeric', month: 'long' }) }
+      ),
+    });
+    expect(june16).toHaveClass('dateMinimumNights');
+    expect(june16).toHaveAttribute('aria-disabled', 'false'); // not truly disabled, just unselectable as end
+
+    // July 14 (29 nights after start) — still blocked
+    const july14 = screen.getByRole('button', {
+      name: intl.formatMessage(
+        { id: 'DatePicker.screenreader.blockedDate' },
+        { date: intl.formatDate(new Date(2024, 6, 14), { day: 'numeric', month: 'long' }) }
+      ),
+    });
+    expect(july14).toHaveClass('dateMinimumNights');
+
+    // July 15 (exactly 30 nights) — first valid end date, not blocked
+    const july15String = intl.formatDate(new Date(2024, 6, 15), { day: 'numeric', month: 'long' });
+    const july15 = screen.getByRole('button', {
+      name: intl.formatMessage(
+        { id: 'DatePicker.screenreader.chooseEndDate' },
+        { date: july15String }
+      ),
+    });
+    expect(july15).not.toHaveClass('dateMinimumNights');
+  });
+
   it('marks selection-blocked dates with dateSelectionBlocked class without aria-disabled', () => {
     const startDate = '2026-07-01';
     const isDateSelectionBlocked = d =>

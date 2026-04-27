@@ -176,6 +176,7 @@ export class BookingDateRangeFilterComponent extends Component {
         <FieldDateRangeController
           name="dates"
           minimumNights={minimumNights}
+          twoMonths={true}
           controllerRef={node => {
             this.popupControllerRef = node;
           }}
@@ -202,6 +203,7 @@ export class BookingDateRangeFilterComponent extends Component {
         <FieldDateRangeController
           name="dates"
           minimumNights={minimumNights}
+          twoMonths={true}
           controllerRef={node => {
             this.popupControllerRef = node;
           }}

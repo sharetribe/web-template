@@ -436,6 +436,32 @@ describe('SearchPage.helpers', () => {
       const iv = initialValues(props2, { pub_generalParam: 'one' })(queryParamNames, isLiveEdit);
       expect(iv).toEqual({ ...urlParams, pub_generalParam: undefined });
     });
+
+    it('returns fresh URL dates when currentQueryParams is reset to {} after topbar navigation', () => {
+      // Simulates the SearchPageWithMap.componentDidUpdate fix:
+      // after a topbar history.push, currentQueryParams is cleared so the chip
+      // reads from the updated URL instead of stale state.
+      const datesConfig = [
+        ...defaultFiltersConfig,
+        { key: 'dates', schemaType: 'dates', dateRangeMode: 'day' },
+      ];
+      const freshDates = '2026-06-01,2026-07-15';
+      const staleDates = '2026-05-01,2026-05-31';
+      const freshLocation = { search: `?dates=${freshDates}` };
+      const propsWithDates = {
+        ...props,
+        location: freshLocation,
+        config: { ...props.config, search: { defaultFilters: datesConfig } },
+      };
+
+      // With stale currentQueryParams (before fix), old dates would shadow the URL
+      const staleResult = initialValues(propsWithDates, { dates: staleDates })(['dates'], false);
+      expect(staleResult).toEqual({ dates: staleDates });
+
+      // After fix: currentQueryParams reset to {}, fresh URL dates are returned
+      const freshResult = initialValues(propsWithDates, {})(['dates'], false);
+      expect(freshResult).toEqual({ dates: freshDates });
+    });
   });
 
   describe('cleanSearchFromConflictingParams', () => {

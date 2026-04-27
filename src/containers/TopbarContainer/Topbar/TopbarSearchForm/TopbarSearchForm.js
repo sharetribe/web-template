@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -76,6 +76,14 @@ const TopbarSearchForm = props => {
   const { className, rootClassName, initialValues = {} } = props;
 
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Stabilise with useRef so React Final Form never sees a new object reference
+  // and reinitialises (which would reset dirty field values back to URL state).
+  const formInitialValues = useRef({
+    location: initialValues.location || null,
+    dateRange: parseDateRangeInitialValue(initialValues.dates),
+    price: parsePriceInitialValue(initialValues.price),
+  }).current;
   const [locationSelected, setLocationSelected] = useState(
     !!initialValues?.location?.selectedPlace
   );
@@ -91,12 +99,6 @@ const TopbarSearchForm = props => {
   const dateLabel = formatDateLabel(initialValues?.dates, intl);
   const budgetLabel = formatBudgetLabel(initialValues?.price);
 
-  // Initial values for the expanded FinalForm
-  const formInitialValues = {
-    location: initialValues.location || null,
-    dateRange: parseDateRangeInitialValue(initialValues.dates),
-    price: parsePriceInitialValue(initialValues.price),
-  };
 
   const handleFormSubmit = values => {
     let queryParams = {};

@@ -32,19 +32,20 @@
 }
 
 .clearButton {
-  color: var(--colorGrey600);
+  color: var(--marketplaceColor);
 
   /* Layout */
   margin: 0 auto 0 0;
 
   &:focus,
   &:hover {
-    color: var(--colorBlack);
+    color: var(--marketplaceColor);
+    text-decoration: underline;
   }
 }
 
 .cancelButton {
-  color: var(--colorGrey600);
+  color: var(--marketplaceColor);
 
   /* Layout */
   margin: 0;
@@ -56,7 +57,8 @@
 
   &:focus,
   &:hover {
-    color: var(--colorBlack);
+    color: var(--marketplaceColor);
+    text-decoration: underline;
   }
 }
 
@@ -68,6 +70,7 @@
 
   &:focus,
   &:hover {
-    color: var(--marketplaceColorDark);
+    color: var(--marketplaceColor);
+    text-decoration: underline;
   }
 }
