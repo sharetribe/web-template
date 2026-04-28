@@ -84,7 +84,6 @@
   min-height: 35px;
 
   padding: 0 18px;
-  margin: 0 9px 0 0;
 
   transition: all var(--transitionStyleButton);
   cursor: pointer;
