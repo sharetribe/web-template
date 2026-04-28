@@ -152,11 +152,13 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   const priceSearchParams = priceParam => {
     const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
-    return priceParam && values.length === 2
-      ? {
-          price: [inSubunits(values[0]), inSubunits(values[1]) + 1].join(','),
-        }
-      : {};
+    if (!priceParam || values.length !== 2) return {};
+    // URL stores monthly values — convert to nightly for the API
+    const nightlyMin = Math.floor(Number(values[0]) / 30);
+    const nightlyMax = Math.ceil(Number(values[1]) / 30);
+    return {
+      price: [inSubunits(nightlyMin), inSubunits(nightlyMax) + 1].join(','),
+    };
   };
 
   const datesSearchParams = datesParam => {

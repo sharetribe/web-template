@@ -68,11 +68,11 @@
   }
 }
 .priceValue {
-  color: var(--marketplaceColor);
+  color: #717171;
 }
 
 .perUnit {
-  color: var(--marketplaceColor);
+  color: #717171;
 }
 
 .author {
@@ -218,14 +218,27 @@
 }
 
 .monthlyPrice {
-  composes: marketplaceTinyFontStyles from global;
   color: var(--marketplaceColor);
   font-weight: var(--fontWeightBold);
-  font-size: 21px;
-  margin: 2px 0 0 24px;
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 0 0 2px 24px;
 
   @media (--viewportMedium) {
-    margin: 2px 0 0 0;
+    margin: 0 0 2px 0;
+  }
+}
+
+.nightlyPrice {
+  composes: h4 from global;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  color: #717171;
+  margin: 0 0 0 24px;
+
+  @media (--viewportMedium) {
+    margin: 0;
+    padding: 0;
   }
 }
 

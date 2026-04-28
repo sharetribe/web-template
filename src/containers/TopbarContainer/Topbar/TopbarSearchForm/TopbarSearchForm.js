@@ -33,7 +33,7 @@ const formatDateLabel = (datesParam, intl) => {
   }
 };
 
-// Format price param ("500,2000") into "$500 – $2,000/mo"
+// Format price param ("0,2200") (monthly) into "$0 – $2,200/mo"
 const formatBudgetLabel = priceParam => {
   if (!priceParam) return null;
   const [minStr, maxStr] = priceParam.split(',');
@@ -60,7 +60,7 @@ const parseDateRangeInitialValue = datesParam => {
   }
 };
 
-// Parse price param into { minValue, maxValue } for the budget slider
+// Parse price param (monthly) into { minValue, maxValue } for the budget slider
 const parsePriceInitialValue = priceParam => {
   if (!priceParam) return { minValue: PRICE_MIN, maxValue: PRICE_MAX };
   const [minStr, maxStr] = priceParam.split(',');
@@ -76,14 +76,19 @@ const TopbarSearchForm = props => {
   const { className, rootClassName, initialValues = {} } = props;
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [formKey, setFormKey] = useState(0);
 
-  // Stabilise with useRef so React Final Form never sees a new object reference
-  // and reinitialises (which would reset dirty field values back to URL state).
-  const formInitialValues = useRef({
-    location: initialValues.location || null,
-    dateRange: parseDateRangeInitialValue(initialValues.dates),
-    price: parsePriceInitialValue(initialValues.price),
-  }).current;
+  // Recomputed fresh each time the panel opens so URL changes from the filter
+  // pills (price, dates, etc.) are reflected when the user reopens the form.
+  const formInitialValues = useRef(null);
+  if (!isExpanded) {
+    // Precompute so the ref is ready the moment the form mounts.
+    formInitialValues.current = {
+      location: initialValues.location || null,
+      dateRange: parseDateRangeInitialValue(initialValues.dates),
+      price: parsePriceInitialValue(initialValues.price),
+    };
+  }
   const [locationSelected, setLocationSelected] = useState(
     !!initialValues?.location?.selectedPlace
   );
@@ -126,6 +131,7 @@ const TopbarSearchForm = props => {
       const { minValue = PRICE_MIN, maxValue = PRICE_MAX } = values.price;
       const isDefault = minValue === PRICE_MIN && maxValue === PRICE_MAX;
       if (!isDefault) {
+        // Store monthly values directly in URL
         queryParams.price = `${minValue},${maxValue}`;
       }
     }
@@ -141,7 +147,7 @@ const TopbarSearchForm = props => {
       {/* ── Collapsed pill — always rendered to keep topbar layout stable ── */}
       <button
         className={classNames(css.collapsedPill, { [css.collapsedPillHidden]: isExpanded })}
-        onClick={() => setIsExpanded(true)}
+        onClick={() => { setFormKey(k => k + 1); setIsExpanded(true); }}
         aria-label={intl.formatMessage({ id: 'TopbarSearchForm.expandSearch' })}
         aria-expanded={isExpanded}
       >
@@ -180,7 +186,8 @@ const TopbarSearchForm = props => {
           onOutsideClick={() => setIsExpanded(false)}
         >
           <FinalForm
-            initialValues={formInitialValues}
+            key={formKey}
+            initialValues={formInitialValues.current}
             onSubmit={handleFormSubmit}
             render={({ handleSubmit }) => (
               <Form className={css.expandedForm} onSubmit={handleSubmit}>

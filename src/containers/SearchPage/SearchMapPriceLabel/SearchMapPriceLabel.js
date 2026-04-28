@@ -6,6 +6,10 @@ import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
 import { isPriceVariationsEnabled } from '../../../util/configHelpers';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+
+const { Money } = sdkTypes;
+const DAYS_PER_MONTH = 30;
 
 import css from './SearchMapPriceLabel.module.css';
 
@@ -49,13 +53,16 @@ class SearchMapPriceLabel extends Component {
     const currentListing = ensureListing(listing);
     const { price, publicData, title } = currentListing.attributes;
 
-    // Create formatted price if currency is known or alternatively show just the unknown currency.
-    const formattedPrice =
+    // Display monthly price (nightly × 30) on map markers.
+    const monthlyPrice =
       price && price.currency === config.currency
-        ? formatMoney(intl, price)
-        : price?.currency
-        ? price.currency
+        ? new Money(price.amount * DAYS_PER_MONTH, price.currency)
         : null;
+    const formattedPrice = monthlyPrice
+      ? `${formatMoney(intl, monthlyPrice)}/mo`
+      : price?.currency
+      ? price.currency
+      : null;
 
     const priceValue = formattedPrice
       ? intl.formatMessage({ id: 'SearchMapPriceLabel.price' }, { priceValue: formattedPrice })

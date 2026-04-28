@@ -2,15 +2,20 @@ import { displayPrice, isPriceVariationsEnabled } from '../../util/configHelpers
 import { formatMoney } from '../../util/currency';
 import { richText } from '../../util/richText';
 import { isBookingProcessAlias } from '../../transactions/transaction';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import css from './ListingCard.module.css';
 
+const { Money } = sdkTypes;
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
+const DAYS_PER_MONTH = 30;
 
 const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
-    const formattedPrice = formatMoney(intl, price);
-    return { formattedPrice, priceTooltip: formattedPrice };
+    const monthlyPrice = new Money(price.amount * DAYS_PER_MONTH, price.currency);
+    const formattedPrice = formatMoney(intl, monthlyPrice);
+    const nightlyFormatted = formatMoney(intl, price);
+    return { formattedPrice, priceTooltip: `${nightlyFormatted} per night` };
   } else if (price) {
     return {
       formattedPrice: intl.formatMessage(
@@ -66,13 +71,9 @@ export const getListingCardTranslations = (listing, config, intl) => {
     ? 'ListingCard.priceStartingFrom'
     : 'ListingCard.price';
 
-  const perUnitString = isBookable
-    ? intl.formatMessage({ id: 'ListingCard.perUnit' }, { unitType: publicData?.unitType })
-    : '';
-
-  // Single formatted price line (amount + per-unit if applicable); used for both card aria and price block
+  // Single formatted price line; used for both card aria and price block
   const priceValue = <span className={css.priceValue}>{formattedPrice}</span>;
-  const pricePerUnit = isBookable ? <span className={css.perUnit}>{perUnitString}</span> : '';
+  const pricePerUnit = isBookable ? <span className={css.perUnit}>/mo</span> : '';
   const priceMessage =
     showPrice && formattedPrice != null
       ? intl.formatMessage({ id: priceMessageId }, { priceValue, pricePerUnit })

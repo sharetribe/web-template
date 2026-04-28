@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -689,16 +689,24 @@ export const BookingDatesForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    initialBookingDates,
+    onFetchTimeSlots,
     ...rest
   } = props;
   const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
-  const initialValuesMaybe =
+  const priceVariantInitial =
     priceVariants.length > 1 && preselectedPriceVariant
-      ? { initialValues: { priceVariantName: preselectedPriceVariant?.name } }
+      ? { priceVariantName: preselectedPriceVariant?.name }
       : priceVariants.length === 1
-      ? { initialValues: { priceVariantName: priceVariants?.[0]?.name } }
+      ? { priceVariantName: priceVariants?.[0]?.name }
       : {};
+  const initialValuesMaybe = {
+    initialValues: {
+      ...priceVariantInitial,
+      ...(initialBookingDates ? { bookingDates: initialBookingDates } : {}),
+    },
+  };
 
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
   const monthId = monthIdString(currentMonth);
@@ -753,10 +761,63 @@ export const BookingDatesForm = props => {
     seatsEnabled
   );
 
+  // Trigger price calculation when form mounts with pre-filled dates (e.g. after browser back)
+  useEffect(() => {
+    if (initialBookingDates?.startDate && initialBookingDates?.endDate) {
+      onFetchTransactionLineItems({
+        orderData: {
+          bookingStart: initialBookingDates.startDate,
+          bookingEnd: initialBookingDates.endDate,
+        },
+        listingId,
+        isOwnListing,
+      });
+    }
+  }, []);
+
+  // When firstAvailableDate is in a future month, the two-month calendar displays
+  // that month + the following month. We need to:
+  // 1. Pre-fetch the second visible month (firstAvailableDate's month + 1) so it isn't blocked.
+  // 2. Sync currentMonth to firstAvailableDate's month so that user navigation fetches
+  //    the correct subsequent months (otherwise currentMonth=April causes "next" clicks
+  //    to fetch April+2=June instead of May+2=July).
+  const prefetchedExtraMonthRef = useRef(false);
+  const monthSyncedRef = useRef(false);
+  const firstAvailableDate = !initialBookingDates
+    ? getFirstAvailableDate(allTimeSlots, timeZone)
+    : null;
+  const firstAvailableMonthId = firstAvailableDate
+    ? monthIdString(firstAvailableDate, timeZone)
+    : null;
+  useEffect(() => {
+    console.log('[DEBUG] pre-fetch effect — firstAvailableMonthId:', firstAvailableMonthId, '| monthlyTimeSlots keys:', Object.keys(monthlyTimeSlots));
+    if (!firstAvailableDate || !onFetchTimeSlots) return;
+    const firstAvailableMonth = getStartOf(firstAvailableDate, 'month', timeZone);
+    const todayMonth = getStartOf(TODAY, 'month', timeZone);
+    if (firstAvailableMonth <= todayMonth) return;
+
+    if (!prefetchedExtraMonthRef.current) {
+      prefetchedExtraMonthRef.current = true;
+      const monthAfter = nextMonthFn(firstAvailableMonth, timeZone);
+      const monthAfterId = monthIdString(monthAfter, timeZone);
+      console.log('[DEBUG] pre-fetching month:', monthAfterId, '| already fetched:', Array.isArray(monthlyTimeSlots?.[monthAfterId]?.timeSlots));
+      if (!Array.isArray(monthlyTimeSlots?.[monthAfterId]?.timeSlots)) {
+        fetchMonthData(monthAfter, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+      }
+    }
+
+    if (!monthSyncedRef.current) {
+      monthSyncedRef.current = true;
+      console.log('[DEBUG] syncing currentMonth to:', monthIdString(firstAvailableMonth, timeZone));
+      setCurrentMonth(firstAvailableMonth);
+    }
+  }, [firstAvailableMonthId]);
+
   return (
     <FinalForm
       {...initialValuesMaybe}
       {...rest}
+      onFetchTimeSlots={onFetchTimeSlots}
       unitPrice={unitPrice}
       render={formRenderProps => {
         const {
@@ -934,7 +995,9 @@ export const BookingDatesForm = props => {
               )}
               onMonthChange={date => {
                 const localizedDate = timeOfDayFromLocalToTimeZone(date, timeZone);
-                onMonthClick(localizedDate < currentMonth ? prevMonthFn : nextMonthFn);
+                const direction = localizedDate < currentMonth ? prevMonthFn : nextMonthFn;
+                console.log('[DEBUG] onMonthChange — navigating to:', monthIdString(localizedDate, timeZone), '| currentMonth:', monthIdString(currentMonth, timeZone), '| direction:', direction === nextMonthFn ? 'next' : 'prev', '| will fetch:', monthIdString(direction(currentMonth, timeZone, 2), timeZone), '| monthlyTimeSlots keys:', Object.keys(monthlyTimeSlots));
+                onMonthClick(direction);
                 setCurrentMonth(localizedDate);
               }}
               onClose={() => {

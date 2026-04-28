@@ -6,6 +6,10 @@ import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
 import { isPriceVariationsEnabled, requireListingImage } from '../../../util/configHelpers';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+
+const { Money } = sdkTypes;
+const DAYS_PER_MONTH = 30;
 
 import { AspectRatioWrapper, ResponsiveImage, ListingCardThumbnail } from '../../../components';
 
@@ -17,12 +21,15 @@ const ListingCard = props => {
 
   const { title, price, publicData } = listing.attributes;
   const { cardStyle } = publicData || {};
-  const formattedPrice =
+  const monthlyPrice =
     price && price.currency === config.currency
-      ? formatMoney(intl, price)
-      : price?.currency
-      ? price.currency
+      ? new Money(price.amount * DAYS_PER_MONTH, price.currency)
       : null;
+  const formattedPrice = monthlyPrice
+    ? `${formatMoney(intl, monthlyPrice)}/mo`
+    : price?.currency
+    ? price.currency
+    : null;
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
   const {
@@ -34,10 +41,6 @@ const ListingCard = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
-  const pricePerUnit = intl.formatMessage(
-    { id: 'SearchMapInfoCard.perUnit' },
-    { unitType: publicData?.unitType }
-  );
   const priceValue = formattedPrice ? formattedPrice : '';
 
   const validListingTypes = config.listing.listingTypes;
@@ -49,11 +52,8 @@ const ListingCard = props => {
   const hasMultiplePriceVariants = isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
 
   const priceMessage = hasMultiplePriceVariants
-    ? intl.formatMessage(
-        { id: 'SearchMapInfoCard.priceStartingFrom' },
-        { priceValue, pricePerUnit }
-      )
-    : intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue, pricePerUnit });
+    ? intl.formatMessage({ id: 'SearchMapInfoCard.priceStartingFrom' }, { priceValue, pricePerUnit: '' })
+    : priceValue;
 
   // listing card anchor needs sometimes inherited border radius.
   const classes = classNames(

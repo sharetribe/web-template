@@ -1476,7 +1476,7 @@ const validSeatsConfig = config => {
 };
 
 const validPriceConfig = config => {
-  const { enabled = true, label = 'Price', min = 0, max = 1000, step = 5 } = config;
+  const { enabled = true, label = 'Price', min = 0, max = 10000, step = 50 } = config;
   const isValidLabel = typeof label === 'string';
   const isValidMin = typeof min === 'number';
   const isValidMax = typeof max === 'number';
@@ -1645,7 +1645,7 @@ const mergeSearchConfig = (
     ...categoryFilterMaybe,
     dateRangeFilter,
     ...seatsFilterMaybe,
-    priceFilter,
+    priceFilter ? { ...priceFilter, min: 0, max: 10000, step: 50 } : priceFilter,
     ...keywordsFilterMaybe,
   ];
 

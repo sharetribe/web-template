@@ -12,6 +12,66 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../../util/routes';
 import { isOriginInUse } from '../../../../util/search';
 import { stringifyDateToISO8601 } from '../../../../util/dates';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
+
+const { LatLng, LatLngBounds } = sdkTypes;
+const STORAGE_KEY = 'patamali_last_search';
+
+const saveSearchToStorage = values => {
+  try {
+    const toSave = {};
+    if (values.location?.selectedPlace) {
+      toSave.location = values.location;
+    }
+    if (values.dateRange?.startDate && values.dateRange?.endDate) {
+      toSave.dateRange = {
+        startDate: values.dateRange.startDate.toISOString(),
+        endDate: values.dateRange.endDate.toISOString(),
+      };
+    }
+    if (values.price) {
+      toSave.price = values.price;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  } catch (e) {}
+};
+
+const loadSearchFromStorage = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    const saved = JSON.parse(raw);
+    const result = {};
+    if (saved.location?.selectedPlace) {
+      const sp = saved.location.selectedPlace;
+      const bounds = sp.bounds
+        ? new LatLngBounds(
+            new LatLng(sp.bounds.ne.lat, sp.bounds.ne.lng),
+            new LatLng(sp.bounds.sw.lat, sp.bounds.sw.lng)
+          )
+        : null;
+      const origin = sp.origin ? new LatLng(sp.origin.lat, sp.origin.lng) : null;
+      result.location = {
+        search: saved.location.search,
+        selectedPlace: { ...sp, bounds, origin },
+      };
+    }
+    if (saved.dateRange) {
+      const startDate = new Date(saved.dateRange.startDate);
+      const endDate = new Date(saved.dateRange.endDate);
+      // Only restore dates if start date is still in the future
+      if (startDate > new Date()) {
+        result.dateRange = { startDate, endDate };
+      }
+    }
+    if (saved.price) {
+      result.price = saved.price;
+    }
+    return result;
+  } catch (e) {
+    return {};
+  }
+};
 
 // Shared components
 import { Form, PrimaryButton } from '../../../../components';
@@ -59,8 +119,9 @@ export const SearchCTA = React.forwardRef((props, ref) => {
   // keywordSearch slot is repurposed for the monthly budget filter
   const budget = keywordSearch;
 
+  const [storedSearch] = useState(() => loadSearchFromStorage());
   const [submitDisabled, setSubmitDisabled] = useState(false);
-  const [locationSelected, setLocationSelected] = useState(false);
+  const [locationSelected, setLocationSelected] = useState(!!storedSearch.location?.selectedPlace);
   const [locationError, setLocationError] = useState(false);
 
   const categoryConfig = config.categoryConfiguration;
@@ -179,6 +240,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
           const { minValue = PRICE_MIN, maxValue = PRICE_MAX } = value || {};
           const isDefault = minValue === PRICE_MIN && maxValue === PRICE_MAX;
           if (!isDefault) {
+            // Store monthly values directly in URL
             queryParams.price = `${minValue},${maxValue}`;
           }
         } else {
@@ -187,8 +249,8 @@ export const SearchCTA = React.forwardRef((props, ref) => {
       }
     });
 
+    saveSearchToStorage(values);
     const to = createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams);
-    // Use history.push to navigate without page refresh
     history.push(to);
   };
 
@@ -197,6 +259,7 @@ export const SearchCTA = React.forwardRef((props, ref) => {
       <FinalForm
         onSubmit={onSubmit}
         {...props}
+        initialValues={{ ...storedSearch, ...(props.initialValues || {}) }}
         render={({ fieldRenderProps, handleSubmit }) => {
           return (
             <Form
