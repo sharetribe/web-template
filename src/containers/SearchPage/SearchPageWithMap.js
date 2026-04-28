@@ -120,6 +120,14 @@ export class SearchPageComponent extends Component {
     this.handleSortBy = this.handleSortBy.bind(this);
   }
 
+  // Reset pending filter state whenever the URL changes externally (e.g. topbar search)
+  // so that initialValues reads fresh URL params instead of stale state.
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      this.setState({ currentQueryParams: {} });
+    }
+  }
+
   // Callback to determine if new search is needed
   // when map is moved by user or viewport has changed
   onMapMoveEnd(viewportBoundsChanged, data) {

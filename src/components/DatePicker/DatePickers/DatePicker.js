@@ -79,12 +79,12 @@ const CalendarMonth = props => {
     endDateOffset,
     hoveredDate: controlledHoveredDate,
     onHoveredDateChange,
+    onTooltipChange,
     intl,
   } = props;
   const [internalHoveredDate, setInternalHoveredDate] = useState(null);
   const hoveredDate = controlledHoveredDate !== undefined ? controlledHoveredDate : internalHoveredDate;
   const [keyboardUsed, setKeyboardUsed] = useState(false);
-  const [tooltip, setTooltip] = useState(null);
   const weekdays = getLocalizedWeekDays(firstDayOfWeek, intl);
   const calendarRows = getCalendarRows(currentMonth, firstDayOfWeek);
 
@@ -125,12 +125,12 @@ const CalendarMonth = props => {
 
     if (td.classList.contains(css.dateMinimumNights)) {
       const rect = td.getBoundingClientRect();
-      setTooltip({ x: rect.left + rect.width / 2, y: rect.bottom, message: `Minimum ${minimumNights} days required` });
+      onTooltipChange?.({ x: rect.left + rect.width / 2, y: rect.bottom, message: `Minimum ${minimumNights} nights required` });
     } else if (td.classList.contains(css.dateSelectionBlocked)) {
       const rect = td.getBoundingClientRect();
-      setTooltip({ x: rect.left + rect.width / 2, y: rect.bottom, message: '30 nights not available' });
+      onTooltipChange?.({ x: rect.left + rect.width / 2, y: rect.bottom, message: '30 nights not available' });
     } else {
-      setTooltip(null);
+      onTooltipChange?.(null);
     }
   };
 
@@ -140,7 +140,7 @@ const CalendarMonth = props => {
     } else {
       setInternalHoveredDate(null);
     }
-    setTooltip(null);
+    onTooltipChange?.(null);
   };
 
   const onTouchStart = event => {
@@ -149,8 +149,8 @@ const CalendarMonth = props => {
     if (!td) return;
     if (td.classList.contains(css.dateSelectionBlocked)) {
       const rect = td.getBoundingClientRect();
-      setTooltip({ x: rect.left + rect.width / 2, y: rect.bottom, message: '30 nights not available' });
-      setTimeout(() => setTooltip(null), 2000);
+      onTooltipChange?.({ x: rect.left + rect.width / 2, y: rect.bottom, message: '30 nights not available' });
+      setTimeout(() => onTooltipChange?.(null), 2000);
     }
   };
 
@@ -161,14 +161,6 @@ const CalendarMonth = props => {
         [css.keyboardUsed]: keyboardUsed,
       })}
     >
-      {tooltip && (
-        <div
-          className={css.minimumNightsTooltip}
-          style={{ left: tooltip.x, top: tooltip.y }}
-        >
-          {tooltip.message}
-        </div>
-      )}
       <table className={css.calendarTable} onKeyDown={handleKeyDown} onTouchStart={onTouchStart} role="presentation">
         <thead className={css.calendarHeader}>
           <tr className={css.weekdayRow} aria-hidden="true">
@@ -355,6 +347,7 @@ const DatePicker = props => {
   const [allowSlide, setAllowSlide] = useState(true);
   const [isMounted, setMounted] = useState(false);
   const [sharedHoveredDate, setSharedHoveredDate] = useState(null);
+  const [sharedTooltip, setSharedTooltip] = useState(null);
 
   useEffect(() => {
     setMounted(true);
@@ -623,6 +616,7 @@ const DatePicker = props => {
     onKeyDown,
     rangeStartHasValue,
     rangeEndHasValue,
+    onTooltipChange: setSharedTooltip,
     intl,
   };
 
@@ -685,6 +679,12 @@ const DatePicker = props => {
               {...twoMonthCommonProps}
             />
           </div>
+
+          {sharedTooltip && (
+            <div className={css.minimumNightsTooltip} style={{ left: sharedTooltip.x, top: sharedTooltip.y }}>
+              {sharedTooltip.message}
+            </div>
+          )}
 
           <DatePickerFooter
             showFooter={showTodayButton || showClearButton}
@@ -751,6 +751,12 @@ const DatePicker = props => {
             </div>
           </div>
         </div>
+
+        {sharedTooltip && (
+          <div className={css.minimumNightsTooltip} style={{ left: sharedTooltip.x, top: sharedTooltip.y }}>
+            {sharedTooltip.message}
+          </div>
+        )}
 
         <DatePickerFooter
           showFooter={showTodayButton || showClearButton}

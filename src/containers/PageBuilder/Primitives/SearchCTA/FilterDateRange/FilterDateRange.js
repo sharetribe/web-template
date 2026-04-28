@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 
 import { useIntl } from '../../../../../util/reactIntl';
-
 import { OutsideClickHandler, IconDate, FieldDateRangeController } from '../../../../../components';
 
 import css from './FilterDateRange.module.css';
+
+const MIN_STAY_NIGHTS = 30;
 
 const handleKeyDown = (isOpen, setIsOpen) => e => {
   const toggleButton = e.currentTarget.getElementsByClassName(css.toggleButton)[0];
@@ -24,13 +25,14 @@ const handleKeyDown = (isOpen, setIsOpen) => e => {
     return;
   }
 };
+
 /**
  * FilterDateRange displays a toggleable date range picker.
  *
  * @component
  * @param {Object} props Component properties.
  * @param {Object} props.config Marketplace configuration object
- * @param {string?} props.className e add more style rules in addition to components own css.root
+ * @param {string?} props.className add more style rules in addition to components own css.root
  * @param {string?} props.rootClassName overwrite components own css.root
  * @returns {JSX.Element} The FilterDateRange component.
  */
@@ -41,21 +43,10 @@ const FilterDateRange = props => {
   const [selectedDates, setSelectedDates] = useState(initialDateLabel || null);
   const intl = useIntl();
 
-  useEffect(() => {
-    if (FieldDateRangeController.preload) {
-      FieldDateRangeController.preload();
-    }
-  }, []);
-
   const classes = classNames(rootClassName || css.root, className);
 
-  const formatDateRange = (start, end) => {
-    const formattedDate = intl.formatDateTimeRange(start, end, {
-      day: 'numeric',
-      month: 'short',
-    });
-    return formattedDate;
-  };
+  const formatDateRange = (start, end) =>
+    intl.formatDateTimeRange(start, end, { day: 'numeric', month: 'short' });
 
   const handleDateRangeChange = value => {
     if (!value) {
@@ -75,26 +66,22 @@ const FilterDateRange = props => {
 
   const handleClick = event => {
     const el = event.currentTarget;
-    const dropdownHeight = 350; // approximately
+    const dropdownHeight = 350;
     const toBottom = window.innerHeight - el.getBoundingClientRect().bottom;
-    // If there's not enough space under the toggle button, scroll down to make space for the dropdown.
     if (!isOpen && toBottom < dropdownHeight) {
       const topbarOffset = 72;
       const toTop = el.getBoundingClientRect().top - topbarOffset;
       const scrollDownNeed = dropdownHeight - toBottom;
-      // Scroll page as little down as possible to get toggle button more space below it - or move it just under the topbar.
-      // This mitigates browsers' own accessibility features that autoscrolls too much.
       const top = toTop < scrollDownNeed ? toTop : scrollDownNeed;
       window.scrollBy({ top });
     }
     setIsOpen(prevState => !prevState);
   };
 
-  const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
+  const datesFilter = config?.search?.defaultFilters?.find(f => f.key === 'dates');
   const { dateRangeMode } = datesFilter || {};
   const isNightlyMode = dateRangeMode === 'night';
 
-  // Compute the CSS class for the label with an "active" modifier if there is a selection or if the picker is open.
   const labelClasses = classNames(css.label, {
     [css.active]: selectedDates || isOpen,
   });
@@ -121,19 +108,19 @@ const FilterDateRange = props => {
             : intl.formatMessage({ id: 'PageBuilder.SearchCTA.dateFilterPlaceholder' })}
         </span>
       </div>
-      {isOpen ? (
+      {/* Always mounted so the Final Form field stays registered and its value isn't dropped on close */}
+      <div style={isOpen ? undefined : { display: 'none' }}>
         <FieldDateRangeController
           onChange={handleDateRangeChange}
           showClearButton
-          className={classNames(css.datePicker, {
-            [css.alignLeft]: alignLeft,
-          })}
+          className={classNames(css.datePicker, { [css.alignLeft]: alignLeft })}
           name="dateRange"
           id="dateRange"
-          minimumNights={isNightlyMode ? 1 : 0}
+          minimumNights={MIN_STAY_NIGHTS}
         />
-      ) : null}
+      </div>
     </OutsideClickHandler>
   );
 };
+
 export default FilterDateRange;
