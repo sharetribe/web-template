@@ -14,8 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
-- [fix] Fixes a bug where listing metadata fields were not shown in the sort dropdown if the default sorting config is missing
-  [#835](https://github.com/sharetribe/web-template/pull/835)
+- [fix] Fix a bug with UserCard showMore button.
+  [#838](https://github.com/sharetribe/web-template/pull/838)
+- [fix] Fixes a bug where listing metadata fields were not shown in the sort dropdown if the default
+  sorting config is missing [#835](https://github.com/sharetribe/web-template/pull/835)
 - [fix] Fix an error in a negotiation email template
   [#837](https://github.com/sharetribe/web-template/pull/837)
 - [change] Update README.md to mention the NODE_ENV environment variable.
