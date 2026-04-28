@@ -974,6 +974,8 @@ const validUserFields = (userFields, userTypesInUse) => {
             ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
+            : name === 'numberConfig'
+            ? validNumberConfig(value)
             : name === 'showConfig'
             ? validUserShowConfig(value)
             : name === 'userTypeConfig'
@@ -1536,14 +1538,6 @@ const validSortConfig = config => {
 };
 
 const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance, listingFields) => {
-  if (hostedSortConfig == null) {
-    return {
-      ...defaultSortConfig,
-      // Disable SortBy component if there are less than 2 options
-      active: defaultSortConfig.options.length > 1,
-    };
-  }
-
   // Flag filters to remove if the default sorting option is toggled off in Console
   const removeByKey = {
     createdAt: !hostedSortConfig?.newest,
@@ -1558,7 +1552,12 @@ const mergeSortConfig = (hostedSortConfig, defaultSortConfig, omitRelevance, lis
   // and returns primaryOptions and secondaryOptions. primaryOptions are prepended to the
   // sort options and secondaryOptions are appended.
   const { primaryOptions, secondaryOptions } = getSortOptionsFromListingFields(listingFields);
-  const filteredDefaults = defaultSortConfig.options.filter(option => !removeByKey[option.key]);
+  // hostedSortConfig can be undefined if listing search settings have not been updated in Console,
+  // in which case there's no need to filter out any options
+  const filteredDefaults =
+    hostedSortConfig == null
+      ? defaultSortConfig.options
+      : defaultSortConfig.options.filter(option => !removeByKey[option.key]);
   const options = [...primaryOptions, ...filteredDefaults, ...secondaryOptions];
 
   return {
