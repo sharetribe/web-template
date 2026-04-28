@@ -974,6 +974,8 @@ const validUserFields = (userFields, userTypesInUse) => {
             ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
+            : name === 'numberConfig'
+            ? validNumberConfig(value)
             : name === 'showConfig'
             ? validUserShowConfig(value)
             : name === 'userTypeConfig'

@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] User fields: fix a bug with numberConfig validation (min and max values were missing).
+  [#840](https://github.com/sharetribe/web-template/pull/840)
 - [fix] Fix a layout bug with InboxSortBy component.
   [#839](https://github.com/sharetribe/web-template/pull/839)
 - [fix] Fix a bug with UserCard showMore button.
