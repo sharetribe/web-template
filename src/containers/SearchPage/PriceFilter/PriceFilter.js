@@ -16,7 +16,7 @@ const getPriceQueryParamName = queryParamNames => {
     : 'price';
 };
 
-// Parse value, which should look like "0,1000"
+// Parse value, which should look like "0,2200" (monthly values stored in URL)
 const parse = priceRange => {
   const [minPrice, maxPrice] = !!priceRange
     ? priceRange.split(',').map(v => Number.parseInt(v, RADIX))
@@ -41,12 +41,20 @@ const PriceFilter = props => {
     label,
     initialValues,
     queryParamNames,
+    onSubmit,
     getAriaLabel = () => {},
     ...rest
   } = props;
   const intl = useIntl();
 
-  // Format function to convert minValue and maxValue to currency strings
+  const priceQueryParam = getPriceQueryParamName(queryParamNames);
+  const initialPrice = initialValues?.[priceQueryParam]
+    ? parse(initialValues[priceQueryParam])
+    : {};
+  const { minPrice, maxPrice } = initialPrice || {};
+  const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
+
+  // URL stores monthly values directly — no conversion needed for display
   const formatValidRangeValues = rangeValues => {
     const { minValue, maxValue } = rangeValues;
     return hasValue(minValue) && hasValue(maxValue)
@@ -56,14 +64,6 @@ const PriceFilter = props => {
         }
       : {};
   };
-
-  const priceQueryParam = getPriceQueryParamName(queryParamNames);
-  const initialPrice = initialValues?.[priceQueryParam]
-    ? parse(initialValues[priceQueryParam])
-    : {};
-  const { minPrice, maxPrice } = initialPrice || {};
-
-  const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
 
   const formattedRangeForAriaLabel = hasInitialValues
     ? `${formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice)} - ${formatCurrencyMajorUnit(
@@ -98,6 +98,7 @@ const PriceFilter = props => {
       initialValues={initialValues}
       formatValidRangeValues={formatValidRangeValues}
       queryParamNames={queryParamNames}
+      onSubmit={onSubmit}
       getLabelForRangeInput={getLabelForRangeInput}
       getAriaLabel={() => getAriaLabel(label, formattedRangeForAriaLabel)}
       {...rest}

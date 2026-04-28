@@ -3,7 +3,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
-import { timestampToDate } from '../../util/dates';
+import { timestampToDate, stringifyDateToISO8601 } from '../../util/dates';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
@@ -292,6 +292,17 @@ export const handleSubmit = parameters => values => {
 
   // Clear previous Stripe errors from store if there is any
   onInitializeCardPaymentData();
+
+  // Persist selected dates in the listing page URL so the back button restores them
+  if (bookingDates?.startDate && bookingDates?.endDate) {
+    const timeZone = listing.attributes?.availabilityPlan?.timezone;
+    const startStr = stringifyDateToISO8601(bookingDates.startDate, timeZone);
+    const endStr = stringifyDateToISO8601(bookingDates.endDate, timeZone);
+    history.replace({
+      pathname: history.location.pathname,
+      search: `?startDate=${startStr}&endDate=${endStr}`,
+    });
+  }
 
   // Redirect to CheckoutPage
   history.push(

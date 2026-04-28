@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import classNames from 'classnames';
 
 import appSettings from '../../../config/settings';
@@ -284,6 +284,28 @@ const TopbarComponent = props => {
     };
   };
   const initialSearchFormValues = topbarSearcInitialValues();
+
+  // Keep localStorage in sync whenever URL search params change (filter pills, topbar submit, etc.)
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('patamali_last_search') || '{}');
+      const updated = { ...saved };
+      if (address && bounds) {
+        updated.location = {
+          search: address,
+          selectedPlace: { address, origin, bounds },
+        };
+      }
+      if (dates) {
+        updated.dateRange = { startDate: dates.split(',')[0], endDate: dates.split(',')[1] };
+      }
+      if (price) {
+        const [min, max] = price.split(',').map(Number);
+        updated.price = { minValue: min, maxValue: max };
+      }
+      localStorage.setItem('patamali_last_search', JSON.stringify(updated));
+    } catch (e) {}
+  }, [address, bounds, dates, price]);
 
   const classes = classNames(rootClassName || css.root, className);
 

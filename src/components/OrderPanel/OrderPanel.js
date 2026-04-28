@@ -24,6 +24,7 @@ import {
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
+import { parseDateFromISO8601 } from '../../util/dates';
 import { userDisplayNameAsString } from '../../util/data';
 import {
   OFFER,
@@ -188,14 +189,12 @@ const PriceMaybe = props => {
     </div>
   ) : (
     <div className={css.priceContainer}>
-      <p className={css.price}>
+      {monthlyPriceLabel && (
+        <p className={css.monthlyPrice}>{monthlyPriceLabel} /mo</p>
+      )}
+      <p className={css.nightlyPrice}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
       </p>
-      {monthlyPriceLabel && (
-        <p className={css.monthlyPrice}>
-          {monthlyPriceLabel} per month
-        </p>
-      )}
     </div>
   );
 };
@@ -383,6 +382,14 @@ const OrderPanel = props => {
   const isOrderOpen = !!searchParams.orderOpen;
   const preselectedPriceVariantSlug = searchParams.bookableOption;
 
+  const initialBookingDates =
+    searchParams.startDate && searchParams.endDate && timeZone
+      ? {
+          startDate: parseDateFromISO8601(searchParams.startDate, timeZone),
+          endDate: parseDateFromISO8601(searchParams.endDate, timeZone),
+        }
+      : null;
+
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
 
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
@@ -520,6 +527,9 @@ const OrderPanel = props => {
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
+            key={searchParams.startDate && searchParams.endDate
+              ? `${searchParams.startDate}-${searchParams.endDate}`
+              : 'no-dates'}
             seatsEnabled={seatsEnabled}
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
@@ -528,6 +538,7 @@ const OrderPanel = props => {
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
             finePrintComponent={SubmitFinePrint}
+            initialBookingDates={initialBookingDates}
             {...priceVariantsMaybe}
             {...sharedProps}
           />
