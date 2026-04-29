@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -701,12 +701,17 @@ export const BookingDatesForm = props => {
       : priceVariants.length === 1
       ? { priceVariantName: priceVariants?.[0]?.name }
       : {};
-  const initialValuesMaybe = {
-    initialValues: {
+  // Memoize initialValues so FinalForm doesn't see a new object on every render.
+  // Without this, any Redux update (e.g. line-items fetch) creates new Date objects in
+  // initialBookingDates, causing FinalForm to reinitialize while the form is still
+  // pristine and snap the calendar back to the URL-param dates.
+  const memoizedInitialValues = useMemo(
+    () => ({
       ...priceVariantInitial,
       ...(initialBookingDates ? { bookingDates: initialBookingDates } : {}),
-    },
-  };
+    }),
+    [initialBookingDates, preselectedPriceVariant?.name, priceVariants?.length]
+  );
 
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
   const monthId = monthIdString(currentMonth);
@@ -775,6 +780,33 @@ export const BookingDatesForm = props => {
     }
   }, []);
 
+  // When loading with URL date params (returning from checkout), the initial page fetch only
+  // covers April+May. If the date range spans into June or beyond, those months are missing
+  // from allTimeSlots, causing isBlockedBetween to incorrectly block valid ranges. Pre-fetch
+  // them once on mount.
+  const prefetchInitialRangeRef = useRef(false);
+  useEffect(() => {
+    if (prefetchInitialRangeRef.current || !initialBookingDates?.startDate || !onFetchTimeSlots) return;
+    prefetchInitialRangeRef.current = true;
+    const startMonth = getStartOf(initialBookingDates.startDate, 'month', timeZone);
+    // Always pre-fetch the month after startDate (second visible month in two-month calendar)
+    const monthAfterStart = nextMonthFn(startMonth, timeZone);
+    const monthAfterStartId = monthIdString(monthAfterStart, timeZone);
+    if (!Array.isArray(monthlyTimeSlots?.[monthAfterStartId]?.timeSlots)) {
+      fetchMonthData(monthAfterStart, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+    }
+    // Also pre-fetch the end date's month if it's further ahead
+    if (initialBookingDates.endDate) {
+      const endMonth = getStartOf(initialBookingDates.endDate, 'month', timeZone);
+      const endMonthId = monthIdString(endMonth, timeZone);
+      if (endMonthId !== monthAfterStartId && !Array.isArray(monthlyTimeSlots?.[endMonthId]?.timeSlots)) {
+        fetchMonthData(endMonth, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+      }
+    }
+    // Sync currentMonth so navigation arrows fetch the right subsequent months
+    setCurrentMonth(startMonth);
+  }, []);
+
   // When firstAvailableDate is in a future month, the two-month calendar displays
   // that month + the following month. We need to:
   // 1. Pre-fetch the second visible month (firstAvailableDate's month + 1) so it isn't blocked.
@@ -790,7 +822,6 @@ export const BookingDatesForm = props => {
     ? monthIdString(firstAvailableDate, timeZone)
     : null;
   useEffect(() => {
-    console.log('[DEBUG] pre-fetch effect — firstAvailableMonthId:', firstAvailableMonthId, '| monthlyTimeSlots keys:', Object.keys(monthlyTimeSlots));
     if (!firstAvailableDate || !onFetchTimeSlots) return;
     const firstAvailableMonth = getStartOf(firstAvailableDate, 'month', timeZone);
     const todayMonth = getStartOf(TODAY, 'month', timeZone);
@@ -800,7 +831,6 @@ export const BookingDatesForm = props => {
       prefetchedExtraMonthRef.current = true;
       const monthAfter = nextMonthFn(firstAvailableMonth, timeZone);
       const monthAfterId = monthIdString(monthAfter, timeZone);
-      console.log('[DEBUG] pre-fetching month:', monthAfterId, '| already fetched:', Array.isArray(monthlyTimeSlots?.[monthAfterId]?.timeSlots));
       if (!Array.isArray(monthlyTimeSlots?.[monthAfterId]?.timeSlots)) {
         fetchMonthData(monthAfter, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
       }
@@ -808,14 +838,13 @@ export const BookingDatesForm = props => {
 
     if (!monthSyncedRef.current) {
       monthSyncedRef.current = true;
-      console.log('[DEBUG] syncing currentMonth to:', monthIdString(firstAvailableMonth, timeZone));
       setCurrentMonth(firstAvailableMonth);
     }
   }, [firstAvailableMonthId]);
 
   return (
     <FinalForm
-      {...initialValuesMaybe}
+      initialValues={memoizedInitialValues}
       {...rest}
       onFetchTimeSlots={onFetchTimeSlots}
       unitPrice={unitPrice}
@@ -995,9 +1024,21 @@ export const BookingDatesForm = props => {
               )}
               onMonthChange={date => {
                 const localizedDate = timeOfDayFromLocalToTimeZone(date, timeZone);
-                const direction = localizedDate < currentMonth ? prevMonthFn : nextMonthFn;
-                console.log('[DEBUG] onMonthChange — navigating to:', monthIdString(localizedDate, timeZone), '| currentMonth:', monthIdString(currentMonth, timeZone), '| direction:', direction === nextMonthFn ? 'next' : 'prev', '| will fetch:', monthIdString(direction(currentMonth, timeZone, 2), timeZone), '| monthlyTimeSlots keys:', Object.keys(monthlyTimeSlots));
-                onMonthClick(direction);
+                // Use localizedDate (not stale currentMonth) to determine the month to pre-fetch.
+                // FieldDateRangePicker holds onto the initial onMonthChange closure, so currentMonth
+                // can be stale (e.g. April) even after setCurrentMonth(May) was called.
+                // localizedDate is the new first-visible month, so localizedDate+1 is the second
+                // visible month that needs to be fetched.
+                const isForward = !(localizedDate < currentMonth);
+                const monthToPreFetch = isForward
+                  ? nextMonthFn(localizedDate, timeZone)
+                  : prevMonthFn(localizedDate, timeZone);
+                fetchMonthData(monthToPreFetch, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+                // Retry if the newly displayed month had a fetch error
+                const newMonthId = monthIdString(localizedDate, timeZone);
+                if (monthlyTimeSlots[newMonthId]?.fetchTimeSlotsError) {
+                  fetchMonthData(localizedDate, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+                }
                 setCurrentMonth(localizedDate);
               }}
               onClose={() => {
