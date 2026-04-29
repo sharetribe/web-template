@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v11.0.2] 2026-04-29
+
 - [fix] User fields: fix a bug with numberConfig validation (min and max values were missing).
   [#840](https://github.com/sharetribe/web-template/pull/840)
 - [fix] Fix a layout bug with InboxSortBy component.
@@ -28,6 +30,8 @@ way to update this template, but currently, we follow a pattern:
   [#836](https://github.com/sharetribe/web-template/pull/836)
 - [add] Add currently available translations for DE, ES, FR.
   [#834](https://github.com/sharetribe/web-template/pull/834)
+
+  [v11.0.2]: https://github.com/sharetribe/web-template/compare/v11.0.1...v11.0.2
 
 ## [v11.0.1] 2026-04-17
 
