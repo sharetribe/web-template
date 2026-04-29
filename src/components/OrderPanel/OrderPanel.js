@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import loadable from '@loadable/component';
 import classNames from 'classnames';
@@ -382,13 +382,16 @@ const OrderPanel = props => {
   const isOrderOpen = !!searchParams.orderOpen;
   const preselectedPriceVariantSlug = searchParams.bookableOption;
 
-  const initialBookingDates =
-    searchParams.startDate && searchParams.endDate && timeZone
-      ? {
-          startDate: parseDateFromISO8601(searchParams.startDate, timeZone),
-          endDate: parseDateFromISO8601(searchParams.endDate, timeZone),
-        }
-      : null;
+  const initialBookingDates = useMemo(
+    () =>
+      searchParams.startDate && searchParams.endDate && timeZone
+        ? {
+            startDate: parseDateFromISO8601(searchParams.startDate, timeZone),
+            endDate: parseDateFromISO8601(searchParams.endDate, timeZone),
+          }
+        : null,
+    [searchParams.startDate, searchParams.endDate, timeZone]
+  );
 
   const seatsEnabled = [AVAILABILITY_MULTIPLE_SEATS].includes(listingTypeConfig?.availabilityType);
 
