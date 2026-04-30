@@ -33,6 +33,7 @@ import { mergeConfig } from './util/configHelpers';
 import { matchPathname } from './util/routes';
 import * as apiUtils from './util/api';
 import * as log from './util/log';
+import { clearReferralDataIfExpired } from './util/sessionStorageHelpers';
 
 // Import relevant global duck files
 import { authInfo } from './ducks/auth.duck';
@@ -144,6 +145,9 @@ if (typeof window !== 'undefined') {
   const googleAnalyticsId = googleAnalyticsIdFromSSR || process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
   const analyticsHandlers = setupAnalyticsHandlers(googleAnalyticsId);
   const store = configureStore({ initialState, sdk, analyticsHandlers });
+
+  // Clear referral data from session storage the expiration time has passed
+  clearReferralDataIfExpired();
 
   require('./util/polyfills');
   render(store, !!window.__PRELOADED_STATE__);

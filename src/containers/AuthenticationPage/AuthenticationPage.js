@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { isEmpty } from '../../util/common';
 import { camelize } from '../../util/string';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
@@ -13,6 +14,11 @@ import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
+import { parse } from '../../util/urlHelpers';
+import {
+  storeReferralDataToSession,
+  filterValidReferralData,
+} from '../../util/sessionStorageHelpers';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
@@ -262,6 +268,15 @@ export const AuthenticationPageComponent = props => {
   const fromState = { state: { ...fromMaybe, ...userTypeMaybe } };
   const show404 = userType && !preselectedUserType;
 
+  const urlReferralParams = parse(location.search);
+
+  // Check if URL contains valid referral params
+  const validReferralParams = filterValidReferralData(urlReferralParams, userTypes);
+  if (!isEmpty(validReferralParams)) {
+    // Store referral params to session storage
+    storeReferralDataToSession(validReferralParams, true);
+  }
+
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
   // We only want to show the email verification dialog in the signup
@@ -386,6 +401,7 @@ export const AuthenticationPageComponent = props => {
                   onSubmit={getHandleSubmitSignup({
                     submitSignup,
                     userFields,
+                    userTypes,
                   })}
                   inProgress={authInProgress}
                   termsAndConditions={termsAndConditions}
@@ -430,6 +446,7 @@ export const AuthenticationPageComponent = props => {
                   authInfo,
                   submitSingupWithIdp,
                   userFields,
+                  userTypes,
                 })}
                 termsAndConditions={termsAndConditions}
                 authInfo={authInfo}
