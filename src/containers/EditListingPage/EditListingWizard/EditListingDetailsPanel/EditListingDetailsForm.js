@@ -295,21 +295,24 @@ const REQUIRED_AMENITIES = [
   { key: 'kitchen', label: 'Kitchen' },
   { key: 'washing-machine', label: 'Washing machine' },
   { key: 'concierge', label: 'Concierge or estate management' },
+  { key: 'hot-water', label: 'Hot water supply' },
+  { key: 'furnished', label: 'Fully furnished' },
 ];
 
 const PREMIUM_AMENITIES = [
-  { key: 'generator', label: 'Backup generator or solar' },
+  { key: 'generator', label: 'Backup generator or power' },
   { key: 'pool', label: 'Swimming pool' },
   { key: 'gym', label: 'Gym / fitness centre' },
   { key: 'rooftop', label: 'Rooftop or outdoor common area' },
   { key: 'balcony', label: 'Private patio or balcony' },
+  { key: 'cleaning', label: 'Weekly cleaning service' },
 ];
 
 const OPTIONAL_AMENITIES = [
-  { key: 'hot-water', label: 'Hot water supply' },
   { key: 'tv', label: 'TV' },
-  { key: 'furnished', label: 'Fully furnished' },
   { key: 'pet-friendly', label: 'Pet-friendly' },
+  { key: 'ac', label: 'Air conditioning' },
+  { key: 'workspace', label: 'Dedicated workspace' },
 ];
 
 const AmenityCheckbox = ({ amenityKey, label, checked, onChange }) => (
@@ -416,6 +419,7 @@ const AmenityGroup = ({
               />
               <label htmlFor={`amenity-${a.key}`} style={{
                 fontSize: '15px',
+                padding: 0,
                 color: '#3d3d3d',
                 cursor: 'pointer',
                 flex: 1,
