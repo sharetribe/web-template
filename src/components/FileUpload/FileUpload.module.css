@@ -1,0 +1,95 @@
+.root {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+
+  border-radius: 4px;
+  border: 1px solid var(--colorGrey100);
+  background: var(--colorWhite);
+}
+
+.error {
+  background: var(--colorFailSubtle);
+  border-color: var(--colorFail);
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+@media (max-width: 549px) {
+  .fileInfoError {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+
+.fileNameDownloadable {
+  display: flex;
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.statusText {
+  flex-shrink: 0;
+  white-space: nowrap;
+  color: var(--colorGrey500);
+}
+
+.error .statusText {
+  color: var(--colorFail);
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--colorGrey600);
+}
+
+.error .removeButton {
+  color: var(--colorFail);
+}
+
+.iconCheck {
+  color: var(--colorSuccess);
+  flex-shrink: 0;
+}
+
+.iconSpinner {
+  color: var(--marketplaceColor);
+  flex-shrink: 0;
+}
+
+.iconError {
+  color: var(--colorFail);
+  flex-shrink: 0;
+}

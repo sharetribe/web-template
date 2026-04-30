@@ -1,0 +1,195 @@
+@import '../../../styles/customMediaQueries.css';
+
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.message,
+.ownMessage {
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+}
+
+.message {
+  display: flex;
+  flex-direction: row;
+  max-width: 433px;
+}
+
+.ownMessage {
+  float: right;
+  max-width: min(433px, 100%);
+}
+
+.avatar {
+  flex-shrink: 0;
+  margin: 0px 12px 0 0;
+
+  @media (--viewportMedium) {
+    margin: 0px 12px 0 0;
+  }
+}
+
+.messageContentWrapper {
+  min-width: 0;
+}
+
+.ownMessageContentWrapper {
+  composes: clearfix from global;
+}
+
+.messageContent,
+.ownMessageContent {
+  composes: textSmall from global;
+
+  /* display: inline-block;
+  margin: 0;
+  padding: 8.5px 14px 8.5px 14px;
+  */
+
+  box-shadow: var(--boxShadow);
+  background-color: var(--colorWhite);
+  border-radius: 8px;
+  display: flex;
+  /* max-width: 420px; */
+  padding: var(--spacing-md, 8px) var(--spacing-lg, 12px);
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--spacing-lg, 12px);
+
+  @media (--viewportMedium) {
+    padding: 8px 14px 8px 14px;
+    margin: 0;
+  }
+}
+
+.messageContent {
+  flex-grow: 1;
+  max-width: min(420px, 100%);
+}
+
+.ownMessageContent {
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  float: right;
+  max-width: min(420px, 100%);
+}
+
+.ownMessageContentLink {
+  color: var(--colorWhite);
+  text-decoration: underline;
+
+  word-break: break-word;
+  hyphens: auto;
+
+  &:hover {
+    text-decoration: none;
+    background-color: var(--marketplaceColorDark);
+  }
+}
+
+.messageDate,
+.ownMessageDate {
+  composes: marketplaceMessageDateFontStyles from global;
+
+  margin: 11px 0 0 0;
+  color: var(--colorGrey600);
+
+  @media (--viewportMedium) {
+    margin: 0 0 0 0;
+  }
+}
+
+.ownMessageDate {
+  text-align: right;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+}
+
+.fileAttachmentsContainer {
+  display: flex;
+  padding: 2px 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.fileAttachment {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  cursor: default;
+
+  /* Reset native button styles when this element is a <button> */
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.fileAttachmentAvailable {
+  cursor: pointer;
+}
+
+.fileAttachmentIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.fileAttachmentStatus {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Icon colors — other-party message (white bubble) */
+.messageContent .fileAttachmentIcon {
+  color: var(--colorGrey500);
+}
+
+.messageContent .fileAttachmentAvailable .fileAttachmentIcon {
+  color: var(--colorGrey600);
+}
+
+/* Icon colors — own message (purple bubble) */
+.ownMessageContent .fileAttachmentIcon {
+  color: var(--colorWhite);
+}
+
+.ownMessageContent .fileAttachmentAvailable .fileAttachmentIcon {
+  color: var(--colorWhite);
+}
+
+.ownMessageContentUnverified {
+  background-color: var(--colorGrey600);
+  color: var(--colorGrey100);
+}
+
+.ownMessageContentUnverified .fileAttachmentAvailable .fileAttachmentIcon {
+  color: var(--colorGrey600);
+}
+
+/* Notes below own message bubble */
+.pendingVerificationNote,
+.securityCheckFailedNote {
+  composes: marketplaceMessageDateFontStyles from global;
+
+  margin: 4px 0 0 0;
+  text-align: right;
+}
+
+.pendingVerificationNote {
+  color: var(--colorGrey600);
+}
+
+.securityCheckFailedNote {
+  color: var(--colorFail);
+}

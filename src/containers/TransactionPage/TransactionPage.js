@@ -18,6 +18,7 @@ import {
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { requireListingImage } from '../../util/configHelpers';
+import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 
 import {
   INQUIRY_PROCESS_NAME,
@@ -75,9 +76,12 @@ import {
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  uploadFile,
+  clearUploadedFiles,
+  selectFileUploads,
+  downloadFile,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
-import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1023;
 
@@ -215,6 +219,34 @@ const getDataValidationResult = (transaction, process) => {
 };
 
 /**
+ * Blocks React Router in-app navigation and browser-level navigation while `when` is true.
+ * Registers history.block() for React Router transitions and a beforeunload listener for
+ * browser-level events (refresh, tab close). Both are cleaned up when `when` becomes false.
+ *
+ * @param {boolean} when - Whether to block navigation
+ * @param {Object} history - React Router history object (injected by withRouter)
+ * @param {string} message - Confirmation message shown in the React Router prompt dialog
+ */
+const useUploadNavigationBlock = (when, history, message) => {
+  useEffect(() => {
+    if (!when) return;
+
+    const unblock = history.block(message);
+
+    const handleBeforeUnload = e => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      unblock();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [when, history, message]);
+};
+
+/**
  * TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
  *
  * @component
@@ -306,8 +338,18 @@ export const TransactionPageComponent = props => {
     nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
+    onUploadFile,
+    fileUploads,
+    onClearUploadedFiles,
+    onDownloadFile,
     ...restOfProps
   } = props;
+
+  const hasUnsentUploads = fileUploads?.length > 0;
+  const blockMessage = intl.formatMessage({
+    id: 'TransactionPage.navigationBlockedBeforeFilesSent',
+  });
+  useUploadNavigationBlock(hasUnsentUploads, history, blockMessage);
 
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
@@ -519,6 +561,8 @@ export const TransactionPageComponent = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
 
+  const allowFiles = config.accessControl.marketplace.fileUploadAndDownloadEnabled;
+
   const showListingImage = requireListingImage(foundListingTypeConfig);
 
   if (isDataAvailable && isProviderRole && !isOwnSale) {
@@ -697,6 +741,11 @@ export const TransactionPageComponent = props => {
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
+      allowFiles={allowFiles}
+      onUploadFile={onUploadFile}
+      fileUploads={fileUploads}
+      onClearUploadedFiles={onClearUploadedFiles}
+      onDownloadFile={onDownloadFile}
       actionButtons={containerId => (
         <ActionButtons
           containerId={containerId}
@@ -727,6 +776,8 @@ export const TransactionPageComponent = props => {
           onOpenReviewModal={onOpenReviewModal}
           onShowOlderMessages={() => onShowMoreMessages(transaction.id, config)}
           fetchMessagesInProgress={fetchMessagesInProgress}
+          allowFiles={allowFiles}
+          onDownloadFile={onDownloadFile}
         />
       }
       transactionFieldsComponent={
@@ -946,6 +997,8 @@ const mapStateToProps = state => {
   const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
   const transaction = transactions.length > 0 ? transactions[0] : null;
 
+  const fileUploads = selectFileUploads(state);
+
   return {
     currentUser,
     fetchTransactionError,
@@ -969,6 +1022,7 @@ const mapStateToProps = state => {
     lineItems, // for OrderPanel
     fetchLineItemsInProgress, // for OrderPanel
     fetchLineItemsError, // for OrderPanel
+    fileUploads,
   };
 };
 
@@ -977,7 +1031,8 @@ const mapDispatchToProps = dispatch => {
     onTransition: (txId, transitionName, params) =>
       dispatch(makeTransition(txId, transitionName, params)),
     onShowMoreMessages: (txId, config) => dispatch(fetchMoreMessages(txId, config)),
-    onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
+    onSendMessage: (txId, message, config, fileIds) =>
+      dispatch(sendMessage(txId, message, config, fileIds)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
       dispatch(manageDisableScrolling(componentId, disableScrolling)),
     onSendReview: (tx, transitionOptions, params, config) =>
@@ -988,6 +1043,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)), // for OrderPanel
     onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
       dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
+    onUploadFile: (file, tempId) => dispatch(uploadFile(file, tempId)),
+    onClearUploadedFiles: tempIds => dispatch(clearUploadedFiles(tempIds)),
+    onDownloadFile: (fileAttachmentId, isOwnFile) =>
+      dispatch(downloadFile(fileAttachmentId, isOwnFile)),
   };
 };
 

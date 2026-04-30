@@ -113,6 +113,9 @@ export class TransactionPanelComponent extends Component {
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.scrollToMessage = this.scrollToMessage.bind(this);
+
+    this.onUploadFile = this.onUploadFile.bind(this);
+    this.onRemoveFile = this.onRemoveFile.bind(this);
   }
 
   componentDidMount() {
@@ -131,16 +134,35 @@ export class TransactionPanelComponent extends Component {
     this.setState({ sendMessageFormFocused: false });
   }
 
+  onUploadFile(file) {
+    if (file) {
+      const tempId = `${Date.now()}-${Math.random()}`;
+
+      this.props.onUploadFile(file, tempId);
+    }
+  }
+
+  onRemoveFile(tempId) {
+    this.props.onClearUploadedFiles([tempId]);
+  }
+
   onMessageSubmit(values, form) {
     const message = values.message ? values.message.trim() : null;
-    const { transactionId, onSendMessage, config } = this.props;
+    const { transactionId, onSendMessage, config, fileUploads, onClearUploadedFiles } = this.props;
 
     if (!message) {
       return;
     }
-    onSendMessage(transactionId, message, config)
+
+    const fileIds = fileUploads.map(f => ({
+      fileId: f.file.id,
+    }));
+
+    // TODO if there are failed or pending file ids, don't send message
+    onSendMessage(transactionId, message, config, fileIds)
       .then(messageId => {
         form.reset();
+        onClearUploadedFiles(fileUploads.map(f => f.tempId));
         this.scrollToMessage(messageId);
       })
       .catch(e => {
@@ -191,6 +213,8 @@ export class TransactionPanelComponent extends Component {
       config,
       hasViewingRights,
       transactionFieldsComponent,
+      allowFiles,
+      onDownloadFile,
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -234,6 +258,7 @@ export class TransactionPanelComponent extends Component {
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
+    const showAttachFiles = showSendMessageForm && allowFiles;
 
     // Only show order panel for users who have listing viewing rights, otherwise
     // show the detail card heading.
@@ -242,6 +267,8 @@ export class TransactionPanelComponent extends Component {
 
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
     const priceVariantName = protectedData?.priceVariantName;
+
+    const { fileUploads } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -351,6 +378,11 @@ export class TransactionPanelComponent extends Component {
                 onFocus={this.onSendMessageFormFocus}
                 onBlur={this.onSendMessageFormBlur}
                 onSubmit={this.onMessageSubmit}
+                showAttachFiles={showAttachFiles}
+                files={fileUploads}
+                onFileUpload={this.onUploadFile}
+                onRemoveFile={this.onRemoveFile}
+                onDownloadFile={onDownloadFile}
               />
             ) : (
               <div className={css.sendingMessageNotAllowed}>
