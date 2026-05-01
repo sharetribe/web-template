@@ -135,8 +135,8 @@ export const listingFields = [
       { option: 'rooftop', label: 'Rooftop or outdoor common area' },
       { option: 'balcony', label: 'Private patio or balcony' },
       { option: 'cleaning', label: 'Weekly cleaning service' },
+      { option: 'tv', label: 'Smart TV' },
       // Optional
-      { option: 'tv', label: 'TV' },
       { option: 'pet-friendly', label: 'Pet-friendly' },
       { option: 'ac', label: 'Air conditioning' },
       { option: 'workspace', label: 'Dedicated workspace' },

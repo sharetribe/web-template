@@ -306,10 +306,10 @@ const PREMIUM_AMENITIES = [
   { key: 'rooftop', label: 'Rooftop or outdoor common area' },
   { key: 'balcony', label: 'Private patio or balcony' },
   { key: 'cleaning', label: 'Weekly cleaning service' },
+  { key: 'tv', label: 'Smart TV' },
 ];
 
 const OPTIONAL_AMENITIES = [
-  { key: 'tv', label: 'TV' },
   { key: 'pet-friendly', label: 'Pet-friendly' },
   { key: 'ac', label: 'Air conditioning' },
   { key: 'workspace', label: 'Dedicated workspace' },
