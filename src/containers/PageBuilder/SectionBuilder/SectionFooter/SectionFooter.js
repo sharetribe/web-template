@@ -113,6 +113,35 @@ const SectionFooter = props => {
       appearance={appearance}
       options={fieldOptions}
     >
+      <div className={css.newsletterSection}>
+        <div className={css.newsletterInner}>
+          <div className={css.newsletterCopy}>
+            <h2 className={css.newsletterTitle}>Never miss a learning opportunity again</h2>
+            <p className={css.newsletterDescription}>
+              Limited edition classes, special guests, and more: everything you need to boost your
+              personal and professional growth. Monthly, in your inbox.
+            </p>
+          </div>
+          <form
+            className={css.newsletterForm}
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+          >
+            <input
+              className={css.newsletterInput}
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              aria-label="Email address"
+            />
+            <button className={css.newsletterButton} type="submit">
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </div>
       <div className={css.footer}>
         <div className={classNames(css.content, getContentCss(numberOfColumns))}>
           <div>
@@ -136,17 +165,17 @@ const SectionFooter = props => {
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
             <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
           </div>
-        
+
         </div>
         <div className={css.copyrightContainer}>
-        <Field data={copyright} className={css.copyright} />
-            {showSocialMediaLinks ? (
-              <div className={css.icons}>
-                <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
-              </div>
-            ) : null}
-          
-          </div>
+          <Field data={copyright} className={css.copyright} />
+          {showSocialMediaLinks ? (
+            <div className={css.icons}>
+              <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
+            </div>
+          ) : null}
+
+        </div>
       </div>
     </SectionContainer>
   );

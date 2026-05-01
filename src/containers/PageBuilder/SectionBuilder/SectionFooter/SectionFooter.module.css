@@ -1,7 +1,123 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .root {
-  border-top: 1px solid var(--colorGrey100);
+
+  /* border-top: 1px solid var(--colorGrey100); */
+  &>div {
+    padding: 0;
+  }
+}
+
+.newsletterSection {
+  background: #CEFDE4;
+}
+
+.newsletterInner {
+  max-width: var(--contentMaxWidthPages);
+  margin: 0 auto;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+
+  @media (--viewportLarge) {
+    padding: 40px 32px;
+    grid-template-columns: minmax(360px, 1fr) auto;
+    align-items: center;
+    gap: 32px;
+  }
+}
+
+.newsletterCopy {
+  max-width: 640px;
+}
+
+.newsletterTitle {
+  margin: 0;
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: 1;
+  letter-spacing: 0%;
+
+  color: #0a0d12;
+
+
+}
+
+.newsletterDescription {
+  margin: 8px 0 0 0;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 1;
+  letter-spacing: 0%;
+
+  color: #475467;
+
+  @media (--viewportLarge) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+.newsletterForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: center;
+
+  @media (--viewportLarge) {
+    grid-template-columns: 320px auto;
+    gap: 12px;
+    justify-content: end;
+  }
+}
+
+.newsletterInput {
+  height: 44px;
+  width: 100%;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-family: Nunito Sans;
+  font-size: 14px;
+  line-height: 20px;
+  color: #101828;
+  outline: none;
+
+  &::placeholder {
+    color: #667085;
+  }
+
+  &:focus {
+    border-color: #98a2b3;
+  }
+}
+
+.newsletterButton {
+  height: 44px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid #0f6b3a;
+  background: #008057;
+  color: #ffffff;
+  font-family: Nunito Sans;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: #0c5a31;
+    border-color: #0c5a31;
+  }
 }
 
 .footer {
@@ -10,7 +126,7 @@
   grid-template-columns: repeat(1, 1fr);
   gap: 32px;
   margin: 0 auto;
-  padding: 24px 32px;
+  padding: 40px 32px 20px;
 }
 
 .footer ul {
@@ -107,7 +223,7 @@
   }
 }
 
-.copyrightContainer{
+.copyrightContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
