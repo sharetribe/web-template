@@ -131,17 +131,22 @@ const SectionFooter = props => {
             <div className={css.sloganDesktop}>
               <Field data={slogan} className={css.slogan} />
             </div>
+
+          </div>
+          <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
+            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
+          </div>
+        
+        </div>
+        <div className={css.copyrightContainer}>
+        <Field data={copyright} className={css.copyright} />
             {showSocialMediaLinks ? (
               <div className={css.icons}>
                 <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
               </div>
             ) : null}
-            <Field data={copyright} className={css.copyright} />
+          
           </div>
-          <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
-          </div>
-        </div>
       </div>
     </SectionContainer>
   );
