@@ -13,6 +13,32 @@
 .defaultUserFields {
 }
 
+.createAccountTitle{
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 32px;
+  leading-trim: NONE;
+  line-height: 44px;
+  letter-spacing: -2%;
+  color: #101828;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.createAccountDescription{
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: spacing/3;
+letter-spacing: 0%;
+color: #414651;
+margin-bottom: 24px;
+padding-bottom: 0;
+}
+
 .name {
   display: flex;
   justify-content: space-between;
@@ -33,11 +59,11 @@
 }
 
 .firstNameRoot {
-  width: calc(34% - 9px);
+  width: calc(50% - 9px);
 }
 
 .lastNameRoot {
-  width: calc(66% - 9px);
+  width: calc(50% - 9px);
 }
 
 .password {

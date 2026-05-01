@@ -115,6 +115,10 @@ const SignupFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
+          <h2 className={css.createAccountTitle}>Create your account</h2>
+          <p className={css.createAccountDescription}>
+            Creating an account on Class26 is completely free, and gives you access to a curated selection of premium courses you can’t find elsewhere.
+          </p>
           <FieldSelectUserType
             name="userType"
             userTypes={userTypes}
