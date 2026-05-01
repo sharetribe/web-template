@@ -85,6 +85,41 @@ const SectionColumns = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
 
+  if(sectionId == "landing-hero"){
+    return (
+      <SectionContainer
+      id={sectionId}
+      className={className}
+      rootClassName={rootClassName}
+      appearance={appearance}
+      options={fieldOptions}
+    >
+      {hasBlocks ? (
+        <div
+          className={classNames(defaultClasses.blockContainer, getColumnCSS(numColumns), {
+            [css.noSidePaddings]: isInsideContainer,
+          })}
+        >
+          <BlockBuilder
+            ctaButtonClass={defaultClasses.ctaButton}
+            blocks={blocks}
+            sectionId={sectionId}
+            responsiveImageSizes={getResponsiveImageSizes(numColumns)}
+            options={options}
+            />
+            {hasHeaderFields ? (
+              <header className={defaultClasses.sectionDetails}>
+                <Field data={title} className={defaultClasses.title} options={fieldOptions} />
+                <Field data={description} className={defaultClasses.description} options={fieldOptions} />
+                <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+              </header>
+            ) : null}
+        </div>
+      ) : null}
+    </SectionContainer>
+    )
+  }
+
   return (
     <SectionContainer
       id={sectionId}
