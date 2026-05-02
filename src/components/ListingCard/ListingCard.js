@@ -29,6 +29,10 @@ import css from './ListingCard.module.css';
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
+// Default card: must match `landingPage-css` / design (portrait 3:4, text + pills on image)
+const CARD_ASPECT_WIDTH = 3;
+const CARD_ASPECT_HEIGHT = 4;
+
 export const LISTING_CARD_VARIANT_DEFAULT = 'default';
 export const LISTING_CARD_VARIANT_COURSE = 'course';
 
@@ -268,6 +272,7 @@ const ListingCardImage = props => {
     variantPrefix,
     aspectRatioClassName,
     lazyLoadImage,
+    children,
   } = props;
 
   const firstImage = listing?.images?.[0] || null;
@@ -292,6 +297,8 @@ const ListingCardImage = props => {
         variants={variants}
         sizes={renderSizes}
       />
+      <div className={css.overlayScrim} />
+      {children}
     </AspectRatioWrapper>
   );
 };
@@ -346,6 +353,14 @@ export const ListingCard = props => {
 
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.layout.listingImage;
 
+  const cardAspectWidth = CARD_ASPECT_WIDTH;
+  const cardAspectHeight = CARD_ASPECT_HEIGHT;
+
+  const pillsFromPublicData =
+    publicData?.cardPills || publicData?.pills || publicData?.tags || publicData?.keywords;
+  const pillsArray = Array.isArray(pillsFromPublicData) ? pillsFromPublicData : [];
+  const pills = [listingType, ...pillsArray].filter(Boolean).slice(0, 3);
+
   const setActivePropsMaybe = setActiveListing
     ? {
       onMouseEnter: () => setActiveListing(listing?.id),
@@ -399,37 +414,40 @@ export const ListingCard = props => {
           title={titlePlain}
           listing={listing}
           setActivePropsMaybe={setActivePropsMaybe}
-          aspectWidth={aspectWidth}
-          aspectHeight={aspectHeight}
+          aspectWidth={cardAspectWidth}
+          aspectHeight={cardAspectHeight}
           variantPrefix={variantPrefix}
           aspectRatioClassName={aspectRatioClassName}
           lazyLoadImage={lazyLoadImage}
-        />
+        >
+          <div className={css.info}>
+            <div className={css.mainInfo}>
+              <div className={classNames(css.title, { [css.lightText]: darkMode })}>{titleFormatted}</div>
+              {showAuthorInfo ? (
+                <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>{authorName}</div>
+              ) : null}
+            </div>
+            {pills.length > 0 ? (
+              <div className={css.pills}>
+                {pills.map(p => (
+                  <div className={css.pill} key={String(p)}>
+                    {String(p)}
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </ListingCardImage>
       ) : (
         <ListingCardThumbnail
           style={cardStyle}
           listingTitle={title}
           className={aspectRatioClassName}
-          width={aspectWidth}
-          height={aspectHeight}
+          width={cardAspectWidth}
+          height={cardAspectHeight}
           setActivePropsMaybe={setActivePropsMaybe}
         />
       )}
-      <div className={css.info}>
-        {showPrice ? (
-          <div className={css.price} title={priceTooltip}>
-            {priceMessage}
-          </div>
-        ) : null}
-        <div className={css.mainInfo}>
-          {showListingImage && (
-            <div className={classNames(css.title, { [css.lightText]: darkMode })}>{titleFormatted}</div>
-          )}
-          {showAuthorInfo ? (
-            <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>{authorName}</div>
-          ) : null}
-        </div>
-      </div>
     </NamedLink>
   );
 };

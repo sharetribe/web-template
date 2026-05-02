@@ -45,10 +45,8 @@ const getResponsiveImageSizes = numColumns => {
   return config ? config.responsiveImageSizes : COLUMN_CONFIG[3].responsiveImageSizes;
 };
 
-const parseAspectRatio = aspectRatio => {
-  const [width, height] = aspectRatio.split('/').map(Number);
-  return width / height;
-};
+// Must match ListingCard default portrait aspect ratio (CARD_ASPECT_WIDTH / CARD_ASPECT_HEIGHT on landingPage-css).
+const LISTING_CARD_ASPECT_RATIO = 3 / 4;
 
 const isMobileViewport = () => {
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
@@ -89,34 +87,20 @@ const calculateCarouselHeight = (
     return noListingsFoundHeight;
   }
 
-  const thumbnailAspectRatio = config.layout.listingImage.aspectRatio;
   const paddingHorizontal = 2 * 32; // 2x32px
-  const titleHeightSingleLine = 16;
-  const cardInfoPadding = 14 + 2; // padding-top + padding-bottom
-  const priceHeight = 16 + 4; // height + margin-bottom
-  const authorInfoHeight = 24;
   const contentMaxWidthPages = 1120;
   const containerPaddingTop = 32;
   const containerPaddingBottom = 24;
-
-  const priceHeightMobile = 18 + 4;
-  const authorInfoHeightMobile = 18 + 4 + 4;
-  const titleHeightSingleLineMobile = 18;
-  const cardInfoHeightMobile =
-    priceHeightMobile + authorInfoHeightMobile + titleHeightSingleLineMobile + cardInfoPadding;
-
-  const parsedAspectRatio = parseAspectRatio(thumbnailAspectRatio);
 
   const gutters = isMobileBreakpoint ? 0 : numColumns === 3 ? 64 : 96;
 
   const mainColumnWidth = Math.min(contentMaxWidthPages, carouselWidth);
   const cardWidth =
     (mainColumnWidth - paddingHorizontal - gutters) / (isMobileBreakpoint ? 1 : numColumns);
-  const cardImageHeight = cardWidth / parsedAspectRatio;
-  const cardInfoHeight = priceHeight + titleHeightSingleLine + authorInfoHeight + cardInfoPadding;
+  const cardImageHeight = cardWidth / LISTING_CARD_ASPECT_RATIO;
 
-  const totalCardHeight =
-    cardImageHeight + (isMobileBreakpoint ? cardInfoHeightMobile : cardInfoHeight);
+  // ListingCard default variant renders info as an overlay on the image (landingPage-css).
+  const totalCardHeight = cardImageHeight;
   const totalWithPaddings = totalCardHeight + containerPaddingTop + containerPaddingBottom;
 
   return Math.ceil(totalWithPaddings);
