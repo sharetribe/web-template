@@ -383,6 +383,9 @@ export const AuthenticationPageComponent = props => {
                     className={css.loginForm}
                     onSubmit={submitLogin}
                     inProgress={authInProgress}
+                    signupRouteName={signupRouteName}
+                    signupRouteParams={userTypeMaybe}
+                    authLinkTo={fromState}
                   />
                 ) : (
                   <SignupForm
@@ -396,6 +399,7 @@ export const AuthenticationPageComponent = props => {
                     preselectedUserType={preselectedUserType}
                     userTypes={userTypes}
                     userFields={userFields}
+                    authLinkTo={fromState}
                   />
                 )}
 

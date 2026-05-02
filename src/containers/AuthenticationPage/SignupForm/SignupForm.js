@@ -8,7 +8,13 @@ import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
-import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  CustomExtendedDataField,
+  NamedLink,
+} from '../../../components';
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
@@ -49,6 +55,7 @@ const SignupFormComponent = props => (
         userTypes,
         userFields,
         values,
+        authLinkTo,
       } = formRenderProps;
 
       const { userType } = values || {};
@@ -113,8 +120,15 @@ const SignupFormComponent = props => (
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress || isPasswordUsedMoreThanOnce(values);
 
+      const logInLink = (
+        <NamedLink name="LoginPage" className={css.switchToLoginLink} to={authLinkTo}>
+          <FormattedMessage id="AuthenticationPage.loginLinkText" />
+        </NamedLink>
+      );
+
       return (
         <Form className={classes} onSubmit={handleSubmit}>
+      
           <h2 className={css.createAccountTitle}>Create your account</h2>
           <p className={css.createAccountDescription}>
             Creating an account on Class26 is completely free, and gives you access to a curated selection of premium courses you can’t find elsewhere.
@@ -230,6 +244,9 @@ const SignupFormComponent = props => (
               <FormattedMessage id="SignupForm.signUp" />
             </PrimaryButton>
           </div>
+          <p className={css.switchToLogin}>
+            <FormattedMessage id="SignupForm.logInRedirectInfo" values={{ logInLink }} />
+          </p>
         </Form>
       );
     }}
@@ -249,11 +266,13 @@ const SignupFormComponent = props => (
  * @param {string} props.preselectedUserType - The preselected user type
  * @param {propTypes.userTypes} props.userTypes - The user types
  * @param {propTypes.listingFields} props.userFields - The user fields
+ * @param {Object} props.authLinkTo - History `to` object (e.g. state) preserved when switching auth views
  * @returns {JSX.Element}
  */
 const SignupForm = props => {
   const intl = useIntl();
-  return <SignupFormComponent {...props} intl={intl} />;
+  const { authLinkTo = {}, ...rest } = props;
+  return <SignupFormComponent {...rest} intl={intl} authLinkTo={authLinkTo} />;
 };
 
 export default SignupForm;

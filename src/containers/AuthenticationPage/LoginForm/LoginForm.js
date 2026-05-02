@@ -22,6 +22,9 @@ const LoginFormComponent = props => (
         invalid,
         values,
         errors,
+        signupRouteName,
+        signupRouteParams,
+        authLinkTo,
       } = fieldRenderProps;
 
       // email
@@ -69,6 +72,17 @@ const LoginFormComponent = props => (
         </NamedLink>
       );
 
+      const signUpLink = (
+        <NamedLink
+          name={signupRouteName}
+          params={signupRouteParams}
+          className={css.recoveryLink}
+          to={authLinkTo}
+        >
+          <FormattedMessage id="AuthenticationPage.signupLinkText" />
+        </NamedLink>
+      );
+
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <div>
@@ -93,6 +107,11 @@ const LoginFormComponent = props => (
             />
           </div>
           <div className={css.bottomWrapper}>
+            <p className={css.bottomWrapperText}>
+              <span className={css.recoveryLinkInfo}>
+                <FormattedMessage id="LoginForm.signUpRedirectInfo" values={{ signUpLink }} />
+              </span>
+            </p>
             <p className={css.bottomWrapperText}>
               <span className={css.recoveryLinkInfo}>
                 <FormattedMessage
@@ -120,11 +139,28 @@ const LoginFormComponent = props => (
  * @param {string} props.className - The class that extends the root class
  * @param {string} props.formId - The form id
  * @param {boolean} props.inProgress - Whether the form is in progress
+ * @param {string} props.signupRouteName - Named route for signup (e.g. SignupPage or SignupForUserTypePage)
+ * @param {Object} props.signupRouteParams - Path params for the signup route
+ * @param {Object} props.authLinkTo - History `to` object (e.g. state) preserved when switching auth views
  * @returns {JSX.Element}
  */
 const LoginForm = props => {
   const intl = useIntl();
-  return <LoginFormComponent {...props} intl={intl} />;
+  const {
+    signupRouteName = 'SignupPage',
+    signupRouteParams = {},
+    authLinkTo = {},
+    ...rest
+  } = props;
+  return (
+    <LoginFormComponent
+      {...rest}
+      intl={intl}
+      signupRouteName={signupRouteName}
+      signupRouteParams={signupRouteParams}
+      authLinkTo={authLinkTo}
+    />
+  );
 };
 
 export default LoginForm;
