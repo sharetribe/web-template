@@ -238,7 +238,7 @@ export class SearchPageComponent extends Component {
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
                     intl={intl}
                     liveEdit
-                    showAsPopup={false}
+                    showAsPopup={true}
                     isDesktop
                   />
                 );
