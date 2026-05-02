@@ -45,7 +45,7 @@ padding-bottom: 0;
   margin-top: 24px;
 
   @media (--viewportMedium) {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 }
 
@@ -54,7 +54,7 @@ padding-bottom: 0;
   margin-top: 24px;
 
   @media (--viewportMedium) {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 }
 
@@ -68,6 +68,7 @@ padding-bottom: 0;
 
 .password {
   composes: marketplaceModalPasswordMargins from global;
+  margin-top: 24px;
 }
 
 .bottomWrapper {
