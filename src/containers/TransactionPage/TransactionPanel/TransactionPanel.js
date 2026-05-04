@@ -98,6 +98,9 @@ const allowShowingExtraInfo = (showExtraInfo, transactionPartyInfo) => {
  * @param {React.ReactNode} props.orderPanel - The order panel
  * @param {object} props.config - The config
  * @param {intlShape} props.intl - The intl
+ * @param {boolean} props.allowFiles - Whether file uploads and downloads are allowed at the marketplace level
+ * @param {boolean} props.listingTypeHasFileAttachments - Whether the listing type has file attachments enabled
+ * @param {Function} props.onDownloadFile - The download file handler
  * @returns {JSX.Element} The TransactionPanel component
  */
 export class TransactionPanelComponent extends Component {
@@ -149,16 +152,21 @@ export class TransactionPanelComponent extends Component {
   onMessageSubmit(values, form) {
     const message = values.message ? values.message.trim() : null;
     const { transactionId, onSendMessage, config, fileUploads, onClearUploadedFiles } = this.props;
+    const { allowFiles } = this.props;
 
     if (!message) {
       return;
     }
 
-    const fileIds = fileUploads.map(f => ({
-      fileId: f.file.id,
-    }));
+    // By default, the SendMessageForm submit button is disabled if
+    // any files are still uploading or have an error. If you make changes to that
+    // logic, adjust this logic to filter out pending or failed uploads.
+    const fileIds = allowFiles
+      ? fileUploads.map(f => ({
+          fileId: f.file.id,
+        }))
+      : null;
 
-    // TODO if there are failed or pending file ids, don't send message
     onSendMessage(transactionId, message, config, fileIds)
       .then(messageId => {
         form.reset();
@@ -214,6 +222,7 @@ export class TransactionPanelComponent extends Component {
       hasViewingRights,
       transactionFieldsComponent,
       allowFiles,
+      listingTypeHasFileAttachments,
       onDownloadFile,
     } = this.props;
 
@@ -258,7 +267,7 @@ export class TransactionPanelComponent extends Component {
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
-    const showAttachFiles = showSendMessageForm && allowFiles;
+    const showAttachFiles = showSendMessageForm && listingTypeHasFileAttachments && allowFiles;
 
     // Only show order panel for users who have listing viewing rights, otherwise
     // show the detail card heading.
@@ -379,6 +388,8 @@ export class TransactionPanelComponent extends Component {
                 onBlur={this.onSendMessageFormBlur}
                 onSubmit={this.onMessageSubmit}
                 showAttachFiles={showAttachFiles}
+                showDisabledFilesError={listingTypeHasFileAttachments && !allowFiles}
+                marketplaceName={config.marketplaceName}
                 files={fileUploads}
                 onFileUpload={this.onUploadFile}
                 onRemoveFile={this.onRemoveFile}

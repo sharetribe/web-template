@@ -250,7 +250,7 @@ describe('ActivityFeed file display and download', () => {
     expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Message.downloadFile' })).toBeInTheDocument();
   });
-  it('own message with one attached file renders no file links when files are not allowed', () => {
+  it('own message with one attached file renders an error instead of file links when files are not allowed', () => {
     const customer = createUser('user1');
     const provider = createUser('user2');
     const listing = createListing('listing');
@@ -287,6 +287,7 @@ describe('ActivityFeed file display and download', () => {
     expect(screen.queryByText('invoice')).not.toBeInTheDocument();
     expect(screen.queryByText('.pdf')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(screen.getByText('TransactionPage.messageFilesDisabled')).toBeInTheDocument();
   });
 
   it('own message with no publicFileAttachments array renders no file links', () => {

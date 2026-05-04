@@ -68,6 +68,8 @@ const IconAttachFile = () => {
  * @param {string} props.formId - The form id
  * @param {boolean} props.inProgress - Whether the form is in progress
  * @param {boolean} props.showAttachFiles - Whether the attach files link is shown
+ * @param {boolean} props.showDisabledFilesError - Whether the 'files disabled' error is shown
+ * @param {string} props.marketplaceName - The marketplace name used in the 'files disabled' error message
  * @param {string} props.messagePlaceholder - The message placeholder
  * @param {Function} props.onSubmit - The on submit function
  * @param {Function} props.onFocus - The on focus function
@@ -119,10 +121,12 @@ class SendMessageFormComponent extends Component {
             form: formApi,
             formId,
             showAttachFiles,
+            showDisabledFilesError,
             files,
             onFileUpload,
             onRemoveFile,
             onDownloadFile,
+            marketplaceName,
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
@@ -134,8 +138,12 @@ class SendMessageFormComponent extends Component {
 
           const submitInProgress = inProgress;
           const submitDisabled =
-            invalid || submitInProgress || !hasMessage || isAnyFileUploading || hasAnyFileErrors;
+            invalid ||
+            submitInProgress ||
+            !hasMessage ||
+            (showAttachFiles && (isAnyFileUploading || hasAnyFileErrors));
           const showFileLink = showAttachFiles && (!files || files?.length < MAX_FILE_UPLOAD_COUNT);
+          const showUploads = showAttachFiles && files?.length > 0;
           const addFileLabel = (
             <>
               <IconAttachFile />
@@ -154,7 +162,7 @@ class SendMessageFormComponent extends Component {
                 onFocus={this.handleFocus}
                 onBlur={this.handleBlur}
               />
-              {files?.length > 0 ? (
+              {showUploads ? (
                 <div className={css.files}>
                   {files.map(f => (
                     <FileUpload
@@ -171,6 +179,13 @@ class SendMessageFormComponent extends Component {
                   {sendMessageError ? (
                     <p className={css.error}>
                       <FormattedMessage id="SendMessageForm.sendFailed" />
+                    </p>
+                  ) : showDisabledFilesError ? (
+                    <p className={css.error}>
+                      <FormattedMessage
+                        id="TransactionPage.messageFilesDisabled"
+                        values={{ marketplaceName }}
+                      />
                     </p>
                   ) : null}
                 </div>

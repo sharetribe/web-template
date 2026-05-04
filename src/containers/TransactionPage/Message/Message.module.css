@@ -193,3 +193,7 @@
 .securityCheckFailedNote {
   color: var(--colorFail);
 }
+
+.fileAttachmentError {
+  color: var(--colorFail);
+}

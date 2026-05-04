@@ -957,6 +957,11 @@ const initialState = {
     // tempId,
     // }
   },
+  // This is configured by default in Access control. If a marketplace
+  // operator disables file uploads when a user is uploading a file,
+  // store the information in state and use it to view the necessary information
+  // if the configuration still has old access details.
+  fileUploadsDisabled: false,
   fileDownloads: {
     // [fileId.uuid]: { inProgress: bool, error: null | storable-error }
   },
@@ -1129,13 +1134,20 @@ const transactionPageSlice = createSlice({
       .addCase(uploadFileThunk.rejected, (state, action) => {
         const { tempId, error } = action.payload;
         const { file } = action.meta.arg;
-        state.fileUploads[tempId] = {
-          uploadInProgress: false,
-          error,
-          file: null,
-          sourceFile: file,
-          tempId,
-        };
+        const isFileUploadDisabledError =
+          error.status === 403 && error.apiErrors.some(ae => ae.code === 'file-upload-disabled');
+        if (isFileUploadDisabledError) {
+          state.fileUploadsDisabled = true;
+          state.fileUploads = {};
+        } else {
+          state.fileUploads[tempId] = {
+            uploadInProgress: false,
+            error,
+            file: null,
+            sourceFile: file,
+            tempId,
+          };
+        }
       })
       // pollForFileVerification cases
       .addCase(pollForFileVerificationThunk.pending, (state, action) => {

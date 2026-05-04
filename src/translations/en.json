@@ -1411,6 +1411,7 @@
   "TransactionPage.listingTitleMobile": "{listingLink}",
   "TransactionPage.loadingOrderData": "Loading order data.",
   "TransactionPage.loadingSaleData": "Loading sale data.",
+  "TransactionPage.messageFilesDisabled": "{marketplaceName} has temporarily disabled file uploads and downloads. Contact support for more information.",
   "TransactionPage.messageSenderBanned": "This message is hidden for safety reasons.",
   "TransactionPage.navigationBlockedBeforeFilesSent": "You have unsent files. If you leave now, your uploads will be lost.",
   "TransactionPage.schemaTitle": "Sale details: {title} | {h1}",

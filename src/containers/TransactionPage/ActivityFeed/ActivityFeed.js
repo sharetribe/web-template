@@ -259,6 +259,7 @@ export const ActivityFeed = props => {
         intl={intl}
         allowFiles={allowFiles}
         downloadFile={onDownloadFile}
+        marketplaceName={config.marketplaceName}
       />
     ) : (
       <Message
@@ -268,6 +269,7 @@ export const ActivityFeed = props => {
         intl={intl}
         allowFiles={allowFiles}
         downloadFile={onDownloadFile}
+        marketplaceName={config.marketplaceName}
       />
     );
 

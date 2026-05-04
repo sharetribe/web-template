@@ -88,7 +88,7 @@ const validAccessControl = accessControlConfig => {
   const marketplace = accessControl?.marketplace || {};
   return {
     ...accessControl,
-    marketplace: { private: false, fileUploadAndDownloadEnabled: false, ...marketplace },
+    marketplace: { private: false, fileUploadAndDownloadDisabled: false, ...marketplace },
   };
 };
 
@@ -1052,7 +1052,7 @@ const validListingTypes = listingTypes => {
           },
           ...validTransactionFieldsMaybe,
           ...priceVariationTypeMaybe,
-          // e.g. stockType, availabilityType,...
+          // e.g. stockType, availabilityType, messagingOptions...
           ...restOfListingType,
         },
       ];

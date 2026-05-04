@@ -345,14 +345,9 @@ export const TransactionPageComponent = props => {
     fileUploads,
     onClearUploadedFiles,
     onDownloadFile,
+    fileUploadsDisabled,
     ...restOfProps
   } = props;
-
-  const hasUnsentUploads = fileUploads?.length > 0;
-  const blockMessage = intl.formatMessage({
-    id: 'TransactionPage.navigationBlockedBeforeFilesSent',
-  });
-  useUploadNavigationBlock(hasUnsentUploads, history, blockMessage);
 
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
@@ -564,7 +559,20 @@ export const TransactionPageComponent = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
 
-  const allowFiles = config.accessControl.marketplace.fileUploadAndDownloadEnabled;
+  // - Access control determines whether file uploads and downloads are allowed
+  //   across the marketplace. If an operator disables files while the user is on the page,
+  //   an API call error might also set file uploads to disabled in state.
+  // - Listing type config determines whether file uploads are enabled for transactions
+  //   of the specified listing type.
+  const allowFiles =
+    !config.accessControl.marketplace.fileUploadAndDownloadDisabled && !fileUploadsDisabled;
+  const listingTypeHasFileAttachments = foundListingTypeConfig?.messagingOptions?.fileAttachments;
+
+  const hasUnsentUploads = fileUploads?.length > 0 && allowFiles;
+  const blockMessage = intl.formatMessage({
+    id: 'TransactionPage.navigationBlockedBeforeFilesSent',
+  });
+  useUploadNavigationBlock(hasUnsentUploads, history, blockMessage);
 
   const showListingImage = requireListingImage(foundListingTypeConfig);
 
@@ -745,6 +753,7 @@ export const TransactionPageComponent = props => {
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
       allowFiles={allowFiles}
+      listingTypeHasFileAttachments={listingTypeHasFileAttachments}
       onUploadFile={onUploadFile}
       fileUploads={fileUploads}
       onClearUploadedFiles={onClearUploadedFiles}
@@ -994,6 +1003,7 @@ const mapStateToProps = state => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    fileUploadsDisabled,
   } = state.TransactionPage;
   const { currentUser } = state.user;
 
@@ -1026,6 +1036,7 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress, // for OrderPanel
     fetchLineItemsError, // for OrderPanel
     fileUploads,
+    fileUploadsDisabled,
   };
 };
 

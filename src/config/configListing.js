@@ -277,6 +277,9 @@ export const listingFields = [
  *                        - schema specific attributes:
  *                          - numberConfig (object, for schemaType: 'long'): { minimum: number, maximum: number }
  *                          - enumOptions (array, for schemaType: 'enum', 'multi-enum'): [{ label: string, option: string }]
+ * - messagingOptions     Options for the messaging experience
+ *  - fileAttachments:    - if set to true, uploading file attachments to messages is enabled. Marketplace level access control
+ *                          configuration may still disable uploading and downloading files, even if enabled in the listing type.
  */
 
 export const listingTypes = [
@@ -370,6 +373,7 @@ export const listingTypes = [
   //       schemaType: 'multi-enum',
   //     },
   //   ],
+  //   messagingOptions	{ fileAttachments: false }
   // },
   // {
   //   listingType: 'nightly-booking',
