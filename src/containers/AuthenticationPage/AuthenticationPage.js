@@ -517,6 +517,8 @@ const BlankPage = props => {
 export const AuthenticationPageComponent = props => {
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [tosRead, setTosRead] = useState(false);
+  const [tosAccepted, setTosAccepted] = useState(false);
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
   const [authError, setAuthError] = useState(getAuthErrorFromCookies());
   const [mounted, setMounted] = useState(false);
@@ -688,6 +690,12 @@ export const AuthenticationPageComponent = props => {
                 <TermsAndConditions
                   onOpenTermsOfService={() => setTosModalOpen(true)}
                   onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+                  tosAccepted={tosAccepted}
+                  onTermsUnchecked={() => {
+                    setTosAccepted(false);
+                    setTosRead(false);
+                    setTosModalOpen(true);
+                  }}
                   intl={intl}
                 />
               }
@@ -698,19 +706,88 @@ export const AuthenticationPageComponent = props => {
       <Modal
         id="AuthenticationPage.tos"
         isOpen={tosModalOpen}
-        onClose={() => setTosModalOpen(false)}
+        onClose={() => { setTosModalOpen(false); setTosRead(false); }}
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
         focusElementId={'terms-accepted.tos-and-privacy'}
       >
-        <div className={css.termsWrapper} role="complementary">
-          <TermsOfServiceContent
-            inProgress={pageAssetsFetchInProgress}
-            error={pageAssetsFetchError}
-            data={pageAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
-            featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
-            isOpen={tosModalOpen}
-          />
+        <div
+          className={css.termsWrapper}
+          role="complementary"
+          style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 160px)' }}
+        >
+          {!tosRead && (
+            <p style={{ fontSize: 13, color: '#555', fontWeight: 500, marginBottom: 8, flexShrink: 0 }}>
+              ↓ Read to the bottom to accept
+            </p>
+          )}
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'scroll',
+              border: '1px solid #e0e0e0',
+              borderRadius: 4,
+              padding: '0 16px',
+            }}
+            onScroll={e => {
+              if (tosRead) return;
+              const el = e.target;
+              const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
+              if (atBottom) setTosRead(true);
+            }}
+          >
+            <TermsOfServiceContent
+              inProgress={pageAssetsFetchInProgress}
+              error={pageAssetsFetchError}
+              data={pageAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
+              featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
+              isOpen={tosModalOpen}
+            />
+          </div>
+          <div style={{ flexShrink: 0, marginTop: 16, paddingTop: 12, borderTop: '1px solid #e0e0e0' }}>
+            <label
+              htmlFor="tos-modal-checkbox"
+              title={!tosRead ? 'Scroll agreement to the bottom to accept' : undefined}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 8,
+                cursor: tosRead ? 'pointer' : 'not-allowed',
+                opacity: tosRead ? 1 : 0.6,
+                pointerEvents: !tosRead ? 'none' : undefined,
+              }}
+            >
+              <input
+                id="tos-modal-checkbox"
+                type="checkbox"
+                checked={false}
+                disabled={!tosRead}
+                onChange={e => {
+                  if (e.target.checked) {
+                    setTosAccepted(true);
+                    setTosModalOpen(false);
+                    setTosRead(false);
+                  }
+                }}
+                style={{
+                  marginTop: 3,
+                  cursor: tosRead ? 'pointer' : 'not-allowed',
+                  flexShrink: 0,
+                  width: 16,
+                  height: 16,
+                  accentColor: '#5c3ebc',
+                  outline: !tosRead ? '1.5px solid #888' : 'none',
+                }}
+              />
+              <span style={{ fontSize: 14, color: tosRead ? '#333' : '#555', lineHeight: 1.5 }}>
+                {intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsAcceptText' }, {
+                  termsLink: intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsTermsLinkText' }),
+                  privacyLink: intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsPrivacyLinkText' }),
+                })}
+              </span>
+            </label>
+          </div>
         </div>
       </Modal>
       <Modal
