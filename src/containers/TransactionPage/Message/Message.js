@@ -121,15 +121,33 @@ const FileAttachment = props => {
   return null;
 };
 
+const FilesDisabledError = ({ marketplaceName }) => (
+  <div className={css.fileAttachmentError}>
+    <FormattedMessage id="TransactionPage.messageFilesDisabled" values={{ marketplaceName }} />
+  </div>
+);
 /**
  * @component
  * @param {Object} props - The props
  * @param {propTypes.message} props.message - The message
  * @param {string} props.formattedDate - The formatted date
+ * @param {Object} props.transaction - The transaction
+ * @param {Object} props.intl - The intl object
+ * @param {boolean} props.allowFiles - Whether file downloads are allowed at the marketplace level
+ * @param {Function} props.downloadFile - The download file handler
+ * @param {string} props.marketplaceName - The marketplace name used in the disabled-files error
  * @returns {JSX.Element} The Message component
  */
 export const Message = props => {
-  const { message, formattedDate, transaction, intl, allowFiles, downloadFile } = props;
+  const {
+    message,
+    formattedDate,
+    transaction,
+    intl,
+    allowFiles,
+    downloadFile,
+    marketplaceName,
+  } = props;
 
   const content = getMessageContent(message, transaction, intl);
 
@@ -150,16 +168,18 @@ export const Message = props => {
           {content}
           {publicFileAttachments.length > 0 ? (
             <div className={css.fileAttachmentsContainer}>
-              {allowFiles
-                ? publicFileAttachments.map(f => (
-                    <FileAttachment
-                      fileAttachment={f}
-                      key={f.id.uuid}
-                      downloadFile={downloadFile}
-                      intl={intl}
-                    />
-                  ))
-                : null}
+              {allowFiles ? (
+                publicFileAttachments.map(f => (
+                  <FileAttachment
+                    fileAttachment={f}
+                    key={f.id.uuid}
+                    downloadFile={downloadFile}
+                    intl={intl}
+                  />
+                ))
+              ) : (
+                <FilesDisabledError marketplaceName={marketplaceName} />
+              )}
             </div>
           ) : null}
         </div>
@@ -174,10 +194,23 @@ export const Message = props => {
  * @param {Object} props - The props
  * @param {propTypes.message} props.message - The message
  * @param {string} props.formattedDate - The formatted date
+ * @param {Object} props.transaction - The transaction
+ * @param {Object} props.intl - The intl object
+ * @param {boolean} props.allowFiles - Whether file downloads are allowed at the marketplace level
+ * @param {Function} props.downloadFile - The download file handler
+ * @param {string} props.marketplaceName - The marketplace name used in the disabled-files error
  * @returns {JSX.Element} The OwnMessage component
  */
 export const OwnMessage = props => {
-  const { message, formattedDate, transaction, intl, allowFiles, downloadFile } = props;
+  const {
+    message,
+    formattedDate,
+    transaction,
+    intl,
+    allowFiles,
+    downloadFile,
+    marketplaceName,
+  } = props;
 
   const hasPendingFiles = messageHasPendingFiles(message);
   const hasFailedFiles = messageHasFailedFiles(message);
@@ -202,16 +235,18 @@ export const OwnMessage = props => {
           {content}
           {publicFileAttachments.length > 0 ? (
             <div className={css.fileAttachmentsContainer}>
-              {allowFiles
-                ? publicFileAttachments.map(f => (
-                    <FileAttachment
-                      fileAttachment={f}
-                      key={f.id.uuid}
-                      downloadFile={downloadFile}
-                      intl={intl}
-                    />
-                  ))
-                : null}
+              {allowFiles ? (
+                publicFileAttachments.map(f => (
+                  <FileAttachment
+                    fileAttachment={f}
+                    key={f.id.uuid}
+                    downloadFile={downloadFile}
+                    intl={intl}
+                  />
+                ))
+              ) : (
+                <FilesDisabledError marketplaceName={marketplaceName} />
+              )}
             </div>
           ) : null}
         </div>

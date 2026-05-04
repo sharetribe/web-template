@@ -159,13 +159,41 @@ export const Error = {
   group: 'page:TransactionPage',
 };
 
-// showAttachFiles: false — marketplace has file upload disabled via config.accessControl.
+// showAttachFiles: false — listing type does not have file attachments enabled.
 export const WithAttachFilesDisabled = {
   component: SendMessageForm,
   props: {
     formId: 'SendMessageForm.WithAttachFilesDisabled.Form',
     messagePlaceholder: 'Send message to Juho…',
     showAttachFiles: false,
+    onSubmit: values => {
+      console.log('submit values:', values);
+    },
+    onFocus: () => {
+      console.log('focus on message form');
+    },
+    onBlur: () => {
+      console.log('blur on message form');
+    },
+    onFileUpload: file => {
+      console.log('upload file:', file);
+    },
+    onRemoveFile: tempId => {
+      console.log('remove file:', tempId);
+    },
+  },
+  group: 'page:TransactionPage',
+};
+
+// showDisabledFilesError: true — listing type has file attachments but marketplace has disabled them.
+export const WithFilesDisabledByMarketplace = {
+  component: SendMessageForm,
+  props: {
+    formId: 'SendMessageForm.WithFilesDisabledByMarketplace.Form',
+    messagePlaceholder: 'Send message to Juho…',
+    showAttachFiles: false,
+    showDisabledFilesError: true,
+    marketplaceName: 'MarketplaceX',
     onSubmit: values => {
       console.log('submit values:', values);
     },
