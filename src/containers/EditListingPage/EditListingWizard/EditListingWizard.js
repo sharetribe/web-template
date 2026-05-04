@@ -47,6 +47,9 @@ import {
   StripeConnectAccountForm,
 } from '../../../components';
 
+import { camelize } from '../../../util/string';
+import { TermsOfServiceContent } from '../../TermsOfServicePage/TermsOfServicePage';
+
 // Import modules from this directory
 import EditListingWizardTab, {
   DETAILS,
@@ -414,7 +417,8 @@ class EditListingWizard extends Component {
       draftId: null,
       showPayoutDetails: false,
       showTCModal: false,
-      tcScrolled: false,  // this line was just added
+      tcScrolled: false,
+      tcAccepted: false,
       selectedListingType: null,
       mounted: false,
     };
@@ -422,6 +426,7 @@ class EditListingWizard extends Component {
     this.handlePublishListing = this.handlePublishListing.bind(this);
     this.handlePayoutModalClose = this.handlePayoutModalClose.bind(this);
     this.handleTCModalClose = this.handleTCModalClose.bind(this);
+    this.handleTCCheckboxClick = this.handleTCCheckboxClick.bind(this);
   }
 
   componentDidMount() {
@@ -456,7 +461,6 @@ class EditListingWizard extends Component {
     const hasManualPayoutDetails =
       !!currentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
 
-    // Only show T&C modal on the last tab
     const savedProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
     const processNameForTabs = savedProcessAlias
       ? savedProcessAlias.split('/')[0]
@@ -471,9 +475,17 @@ class EditListingWizard extends Component {
       hasManualPayoutDetails ||
       (stripeConnected && !stripeRequirementsMissing)
     ) {
-      this.setState({ draftId: id, showTCModal: true });
+      onPublishListingDraft(id);
     } else {
-      this.setState({ draftId: id, showTCModal: true, showPayoutDetails: false });
+      this.setState({ draftId: id, showPayoutDetails: true });
+    }
+  }
+
+  handleTCCheckboxClick() {
+    if (this.state.tcAccepted) {
+      this.setState({ tcAccepted: false, tcScrolled: false, showTCModal: true });
+    } else {
+      this.setState({ showTCModal: true });
     }
   }
 
@@ -699,6 +711,8 @@ class EditListingWizard extends Component {
                 errors={errors}
                 handleCreateFlowTabScrolling={this.handleCreateFlowTabScrolling}
                 handlePublishListing={this.handlePublishListing}
+                tcAccepted={this.state.tcAccepted}
+                onTCCheckboxClick={this.handleTCCheckboxClick}
                 fetchInProgress={fetchInProgress}
                 onListingTypeChange={selectedListingType => this.setState({ selectedListingType })}
                 onManageDisableScrolling={onManageDisableScrolling}
@@ -718,181 +732,80 @@ class EditListingWizard extends Component {
           onManageDisableScrolling={onManageDisableScrolling}
           usePortal
         >
-          <div className={css.modalPayoutDetailsWrapper}>
-            <Heading as="h2" rootClassName={css.modalTitle}>
-              One more thing
-            </Heading>
-            <p style={{ color: '#666', marginBottom: 16, lineHeight: 1.6 }}>
-              Please read and accept our Terms and Conditions before publishing your listing.
-            </p>
-
-            {/* Scroll hint */}
-            <p
-              id="tc-hint"
-              style={{ fontSize: 12, color: '#999', marginBottom: 12, fontStyle: 'italic' }}
-            >
-              ↓ Scroll to the bottom to accept
-            </p>
-
-            {/* Scrollable T&C box */}
+          <div
+            className={css.modalPayoutDetailsWrapper}
+            style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 160px)' }}
+          >
+            {!this.state.tcScrolled && (
+              <p style={{ fontSize: 13, color: '#555', fontWeight: 500, marginBottom: 8, flexShrink: 0 }}>
+                ↓ Read to the bottom to accept
+              </p>
+            )}
             <div
-              id="tc-scroll-box"
-              onScroll={e => {
-                const el = e.target;
-                const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
-                
-                if (atBottom) {
-                  this.setState({ tcScrolled: true });
-                  document.getElementById('tc-hint').style.display = 'none';
-                }
-              }}
               style={{
-                height: 260,
+                flex: 1,
+                minHeight: 0,
                 overflowY: 'scroll',
                 border: '1px solid #e0e0e0',
                 borderRadius: 4,
-                padding: '16px',
-                fontSize: 13,
-                lineHeight: 1.8,
-                color: '#444',
-                marginBottom: 12,
-                backgroundColor: '#fafafa',
+                padding: '0 16px',
+              }}
+              onScroll={e => {
+                if (this.state.tcScrolled) return;
+                const el = e.target;
+                const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
+                if (atBottom) this.setState({ tcScrolled: true });
               }}
             >
-              <strong>Terms and Conditions</strong><br />
-              <em>Last updated: 14 March 2026</em>
-              <br /><br />
-              These Terms and Conditions ("Terms") govern the use of the Patamali platform ("Platform"), accessible via http://patamali.com, which connects guests seeking furnished mid-term accommodation with hosts offering such properties.
-              <br /><br />
-              By accessing or using the platform as a guest or host, you agree to comply with these Terms.
-              <br /><br />
-              <strong>1. About Patamali</strong><br />
-              Patamali operates an online platform that connects guests with furnished apartments available for stays of 30 days or longer. Patamali facilitates bookings and manages payments between guests and hosts in order to create a secure and reliable rental experience. Unless explicitly stated, Patamali does not own, operate, or manage the properties listed on the platform.
-              <br /><br />
-              <strong>2. Eligibility</strong><br />
-              To use the Patamali platform, users must: be at least 18 years of age, provide accurate and complete information when creating an account, and comply with all applicable laws and regulations. Patamali reserves the right to suspend or terminate accounts that violate these Terms.
-              <br /><br />
-              <strong>3. Bookings and Payments</strong><br />
-              All bookings must be made through the Patamali platform. To reduce fraud and protect both guests and hosts, Patamali collects payment from guests on behalf of hosts. Payments are held securely until the guest has checked into the property. Hosts receive payment one (1) day after the guest has successfully checked in. This payment structure applies even if a booking is made weeks or months in advance.
-              <br /><br />
-              <strong>4. Patamali Service Fee and Platform Integrity</strong><br />
-              Patamali charges hosts a 10% commission on the total booking amount paid by the guest. This commission is deducted before payment is transferred to the host. All bookings initiated through the Patamali platform must be completed through the platform's booking and payment system. Hosts and guests agree not to bypass or attempt to bypass the Patamali platform in order to avoid service fees or commissions. If Patamali determines that a user has attempted to circumvent the platform, the account may be suspended or permanently removed, active bookings may be cancelled, and Patamali may charge the applicable service fee that would have been due.
-              <br /><br />
-              <strong>5. Host Responsibilities</strong><br />
-              Hosts listing properties on Patamali agree to: provide accurate descriptions and information about their property, upload real and current photos of the actual unit offered, ensure they are the legal owner or authorized host of the property, maintain the property in a safe and habitable condition, and honor confirmed bookings made through the platform. Hosts are responsible for ensuring their listings comply with local laws and regulations.
-              <br /><br />
-              <strong>6. Host Misrepresentation and Removal</strong><br />
-              Patamali may remove hosts or listings from the platform if the property listed does not match the photos or description, the property offered is not the actual unit shown in the listing, the host is not the rightful owner or authorized host, the host attempts to move bookings off the platform, or the host engages in fraudulent or misleading behavior.
-              <br /><br />
-              <strong>7. Guest Responsibilities</strong><br />
-              Guests agree to provide accurate booking and contact information, respect the property and house rules provided by the host, and use the property only for lawful purposes. Guests must not attempt to arrange bookings outside the Patamali platform after discovering a property through Patamali.
-              <br /><br />
-              <strong>8. Verification and Trust</strong><br />
-              Patamali takes reasonable steps to review listings and verify host identities where possible. However, Patamali cannot guarantee the accuracy, legality, or safety of all listings, and users should report concerns immediately.
-              <br /><br />
-              <strong>9. Check-In Issues and Property Accuracy</strong><br />
-              If a guest encounters a serious issue at check-in or within the first two (2) days of the stay, the guest must notify Patamali immediately. Upon notification, Patamali will make reasonable efforts to assist the guest in securing alternative accommodation or provide a partial or full refund where appropriate.
-              <br /><br />
-              <strong>10. Cancellation Policy</strong><br />
-              More than 14 days before check-in: full refund. Within 14 days of check-in: 25% cancellation fee. Within 7 days of check-in: 50% cancellation fee. No-show or cancellation after check-in: no refund. Where a cancellation fee applies, Patamali deducts a 10% service commission from the cancellation amount, the remaining balance is paid to the host as compensation, and any remaining amount is refunded to the guest.
-              <br /><br />
-              <strong>11. Security Deposit</strong><br />
-              Some properties may require a security deposit, typically equal to one month of rent. Hosts are responsible for returning the security deposit within a reasonable period after check-out, provided the property is left in good condition, no damage has occurred, and all house rules have been respected.
-              <br /><br />
-              <strong>12. Payment Processing</strong><br />
-              Patamali may use third-party payment processors to facilitate transactions. Patamali is not responsible for delays caused by payment processors, banks, currency conversion providers, or technical issues outside Patamali's control.
-              <br /><br />
-              <strong>13. Platform Rules</strong><br />
-              Users may not attempt to bypass Patamali's payment system, engage in fraud or misrepresentation, or interfere with the operation or security of the platform.
-              <br /><br />
-              <strong>14. Termination of Accounts</strong><br />
-              Patamali reserves the right to suspend or terminate accounts that violate these Terms, engage in fraudulent activity, or attempt to circumvent the platform.
-              <br /><br />
-              <strong>15. Limitation of Liability</strong><br />
-              To the fullest extent permitted by law, Patamali and its affiliates shall not be liable for indirect, incidental, or consequential damages arising from the use of the platform. Patamali's total liability related to a booking shall not exceed the service fees paid to Patamali for that booking.
-              <br /><br />
-              <strong>16. Indemnification</strong><br />
-              Users agree to indemnify and hold harmless Patamali, its founders, employees, and affiliates from claims, damages, losses, or expenses arising from violation of these Terms, a host's listing or rental of a property, a guest's use of a property, property damage or personal injury during a stay, or disputes between hosts and guests.
-              <br /><br />
-              <strong>17. Force Majeure</strong><br />
-              Patamali shall not be liable for delays or failure to perform obligations due to events beyond its reasonable control, including natural disasters, government actions, political instability, internet outages, labor disputes, war, terrorism, or public health emergencies.
-              <br /><br />
-              <strong>18. Governing Law</strong><br />
-              These Terms shall be governed by and interpreted in accordance with the laws of Kenya. Any disputes arising from the use of the platform shall be subject to the courts of Kenya.
-              <br /><br />
-              <strong>19. Changes to These Terms</strong><br />
-              Patamali may update these Terms from time to time. Continued use of the platform after updates constitutes acceptance of the revised Terms.
+              {(() => {
+                const tcAsset = this.props.pageAssetsData?.[camelize('terms-and-conditions')];
+                return (
+                  <TermsOfServiceContent
+                    data={tcAsset?.data}
+                    inProgress={tcAsset?.inProgress}
+                    error={tcAsset?.error ?? null}
+                  />
+                );
+              })()}
             </div>
-
-            {/* Checkbox */}
-            <label
-              id="tc-checkbox-label"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '16px 1fr',
-                gap: 10,
-                fontSize: 13,
-                color: '#999',
-                marginBottom: 24,
-                lineHeight: 1.6,
-                width: '100%',
-                boxSizing: 'border-box',
-                overflow: 'hidden',
-              }}
-            >
-              <input
-                id="tc-checkbox"
-                type="checkbox"
-                disabled={!this.state.tcScrolled}
-                onChange={e => {
-                  const btn = document.getElementById('tc-publish-btn');
-                  const checked = e.target.checked;
-                  btn.style.backgroundColor = checked ? '#6e42e5' : '#f5f5f5';
-                  btn.style.color = checked ? '#fff' : '#aaa';
-                  btn.style.borderColor = checked ? '#6e42e5' : '#e0e0e0';
-                  btn.style.cursor = checked ? 'pointer' : 'default';
-                  document.getElementById('tc-checkbox-label').style.color = checked ? '#333' : '#999';
+            <div style={{ flexShrink: 0, marginTop: 16, paddingTop: 12, borderTop: '1px solid #e0e0e0' }}>
+              <label
+                htmlFor="tc-wizard-modal-checkbox"
+                title={!this.state.tcScrolled ? 'Scroll agreement to the bottom to accept' : undefined}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 8,
+                  cursor: this.state.tcScrolled ? 'pointer' : 'not-allowed',
+                  opacity: this.state.tcScrolled ? 1 : 0.6,
+                  pointerEvents: !this.state.tcScrolled ? 'none' : undefined,
                 }}
-                style={{ marginTop: 3 }}
-              />
-              <span style={{ minWidth: 0, wordBreak: 'break-word' }}>
-                I understand that payouts are made only 24 hours after the guest has checked in, and I agree to Patamali's Terms and Conditions.
-              </span>
-            </label>
-
-            {/* Publish button */}
-            <button
-              id="tc-publish-btn"
-              onClick={() => {
-                const checkbox = document.getElementById('tc-checkbox');
-                if (!checkbox.checked) return;
-                const hasManualPayoutDetails =
-                  !!ensuredCurrentUser?.attributes?.profile?.privateData?.manualPayoutDetails;
-                this.handleTCModalClose();
-                if (hasManualPayoutDetails) {
-                  this.props.onPublishListingDraft(this.state.draftId);
-                } else {
-                  this.setState({ showPayoutDetails: true });
-                }
-              }}
-              style={{
-                display: 'block',
-                width: '100%',
-                padding: '14px',
-                backgroundColor: '#f5f5f5',
-                color: '#aaa',
-                textAlign: 'center',
-                borderRadius: 4,
-                fontWeight: 500,
-                boxSizing: 'border-box',
-                border: '1px solid #e0e0e0',
-                cursor: 'default',
-                fontFamily: 'inherit',
-                fontSize: 16,
-              }}
-            >
-              Accept & Continue
-            </button>
+              >
+                <input
+                  id="tc-wizard-modal-checkbox"
+                  type="checkbox"
+                  checked={false}
+                  disabled={!this.state.tcScrolled}
+                  onChange={e => {
+                    if (e.target.checked) {
+                      this.setState({ tcAccepted: true, showTCModal: false, tcScrolled: false });
+                    }
+                  }}
+                  style={{
+                    marginTop: 3,
+                    cursor: this.state.tcScrolled ? 'pointer' : 'not-allowed',
+                    flexShrink: 0,
+                    width: 16,
+                    height: 16,
+                    accentColor: '#5c3ebc',
+                    outline: !this.state.tcScrolled ? '1.5px solid #888' : 'none',
+                  }}
+                />
+                <span style={{ fontSize: 14, color: this.state.tcScrolled ? '#333' : '#555', lineHeight: 1.5 }}>
+                  I accept the Terms and Conditions
+                </span>
+              </label>
+            </div>
           </div>
         </Modal>
 

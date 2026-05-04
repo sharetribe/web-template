@@ -56,6 +56,9 @@ const EditListingPhotosPanel = props => {
     listingImageConfig,
     updatePageTitle: UpdatePageTitle,
     intl,
+    tcAccepted,
+    onTCCheckboxClick,
+    isNewListingFlow,
   } = props;
 
   const rootClass = rootClassName || css.root;
@@ -115,6 +118,9 @@ const EditListingPhotosPanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         listingImageConfig={listingImageConfig}
+        tcAccepted={tcAccepted}
+        onTCCheckboxClick={onTCCheckboxClick}
+        isNewListingFlow={isNewListingFlow}
       />
     </main>
   );
