@@ -86,6 +86,39 @@ describe('AuthenticationPage', () => {
   });
 });
 
+describe('AuthenticationPage signup tab', () => {
+  beforeEach(() => {
+    window.scrollTo = jest.fn();
+    process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
+    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  it('shows the T&C checkbox on the signup tab', async () => {
+    await act(async () => {
+      render(<AuthenticationPage {...props} tab="signup" />);
+    });
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+
+  it('T&C checkbox is unchecked by default', async () => {
+    await act(async () => {
+      render(<AuthenticationPage {...props} tab="signup" />);
+    });
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
+
+  it('renders the sign up button', async () => {
+    await act(async () => {
+      render(<AuthenticationPage {...props} tab="signup" />);
+    });
+    expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeInTheDocument();
+  });
+});
+
 describe('AuthenticationPage with SSO', () => {
   beforeEach(() => {
     // This is not defined by default on test env. AuthenticationPage needs it.

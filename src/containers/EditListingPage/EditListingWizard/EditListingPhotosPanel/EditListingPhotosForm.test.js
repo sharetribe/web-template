@@ -12,6 +12,107 @@ const { screen, userEvent, waitFor, act } = testingLibrary;
 
 const noop = () => null;
 
+const defaultFormProps = {
+  initialValues: { country: 'US', images: [] },
+  intl: fakeIntl,
+  dispatch: noop,
+  onImageUpload: v => Promise.reject(v),
+  onSubmit: v => v,
+  saveActionMsg: 'Publish listing',
+  stripeConnected: false,
+  updated: false,
+  ready: false,
+  updateInProgress: false,
+  disabled: false,
+  onRemoveImage: noop,
+  listingImageConfig: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
+};
+
+describe('EditListingPhotosForm T&C checkbox', () => {
+  it('does not render T&C checkbox when isNewListingFlow is falsy', () => {
+    render(<EditListingPhotosForm {...defaultFormProps} />);
+    expect(screen.queryByText('Terms and Conditions')).not.toBeInTheDocument();
+  });
+
+  it('renders T&C checkbox when isNewListingFlow is true', () => {
+    render(
+      <EditListingPhotosForm
+        {...defaultFormProps}
+        isNewListingFlow
+        tcAccepted={false}
+        onTCCheckboxClick={noop}
+      />
+    );
+    expect(screen.getByText('Terms and Conditions')).toBeInTheDocument();
+  });
+
+  it('T&C checkbox is unchecked when tcAccepted is false', () => {
+    render(
+      <EditListingPhotosForm
+        {...defaultFormProps}
+        isNewListingFlow
+        tcAccepted={false}
+        onTCCheckboxClick={noop}
+      />
+    );
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
+
+  it('T&C checkbox is checked when tcAccepted is true', () => {
+    render(
+      <EditListingPhotosForm
+        {...defaultFormProps}
+        isNewListingFlow
+        tcAccepted={true}
+        onTCCheckboxClick={noop}
+      />
+    );
+    expect(screen.getByRole('checkbox')).toBeChecked();
+  });
+
+  it('Publish listing button is disabled when T&C is not accepted', () => {
+    render(
+      <EditListingPhotosForm
+        {...defaultFormProps}
+        isNewListingFlow
+        tcAccepted={false}
+        onTCCheckboxClick={noop}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Publish listing' })).toBeDisabled();
+  });
+
+  it('clicking the T&C checkbox calls onTCCheckboxClick', async () => {
+    const onTCCheckboxClick = jest.fn();
+    const user = userEvent.setup();
+    render(
+      <EditListingPhotosForm
+        {...defaultFormProps}
+        isNewListingFlow
+        tcAccepted={false}
+        onTCCheckboxClick={onTCCheckboxClick}
+      />
+    );
+    await user.click(screen.getByRole('checkbox'));
+    expect(onTCCheckboxClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('clicking the checked T&C checkbox also calls onTCCheckboxClick', async () => {
+    const onTCCheckboxClick = jest.fn();
+    const user = userEvent.setup();
+    render(
+      <EditListingPhotosForm
+        {...defaultFormProps}
+        isNewListingFlow
+        tcAccepted={true}
+        onTCCheckboxClick={onTCCheckboxClick}
+      />
+    );
+    await user.click(screen.getByRole('checkbox'));
+    expect(onTCCheckboxClick).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('EditListingDeliveryForm', () => {
   it('matches snapshot', () => {
     const saveActionMsg = 'Save photos';
