@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 
 // Import util modules
@@ -361,13 +361,18 @@ const EditListingDetailsPanel = props => {
     }
   }, []);
 
-  const initialValues = getInitialValues(
-    props,
-    existingListingTypeInfo,
-    listingTypes,
-    listingFields,
-    listingCategories,
-    categoryKey
+  const initialValues = useMemo(
+    () =>
+      getInitialValues(
+        props,
+        existingListingTypeInfo,
+        listingTypes,
+        listingFields,
+        listingCategories,
+        categoryKey
+      ),
+    // Only recompute when saved listing data changes (server response), not on wizard setState.
+    [listing, listingTypes, listingFields, listingCategories, categoryKey]
   );
 
   const noListingTypesSet = listingTypes?.length === 0;

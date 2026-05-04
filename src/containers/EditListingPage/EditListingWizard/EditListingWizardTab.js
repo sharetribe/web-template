@@ -91,6 +91,8 @@ const EditListingWizardTab = props => {
     newListingPublished,
     handleCreateFlowTabScrolling,
     handlePublishListing,
+    tcAccepted,
+    onTCCheckboxClick,
     history,
     images,
     listing,
@@ -267,6 +269,9 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          tcAccepted={tcAccepted}
+          onTCCheckboxClick={onTCCheckboxClick}
+          isNewListingFlow={isNewListingFlow}
         />
       );
     }

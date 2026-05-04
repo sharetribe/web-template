@@ -1,3 +1,11 @@
+# Patamali - A Sharetribe Web Template
+
+A furnished monthly rentals marketplace for Kenya/Africa. Sharetribe has been extensively customised
+from the base template to meet the needs of hosts and guests who want to rent units for 30+ days — see [PATAMALI-CHANGELOG.md](./PATAMALI-CHANGELOG.md)
+for the full change history.
+
+---
+
 # Sharetribe Web Template
 
 [![CircleCI](https://circleci.com/gh/sharetribe/web-template.svg?style=svg)](https://circleci.com/gh/sharetribe/web-template)

@@ -180,6 +180,9 @@ export const EditListingPhotosForm = props => {
           errors,
           values,
           listingImageConfig,
+          tcAccepted,
+          onTCCheckboxClick,
+          isNewListingFlow,
         } = formRenderProps;
 
         const images = values.images || [];
@@ -200,7 +203,8 @@ export const EditListingPhotosForm = props => {
         const submitReady = (updated && pristineSinceLastSubmit) || ready;
         const submitInProgress = updateInProgress;
         const submitDisabled =
-          invalid || disabled || submitInProgress || state.imageUploadRequested || ready;
+          invalid || disabled || submitInProgress || state.imageUploadRequested || ready ||
+          (isNewListingFlow && !tcAccepted);
         const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
 
         const classes = classNames(css.root, className);
@@ -284,6 +288,43 @@ export const EditListingPhotosForm = props => {
 
             <PublishListingError error={publishListingError} />
             <ShowListingsError error={showListingsError} />
+
+            {isNewListingFlow && (
+              <div style={{ marginBottom: 16, paddingTop: 16, borderTop: '1px solid #e0e0e0' }}>
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 8,
+                    cursor: 'pointer',
+                  }}
+                  onClick={e => {
+                    e.preventDefault();
+                    if (onTCCheckboxClick) onTCCheckboxClick();
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={!!tcAccepted}
+                    readOnly
+                    style={{
+                      marginTop: 3,
+                      cursor: 'pointer',
+                      flexShrink: 0,
+                      width: 16,
+                      height: 16,
+                      accentColor: '#5c3ebc',
+                    }}
+                  />
+                  <span style={{ fontSize: 14, color: '#333', lineHeight: 1.5 }}>
+                    I accept the{' '}
+                    <span style={{ color: '#5c3ebc', textDecoration: 'underline' }}>
+                      Terms and Conditions
+                    </span>
+                  </span>
+                </label>
+              </div>
+            )}
 
             <div className={css.buttonRow}>
               <Button
