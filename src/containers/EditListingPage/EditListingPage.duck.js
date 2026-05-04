@@ -19,6 +19,7 @@ import { isUserAuthorized } from '../../util/userHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { fetchPageAssets } from '../../ducks/hostedAssets.duck';
 import {
   createStripeAccount,
   updateStripeAccount,
@@ -868,6 +869,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const fetchCurrentUserOptions = {
     updateNotifications: false,
   };
+
+  dispatch(fetchPageAssets({ termsAndConditions: 'content/pages/terms-and-conditions.json' }, false));
 
   if (type === 'new') {
     // No need to listing data when creating a new listing

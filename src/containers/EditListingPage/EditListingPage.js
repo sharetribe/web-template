@@ -151,6 +151,7 @@ export const EditListingPageComponent = props => {
     onPayoutDetailsChange,
     onGetStripeConnectAccountLink,
     page,
+    pageAssetsData,
     params,
     location,
     scrollingDisabled,
@@ -298,6 +299,7 @@ export const EditListingPageComponent = props => {
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveListingImage}
           currentUser={currentUser}
+          pageAssetsData={pageAssetsData}
           onManageDisableScrolling={onManageDisableScrolling}
           stripeOnboardingReturnURL={params.returnURLType}
           updatedTab={page.updatedTab}
@@ -365,6 +367,7 @@ const mapStateToProps = state => {
     fetchInProgress: createStripeAccountInProgress,
     getOwnListing,
     page,
+    pageAssetsData: state.hostedAssets?.pageAssetsData,
     scrollingDisabled: isScrollingDisabled(state),
     authScopes,
   };
