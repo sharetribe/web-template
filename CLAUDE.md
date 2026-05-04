@@ -32,40 +32,31 @@ Airbnb-style collapsed pill → fixed expanded bar (not inline in nav).
 
 ---
 
-## Work In Progress — Booking Date Picker (branch: `feature/session2-require-30-plus-days-across-platform`)
+## Terms & Conditions — Architecture (complete)
 
-### The problem
-User selects dates (e.g. May 9 – Jun 30), goes to checkout, clicks browser Back. URL now has `?startDate=2026-05-09&endDate=2026-06-30`. The form pre-fills those dates but the user can't change them — any attempt to pick new dates fails.
+All T&C content is served from a **single Sharetribe Console page asset**: `terms-and-conditions`.
 
-### Root causes identified (two separate bugs)
+- The old `terms-of-service` asset and `/terms-of-service` route have been **removed**. Do not reference them.
+- The `TermsOfServiceContent` component (from `TermsOfServicePage`) renders the live Console content everywhere T&C appears.
+- Three surfaces all read from the same asset: `/p/terms-and-conditions` public page, signup modal, listing publish modal.
 
-**Bug 1 — FinalForm snap-back (FIXED)**
-`initialBookingDates` in `OrderPanel.js` created new `Date` objects on every Redux re-render → new `initialValues` object reference → react-final-form called `form.restart()` → form snapped back to URL dates.
+### Scroll-to-accept UX (signup + listing publish)
+Both surfaces use the same pattern: checkbox click → modal opens → user must scroll to bottom → modal checkbox unlocks → checking it closes modal and marks form checkbox accepted → unchecking form checkbox reopens modal.
 
-Fix: `useMemo` on `initialBookingDates` in `OrderPanel.js` (keyed on URL param strings) and `useMemo` on `memoizedInitialValues` in `BookingDatesForm.js`. FinalForm only sees a changed `initialValues` when URL params actually change.
+Key files:
+- `src/containers/AuthenticationPage/AuthenticationPage.js` — signup modal state (`tosAccepted`, `tosRead`, `tosModalOpen`)
+- `src/containers/AuthenticationPage/TermsAndConditions/TermsAndConditions.js` — custom `Field` + `TermsInput` sub-component; syncs `tosAccepted` prop → form field via `useEffect`
+- `src/containers/EditListingPage/EditListingWizard/EditListingWizard.js` — listing publish modal state (`tcAccepted`, `tcScrolled`); `handleTCCheckboxClick`; `handlePublishListing` no longer opens the modal
+- `src/containers/EditListingPage/EditListingWizard/EditListingPhotosPanel/EditListingPhotosForm.js` — T&C checkbox rendered above submit button when `isNewListingFlow=true`; submit gated on `tcAccepted`
 
-**Bug 2 — `isBlockedBetween` falsely blocking June (fix applied, needs testing)**
-When loading with URL params, `firstAvailableDate = null` (guarded by `!initialBookingDates`), so the June pre-fetch is skipped. The initial page load only fetches April + May time slots. When the user selects a new range spanning June, `isBlockedBetween` finds no time slot data for June and blocks it — the date picker resets to just the clicked end date as a new start.
-
-Fix: New `useEffect` in `BookingDatesForm.js` fires once on mount when `initialBookingDates` is set. Pre-fetches `startDate's month + 1` and `endDate's month` (if further ahead). Also syncs `currentMonth` to startDate's month so navigation arrows work correctly.
-
-### Files changed on this branch
-| File | Change |
-|------|--------|
-| `src/components/OrderPanel/OrderPanel.js` | `useMemo` for `initialBookingDates`; `key` prop on `BookingDatesForm` tied to URL date params |
-| `src/components/OrderPanel/BookingDatesForm/BookingDatesForm.js` | `useMemo` for `memoizedInitialValues`; new pre-fetch `useEffect` for initial range months; `currentMonth` sync for URL-param case; removed `keepDirtyOnReinitialize` |
-| `src/containers/ListingPage/ListingPage.shared.js` | `history.replace` with date params before navigating to CheckoutPage (so back-button restores dates in URL) |
-
-### What to test next
-1. Load a listing page with `?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD` in the URL.
-2. Verify the calendar opens with those dates pre-filled.
-3. Try selecting a completely different date range (including one that spans a month boundary).
-4. Confirm the new dates are accepted and the price breakdown updates.
-5. Check Redux DevTools that `monthlyTimeSlots` has entries for all months in the selected range.
+The T&C checkbox on listing publish only appears for new/draft listings (`isNewListingFlow`), not for editing already-published listings.
 
 ---
 
 ## Other Completed Work (merged to main/develop)
 - 30-night minimum stay enforced across all date pickers and search filter sync.
+- Booking date picker back-navigation snap-back fixed (`useMemo` on `initialValues` in `OrderPanel` and `BookingDatesForm`).
 - CI testing pipeline added.
 - Stripe `STRIPE_SECRET_KEY` env var configured in Render for test.patamali.com.
+- Room listing type snap-back fixed (`useMemo` on `getInitialValues` in `EditListingDetailsPanel`).
+- T&C scroll-to-accept on signup and listing publish (see T&C section above).
