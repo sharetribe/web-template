@@ -74,6 +74,19 @@
   }
 }
 
+/* Default: every direct child spans the full row. Custom listing fields wrap
+ * themselves in `.customField` (via DisplayOverrideField) and override this
+ * to render half-width on viewportMedium+. */
+.fieldsGrid > :where(*) {
+  grid-column: 1 / -1;
+}
+
+.fieldsGrid > :where(:global(.customField)) {
+  @media (--viewportMedium) {
+    grid-column: span 1;
+  }
+}
+
 .fullWidth {
   grid-column: 1 / -1;
 }

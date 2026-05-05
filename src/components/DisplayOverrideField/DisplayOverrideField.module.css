@@ -1,0 +1,10 @@
+/*
+ * .customField is a CSS hook only — used by parent grid containers
+ * (`.fieldsGrid` in EditListingDetailsForm/DeliveryForm/LocationForm) to
+ * make the field render at single-column width on tablet+ viewports.
+ *
+ * The element itself stays display-block so the underlying CustomExtendedDataField
+ * occupies its natural layout.
+ */
+.customField {
+}

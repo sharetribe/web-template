@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 // Import util modules
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
-import { listingFieldDisplayOverrides } from '../../../../config/configListingDisplay';
+import DisplayOverrideField from '../../../../components/DisplayOverrideField/DisplayOverrideField';
 import { displayDescription } from '../../../../util/configHelpers.js';
 import { useConfiguration } from '../../../../context/configurationContext.js';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
@@ -23,7 +23,6 @@ import {
   FieldSelect,
   FieldTextInput,
   Heading,
-  CustomExtendedDataField,
 } from '../../../../components';
 // Import modules from this directory
 import css from './EditListingDetailsForm.module.css';
@@ -258,18 +257,13 @@ const AddListingFields = props => {
     const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
     const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
-    const displayOverride = listingFieldDisplayOverrides[key];
-    const effectiveFieldConfig = displayOverride
-      ? { ...fieldConfig, saveConfig: { ...fieldConfig.saveConfig, ...displayOverride.saveConfig } }
-      : fieldConfig;
-
     return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory
       ? [
           ...pickedFields,
-          <CustomExtendedDataField
+          <DisplayOverrideField
             key={namespacedKey}
             name={namespacedKey}
-            fieldConfig={effectiveFieldConfig}
+            fieldConfig={fieldConfig}
             defaultRequiredMessage={intl.formatMessage({
               id: 'EditListingDetailsForm.defaultRequiredMessage',
             })}
@@ -405,20 +399,18 @@ const EditListingDetailsForm = props => (
           <ErrorMessage fetchErrors={fetchErrors} />
 
           <div className={css.fieldsGrid}>
-            <div className={css.fullWidth}>
-              <FieldSelectListingType
-                name="listingType"
-                listingTypes={selectableListingTypes}
-                hasPredefinedListingType={hasPredefinedListingType}
-                onListingTypeChange={onListingTypeChange}
-                formApi={formApi}
-                formId={formId}
-                intl={intl}
-              />
-            </div>
+            <FieldSelectListingType
+              name="listingType"
+              listingTypes={selectableListingTypes}
+              hasPredefinedListingType={hasPredefinedListingType}
+              onListingTypeChange={onListingTypeChange}
+              formApi={formApi}
+              formId={formId}
+              intl={intl}
+            />
 
             {showCategories && isCompatibleCurrency && (
-              <div className={classNames(css.fullWidth, css.catCols)}>
+              <div className={css.catCols}>
                 <FieldSelectCategory
                   values={values}
                   prefix={categoryPrefix}
@@ -432,41 +424,37 @@ const EditListingDetailsForm = props => (
             )}
 
             {showTitle && isCompatibleCurrency && (
-              <div className={css.fullWidth}>
-                <FieldTextInput
-                  id={`${formId}title`}
-                  name="title"
-                  className={css.title}
-                  type="text"
-                  label={intl.formatMessage({ id: 'EditListingDetailsForm.title' })}
-                  placeholder={intl.formatMessage({
-                    id: 'EditListingDetailsForm.titlePlaceholder',
-                  })}
-                  maxLength={TITLE_MAX_LENGTH}
-                  validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
-                  autoFocus={autoFocus}
-                />
-              </div>
+              <FieldTextInput
+                id={`${formId}title`}
+                name="title"
+                className={css.title}
+                type="text"
+                label={intl.formatMessage({ id: 'EditListingDetailsForm.title' })}
+                placeholder={intl.formatMessage({
+                  id: 'EditListingDetailsForm.titlePlaceholder',
+                })}
+                maxLength={TITLE_MAX_LENGTH}
+                validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
+                autoFocus={autoFocus}
+              />
             )}
 
             {showDescription && isCompatibleCurrency && (
-              <div className={css.fullWidth}>
-                <FieldTextInput
-                  id={`${formId}description`}
-                  name="description"
-                  className={css.description}
-                  type="textarea"
-                  label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
-                  placeholder={intl.formatMessage({
-                    id: 'EditListingDetailsForm.descriptionPlaceholder',
-                  })}
-                  validate={required(
-                    intl.formatMessage({
-                      id: 'EditListingDetailsForm.descriptionRequired',
-                    })
-                  )}
-                />
-              </div>
+              <FieldTextInput
+                id={`${formId}description`}
+                name="description"
+                className={css.description}
+                type="textarea"
+                label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
+                placeholder={intl.formatMessage({
+                  id: 'EditListingDetailsForm.descriptionPlaceholder',
+                })}
+                validate={required(
+                  intl.formatMessage({
+                    id: 'EditListingDetailsForm.descriptionRequired',
+                  })
+                )}
+              />
             )}
 
             {showListingFields && isCompatibleCurrency && (
@@ -480,7 +468,7 @@ const EditListingDetailsForm = props => (
             )}
 
             {!isCompatibleCurrency && listingType && (
-              <p className={classNames(css.error, css.fullWidth)}>
+              <p className={css.error}>
                 <FormattedMessage
                   id="EditListingDetailsForm.incompatibleCurrency"
                   values={{ marketplaceName, marketplaceCurrency }}

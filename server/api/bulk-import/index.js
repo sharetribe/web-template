@@ -3,8 +3,8 @@
 const express = require('express');
 const multer = require('multer');
 const { parseCsv, validateRows } = require('./csvParser');
-const { processImportJob } = require('./importWorker');
-const { createJob, getJob } = require('./jobStore');
+const { processImportJob, serializeSdkError } = require('./importWorker');
+const { createJob, getJob, updateJob } = require('./jobStore');
 const { extractZip } = require('./zipExtractor');
 
 const router = express.Router();
@@ -80,11 +80,9 @@ router.post('/start', authMiddleware, uploadSingle, (req, res) => {
 
     // Start async processing (do not await)
     processImportJob(job.id, validation.rows, imageMap).catch(err => {
-      console.error(`[bulk-import] Job ${job.id} crashed:`, err.message);
-      const j = getJob(job.id);
-      if (j) {
-        j.status = 'failed';
-      }
+      const serialized = serializeSdkError(err);
+      console.error(`[bulk-import] Job ${job.id} crashed:`, serialized);
+      updateJob(job.id, { status: 'failed', error: serialized });
     });
 
     res.status(202).json({
@@ -114,11 +112,12 @@ router.get('/status/:jobId', authMiddleware, (req, res) => {
     failed: job.failed,
     errors: job.errors,
     results: job.results,
+    error: job.error || null,
   });
 });
 
 // GET /api/bulk-import/template
-router.get('/template', (req, res) => {
+router.get('/template', authMiddleware, (req, res) => {
   const headers = [
     'title',
     'description',

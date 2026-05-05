@@ -1,12 +1,19 @@
 import React from 'react';
 import classNames from 'classnames';
-import { NamedLink } from '../../components';
+import { NamedLink, ResponsiveImage } from '../../components';
 import css from './AVCategoryCard.module.css';
 
-const formatCategoryName = id =>
-  (id || '')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase());
+// Variants ordered smallest → largest so ResponsiveImage builds a srcSet that
+// browsers can pick from. CMS image assets expose these `original*` keys.
+const IMAGE_VARIANTS = ['original400', 'original800', 'original1200', 'original2400'];
+
+// Format slug as sentence case (Spanish convention for category labels):
+// only the first word is capitalized; everything else stays lowercase.
+// Callers should prefer passing the `name` prop to override this fallback.
+const formatCategoryName = id => {
+  const lower = (id || '').replace(/-/g, ' ').toLowerCase().trim();
+  return lower ? lower.charAt(0).toUpperCase() + lower.slice(1) : '';
+};
 
 /**
  * AVCategoryCard
@@ -24,14 +31,8 @@ const formatCategoryName = id =>
 const AVCategoryCard = props => {
   const { categoryId, name, media, className } = props;
 
-  const imageVariants = media?.image?.attributes?.variants || {};
-  const imageUrl = (
-    imageVariants['original400'] ||
-    imageVariants['original800'] ||
-    imageVariants['original1200'] ||
-    imageVariants['original2400'] ||
-    Object.values(imageVariants)[0]
-  )?.url;
+  const image = media?.image;
+  const hasImage = !!image?.attributes?.variants;
   const alt = media?.alt || name || formatCategoryName(categoryId);
   const displayName = name || formatCategoryName(categoryId);
 
@@ -42,8 +43,14 @@ const AVCategoryCard = props => {
       className={classNames(css.root, className)}
     >
       <div className={css.imageWrapper}>
-        {imageUrl ? (
-          <img src={imageUrl} alt={alt} className={css.image} />
+        {hasImage ? (
+          <ResponsiveImage
+            className={css.image}
+            alt={alt}
+            image={image}
+            variants={IMAGE_VARIANTS}
+            sizes="(max-width: 767px) 50vw, 25vw"
+          />
         ) : (
           <div className={css.imagePlaceholder} />
         )}
@@ -55,4 +62,4 @@ const AVCategoryCard = props => {
   );
 };
 
-export default AVCategoryCard;
+export default React.memo(AVCategoryCard);

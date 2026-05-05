@@ -94,7 +94,12 @@ const FieldColorDropdown = props => {
         onClick={() => setIsOpen(o => !o)}
         role="button"
         tabIndex={0}
-        onKeyDown={e => e.key === 'Enter' || e.key === ' ' ? setIsOpen(o => !o) : null}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(o => !o);
+          }
+        }}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >

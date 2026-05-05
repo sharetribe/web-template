@@ -24,9 +24,11 @@ router.get('/feed', async (_req, res) => {
     return res.status(503).json({ ok: false, error: 'not_configured' });
   }
 
-  const cached = igCache.feed;
-  if (cached.data) {
-    return res.json(cached.data);
+  // createTTLCache returns a Proxy: every get yields an envelope
+  // { data, timestamp, expiresAt } with `data: null` on miss/expired.
+  const { data: cachedFeed } = igCache.feed || {};
+  if (cachedFeed) {
+    return res.json(cachedFeed);
   }
 
   try {

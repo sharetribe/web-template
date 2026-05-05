@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
@@ -17,7 +17,26 @@ import { AspectRatioWrapper, NamedLink, ResponsiveImage, AvatarSmall } from '../
 import css from './AVListingCard.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
+const ASPECT_WIDTH_TALL = 3;
+const ASPECT_HEIGHT_TALL = 4.85;
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
+
+// Build a `{ [fieldKey]: { [option]: label } }` lookup from listingFields so
+// each card render does O(1) label lookups instead of O(N) array scans.
+const buildEnumLookup = listingFields => {
+  const out = {};
+  for (const field of listingFields || []) {
+    const opts = {};
+    for (const opt of field?.enumOptions || []) {
+      opts[opt.option] = opt.label;
+    }
+    out[field.key] = opts;
+  }
+  return out;
+};
+
+const getEnumLabel = (lookup, fieldKey, option) =>
+  lookup?.[fieldKey]?.[option] || option;
 
 const PriceMaybe = props => {
   const { price, publicData, config, intl } = props;
@@ -34,16 +53,7 @@ const PriceMaybe = props => {
     return null;
   }
 
-  const customFormatPrice = money => {
-    const { amount, currency } = money || {};
-    if (currency === 'MXN') {
-      const decimal = (amount / 100).toFixed(2);
-      return `$${decimal.replace(',', '.')}`;
-    }
-
-    return formatMoney(intl, money);
-  };
-  const fixedPrice = customFormatPrice(price);
+  const fixedPrice = formatMoney(intl, price);
   const priceTitle = fixedPrice;
   const priceValue = <span className={css.priceValue}>{fixedPrice}</span>;
   const pricePerUnit = isBookable ? (
@@ -76,7 +86,7 @@ const PriceMaybe = props => {
  */
 export const AVListingCard = props => {
   const config = useConfiguration();
-  const intl = props.intl || useIntl();
+  const intl = useIntl();
   const {
     className,
     rootClassName,
@@ -104,7 +114,7 @@ export const AVListingCard = props => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants || {}).filter(k => k.startsWith(variantPrefix))
     : [];
 
   const setActivePropsMaybe = setActiveListing
@@ -114,16 +124,18 @@ export const AVListingCard = props => {
       }
     : null;
 
-    const aspectWidthTall = 3,
-          aspectHeightTall = 4.85;
+  const enumLookup = useMemo(
+    () => buildEnumLookup(config.listing.listingFields),
+    [config.listing.listingFields]
+  );
 
   return (
     <div className={classes}>
       <NamedLink className={css.cardLink} name="ListingPage" params={{ id, slug }}>
         <AspectRatioWrapper
           className={css.aspectRatioWrapper}
-          width={showTallCards ? aspectWidthTall : aspectWidth}
-          height={showTallCards ? aspectHeightTall : aspectHeight}
+          width={showTallCards ? ASPECT_WIDTH_TALL : aspectWidth}
+          height={showTallCards ? ASPECT_HEIGHT_TALL : aspectHeight}
           {...setActivePropsMaybe}
         >
           <LazyImage
@@ -142,10 +154,7 @@ export const AVListingCard = props => {
             to={{ search: `?pub_brand=${publicData?.brand}` }}
             className={css.brand}
           >
-            {
-              (config.listing.listingFields.find(f => f.key === 'brand')?.enumOptions || [])
-                .find(opt => opt.option === publicData?.brand)?.label || publicData?.brand
-            }
+            {getEnumLabel(enumLookup, 'brand', publicData?.brand)}
           </NamedLink>
         ) : null}
 
@@ -161,10 +170,7 @@ export const AVListingCard = props => {
         {publicData?.talla ? (
           <div className={css.sizes}>
             <FormattedMessage id="AVListingCard.sizeLabel" />{' '}
-            {
-              (config.listing.listingFields.find(f => f.key === 'talla')?.enumOptions || [])
-                .find(opt => opt.option === publicData?.talla)?.label || publicData?.talla
-            }
+            {getEnumLabel(enumLookup, 'talla', publicData?.talla)}
           </div>
         ) : null}
         <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
@@ -189,4 +195,4 @@ export const AVListingCard = props => {
   );
 };
 
-export default AVListingCard;
+export default React.memo(AVListingCard);

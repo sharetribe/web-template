@@ -90,40 +90,38 @@ export const EditListingLocationForm = props => (
         <Form className={classes} onSubmit={handleSubmit}>
           <div className={css.fieldsGrid}>
             {updateListingError ? (
-              <p className={classNames(css.error, css.fullWidth)}>
+              <p className={css.error}>
                 <FormattedMessage id="EditListingLocationForm.updateFailed" />
               </p>
             ) : null}
 
             {showListingsError ? (
-              <p className={classNames(css.error, css.fullWidth)}>
+              <p className={css.error}>
                 <FormattedMessage id="EditListingLocationForm.showListingFailed" />
               </p>
             ) : null}
 
-            <div className={css.fullWidth}>
-              <FieldLocationAutocompleteInput
-                rootClassName={css.locationAddress}
-                inputClassName={css.locationAutocompleteInput}
-                iconClassName={css.locationAutocompleteInputIcon}
-                predictionsClassName={css.predictionsRoot}
-                validClassName={css.validLocation}
-                autoFocus={autoFocus}
-                name="location"
-                id={`${formId}.location`}
-                label={intl.formatMessage({ id: 'EditListingLocationForm.address' })}
-                placeholder={intl.formatMessage({
-                  id: 'EditListingLocationForm.addressPlaceholder',
-                })}
-                useDefaultPredictions={false}
-                format={identity}
-                valueFromForm={values.location}
-                validate={composeValidators(
-                  autocompleteSearchRequired(addressRequiredMessage),
-                  autocompletePlaceSelected(addressNotRecognizedMessage)
-                )}
-              />
-            </div>
+            <FieldLocationAutocompleteInput
+              rootClassName={css.locationAddress}
+              inputClassName={css.locationAutocompleteInput}
+              iconClassName={css.locationAutocompleteInputIcon}
+              predictionsClassName={css.predictionsRoot}
+              validClassName={css.validLocation}
+              autoFocus={autoFocus}
+              name="location"
+              id={`${formId}.location`}
+              label={intl.formatMessage({ id: 'EditListingLocationForm.address' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingLocationForm.addressPlaceholder',
+              })}
+              useDefaultPredictions={false}
+              format={identity}
+              valueFromForm={values.location}
+              validate={composeValidators(
+                autocompleteSearchRequired(addressRequiredMessage),
+                autocompletePlaceSelected(addressNotRecognizedMessage)
+              )}
+            />
 
             <FieldTextInput
               className={css.building}

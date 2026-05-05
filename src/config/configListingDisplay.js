@@ -1,8 +1,6 @@
-// Display-only overrides for listing fields served from Sharetribe hosted assets.
+// Display-only overrides for listing fields defined in configListing.js.
 // These do NOT affect backend search schema — only how the form input is rendered.
-//
-// NOTE: groups[*].options must use the exact option keys defined in the `all_sizes`
-// field in Sharetribe Console. Fill these in once the field is created there.
+// Option keys in groups[*].options must match enumOptions keys in configListing.js.
 export const listingFieldDisplayOverrides = {
   all_sizes: {
     saveConfig: {
@@ -66,6 +64,7 @@ export const listingFieldDisplayOverrides = {
             { option: 'curvy_3x', label: '3X' },
             { option: 'curvy_4x', label: '4X' },
             { option: 'curvy_5x', label: '5X' },
+            { option: 'curvy_6x', label: '6X' },
           ],
         },
       ],

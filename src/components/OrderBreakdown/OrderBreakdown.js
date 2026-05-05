@@ -26,8 +26,8 @@ import LineItemPickupFeeMaybe from './LineItemPickupFeeMaybe';
 import LineItemCustomerCommissionMaybe from './LineItemCustomerCommissionMaybe';
 import LineItemCustomerCommissionRefundMaybe from './LineItemCustomerCommissionRefundMaybe';
 import LineItemProviderCommissionMaybe from './LineItemProviderCommissionMaybe';
-import LineItemProviderCommissionFixedMaybe from './LineItemProviderCommissionFixedMaybe';
 import LineItemProviderCommissionRefundMaybe from './LineItemProviderCommissionRefundMaybe';
+import { extraOrderBreakdownLineItems } from '../../config/configTransaction';
 import LineItemRefundMaybe from './LineItemRefundMaybe';
 import LineItemTotalPrice from './LineItemTotalPrice';
 import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
@@ -147,12 +147,15 @@ export const OrderBreakdownComponent = props => {
         marketplaceName={marketplaceName}
         intl={intl}
       />
-      <LineItemProviderCommissionFixedMaybe
-        lineItems={lineItems}
-        isProvider={isProvider}
-        marketplaceName={marketplaceName}
-        intl={intl}
-      />
+      {extraOrderBreakdownLineItems.map((Comp, i) => (
+        <Comp
+          key={`extra-line-item-${i}`}
+          lineItems={lineItems}
+          isProvider={isProvider}
+          marketplaceName={marketplaceName}
+          intl={intl}
+        />
+      ))}
       <LineItemProviderCommissionRefundMaybe
         lineItems={lineItems}
         isProvider={isProvider}

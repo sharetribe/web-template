@@ -18,14 +18,7 @@ import {
   validateYoutubeURL,
 } from '../../util/validators';
 // Import shared components
-import {
-  FieldCheckboxGroup,
-  FieldSelect,
-  FieldTextInput,
-  FieldBoolean,
-  FieldGroupedMultiSelect,
-  FieldColorDropdown,
-} from '../../components';
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../components';
 // Import modules from this directory
 import css from './CustomExtendedDataField.module.css';
 
@@ -72,35 +65,27 @@ const CustomFieldEnum = props => {
 };
 
 const CustomFieldMultiEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, inputComponents } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
-  const { isRequired, requiredMessage, inputType, groups } = saveConfig || {};
+  const { isRequired, requiredMessage, inputType } = saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
     ? { validate: nonEmptyArray(requiredMessage || defaultRequiredMessage) }
     : {};
 
-  // Custom: grouped multi-select (e.g. all_sizes)
-  if (inputType === 'groupedMultiSelect') {
+  // Caller-supplied custom input components, dispatched on saveConfig.inputType.
+  // The custom component receives the full saveConfig + enumOptions + label
+  // and decides how to render the input.
+  const CustomInput = inputComponents?.[inputType];
+  if (CustomInput) {
     return (
-      <FieldGroupedMultiSelect
+      <CustomInput
         name={name}
         id={formId ? `${formId}.${name}` : name}
         label={label}
-        groups={groups || []}
-        {...validateMaybe}
-      />
-    );
-  }
-
-  // Custom: color grid picker (e.g. color)
-  if (inputType === 'colorGridPicker') {
-    return (
-      <FieldColorDropdown
-        name={name}
-        id={formId ? `${formId}.${name}` : name}
-        label={label}
-        options={createFilterOptions(enumOptions)}
+        saveConfig={saveConfig}
+        enumOptions={enumOptions}
+        createFilterOptions={createFilterOptions}
         {...validateMaybe}
       />
     );

@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
 import { LinkTabNavHorizontal } from '../../components';
+import { AV_PROFILE_LINKS } from '../../extensions/topbar/links';
 
 import css from './UserNav.module.css';
 
@@ -33,29 +34,15 @@ const UserNav = props => {
       ]
     : [];
 
+  const avTabs = AV_PROFILE_LINKS.map(({ pageName, labels }) => ({
+    text: <FormattedMessage id={labels.userNav} />,
+    selected: currentPage === pageName,
+    linkProps: { name: pageName },
+  }));
+
   const tabs = [
     ...manageListingsTabMaybe,
-    {
-      text: <FormattedMessage id="UserNav.myPurchases" />,
-      selected: currentPage === 'MyPurchasesPage',
-      linkProps: {
-        name: 'MyPurchasesPage',
-      },
-    },
-    {
-      text: <FormattedMessage id="UserNav.mySales" />,
-      selected: currentPage === 'MySalesPage',
-      linkProps: {
-        name: 'MySalesPage',
-      },
-    },
-    {
-      text: <FormattedMessage id="UserNav.myBalance" />,
-      selected: currentPage === 'MyBalancePage',
-      linkProps: {
-        name: 'MyBalancePage',
-      },
-    },
+    ...avTabs,
     {
       text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage',

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useIntl } from '../../../../util/reactIntl';
 import { AVListingCard } from '../../../../components';
+import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import Field, { hasDataInFields } from '../../Field';
 
@@ -81,32 +82,19 @@ const SectionSelectedListings = props => {
   const [effectiveColumns, setEffectiveColumns] = useState(numColumns);
   const normalizedColumns = Math.min(Math.max(effectiveColumns, 1), COLUMN_CONFIG.length);
 
-  useEffect(() => {
-    if (!listings.length || typeof window === 'undefined') {
-      return () => {};
-    }
-
-    const setCarouselWidth = () => {
-      const container = sliderContainerRef.current;
-      if (!container) {
-        return;
-      }
-
-      const windowWidth = window.innerWidth;
-      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-      const containerWidth =
-        container.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : container.clientWidth;
-      const carouselWidth = containerWidth - scrollbarWidth;
-
-      container.style.setProperty('--carouselWidth', `${carouselWidth}px`);
-      setEffectiveColumns(getEffectiveColumns(numColumns));
-    };
-
-    setCarouselWidth();
-    window.addEventListener('resize', setCarouselWidth);
-
-    return () => window.removeEventListener('resize', setCarouselWidth);
-  }, [listings.length]);
+  const setCarouselWidth = () => {
+    if (!listings.length) return;
+    const container = sliderContainerRef.current;
+    if (!container) return;
+    const windowWidth = window.innerWidth;
+    const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+    const containerWidth =
+      container.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : container.clientWidth;
+    const carouselWidth = containerWidth - scrollbarWidth;
+    container.style.setProperty('--carouselWidth', `${carouselWidth}px`);
+    setEffectiveColumns(getEffectiveColumns(numColumns));
+  };
+  useDebouncedWindowResize(setCarouselWidth);
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }

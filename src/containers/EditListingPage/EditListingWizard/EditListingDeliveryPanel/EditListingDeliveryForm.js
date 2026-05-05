@@ -133,16 +133,14 @@ export const EditListingDeliveryForm = props => (
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <div className={css.fieldsGrid}>
-            <div className={css.fullWidth}>
-              <FieldCheckbox
-                id={formId ? `${formId}.pickup` : 'pickup'}
-                className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
-                name="deliveryOptions"
-                label={pickupLabel}
-                value="pickup"
-              />
-            </div>
-            <div className={classNames(css.fullWidth, pickupClasses)}>
+            <FieldCheckbox
+              id={formId ? `${formId}.pickup` : 'pickup'}
+              className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
+              name="deliveryOptions"
+              label={pickupLabel}
+              value="pickup"
+            />
+            <div className={pickupClasses}>
               {updateListingError ? (
                 <p className={css.error}>
                   <FormattedMessage id="EditListingDeliveryForm.updateFailed" />
@@ -200,17 +198,15 @@ export const EditListingDeliveryForm = props => (
               disabled={!pickupEnabled}
             />
 
-            <div className={css.fullWidth}>
-              <FieldCheckbox
-                id={formId ? `${formId}.shipping` : 'shipping'}
-                className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
-                name="deliveryOptions"
-                label={shippingLabel}
-                value="shipping"
-              />
-            </div>
+            <FieldCheckbox
+              id={formId ? `${formId}.shipping` : 'shipping'}
+              className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
+              name="deliveryOptions"
+              label={shippingLabel}
+              value="shipping"
+            />
 
-            <div className={classNames(css.fullWidth, shippingClasses)}>
+            <div className={shippingClasses}>
               <FieldCurrencyInput
                 id={
                   formId

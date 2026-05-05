@@ -264,6 +264,7 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          photoMode={config?.listing?.photoMode}
         />
       );
     }

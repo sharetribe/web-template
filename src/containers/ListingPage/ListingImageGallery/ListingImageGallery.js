@@ -61,6 +61,9 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
  * @param {Array<string>} props.thumbnailVariants - The thumbnail variants
  * @returns {JSX.Element} listing image gallery component
  */
+// AV: returns the human-readable slot label for an image when the listing was
+// created in slot-mode (publicData.imageSlots present). For listings created
+// under the upstream gallery mode, imageSlots is undefined and this is a no-op.
 const getSlotLabelForImage = (image, imageSlots, intl) => {
   if (!imageSlots) return null;
   const imageUuid = image?.id?.uuid;

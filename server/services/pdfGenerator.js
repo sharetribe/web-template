@@ -145,13 +145,13 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
 
     doc
       .fillColor(ACCENT)
-      .text('hola@archinovintach.com', { underline: true });
+      .text('hola@archivovintach.com', { underline: true });
 
     doc.moveDown(0.3);
 
     doc
       .fillColor(GRAY)
-      .text('O visítanos en: https://archinovintach.com');
+      .text('O visítanos en: https://archivovintach.com');
 
     doc.moveDown(2);
 

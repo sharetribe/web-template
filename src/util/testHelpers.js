@@ -19,7 +19,10 @@ import routeConfiguration from '../routing/routeConfiguration';
 // In case you have translated the template and have new translations that
 // are missing from the en translations file, the language for the tests can
 // be changed here so that there are no missing translation keys in tests.
-import messages from '../translations/en.json';
+import baseMessages from '../translations/en.json';
+import avMessages from '../translations/en_av.json';
+
+const messages = { ...baseMessages, ...avMessages };
 
 let undefined;
 export const getDefaultConfiguration = () => {

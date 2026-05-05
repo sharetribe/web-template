@@ -25,9 +25,10 @@ import {
 
 const formatMessage = (intl, id, defaultMessage) => {
   if (!intl?.formatMessage) return defaultMessage ?? '';
-  const result = intl.formatMessage({ id, defaultMessage: defaultMessage ?? '' });
-  // When a key is missing, React Intl returns the id itself — treat that as empty
-  return result === id ? (defaultMessage ?? '') : result;
+  // Check the messages map directly so a translation that happens to equal the
+  // id is still returned (the previous round-trip heuristic discarded it).
+  const has = !!intl.messages?.[id];
+  return has ? intl.formatMessage({ id }) : (defaultMessage ?? '');
 };
 
 export const transformCustomSections = ({ pageData, intl, extensionData }) => {

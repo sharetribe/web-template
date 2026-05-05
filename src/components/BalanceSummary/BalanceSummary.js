@@ -32,7 +32,7 @@ const BalanceSummary = props => {
 
   if (fetchInProgress) {
     return (
-      <div className={css.root}>
+      <div className={css.root} aria-busy="true" aria-live="polite">
         <IconSpinner />
       </div>
     );

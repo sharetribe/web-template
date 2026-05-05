@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import Field from '../../Field';
+import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 import css from './SectionInstaGrid.module.css';
 
 const getColumns = () => {
@@ -73,7 +74,7 @@ const PostModal = ({ block, username, onClose, fieldOptions }) => {
         <div className={css.modalBody}>
           <div className={css.modalHeader}>
             <InstaIcon size={24} />
-            <span className={css.modalUsername}>{username || 'archinovintach'}</span>
+            <span className={css.modalUsername}>{username || 'archivovintach'}</span>
             <button className={css.modalClose} onClick={onClose} aria-label="Close post">
               ×
             </button>
@@ -113,12 +114,7 @@ const SectionInstaGrid = props => {
   const fieldOptions = { fieldComponents: options?.fieldComponents };
   const username = title?.content;
 
-  useEffect(() => {
-    const update = () => setColumns(getColumns());
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
+  useDebouncedWindowResize(() => setColumns(getColumns()));
 
   if (!blocks.length) return null;
 

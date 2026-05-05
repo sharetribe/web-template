@@ -93,13 +93,13 @@ export const getRefundedTransitions = () => {
 /**
  * Build SDK-compatible query params from URL search string for filtered transaction queries.
  *
- * @param {string} search - URL search string (e.g. '?status=completed&process=default-purchase&page=2')
+ * @param {Object} searchParams - parsed URL search params (e.g. { status, dateFrom, dateTo, page })
  * @param {Object} options
  * @param {string} options.only - 'sale' or 'order'
  * @returns {Object} params suitable for sdk.transactions.query()
  */
 export const buildFilteredQueryParams = (searchParams, { only = 'sale' } = {}) => {
-  const { status, process, dateFrom, dateTo, page = 1 } = searchParams;
+  const { status, dateFrom, dateTo, page = 1 } = searchParams;
 
   const params = { page: Number(page) };
 
@@ -110,11 +110,6 @@ export const buildFilteredQueryParams = (searchParams, { only = 'sale' } = {}) =
     params.lastTransitions = getRefundedTransitions();
   } else if (status === 'pending') {
     params.lastTransitions = getPendingTransitions();
-  }
-
-  // Filter by process name
-  if (process && process !== 'all') {
-    params.processNames = [process];
   }
 
   // Filter by date range

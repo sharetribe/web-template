@@ -62,7 +62,6 @@ const loadDataPayloadCreator = ({ search }, { dispatch, rejectWithValue, extra: 
       'processName',
       'lastTransition',
       'lastTransitionedAt',
-      'transitions',
       'payinTotal',
       'payoutTotal',
       'lineItems',

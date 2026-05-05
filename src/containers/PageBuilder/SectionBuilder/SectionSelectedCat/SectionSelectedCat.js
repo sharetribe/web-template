@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useIntl } from '../../../../util/reactIntl';
 import AVCategoryCard from '../../../../components/AVCategoryCard/AVCategoryCard';
+import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
@@ -73,25 +74,19 @@ const SectionSelectedCat = props => {
   const [effectiveColumns, setEffectiveColumns] = useState(numColumns);
   const normalizedColumns = Math.min(Math.max(effectiveColumns, 1), COLUMN_CONFIG.length);
 
-  useEffect(() => {
-    if (!blocks.length || typeof window === 'undefined') return () => {};
-
-    const setCarouselWidth = () => {
-      const container = sliderContainerRef.current;
-      if (!container) return;
-      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-      const containerWidth =
-        container.clientWidth >= window.innerWidth - scrollbarWidth
-          ? window.innerWidth
-          : container.clientWidth;
-      container.style.setProperty('--carouselWidth', `${containerWidth - scrollbarWidth}px`);
-      setEffectiveColumns(getEffectiveColumns(numColumns));
-    };
-
-    setCarouselWidth();
-    window.addEventListener('resize', setCarouselWidth);
-    return () => window.removeEventListener('resize', setCarouselWidth);
-  }, [blocks.length]);
+  const setCarouselWidth = () => {
+    if (!blocks.length) return;
+    const container = sliderContainerRef.current;
+    if (!container) return;
+    const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+    const containerWidth =
+      container.clientWidth >= window.innerWidth - scrollbarWidth
+        ? window.innerWidth
+        : container.clientWidth;
+    container.style.setProperty('--carouselWidth', `${containerWidth - scrollbarWidth}px`);
+    setEffectiveColumns(getEffectiveColumns(numColumns));
+  };
+  useDebouncedWindowResize(setCarouselWidth);
 
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };

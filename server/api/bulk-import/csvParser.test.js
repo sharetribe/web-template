@@ -400,6 +400,49 @@ describe('validateRows', () => {
     expect(result.rows[0].publicData.era).toBe('80s');
   });
 
+  it.each(['pd___proto__', 'pd_constructor', 'pd_prototype'])(
+    'rejects reserved publicData key from column %s',
+    column => {
+      const result = validateRows(
+        [
+          validRow({
+            [column]: 'evil',
+            image_front: 'front.jpg',
+            image_back: 'back.jpg',
+            image_horizontal: 'front.jpg',
+          }),
+        ],
+        imageMap
+      );
+      expect(result.valid).toBe(false);
+      expect(result.errors).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining(`publicData column "${column}" uses a reserved key`),
+        ])
+      );
+      const reservedKey = column.slice(3);
+      expect(Object.prototype.hasOwnProperty.call(result.rows[0].publicData, reservedKey)).toBe(
+        false
+      );
+      expect({}[reservedKey === 'constructor' ? 'arbitrary_unset' : reservedKey]).not.toBe('evil');
+    }
+  );
+
+  it('publicData uses a null prototype', () => {
+    const result = validateRows(
+      [
+        validRow({
+          pd_color: 'blue',
+          image_front: 'front.jpg',
+          image_back: 'back.jpg',
+          image_horizontal: 'front.jpg',
+        }),
+      ],
+      imageMap
+    );
+    expect(Object.getPrototypeOf(result.rows[0].publicData)).toBeNull();
+  });
+
   it('ignores empty pd_* columns', () => {
     const result = validateRows(
       [

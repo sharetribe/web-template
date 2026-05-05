@@ -65,6 +65,17 @@
   }
 }
 
+/* Default direct children to full row span. Half-width opt-in via .customField. */
+.fieldsGrid > :where(*) {
+  grid-column: 1 / -1;
+}
+
+.fieldsGrid > :where(:global(.customField)) {
+  @media (--viewportMedium) {
+    grid-column: span 1;
+  }
+}
+
 .fullWidth {
   grid-column: 1 / -1;
 }

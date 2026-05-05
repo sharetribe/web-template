@@ -45,7 +45,9 @@ router.post('/subscribe', async (req, res) => {
       // Brevo returns 201 for created, 204 for updated; 400-range includes already blacklisted, etc.
       if (r.status >= 400) {
         const j = await r.json().catch(() => ({}));
-        return res.status(400).json({ ok: false, error: 'brevo_create_failed', details: j });
+        // eslint-disable-next-line no-console
+        console.error('[brevo] contact upsert failed', { status: r.status, email: email.trim(), body: j });
+        return res.status(400).json({ ok: false, error: 'brevo_create_failed' });
       }
     }
 
@@ -63,7 +65,9 @@ router.post('/subscribe', async (req, res) => {
 
       if (r.status >= 400) {
         const j = await r.json().catch(() => ({}));
-        return res.status(400).json({ ok: false, error: 'brevo_add_to_list_failed', details: j });
+        // eslint-disable-next-line no-console
+        console.error('[brevo] add-to-list failed', { status: r.status, email: email.trim(), body: j });
+        return res.status(400).json({ ok: false, error: 'brevo_add_to_list_failed' });
       }
     }
 

@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { Field } from 'react-final-form';
 
 import multicolorImg from '../../assets/media/multicolor.jpg';
+import animalprintImg from '../../assets/media/animal-print.jpg';
+import floralprintImg from '../../assets/media/floral-print.jpg';
 
 import css from './FieldSwatch.module.css';
 
@@ -134,8 +136,8 @@ export const swatchColors = {
 };
 
 export const swatchBg = {
-  'animal-print': multicolorImg,
-  'floral-print': multicolorImg,
+  'animal-print': animalprintImg,
+  'floral-print': floralprintImg,
   multicolor: multicolorImg,
 }
 

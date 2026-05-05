@@ -10,7 +10,7 @@ const CheckIcon = () => (
 );
 
 const PricingToggle = props => {
-  const { toggles, plans } = props;
+  const { toggles = {}, plans = {} } = props;
 
   const [activeSet, setActiveSet] = useState('set1');
   const showToggle = Boolean(toggles.cta1?.trim()) || Boolean(toggles.cta2?.trim());
@@ -62,7 +62,7 @@ const PricingToggle = props => {
             {/* Footer */}
             <ul className={css.featureList}>
               {plan.features.map((feature, i) => (
-                <li key={i} className={css.featureItem}>
+                <li key={typeof feature === 'string' ? feature : i} className={css.featureItem}>
                   <i className={css.checkIcon}>
                     <CheckIcon />
                   </i>

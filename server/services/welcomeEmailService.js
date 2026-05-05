@@ -4,9 +4,21 @@ const fetch = require('node-fetch');
 const { generateGettingStartedPDF } = require('./pdfGenerator');
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'hola@archinovintach.com';
+const SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'hola@archivovintach.com';
 const SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Archivo Vintach';
-const MARKETPLACE_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL || 'https://archinovintach.com';
+const MARKETPLACE_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL || 'https://archivovintach.com';
+
+const HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+function escapeHtml(str) {
+  return String(str == null ? '' : str).replace(/[&<>"']/g, ch => HTML_ESCAPES[ch]);
+}
 
 /**
  * Sends a welcome email with the Getting Started PDF attached.
@@ -21,6 +33,10 @@ async function sendWelcomeEmail({ email, firstName, lastName }) {
   const pdfBuffer = await generateGettingStartedPDF({ firstName });
   const pdfBase64 = pdfBuffer.toString('base64');
 
+  const safeFirstName = escapeHtml(firstName || 'Usuario');
+  const safeMarketplaceUrl = escapeHtml(MARKETPLACE_URL);
+  const safeSenderEmail = escapeHtml(SENDER_EMAIL);
+
   const htmlBody = `
     <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
       <div style="background: #1a1a1a; padding: 40px 30px; text-align: center;">
@@ -29,7 +45,7 @@ async function sendWelcomeEmail({ email, firstName, lastName }) {
       </div>
 
       <div style="padding: 40px 30px;">
-        <h2 style="font-size: 22px; margin-top: 0;">¡Hola, ${firstName}! 👋</h2>
+        <h2 style="font-size: 22px; margin-top: 0;">¡Hola, ${safeFirstName}! 👋</h2>
 
         <p style="line-height: 1.7; color: #555;">
           Estamos encantados de tenerte en <strong>Archivo Vintach</strong>. Tu cuenta ya está activa
@@ -42,12 +58,12 @@ async function sendWelcomeEmail({ email, firstName, lastName }) {
         </p>
 
         <div style="text-align: center; margin: 36px 0;">
-          <a href="${MARKETPLACE_URL}/s"
+          <a href="${safeMarketplaceUrl}/s"
              style="display: inline-block; background: #1a1a1a; color: #ffffff; text-decoration: none;
                     padding: 14px 28px; margin: 6px; font-size: 14px; border-radius: 3px;">
             Explorar el catálogo
           </a>
-          <a href="${MARKETPLACE_URL}/l/new"
+          <a href="${safeMarketplaceUrl}/l/new"
              style="display: inline-block; background: #c8a97e; color: #1a1a1a; text-decoration: none;
                     padding: 14px 28px; margin: 6px; font-size: 14px; border-radius: 3px;">
             Publicar mi primer anuncio
@@ -56,7 +72,7 @@ async function sendWelcomeEmail({ email, firstName, lastName }) {
 
         <p style="line-height: 1.7; color: #555;">
           Si tienes alguna pregunta no dudes en escribirnos a
-          <a href="mailto:${SENDER_EMAIL}" style="color: #c8a97e;">${SENDER_EMAIL}</a>.
+          <a href="mailto:${safeSenderEmail}" style="color: #c8a97e;">${safeSenderEmail}</a>.
         </p>
 
         <p style="color: #555;">¡Bienvenido/a al archivo!</p>
@@ -65,7 +81,7 @@ async function sendWelcomeEmail({ email, firstName, lastName }) {
 
       <div style="background: #f5f5f5; padding: 20px 30px; text-align: center; font-size: 11px; color: #999;">
         © ${new Date().getFullYear()} Archivo Vintach ·
-        <a href="${MARKETPLACE_URL}" style="color: #999;">archinovintach.com</a>
+        <a href="${safeMarketplaceUrl}" style="color: #999;">archivovintach.com</a>
       </div>
     </div>
   `;

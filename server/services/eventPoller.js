@@ -3,12 +3,69 @@
 const { getIntegrationSdk } = require('./integrationSdk');
 const { sendWelcomeEmail } = require('./welcomeEmailService');
 const { sendAdminAlert, sendUserWhatsApp, lookupUserPhone } = require('./whatsappService');
+const { loadCursor, saveCursor } = require('./eventPollerCursor');
+const { createTTLCache } = require('../api-util/cache');
+const { withRetry } = require('./retry');
+
+// Run notifications in parallel; log each rejection independently.
+async function runNotifications(tasks) {
+  const results = await Promise.allSettled(tasks.map(t => withRetry(t.fn, { label: t.label })));
+  results.forEach((r, i) => {
+    if (r.status === 'rejected') {
+      console.error(`[eventPoller] ${tasks[i].label} failed after retries:`, r.reason);
+    }
+  });
+}
 
 const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+// Defer the first poll so the dyno's listen() callback returns and the load
+// balancer can route a health check before the poller's I/O burst kicks in.
+const INITIAL_POLL_DELAY_MS = 5 * 1000;
+const RECENT_EVENT_IDS_CAP = 500;
 
-// In-memory cursor; resets on server restart.
-// On first boot we look back 10 minutes to avoid missing events during deployments.
+// Customer/provider relationships are immutable once a transaction exists, so
+// 3 minutes is safe and absorbs message bursts within a single thread.
+const TX_RELATIONSHIPS_CACHE_TTL_SECONDS = 180;
+const txRelationshipsCache = createTTLCache(TX_RELATIONSHIPS_CACHE_TTL_SECONDS);
+
+async function loadTransactionRelationships(sdk, transactionId) {
+  if (!transactionId) return null;
+  const { data: cached } = txRelationshipsCache[transactionId] || {};
+  if (cached && cached.customerId !== undefined) return cached;
+
+  const res = await sdk.transactions.show({ id: transactionId });
+  const tx = res?.data?.data;
+  const value = {
+    customerId: tx?.relationships?.customer?.data?.id?.uuid || null,
+    providerId: tx?.relationships?.provider?.data?.id?.uuid || null,
+  };
+  txRelationshipsCache[transactionId] = value;
+  return value;
+}
+
+// Cursor — loaded from disk on startup; on a totally fresh boot we look back
+// 10 minutes to avoid missing events during deployments.
 let lastSequenceId = null;
+
+// Insertion-ordered Set; keeps the last RECENT_EVENT_IDS_CAP processed event
+// IDs so a duplicate poll (after restart with overlapping window) skips them.
+const recentEventIds = new Set();
+
+// Concurrency guard — a slow poll must not overlap with the next interval tick.
+let isPolling = false;
+
+function rememberEventId(eventId) {
+  if (!eventId) return;
+  if (recentEventIds.has(eventId)) {
+    // Re-add to push it to the end of the insertion order.
+    recentEventIds.delete(eventId);
+  }
+  recentEventIds.add(eventId);
+  while (recentEventIds.size > RECENT_EVENT_IDS_CAP) {
+    const oldest = recentEventIds.values().next().value;
+    recentEventIds.delete(oldest);
+  }
+}
 
 // ─── Event handlers ───────────────────────────────────────────────────────────
 
@@ -24,32 +81,23 @@ async function handleNewUser(resource) {
 
   console.log(`[eventPoller] New user: ${email}`);
 
-  // Welcome email with PDF (non-fatal)
-  try {
-    await sendWelcomeEmail({ email, firstName, lastName });
-  } catch (err) {
-    console.error('[eventPoller] Welcome email failed:', err.message);
-  }
-
-  // WhatsApp: admin alert (non-fatal)
-  try {
-    await sendAdminAlert({ firstName, lastName, email });
-  } catch (err) {
-    console.error('[eventPoller] Admin WhatsApp alert failed:', err.message);
-  }
-
-  // WhatsApp: user welcome (only if they have a phone)
+  const tasks = [
+    { label: 'welcome email', fn: () => sendWelcomeEmail({ email, firstName, lastName }) },
+    { label: 'admin WhatsApp alert', fn: () => sendAdminAlert({ firstName, lastName, email }) },
+  ];
   if (phone) {
-    try {
-      await sendUserWhatsApp({
-        phone,
-        templateName: 'av_welcome_user',
-        params: [firstName],
-      });
-    } catch (err) {
-      console.error('[eventPoller] User welcome WhatsApp failed:', err.message);
-    }
+    tasks.push({
+      label: 'user welcome WhatsApp',
+      fn: () =>
+        sendUserWhatsApp({
+          phone,
+          templateName: 'av_welcome_user',
+          params: [firstName],
+        }),
+    });
   }
+
+  await runNotifications(tasks);
 }
 
 // Maps transition name fragments → { buyerTemplate, sellerTemplate, notifyBoth }
@@ -103,21 +151,20 @@ async function handleTransactionEvent(resource) {
     providerId ? lookupUserPhone(sdk, providerId) : Promise.resolve(null),
   ]);
 
+  const tasks = [];
   if (rule.buyerTemplate && customerPhone) {
-    try {
-      await sendUserWhatsApp({ phone: customerPhone, templateName: rule.buyerTemplate });
-    } catch (err) {
-      console.error('[eventPoller] Buyer WhatsApp failed:', err.message);
-    }
+    tasks.push({
+      label: 'buyer WhatsApp',
+      fn: () => sendUserWhatsApp({ phone: customerPhone, templateName: rule.buyerTemplate }),
+    });
   }
-
   if (rule.sellerTemplate && providerPhone) {
-    try {
-      await sendUserWhatsApp({ phone: providerPhone, templateName: rule.sellerTemplate });
-    } catch (err) {
-      console.error('[eventPoller] Seller WhatsApp failed:', err.message);
-    }
+    tasks.push({
+      label: 'seller WhatsApp',
+      fn: () => sendUserWhatsApp({ phone: providerPhone, templateName: rule.sellerTemplate }),
+    });
   }
+  await runNotifications(tasks);
 }
 
 async function handleMessageEvent(resource) {
@@ -131,10 +178,7 @@ async function handleMessageEvent(resource) {
   if (!transactionId) return;
 
   try {
-    const txRes = await sdk.transactions.show({ id: transactionId });
-    const tx = txRes?.data?.data;
-    const customerId = tx?.relationships?.customer?.data?.id?.uuid;
-    const providerId = tx?.relationships?.provider?.data?.id?.uuid;
+    const { customerId, providerId } = await loadTransactionRelationships(sdk, transactionId);
 
     // The recipient is whichever party is NOT the sender
     const recipientId = senderId === customerId ? providerId : customerId;
@@ -142,54 +186,81 @@ async function handleMessageEvent(resource) {
 
     const recipientPhone = await lookupUserPhone(sdk, recipientId);
     if (recipientPhone) {
-      await sendUserWhatsApp({
-        phone: recipientPhone,
-        templateName: 'av_new_message',
-      });
+      await runNotifications([
+        {
+          label: 'message WhatsApp',
+          fn: () =>
+            sendUserWhatsApp({ phone: recipientPhone, templateName: 'av_new_message' }),
+        },
+      ]);
     }
   } catch (err) {
-    console.error('[eventPoller] Message event handler failed:', err.message);
+    console.error('[eventPoller] Message event handler failed:', err);
   }
 }
 
 // ─── Polling loop ─────────────────────────────────────────────────────────────
 
 async function pollEvents() {
-  const sdk = getIntegrationSdk();
-
-  const params = lastSequenceId
-    ? { sequenceIdStart: lastSequenceId + 1 }
-    : { createdAtStart: new Date(Date.now() - 10 * 60 * 1000).toISOString() };
-
-  let res;
-  try {
-    res = await sdk.events.query(params);
-  } catch (err) {
-    console.error('[eventPoller] Integration API query failed:', err.message);
+  if (isPolling) {
+    console.warn('[eventPoller] Previous poll still running — skipping this tick');
     return;
   }
+  isPolling = true;
+  try {
+    const sdk = getIntegrationSdk();
 
-  const events = res?.data?.data || [];
-  if (events.length > 0) {
-    console.log(`[eventPoller] Processing ${events.length} event(s)`);
-  }
+    // Cap each tick at 100 events; remainder is picked up on the next poll via lastSequenceId.
+    const params = lastSequenceId
+      ? { sequenceIdStart: lastSequenceId + 1, perPage: 100 }
+      : { createdAtStart: new Date(Date.now() - 10 * 60 * 1000).toISOString(), perPage: 100 };
 
-  for (const event of events) {
-    const { eventType, resource, sequenceId } = event.attributes;
-
+    let res;
     try {
-      if (eventType === 'user/created') {
-        await handleNewUser(resource);
-      } else if (eventType === 'transaction/transitioned') {
-        await handleTransactionEvent(resource);
-      } else if (eventType === 'message/created') {
-        await handleMessageEvent(resource);
-      }
+      res = await sdk.events.query(params);
     } catch (err) {
-      console.error(`[eventPoller] Unhandled error for event type "${eventType}":`, err.message);
+      console.error('[eventPoller] Integration API query failed:', err);
+      return;
     }
 
-    lastSequenceId = sequenceId;
+    const events = res?.data?.data || [];
+    if (events.length > 0) {
+      console.log(`[eventPoller] Processing ${events.length} event(s)`);
+    }
+
+    for (const event of events) {
+      const { eventType, resource, sequenceId } = event.attributes;
+      const eventId = event.id?.uuid || event.id;
+
+      // Skip events we've already processed in a previous (overlapping) poll.
+      if (eventId && recentEventIds.has(eventId)) {
+        lastSequenceId = sequenceId;
+        continue;
+      }
+
+      try {
+        if (eventType === 'user/created') {
+          await handleNewUser(resource);
+        } else if (eventType === 'transaction/transitioned') {
+          await handleTransactionEvent(resource);
+        } else if (eventType === 'message/created') {
+          await handleMessageEvent(resource);
+        }
+      } catch (err) {
+        console.error(`[eventPoller] Unhandled error for event type "${eventType}":`, err);
+      }
+
+      rememberEventId(eventId);
+      lastSequenceId = sequenceId;
+    }
+  } finally {
+    // Persist cursor + dedupe set after every poll. Failures are non-fatal
+    // (logged inside saveCursor) so a transient disk error never wedges polling.
+    await saveCursor({
+      lastSequenceId,
+      recentEventIds: Array.from(recentEventIds),
+    });
+    isPolling = false;
   }
 }
 
@@ -198,16 +269,33 @@ async function pollEvents() {
  */
 let pollIntervalId = null;
 
-function startPoller() {
+async function startPoller() {
   if (pollIntervalId) return;
 
   console.log('[eventPoller] Starting Integration API event poller (interval: 5 min)');
 
-  // First poll immediately, then on interval
-  pollEvents().catch(err => console.error('[eventPoller] Initial poll failed:', err.message));
+  // Seed cursor + dedupe set from persisted state. On a totally fresh boot
+  // this is a no-op and we fall back to the 10-minute lookback window.
+  try {
+    const seed = await loadCursor();
+    lastSequenceId = seed.lastSequenceId;
+    for (const id of seed.recentEventIds) recentEventIds.add(id);
+    console.log(
+      `[eventPoller] Loaded cursor: lastSequenceId=${lastSequenceId}, dedupe size=${recentEventIds.size}`
+    );
+  } catch (err) {
+    console.warn('[eventPoller] Cursor seed failed, starting fresh:', err);
+  }
+
+  // Defer the first poll so the dyno can finish warming up; subsequent polls
+  // run on the regular interval.
+  const initialTimer = setTimeout(() => {
+    pollEvents().catch(err => console.error('[eventPoller] Initial poll failed:', err));
+  }, INITIAL_POLL_DELAY_MS);
+  initialTimer.unref?.();
 
   pollIntervalId = setInterval(() => {
-    pollEvents().catch(err => console.error('[eventPoller] Poll failed:', err.message));
+    pollEvents().catch(err => console.error('[eventPoller] Poll failed:', err));
   }, POLL_INTERVAL_MS);
 
   // Allow process to exit normally even with active interval

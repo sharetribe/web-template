@@ -27,6 +27,9 @@ import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
+// AV-specific translation overrides + additions, kept in a separate file so the
+// upstream-baseline en.json stays merge-clean.
+import avMessages from './translations/en_av.json';
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -94,9 +97,12 @@ const addMissingTranslations = (sourceLangTranslations, targetLangTranslations) 
 //       messages with the key as the value of each message and discard the value.
 //       { 'My.translationKey1': 'My.translationKey1', 'My.translationKey2': 'My.translationKey2' }
 const isTestEnv = process.env.NODE_ENV === 'test';
+// AV overrides win over both defaultMessages (upstream en.json) and any
+// non-test locale messages. Missing AV keys fall through to the underlying file.
+const mergedDefaultMessages = { ...defaultMessages, ...avMessages };
 const localeMessages = isTestEnv
-  ? Object.fromEntries(Object.entries(defaultMessages).map(([key]) => [key, key]))
-  : addMissingTranslations(defaultMessages, messagesInLocale);
+  ? Object.fromEntries(Object.entries(mergedDefaultMessages).map(([key]) => [key, key]))
+  : { ...addMissingTranslations(mergedDefaultMessages, messagesInLocale), ...avMessages };
 
 // For customized apps, this dynamic loading of locale files is not necessary.
 // It helps locale change from configDefault.js file or hosted configs, but customizers should probably

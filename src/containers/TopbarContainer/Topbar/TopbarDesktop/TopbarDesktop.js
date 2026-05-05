@@ -20,6 +20,7 @@ import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 import IconRegisterDesktop from './IconRegisterDesktop';
 
 import css from './TopbarDesktop.module.css';
+import { AV_PROFILE_LINKS } from '../../../../extensions/topbar/links';
 
 import { CreateListingMenuLink } from './CustomLinksMenu/PriorityLinks';
 
@@ -99,33 +100,17 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
             </NamedLink>
           </MenuItem>
         ) : null}
-        <MenuItem key="MyPurchasesPage">
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('MyPurchasesPage'))}
-            name="MyPurchasesPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.myPurchasesLink" />
-          </NamedLink>
-        </MenuItem>
-        <MenuItem key="MySalesPage">
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('MySalesPage'))}
-            name="MySalesPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.mySalesLink" />
-          </NamedLink>
-        </MenuItem>
-        <MenuItem key="MyBalancePage">
-          <NamedLink
-            className={classNames(css.menuLink, currentPageClass('MyBalancePage'))}
-            name="MyBalancePage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.myBalanceLink" />
-          </NamedLink>
-        </MenuItem>
+        {AV_PROFILE_LINKS.map(({ pageName, labels }) => (
+          <MenuItem key={pageName}>
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass(pageName))}
+              name={pageName}
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id={labels.desktop} />
+            </NamedLink>
+          </MenuItem>
+        ))}
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}

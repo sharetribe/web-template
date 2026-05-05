@@ -106,3 +106,126 @@
  *   src/components/FieldCheckbox/FieldCheckbox.module.css
  *   src/components/FieldRadioButton/FieldRadioButton.module.css
  */
+
+/* ================ AV Typography Overrides ================ */
+/* Moved from marketplaceDefaults.css to keep that file upstream-clean. */
+
+:root {
+  --colorSuccessDark: #239954;
+}
+
+body {
+  letter-spacing: 1px;
+}
+
+html {
+  color: var(--colorGrey900);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: var(--fontWeightRegular);
+}
+
+h4 {
+  font-size: 21px;
+}
+
+pre {
+  font-size: 18px;
+
+  @media (--viewportMedium) {
+    font-size: 20px;
+  }
+}
+
+select,
+input,
+textarea {
+  font-size: 18px;
+}
+
+.h4 {
+  font-size: 18px;
+}
+
+.text {
+  font-size: 16px;
+
+  @media (--viewportMedium) {
+    font-size: 18px;
+  }
+}
+
+.textSmall {
+  font-size: 16px;
+  line-height: 20px;
+
+  @media (--viewportMedium) {
+    font-size: 18px;
+  }
+}
+
+.textXSmall {
+  font-size: 14px;
+}
+
+.marketplaceModalHelperLink {
+  font-size: 14px;
+}
+
+/* ================ AV Title Helper Classes ================ */
+
+.marketplaceAuthTitleStyles {
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  font-size: 24px;
+  line-height: 36px;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    font-weight: var(--fontWeightBold);
+    line-height: 30px;
+    font-size: 28px;
+    margin: 0;
+  }
+}
+
+.marketplaceListingSectionTitleStyles {
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  font-size: 24px;
+  line-height: 36px;
+
+  @media (--viewportMedium) {
+    font-size: 24px;
+    line-height: 30px;
+    font-size: 28px;
+  }
+}
+
+/* ================ LayoutSideNavigation page title ================ */
+
+.sideNavPageTitle {
+  align-self: center;
+  padding: 0px 0 8px 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+  width: var(--TabNav_linkWidth);
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (--viewportLarge) {
+    padding: 5px 0 3px 0;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    align-self: unset;
+  }
+}

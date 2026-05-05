@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // utils
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from '../../util/types';
@@ -12,13 +12,7 @@ import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 import IntegerRangeFilter from './IntegerRangeFilter/IntegerRangeFilter';
 import SeatsFilter from './SeatsFilter/SeatsFilter';
-import GroupedMultiSelectFilter from './GroupedMultiSelectFilter/GroupedMultiSelectFilter';
-import { listingFieldDisplayOverrides } from '../../config/configListingDisplay';
-
-// TODO: move to component.
-import classNames from 'classnames';
-import FilterPlainCss from './FilterPlain/FilterPlain.module.css';
-import IconPlus from './IconPlus/IconPlus';
+import { getAvFilter } from '../../extensions/searchFilters/avFilters';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -164,62 +158,27 @@ const FilterComponent = props => {
     }
   }
 
+  // AV-specific filter rendering (grouped_enum, color swatches, groupedMultiSelect overrides).
+  // Returns null if the case isn't AV-recognized — fall through to upstream switch.
+  const avFilter = getAvFilter({
+    schemaType,
+    key,
+    config,
+    componentId,
+    prefix,
+    name,
+    liveEdit,
+    useHistoryPush,
+    initialValues,
+    getHandleChangedValueFn,
+    getAriaLabel,
+    constructQueryParamName,
+    rest,
+  });
+  if (avFilter) return avFilter;
+
   // Custom extended data filters
   switch (schemaType) {
-    case 'grouped_enum': {
-      const { childFilters = [], filterConfig = {} } = config;
-      if (filterConfig.filterType === 'GroupedSelectMultipleFilter') {
-        // TODO: move to component.
-        const [isOpen, setOpened] = useState(false);
-        const toggleIsOpen = () => {
-          setOpened(!isOpen)
-        };
-
-        return (<div className={FilterPlainCss.root}>
-          <button className={FilterPlainCss.labelButton} onClick={toggleIsOpen}>
-            <span className={FilterPlainCss.labelButtonContent}>
-              <span className={FilterPlainCss.labelWrapper}>
-                <span className={FilterPlainCss.label}>
-                  {filterConfig.label}
-                </span>
-              </span>
-              <span className={FilterPlainCss.openSign}>
-                <IconPlus isOpen={isOpen} isSelected={true} />
-              </span>
-            </span>
-          </button>
-
-          <div
-            id={componentId}
-            className={classNames(FilterPlainCss.plain, FilterPlainCss.grouped, { [FilterPlainCss.isOpen]: isOpen })}
-          >
-            {childFilters.map(elementConfig => {
-              const { key, schemaType } = elementConfig;
-              const componentId = `${prefix}.${key.toLowerCase()}`;
-              const { scope, enumOptions, filterConfig = {} } = elementConfig;
-              const { label, filterType } = filterConfig;
-              const name = key.replace(/\s+/g, '-');
-              const queryParamNames = [constructQueryParamName(key, scope)];
-
-              return (<div key={componentId}>
-                  <SelectMultipleFilter
-                  id={componentId}
-                  label={label}
-                  name={name}
-                  queryParamNames={queryParamNames}
-                  initialValues={initialValues(queryParamNames, liveEdit)}
-                  onSubmit={getHandleChangedValueFn(useHistoryPush)}
-                  options={enumOptions}
-                  schemaType={schemaType}
-                  getAriaLabel={getAriaLabel}
-                  {...rest}
-                />
-              </div>);
-            })}
-          </div>
-        </div>);
-      }
-    }
     case SCHEMA_TYPE_ENUM: {
       const { scope, enumOptions, filterConfig = {} } = config;
       const { label, filterType } = filterConfig;
@@ -248,40 +207,14 @@ const FilterComponent = props => {
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={enumOptions}
           schemaType={schemaType}
-          useSwatches={filterType === 'ColorSwatchFilter' || key === 'color'}
           {...rest}
         />
       );
     }
     case SCHEMA_TYPE_MULTI_ENUM: {
       const { scope, enumOptions, filterConfig = {} } = config;
-      const { label, filterType, searchMode } = filterConfig;
+      const { label, searchMode } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
-
-      // If this field has a groupedMultiSelect display override, render the grouped filter.
-      const displayOverride = listingFieldDisplayOverrides[key];
-      const groups =
-        displayOverride?.saveConfig?.inputType === 'groupedMultiSelect'
-          ? displayOverride.saveConfig.groups
-          : null;
-
-      if (groups) {
-        return (
-          <GroupedMultiSelectFilter
-            id={componentId}
-            label={label}
-            getAriaLabel={getAriaLabel}
-            name={name}
-            queryParamNames={queryParamNames}
-            initialValues={initialValues(queryParamNames, liveEdit)}
-            onSubmit={getHandleChangedValueFn(useHistoryPush)}
-            groups={groups}
-            searchMode={searchMode}
-            {...rest}
-          />
-        );
-      }
-
       return (
         <SelectMultipleFilter
           id={componentId}
@@ -294,7 +227,6 @@ const FilterComponent = props => {
           options={enumOptions}
           schemaType={schemaType}
           searchMode={searchMode}
-          useSwatches={filterType === 'ColorSwatchFilter' || key === 'color'}
           {...rest}
         />
       );

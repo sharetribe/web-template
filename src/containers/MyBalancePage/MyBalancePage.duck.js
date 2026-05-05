@@ -8,9 +8,9 @@ import {
   getRefundedTransitions,
 } from '../../transactions/transactionHelpers';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import * as log from '../../util/log';
 
 const PAGE_SIZE = 10;
-const SUMMARY_PER_PAGE = 100;
 
 const entityRefs = entities =>
   entities.map(entity => ({
@@ -31,6 +31,7 @@ const myBalancePageSlice = createSlice({
     pagination: null,
     transactionRefs: [],
     summaryFetchInProgress: false,
+    summaryLoaded: false,
     completedTotalAmount: 0,
     pendingTotalAmount: 0,
     cancelledCount: 0,
@@ -54,7 +55,7 @@ const myBalancePageSlice = createSlice({
         state.pagination = action.payload.data.meta;
       })
       .addCase(loadTransactionsThunk.rejected, (state, action) => {
-        console.error(action.payload || action.error); // eslint-disable-line
+        log.error(action.payload || action.error, 'my-balance-fetch-failed');
         state.fetchInProgress = false;
         state.fetchError = action.payload;
       })
@@ -73,6 +74,7 @@ const myBalancePageSlice = createSlice({
           currency,
         } = action.payload;
         state.summaryFetchInProgress = false;
+        state.summaryLoaded = true;
         state.completedTotalAmount = completedTotalAmount;
         state.pendingTotalAmount = pendingTotalAmount;
         state.cancelledCount = cancelledCount;
@@ -82,7 +84,7 @@ const myBalancePageSlice = createSlice({
         state.currency = currency;
       })
       .addCase(fetchSummaryThunk.rejected, (state, action) => {
-        console.error(action.payload || action.error); // eslint-disable-line
+        log.error(action.payload || action.error, 'my-balance-summary-failed');
         state.summaryFetchInProgress = false;
       });
   },
@@ -105,7 +107,6 @@ const txQueryConfig = {
     'processName',
     'lastTransition',
     'lastTransitionedAt',
-    'transitions',
     'payinTotal',
     'payoutTotal',
     'lineItems',
@@ -154,96 +155,27 @@ export const loadTransactionsThunk = createAsyncThunk(
   loadTransactionsPayloadCreator
 );
 
-const sumPayoutAmounts = txs => {
-  let total = 0;
-  let currency = null;
-  txs.forEach(tx => {
-    const payout = tx.attributes.payoutTotal;
-    if (payout) {
-      total += payout.amount;
-      if (!currency) currency = payout.currency;
-    }
+// Thunk: fetch summary totals from the server endpoint, which paginates fully.
+// The server scopes results to the authenticated user via the cookie SDK.
+const fetchSummaryPayloadCreator = async (_, { rejectWithValue }) => {
+  const params = new URLSearchParams({
+    completed: getCompletedTransitions().join(','),
+    refunded: getRefundedTransitions().join(','),
+    processNames: paymentProcessNames().join(','),
   });
-  return { total, currency };
-};
-
-const computePending = (allTxs, completedTxs, cancelledTxs) => {
-  const completedIds = new Set(completedTxs.map(tx => tx.id.uuid));
-  const cancelledIds = new Set(cancelledTxs.map(tx => tx.id.uuid));
-  let pendingTotal = 0;
-  let currency = null;
-  allTxs.forEach(tx => {
-    if (!completedIds.has(tx.id.uuid) && !cancelledIds.has(tx.id.uuid)) {
-      const payout = tx.attributes.payoutTotal;
-      if (payout) {
-        pendingTotal += payout.amount;
-        if (!currency) currency = payout.currency;
-      }
+  try {
+    const res = await fetch(`/api/my-balance/summary?${params.toString()}`, {
+      credentials: 'include',
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      return rejectWithValue(storableError(new Error(body.error || `summary_failed_${res.status}`)));
     }
-  });
-  return { pendingTotal, currency };
-};
-
-// Thunk: fetch summary totals (6 parallel queries: 3 all-time + 3 current month)
-const fetchSummaryPayloadCreator = (_, { rejectWithValue, extra: sdk }) => {
-  const processNames = paymentProcessNames();
-  const completedTransitions = getCompletedTransitions();
-  const refundedTransitions = getRefundedTransitions();
-
-  const now = new Date();
-  const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  const baseParams = {
-    only: 'sale',
-    processNames,
-    'fields.transaction': ['payoutTotal', 'lastTransition'],
-    perPage: SUMMARY_PER_PAGE,
-  };
-
-  const monthParams = { ...baseParams, createdAtStart: currentMonthStart };
-
-  return Promise.all([
-    sdk.transactions.query({ ...baseParams, lastTransitions: completedTransitions }),
-    sdk.transactions.query({ ...baseParams, lastTransitions: refundedTransitions }),
-    sdk.transactions.query(baseParams),
-    sdk.transactions.query({ ...monthParams, lastTransitions: completedTransitions }),
-    sdk.transactions.query({ ...monthParams, lastTransitions: refundedTransitions }),
-    sdk.transactions.query(monthParams),
-  ])
-    .then(([completedRes, cancelledRes, allRes, mCompletedRes, mCancelledRes, mAllRes]) => {
-      const completedTxs = completedRes.data.data;
-      const cancelledTxs = cancelledRes.data.data;
-      const allTxs = allRes.data.data;
-      const mCompletedTxs = mCompletedRes.data.data;
-      const mCancelledTxs = mCancelledRes.data.data;
-      const mAllTxs = mAllRes.data.data;
-
-      const { total: completedTotalAmount, currency: c1 } = sumPayoutAmounts(completedTxs);
-      const { pendingTotal: pendingTotalAmount, currency: c2 } = computePending(
-        allTxs,
-        completedTxs,
-        cancelledTxs
-      );
-      const { total: currentMonthCompletedAmount, currency: c3 } = sumPayoutAmounts(mCompletedTxs);
-      const { pendingTotal: currentMonthPendingAmount } = computePending(
-        mAllTxs,
-        mCompletedTxs,
-        mCancelledTxs
-      );
-
-      const currency = c1 || c2 || c3 || null;
-
-      return {
-        completedTotalAmount,
-        pendingTotalAmount,
-        cancelledCount: cancelledRes.data.meta?.totalItems || cancelledTxs.length,
-        currentMonthCompletedAmount,
-        currentMonthPendingAmount,
-        currentMonthCancelledCount: mCancelledRes.data.meta?.totalItems || mCancelledTxs.length,
-        currency,
-      };
-    })
-    .catch(e => rejectWithValue(storableError(e)));
+    const body = await res.json();
+    return body;
+  } catch (e) {
+    return rejectWithValue(storableError(e));
+  }
 };
 
 export const fetchSummaryThunk = createAsyncThunk(
@@ -251,9 +183,14 @@ export const fetchSummaryThunk = createAsyncThunk(
   fetchSummaryPayloadCreator
 );
 
-export const loadData = (params, search) => dispatch => {
-  return Promise.all([
-    dispatch(loadTransactionsThunk({ search })),
-    dispatch(fetchSummaryThunk()),
-  ]);
+export const loadData = (params, search) => (dispatch, getState) => {
+  const promises = [dispatch(loadTransactionsThunk({ search }))];
+  // Summary is invariant of pagination/filter — only fetch once per session.
+  // Skip on SSR: fetch() to a same-origin path needs an absolute URL in Node, and
+  // the summary is per-user/personalized, so it doesn't help SSR cache or SEO.
+  const isClient = typeof window !== 'undefined';
+  if (isClient && !getState().MyBalancePage.summaryLoaded) {
+    promises.push(dispatch(fetchSummaryThunk()));
+  }
+  return Promise.all(promises);
 };

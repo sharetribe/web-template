@@ -6,6 +6,7 @@ const REQUIRED_COLUMNS = ['title', 'price', 'description'];
 const IMAGE_COLUMNS = ['image_front', 'image_back', 'image_horizontal', 'image_details'];
 const REQUIRED_IMAGE_COLUMNS = ['image_front', 'image_back', 'image_horizontal'];
 const MAX_ROWS = 100;
+const RESERVED_PD_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 /**
  * Parse a CSV buffer and return structured rows.
@@ -90,11 +91,18 @@ function validateRows(rows, imageMap) {
       }
     }
 
-    // Extract publicData from pd_* columns
-    const publicData = {};
+    // Extract publicData from pd_* columns. Use a null-prototype object and
+    // reject reserved keys to prevent prototype pollution from CSV headers.
+    const publicData = Object.create(null);
     for (const [key, value] of Object.entries(row)) {
       if (key.startsWith('pd_') && value && value.trim() !== '') {
         const pdKey = key.slice(3); // pd_color -> color
+        if (RESERVED_PD_KEYS.has(pdKey)) {
+          rowErrors.push(
+            `Row ${rowNum}: publicData column "${key}" uses a reserved key and was skipped.`
+          );
+          continue;
+        }
         // Pipe-separated values become arrays (multi-enum)
         if (value.includes('|')) {
           publicData[pdKey] = value.split('|').map(v => v.trim());
@@ -111,6 +119,20 @@ function validateRows(rows, imageMap) {
       rowErrors.push(`Row ${rowNum}: Invalid geolocation values.`);
     }
 
+    // Stock — explicit validation: empty defaults to 1, otherwise must be a non-negative integer.
+    const rawStock = row.stock == null ? '' : String(row.stock).trim();
+    let stock = 1;
+    if (rawStock !== '') {
+      const parsedStock = Number(rawStock);
+      if (!Number.isInteger(parsedStock) || parsedStock < 0) {
+        rowErrors.push(
+          `Row ${rowNum}: "stock" must be a non-negative integer, got "${row.stock}".`
+        );
+      } else {
+        stock = parsedStock;
+      }
+    }
+
     errors.push(...rowErrors);
 
     return {
@@ -121,7 +143,7 @@ function validateRows(rows, imageMap) {
       currency: (row.currency || 'MXN').trim().toUpperCase(),
       authorId: (row.author_id || '').trim(),
       publish: (row.publish || 'yes').trim().toLowerCase() !== 'no',
-      stock: parseInt(row.stock, 10) || 1,
+      stock,
       shippingEnabled: (row.shipping_enabled || 'true').trim().toLowerCase() !== 'false',
       pickupEnabled: (row.pickup_enabled || 'false').trim().toLowerCase() === 'true',
       locationAddress: (row.location_address || '').trim(),

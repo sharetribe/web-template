@@ -86,6 +86,9 @@ app.use(express.json());
 app.use('/api/brevo', brevoRouter);
 app.use('/api/instagram', instagramRouter);
 
+const myBalanceRouter = require('./api/my-balance');
+app.use('/api/my-balance', myBalanceRouter);
+
 // Bulk import router (mounted separately to avoid Transit body-parser conflict with multer)
 const bulkImportRouter = require('./api/bulk-import');
 app.use('/api/bulk-import', bulkImportRouter);

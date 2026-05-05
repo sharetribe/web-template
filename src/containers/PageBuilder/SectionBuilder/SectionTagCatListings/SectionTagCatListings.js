@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { useIntl } from '../../../../util/reactIntl';
 import { AVListingCard } from '../../../../components';
+import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
@@ -52,7 +52,6 @@ const getGapValue = slider => {
  * Listings are loaded by the AV landing page extension during loadData.
  */
 const SectionTagCatListings = props => {
-  const intl = useIntl();
   const {
     sectionId,
     className,
@@ -75,25 +74,19 @@ const SectionTagCatListings = props => {
   const [effectiveColumns, setEffectiveColumns] = useState(numColumns);
   const normalizedColumns = Math.min(Math.max(effectiveColumns, 1), COLUMN_CONFIG.length);
 
-  useEffect(() => {
-    if (!listings.length || typeof window === 'undefined') return () => {};
-
-    const setCarouselWidth = () => {
-      const container = sliderContainerRef.current;
-      if (!container) return;
-      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-      const containerWidth =
-        container.clientWidth >= window.innerWidth - scrollbarWidth
-          ? window.innerWidth
-          : container.clientWidth;
-      container.style.setProperty('--carouselWidth', `${containerWidth - scrollbarWidth}px`);
-      setEffectiveColumns(getEffectiveColumns(numColumns));
-    };
-
-    setCarouselWidth();
-    window.addEventListener('resize', setCarouselWidth);
-    return () => window.removeEventListener('resize', setCarouselWidth);
-  }, [listings.length]);
+  const setCarouselWidth = () => {
+    if (!listings.length) return;
+    const container = sliderContainerRef.current;
+    if (!container) return;
+    const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+    const containerWidth =
+      container.clientWidth >= window.innerWidth - scrollbarWidth
+        ? window.innerWidth
+        : container.clientWidth;
+    container.style.setProperty('--carouselWidth', `${containerWidth - scrollbarWidth}px`);
+    setEffectiveColumns(getEffectiveColumns(numColumns));
+  };
+  useDebouncedWindowResize(setCarouselWidth);
 
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
@@ -159,7 +152,7 @@ const SectionTagCatListings = props => {
           <div className={classNames(css.slider, getColumnClass(normalizedColumns))} ref={sliderRef}>
             {listings.map(l => (
               <div key={l.id.uuid} className={css.carouselItem}>
-                <AVListingCard listing={l} intl={intl} className={css.listingCard} renderSizes={renderSizes} />
+                <AVListingCard listing={l} className={css.listingCard} renderSizes={renderSizes} />
               </div>
             ))}
           </div>

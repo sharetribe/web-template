@@ -94,7 +94,10 @@ const FieldGroupedMultiSelect = props => {
                 <button
                   type="button"
                   className={css.chipRemove}
-                  aria-label={`Remove ${optionLabelMap[key] || key}`}
+                  aria-label={intl.formatMessage(
+                    { id: 'FieldGroupedMultiSelect.removeOption' },
+                    { label: optionLabelMap[key] || key }
+                  )}
                   onClick={e => removeOption(e, key)}
                 >
                   ×
@@ -118,7 +121,9 @@ const FieldGroupedMultiSelect = props => {
             type="button"
             className={css.toggleBtn}
             onClick={() => setIsOpen(o => !o)}
-            aria-label={isOpen ? 'Collapse' : 'Expand'}
+            aria-label={intl.formatMessage({
+              id: isOpen ? 'FieldGroupedMultiSelect.collapse' : 'FieldGroupedMultiSelect.expand',
+            })}
           >
             {isOpen ? '▲' : '▼'}
           </button>

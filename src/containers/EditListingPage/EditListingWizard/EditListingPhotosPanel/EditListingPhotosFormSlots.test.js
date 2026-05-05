@@ -4,15 +4,15 @@ import '@testing-library/jest-dom';
 import { fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render } from '../../../../util/testHelpers';
 
-import EditListingPhotosForm from './EditListingPhotosForm';
+import EditListingPhotosFormSlots from './EditListingPhotosFormSlots';
 
 const noop = () => null;
 
-describe('EditListingPhotosForm', () => {
+describe('EditListingPhotosFormSlots', () => {
   it('matches snapshot', () => {
     const saveActionMsg = 'Save photos';
     const tree = render(
-      <EditListingPhotosForm
+      <EditListingPhotosFormSlots
         initialValues={{ country: 'US' }}
         intl={fakeIntl}
         dispatch={noop}

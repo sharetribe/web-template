@@ -10,6 +10,33 @@ const DELAY_BETWEEN_ROWS_MS = 500;
 
 const SLOT_ORDER = ['front', 'back', 'horizontal', 'details'];
 
+const MAX_SDK_ERRORS_KEPT = 5;
+
+/**
+ * Serialize an SDK / generic Error into a JSON-safe shape that preserves
+ * Sharetribe SDK validation detail (`err.data.errors`) when present.
+ */
+function serializeSdkError(err) {
+  if (!err) return { message: 'Unknown error' };
+  const out = {
+    message: err.message || 'Unknown error',
+  };
+  if (err.status) out.status = err.status;
+  const sdkErrors = err.data && Array.isArray(err.data.errors) ? err.data.errors : null;
+  if (sdkErrors && sdkErrors.length > 0) {
+    out.sdkErrors = sdkErrors.slice(0, MAX_SDK_ERRORS_KEPT).map(e => ({
+      status: e.status,
+      code: e.code,
+      title: e.title,
+      source: e.source,
+    }));
+    if (sdkErrors.length > MAX_SDK_ERRORS_KEPT) {
+      out.sdkErrorsTruncated = sdkErrors.length - MAX_SDK_ERRORS_KEPT;
+    }
+  }
+  return out;
+}
+
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -18,7 +45,7 @@ function delay(ms) {
  * Upload a single image buffer to Sharetribe via Integration SDK.
  * Returns the image UUID string.
  */
-async function uploadImage(sdk, imageBuffer, originalFilename) {
+async function uploadImage(sdk, imageBuffer) {
   const res = await sdk.images.upload({
     image: imageBuffer,
   });
@@ -37,7 +64,7 @@ async function processRow(sdk, row, imageMap, config) {
     const filename = row.imageSlots[slotKey];
     if (filename && imageMap.has(filename)) {
       const buffer = imageMap.get(filename);
-      const uuid = await uploadImage(sdk, buffer, filename);
+      const uuid = await uploadImage(sdk, buffer);
       imageSlotMapping[slotKey] = uuid;
       imageUuids.push(new UUID(uuid));
     }
@@ -142,15 +169,21 @@ async function processImportJob(jobId, rows, imageMap) {
       failed += 1;
 
       const job = updateJob(jobId, { processed: i + 1, failed });
+      const serialized = serializeSdkError(err);
       job.errors.push({
         row: row.rowNum,
         title: row.title,
-        error: err.message || 'Unknown error',
+        error: serialized.message,
+        ...(serialized.status ? { status: serialized.status } : {}),
+        ...(serialized.sdkErrors ? { sdkErrors: serialized.sdkErrors } : {}),
+        ...(serialized.sdkErrorsTruncated
+          ? { sdkErrorsTruncated: serialized.sdkErrorsTruncated }
+          : {}),
       });
 
       console.error(
         `[bulk-import] Row ${row.rowNum} ("${row.title}") failed:`,
-        err.message
+        serialized
       );
     }
 
@@ -167,4 +200,4 @@ async function processImportJob(jobId, rows, imageMap) {
   );
 }
 
-module.exports = { processImportJob };
+module.exports = { processImportJob, serializeSdkError };

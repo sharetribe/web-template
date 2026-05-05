@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useIntl } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { formatDateIntoPartials } from '../../util/dates';
@@ -87,4 +88,13 @@ const PayoutItem = props => {
   );
 };
 
-export default PayoutItem;
+StatusBadge.propTypes = {
+  status: PropTypes.string,
+  intl: PropTypes.object.isRequired,
+};
+
+PayoutItem.propTypes = {
+  tx: PropTypes.object.isRequired,
+};
+
+export default React.memo(PayoutItem);

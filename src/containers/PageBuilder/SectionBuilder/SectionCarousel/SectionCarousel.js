@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
+import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionCarousel.module.css';
@@ -87,24 +88,19 @@ const SectionCarousel = props => {
   const numberOfBlocks = blocks?.length;
   const hasBlocks = numberOfBlocks > 0;
 
-  useEffect(() => {
-    const setCarouselWidth = () => {
-      if (hasBlocks) {
-        const windowWidth = window.innerWidth;
-        const elem = window.document.getElementById(sliderContainerId);
-        const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-        const elementWidth =
-          elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
-        const carouselWidth = elementWidth - scrollbarWidth;
-
-        elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
-      }
-    };
-    setCarouselWidth();
-
-    window.addEventListener('resize', setCarouselWidth);
-    return () => window.removeEventListener('resize', setCarouselWidth);
-  }, []);
+  const setCarouselWidth = () => {
+    if (hasBlocks) {
+      const windowWidth = window.innerWidth;
+      const elem = window.document.getElementById(sliderContainerId);
+      if (!elem) return;
+      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+      const elementWidth =
+        elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
+      const carouselWidth = elementWidth - scrollbarWidth;
+      elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
+    }
+  };
+  useDebouncedWindowResize(setCarouselWidth);
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }

@@ -147,8 +147,15 @@ const BulkImportPageComponent = props => {
     async e => {
       e.preventDefault();
 
+      if (!apiKey.trim()) {
+        setUploadError(intl.formatMessage({ id: 'BulkImportPage.errorNoApiKey' }));
+        return;
+      }
+
       try {
-        const res = await fetch(templateDownloadUrl);
+        const res = await fetch(templateDownloadUrl, {
+          headers: { 'X-Import-Key': apiKey },
+        });
         if (!res.ok) {
           throw new Error(`Template download failed: ${res.status}`);
         }
@@ -164,10 +171,10 @@ const BulkImportPageComponent = props => {
         window.URL.revokeObjectURL(objectUrl);
       } catch (err) {
         console.error('Template download error:', err);
-        window.location.assign(templateDownloadUrl);
+        setUploadError(err.message);
       }
     },
-    [templateDownloadUrl]
+    [templateDownloadUrl, apiKey, intl]
   );
 
   const progressPercent =

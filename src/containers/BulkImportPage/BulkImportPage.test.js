@@ -133,13 +133,17 @@ describe('BulkImportPage', () => {
       blob: async () => new Blob(['title,description,price'], { type: 'text/csv' }),
     });
 
+    window.localStorage.setItem('bulkImportApiKey', 'secret-key');
+
     render(<BulkImportPage />, { initialState: baseState });
 
     const link = await screen.findByText('BulkImportPage.downloadTemplate');
     fireEvent.click(link);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/bulk-import/template');
+      expect(global.fetch).toHaveBeenCalledWith('/api/bulk-import/template', {
+        headers: { 'X-Import-Key': 'secret-key' },
+      });
       expect(window.URL.createObjectURL).toHaveBeenCalled();
       expect(clickSpy).toHaveBeenCalled();
       expect(removeSpy).toHaveBeenCalled();
@@ -147,6 +151,18 @@ describe('BulkImportPage', () => {
     });
 
     appendSpy.mockRestore();
+  });
+
+  it('shows API key error when downloading template without API key', async () => {
+    render(<BulkImportPage />, { initialState: baseState });
+
+    const link = await screen.findByText('BulkImportPage.downloadTemplate');
+    fireEvent.click(link);
+
+    await waitFor(() => {
+      expect(screen.getByText('BulkImportPage.errorNoApiKey')).toBeInTheDocument();
+    });
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 
   it('shows error when submitting without API key', async () => {

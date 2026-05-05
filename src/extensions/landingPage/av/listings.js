@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { types as sdkTypes, createImageVariantConfig } from '../../../util/sdkLoader';
 import { addMarketplaceEntities, getListingsById } from '../../../ducks/marketplaceData.duck';
 import { denormalisedEntities } from '../../../util/data';
@@ -173,7 +174,10 @@ export const loadCustomSectionListings = ({ pageData, dispatch, config }) => {
     }
   });
 
-  // Fetch each unique user ID across all selected-users sections
+  // Fetch each unique user ID across all selected-users sections.
+  // Note: Sharetribe's public Marketplace API doesn't accept an id-array filter on
+  // sdk.users.query, so true batching isn't available — we deduplicate via Set
+  // and let Promise.all dispatch the fan-out in parallel below.
   const allUserIds = [
     ...new Set(Object.values(selectedUsersSections).flat()),
   ];
@@ -188,44 +192,74 @@ export const loadCustomSectionListings = ({ pageData, dispatch, config }) => {
   });
 };
 
-export const selectCustomSectionListings = ({ state, pageData }) => {
-  const hasSections = hasCustomSections(pageData);
-  if (!hasSections) {
-    return { hasCustomSections: false };
-  }
-
-  const recommendedListingIds = getRecommendedListingIds(pageData);
-  const selectionsSections = getSelectionsSections(pageData);
-  const listings = pickListingsById(state, recommendedListingIds);
-  const selectionsListings = Object.entries(selectionsSections).reduce((collected, [sectionId, ids]) => {
-    return { ...collected, [sectionId]: pickListingsById(state, ids) };
-  }, {});
-
-  // Read tag listing IDs from Redux and denormalize
-  const tagListingIdsBySection = state.avLandingExtension?.tagListingIds || {};
-  const tagListingsSections = Object.entries(tagListingIdsBySection).reduce(
-    (collected, [sectionId, ids]) => ({
-      ...collected,
-      [sectionId]: pickListingsById(state, ids),
-    }),
-    {}
-  );
-
-  // Pick selected users from marketplaceData (fetched during loadData)
-  const selectedUsersSections = getSelectedUsersSections(pageData);
-  const selectedUsersBySection = Object.entries(selectedUsersSections).reduce(
-    (collected, [sectionId, ids]) => ({
-      ...collected,
-      [sectionId]: pickUsersById(state, ids),
-    }),
-    {}
-  );
-
-  return {
-    hasCustomSections: true,
-    listings,
-    selectionsListings,
-    tagListingsSections,
-    selectedUsersBySection,
-  };
+// Entities-aware pickers used inside the memoized selector below.
+const pickListingsByIdFromEntities = (entities, ids) => {
+  const refs = (ids || [])
+    .map(toUUID)
+    .filter(Boolean)
+    .map(id => ({ id, type: 'listing' }));
+  if (!refs.length) return [];
+  return denormalisedEntities(entities, refs, false);
 };
+
+const pickUsersByIdFromEntities = (entities, ids) => {
+  const refs = (ids || [])
+    .map(toUUID)
+    .filter(Boolean)
+    .map(id => ({ id, type: 'user' }));
+  if (!refs.length) return [];
+  return denormalisedEntities(entities, refs, false).filter(Boolean);
+};
+
+// Memoized via reselect (re-exported by @reduxjs/toolkit). Recomputes only
+// when entities, tagListingIds, or pageData change by reference.
+const customSectionListingsSelector = createSelector(
+  [
+    (state) => state.marketplaceData?.entities,
+    (state) => state.avLandingExtension?.tagListingIds,
+    (_state, pageData) => pageData,
+  ],
+  (entities, tagListingIdsBySection, pageData) => {
+    if (!hasCustomSections(pageData)) {
+      return { hasCustomSections: false };
+    }
+
+    const recommendedListingIds = getRecommendedListingIds(pageData);
+    const selectionsSections = getSelectionsSections(pageData);
+    const selectedUsersSections = getSelectedUsersSections(pageData);
+
+    const listings = pickListingsByIdFromEntities(entities, recommendedListingIds);
+    const selectionsListings = Object.entries(selectionsSections).reduce(
+      (collected, [sectionId, ids]) => ({
+        ...collected,
+        [sectionId]: pickListingsByIdFromEntities(entities, ids),
+      }),
+      {}
+    );
+    const tagListingsSections = Object.entries(tagListingIdsBySection || {}).reduce(
+      (collected, [sectionId, ids]) => ({
+        ...collected,
+        [sectionId]: pickListingsByIdFromEntities(entities, ids),
+      }),
+      {}
+    );
+    const selectedUsersBySection = Object.entries(selectedUsersSections).reduce(
+      (collected, [sectionId, ids]) => ({
+        ...collected,
+        [sectionId]: pickUsersByIdFromEntities(entities, ids),
+      }),
+      {}
+    );
+
+    return {
+      hasCustomSections: true,
+      listings,
+      selectionsListings,
+      tagListingsSections,
+      selectedUsersBySection,
+    };
+  }
+);
+
+export const selectCustomSectionListings = ({ state, pageData }) =>
+  customSectionListingsSelector(state, pageData);

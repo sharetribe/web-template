@@ -21,6 +21,7 @@ import CustomLinksMenu from '../TopbarDesktop/CustomLinksMenu/CustomLinksMenu';
 // import { CreateListingMenuLink } from '../TopbarDesktop/CustomLinksMenu/PriorityLinks';
 
 import css from './TopbarMobileMenu.module.css';
+import { AV_PROFILE_LINKS } from '../../../../extensions/topbar/links';
 
 const CustomLinkComponent = ({ linkConfig, currentPage }) => {
   const { group, text, type, href, route } = linkConfig;
@@ -204,21 +205,16 @@ const TopbarMobileMenu = props => {
             </NamedLink>
           </li>
           {manageListingsLinkMaybe}
-          <li className={classNames(css.navigationLink, currentPageClass('MyPurchasesPage'))}>
-            <NamedLink name="MyPurchasesPage">
-              <FormattedMessage id="TopbarMobileMenu.myPurchasesLink" />
-            </NamedLink>
-          </li>
-          <li className={classNames(css.navigationLink, currentPageClass('MySalesPage'))}>
-            <NamedLink name="MySalesPage">
-              <FormattedMessage id="TopbarMobileMenu.mySalesLink" />
-            </NamedLink>
-          </li>
-          <li className={classNames(css.navigationLink, currentPageClass('MyBalancePage'))}>
-            <NamedLink name="MyBalancePage">
-              <FormattedMessage id="TopbarMobileMenu.myBalanceLink" />
-            </NamedLink>
-          </li>
+          {AV_PROFILE_LINKS.map(({ pageName, labels }) => (
+            <li
+              key={pageName}
+              className={classNames(css.navigationLink, currentPageClass(pageName))}
+            >
+              <NamedLink name={pageName}>
+                <FormattedMessage id={labels.mobile} />
+              </NamedLink>
+            </li>
+          ))}
           <li className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}>
             <NamedLink name="ProfileSettingsPage">
               <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
