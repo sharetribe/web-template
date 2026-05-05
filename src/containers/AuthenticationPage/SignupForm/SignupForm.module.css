@@ -10,7 +10,48 @@
   }
 }
 
+.switchToLogin {
+  /* composes: marketplaceModalBottomWrapperText from global; */
+  margin-bottom: 24px;
+  margin-top: 20px;
+  text-align: center;
+
+  @media (--viewportMedium) {
+    margin-bottom: 24px;
+  }
+}
+
+.switchToLoginLink {
+  composes: marketplaceModalHelperLink from global;
+}
+
 .defaultUserFields {
+}
+
+.createAccountTitle{
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 32px;
+  leading-trim: NONE;
+  line-height: 44px;
+  letter-spacing: -2%;
+  color: #101828;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.createAccountDescription{
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: spacing/3;
+letter-spacing: 0%;
+color: #414651;
+margin-bottom: 24px;
+padding-bottom: 0;
 }
 
 .name {
@@ -19,7 +60,7 @@
   margin-top: 24px;
 
   @media (--viewportMedium) {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 }
 
@@ -28,20 +69,21 @@
   margin-top: 24px;
 
   @media (--viewportMedium) {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 }
 
 .firstNameRoot {
-  width: calc(34% - 9px);
+  width: calc(50% - 9px);
 }
 
 .lastNameRoot {
-  width: calc(66% - 9px);
+  width: calc(50% - 9px);
 }
 
 .password {
   composes: marketplaceModalPasswordMargins from global;
+  margin-top: 24px;
 }
 
 .bottomWrapper {

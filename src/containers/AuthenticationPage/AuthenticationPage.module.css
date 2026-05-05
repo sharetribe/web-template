@@ -18,14 +18,47 @@
   }
 }
 
-.content {
-  composes: marketplaceModalBaseStyles from global;
+.Leftcontent {
+  /* composes: marketplaceModalBaseStyles from global;
   padding-top: 29px;
 
   @media (--viewportMedium) {
     margin-top: 5vh;
     margin-bottom: 7.5vh;
     min-height: 700px;
+  } */
+   max-width: 40%;
+   width: 100%;
+   padding: 0 20px;
+   @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 20px;
+    margin-bottom: 30px;
+   }
+   & > div{
+    max-width: 360px;
+    width: 100%;
+    margin: 0 auto;
+   }
+}
+
+.rightImage{
+  max-width: 60%;
+  width: 100%;
+  @media (max-width: 768px) {
+display: none;
+  }
+}
+
+.authenticationPage{
+  display: flex;
+  overflow: hidden;
+  max-width: 100vw;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
   }
 }
 
@@ -141,7 +174,7 @@
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
 }
 

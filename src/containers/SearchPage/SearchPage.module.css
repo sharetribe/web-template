@@ -49,10 +49,11 @@
 
   /* When side nav is shown as a column, Topbar's box-shadow should be visible */
   z-index: calc(var(--zIndexTopbar) - 1);
+  background: #fff;
 
   @media (--viewportMedium) {
-    flex-direction: row;
-    justify-content: center;
+    /* flex-direction: row;
+    justify-content: center; */
   }
 }
 
@@ -68,7 +69,7 @@
   }
   @media (--viewportLarge) {
     /* Layout */
-    padding: 40px 0 0 36px;
+    padding: 0px 0 0 0px;
 
     flex-direction: column;
     justify-content: flex-start;
@@ -77,18 +78,20 @@
     background-color: transparent;
   }
 
-  @media (min-width: 1440px) {
+  /* @media (min-width: 1440px) {
     padding: 40px 0 0 calc((100vw - 1368px) / 2);
   }
   @media (--viewportXLarge) {
     padding: 40px 0 0 calc((100vw - 1800px) / 2);
-  }
+  } */
 }
 
 .filterColumnContent {
   display: flex;
-  flex-direction: column;
-  width: 210px;
+  flex-wrap: wrap;
+  gap: 12px;
+  /* flex-direction: column; */
+  /* width: 210px; */
   padding: 8px 24px 0 0;
 
   @media (--viewportMedium) {
@@ -96,12 +99,15 @@
   }
 
   @media (--viewportLarge) {
-    width: 240px;
-    padding: 8px 36px 24px 0;
+    /* width: 240px; */
+    padding: 20px 36px 24px 0;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   @media (min-width: 1440px) {
-    padding: 8px 60px 24px 0;
+    padding: 20px 0px 24px 0;
   }
 }
 .filter:first-child {
@@ -130,7 +136,7 @@
   }
 
   @media (--viewportMedium) {
-    margin: 24px 0 0 0;
+    margin: 0px 0 0 0;
     padding: 3px 0 5px 0;
   }
 }
@@ -149,9 +155,9 @@
      */
     padding: 24px 24px 0 24px;
     background-color: var(--colorWhite);
-    border-left-width: 1px;
+    /* border-left-width: 1px;
     border-left-style: solid;
-    border-left-color: var(--colorGrey100);
+    border-left-color: var(--colorGrey100); */
 
     scroll-margin-top: var(--topbarHeightDesktop);
   }
@@ -162,13 +168,15 @@
      * and left padding together with border should be 60px.
      */
     padding: 40px 36px 0 36px;
+    max-width: 1354px;
+    margin: 0 auto;
   }
 
   @media (min-width: 1440px) {
-    padding: 40px calc((100vw - 1368px) / 2) 0 59px;
+    /* padding: 40px 0 0 calc((100vw - 1368px) / 2); */
   }
   @media (--viewportXLarge) {
-    padding: 40px calc((100vw - 1800px) / 2) 0 59px;
+    /* padding: 40px 0px 0 calc((100vw - 1800px) / 2); */
   }
 }
 

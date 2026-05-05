@@ -149,7 +149,7 @@ const TopbarDesktop = props => {
     onLogout,
     onSearchSubmit,
     initialSearchFormValues = {},
-    showSearchForm,
+    showSearchForm = false,
     showCreateListingsLink,
     inboxTab,
   } = props;
@@ -211,15 +211,22 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
         linkToExternalSite={config?.topbar?.logoLink}
       />
-      {searchFormMaybe}
+      {/* {searchFormMaybe} */}
+      <div
+        className={classNames(css.spacer, css.topbarSearchWithLeftPadding, {
+          [css.takeAvailableSpace]: giveSpaceForSearch,
+        })}
+      >
+   <NamedLink name="SearchPage" className={css.topbarLink}>
+   <span className={css.topbarLinkLabel}>Courses</span>
+   </NamedLink>
+   <NamedLink name="SearchPage" className={css.topbarLink}> 
+   <span className={css.topbarLinkLabel}>Experts</span>
+   </NamedLink>
+ 
 
-      <CustomLinksMenu
-        currentPage={currentPage}
-        customLinks={customLinks}
-        intl={intl}
-        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-        showCreateListingsLink={showCreateListingsLink}
-      />
+      </div>
+
 
       {inboxLinkMaybe}
       {profileMenuMaybe}

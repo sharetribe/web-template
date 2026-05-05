@@ -15,7 +15,9 @@
     <!--!link-->
     <!--!ssrStyles-->
     <!--!ssrLinks-->
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
     <style>
 
      /**
@@ -150,6 +152,65 @@
         font-weight: 900;
         font-display: fallback;
         src: url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-BlackItalic.woff2") format("woff2"), url("https://assets-sharetribecom.sharetribe.com/webfonts/inter/static-web/Inter-BlackItalic.woff") format("woff");
+      }
+
+      /**
+       * Nohemi font (local). Files live in /public/static/fonts
+       * Use: font-family: 'Nohemi';
+       */
+
+      @font-face {
+        font-family: "Nohemi";
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+        src: url("/static/fonts/Nohemi-Light-BF6438cc5899919.ttf") format("truetype"),
+          url("/static/fonts/Nohemi-Light-BF6438cc583f70b.otf") format("opentype");
+      }
+
+      @font-face {
+        font-family: "Nohemi";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("/static/fonts/Nohemi-Regular-BF6438cc579d934.woff") format("woff"),
+          url("/static/fonts/Nohemi-Regular-BF6438cc4d0e493.ttf") format("truetype"),
+          url("/static/fonts/Nohemi-Regular-BF6438cc58b98fc.otf") format("opentype");
+      }
+
+      @font-face {
+        font-family: "Nohemi";
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+        src: url("/static/fonts/Nohemi-Medium-BF6438cc5883899.ttf") format("truetype"),
+          url("/static/fonts/Nohemi-Medium-BF6438cc581a509.otf") format("opentype");
+      }
+
+      @font-face {
+        font-family: "Nohemi";
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url("/static/fonts/Nohemi-SemiBold-BF6438cc588a48a.ttf") format("truetype");
+      }
+
+      @font-face {
+        font-family: "Nohemi";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url("/static/fonts/Nohemi-Bold-BF6438cc577b524.woff") format("woff"),
+          url("/static/fonts/Nohemi-Bold-BF6438cc587b5b5.ttf") format("truetype");
+      }
+
+      @font-face {
+        font-family: "Nohemi";
+        font-style: normal;
+        font-weight: 800;
+        font-display: swap;
+        src: url("/static/fonts/Nohemi-ExtraBold-BF6438cc5761ae2.woff") format("woff"),
+          url("/static/fonts/Nohemi-ExtraBold-BF6438cc5881baf.ttf") format("truetype");
       }
     </style>
 
