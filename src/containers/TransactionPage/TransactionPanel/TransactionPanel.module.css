@@ -443,25 +443,6 @@
   }
 }
 
-/* Prop to be passed to SendMessageForm component */
-.sendMessageForm {
-  position: relative;
-  margin: 46px 24px 0 24px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-self: stretch;
-
-  @media (--viewportMedium) {
-    margin: 49px 24px 0 24px;
-    border-top: 0;
-  }
-  @media (--viewportLarge) {
-    margin: 48px 0 0 0;
-  }
-}
-
 .sendingMessageNotAllowed {
   color: var(--colorGrey600);
 
