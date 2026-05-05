@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -19,6 +19,8 @@ import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { requireListingImage } from '../../util/configHelpers';
 import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
+import { userDisplayNameAsString } from '../../util/data';
+import { isMobileSafari } from '../../util/userAgent';
 
 import {
   INQUIRY_PROCESS_NAME,
@@ -67,6 +69,7 @@ import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import RequestChangesModal from './RequestChangesModal/RequestChangesModal';
 import MakeCounterOfferModal from './MakeCounterOfferModal/MakeCounterOfferModal';
+import SendMessageForm from './SendMessageForm/SendMessageForm';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
@@ -84,6 +87,7 @@ import {
 import css from './TransactionPage.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1023;
+const SEND_MESSAGE_FORM_ID = 'TransactionPanel.SendMessageForm';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -308,6 +312,11 @@ export const TransactionPageComponent = props => {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  const isMobileSafariRef = useRef(false);
+  useEffect(() => {
+    isMobileSafariRef.current = isMobileSafari();
   }, []);
 
   const config = useConfiguration();
@@ -574,6 +583,63 @@ export const TransactionPageComponent = props => {
   });
   useUploadNavigationBlock(hasUnsentUploads, history, blockMessage);
 
+  /**
+   * SendMessageForm related attributes
+   */
+
+  const showSendMessageForm =
+    !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
+  const showAttachFiles = showSendMessageForm && listingTypeHasFileAttachments && allowFiles;
+
+  const currentUserIsCustomer =
+    currentUser?.id && customer?.id && currentUser.id.uuid === customer?.id?.uuid;
+  const otherUserDisplayNameString = currentUserIsCustomer
+    ? userDisplayNameAsString(provider, '')
+    : userDisplayNameAsString(customer, '');
+
+  const onUploadFileToPanel = file => {
+    if (file) {
+      const tempId = `${Date.now()}-${Math.random()}`;
+      onUploadFile(file, tempId);
+    }
+  };
+
+  const onRemoveFileFromPanel = tempId => {
+    onClearUploadedFiles([tempId]);
+  };
+
+  const onSendMessageFormFocus = () => {
+    if (isMobileSafariRef.current) {
+      window.scroll({ top: document.body.scrollHeight, left: 0, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToMessage = messageId => {
+    const selector = `#msg-${messageId.uuid}`;
+    const el = document.querySelector(selector);
+    if (el) {
+      el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+  };
+
+  const onMessageSubmit = (values, form) => {
+    const message = values.message ? values.message.trim() : null;
+    if (!message) {
+      return;
+    }
+    // By default, the SendMessageForm submit button is disabled if
+    // any files are still uploading or have an error. If you make changes to that
+    // logic, adjust this logic to filter out pending or failed uploads.
+    const fileIds = allowFiles ? fileUploads.map(f => ({ fileId: f.file.id })) : null;
+    onSendMessage(transaction.id, message, config, fileIds)
+      .then(messageId => {
+        form.reset();
+        onClearUploadedFiles(fileUploads.map(f => f.tempId));
+        scrollToMessage(messageId);
+      })
+      .catch(() => {});
+  };
+
   const showListingImage = requireListingImage(foundListingTypeConfig);
 
   if (isDataAvailable && isProviderRole && !isOwnSale) {
@@ -743,21 +809,35 @@ export const TransactionPageComponent = props => {
       messages={messages}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
-      sendMessageInProgress={sendMessageInProgress}
-      sendMessageError={sendMessageError}
-      onSendMessage={onSendMessage}
       onOpenDisputeModal={onOpenDisputeModal}
       stateData={stateData}
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
-      allowFiles={allowFiles}
-      listingTypeHasFileAttachments={listingTypeHasFileAttachments}
-      onUploadFile={onUploadFile}
-      fileUploads={fileUploads}
-      onClearUploadedFiles={onClearUploadedFiles}
-      onDownloadFile={onDownloadFile}
+      sendMessageForm={
+        showSendMessageForm ? (
+          <SendMessageForm
+            formId={SEND_MESSAGE_FORM_ID}
+            rootClassName={css.sendMessageForm}
+            messagePlaceholder={intl.formatMessage(
+              { id: 'TransactionPanel.sendMessagePlaceholder' },
+              { name: otherUserDisplayNameString }
+            )}
+            inProgress={sendMessageInProgress}
+            sendMessageError={sendMessageError}
+            onFocus={onSendMessageFormFocus}
+            onSubmit={onMessageSubmit}
+            showAttachFiles={showAttachFiles}
+            showDisabledFilesError={listingTypeHasFileAttachments && !allowFiles}
+            marketplaceName={config.marketplaceName}
+            files={fileUploads}
+            onFileUpload={onUploadFileToPanel}
+            onRemoveFile={onRemoveFileFromPanel}
+            onDownloadFile={onDownloadFile}
+          />
+        ) : null
+      }
       actionButtons={containerId => (
         <ActionButtons
           containerId={containerId}
