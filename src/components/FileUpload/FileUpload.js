@@ -5,43 +5,91 @@ import { calculateFileSize } from '../../util/fileHelpers';
 import { FileName } from '../../components';
 
 import { IconCheck } from './IconCheck';
+import { IconProgressCircle } from './IconProgressCircle';
 import { IconSpinner } from './IconSpinner';
 import { IconError } from './IconError';
 import { IconCross } from './IconCross';
 
 import css from './FileUpload.module.css';
 
+const FILE_UPLOADING = 'uploading';
+const FILE_FINISHING_UPLOAD = 'finishingUpload';
+const FILE_VERIFYING = 'verifying';
+const FILE_UPLOAD_COMPLETE = 'complete';
+const FILE_UPLOAD_FAILED = 'failed';
+
+/**
+ * Maps raw upload item flags to one of five mutually exclusive upload state strings.
+ *
+ * @param {Object} fileItem - A fileUploads Redux state entry
+ * @returns {string|null} One of the FILE_* state constants, or null for an unrecognized state
+ */
+const deriveFileUploadState = fileItem => {
+  const { uploadInProgress, verificationInProgress, progress, error, file } = fileItem;
+
+  if (error) {
+    return FILE_UPLOAD_FAILED;
+  } else if (uploadInProgress && progress === 100) {
+    return FILE_FINISHING_UPLOAD;
+  } else if (verificationInProgress) {
+    return FILE_VERIFYING;
+  } else if (uploadInProgress) {
+    return FILE_UPLOADING;
+  } else if (file) {
+    return FILE_UPLOAD_COMPLETE;
+  } else {
+    return null;
+  }
+};
+
+/**
+ * Renders the status icon for the current upload state.
+ * UPLOADING → progress circle; FINISHING_UPLOAD and VERIFYING → spinner;
+ * FAILED → error icon; COMPLETE → check icon.
+ *
+ * @param {Object} props
+ * @param {string} props.uploadState - One of the FILE_* state constants
+ * @param {number|null} props.progress - Upload progress 0–100, forwarded to IconProgressCircle
+ * @returns {JSX.Element}
+ */
 const StatusIcon = props => {
-  const { uploadInProgress, verificationInProgress, hasError, hasCompletedUpload } = props;
+  const { uploadState, progress } = props;
   let statusIcon;
-  if (uploadInProgress || verificationInProgress) {
-    // TODO include progress functionality
-    return <IconSpinner />;
-  } else if (hasError) {
-    return <IconError />;
-  } else if (hasCompletedUpload) {
-    return <IconCheck />;
+  if (uploadState === FILE_UPLOADING) {
+    statusIcon = <IconProgressCircle progress={progress} />;
+  } else if (uploadState === FILE_FINISHING_UPLOAD || uploadState === FILE_VERIFYING) {
+    statusIcon = <IconSpinner />;
+  } else if (uploadState === FILE_UPLOAD_FAILED) {
+    statusIcon = <IconError />;
+  } else if (uploadState === FILE_UPLOAD_COMPLETE) {
+    statusIcon = <IconCheck />;
   }
   return <span className={css.statusIcon}>{statusIcon}</span>;
 };
 
+/**
+ * Renders the status text for the current upload state.
+ * In-progress states show i18n copy; FAILED shows an error-specific message;
+ * COMPLETE shows the formatted file size.
+ *
+ * @param {Object} props
+ * @param {string} props.uploadState - One of the FILE_* state constants
+ * @param {Object|null} props.error - Error object with a `message` string (used in FAILED state)
+ * @param {Object|null} props.file - SDK file entity with `attributes.size` (used in COMPLETE state)
+ * @param {string} props.locale - locale string for file size formatting
+ * @returns {JSX.Element}
+ */
 const StatusText = props => {
-  const {
-    uploadInProgress,
-    verificationInProgress,
-    hasError,
-    error,
-    hasCompletedUpload,
-    file,
-    locale,
-  } = props;
+  const { uploadState, error, file, locale } = props;
   let statusText;
 
-  if (uploadInProgress) {
+  if (uploadState === FILE_UPLOADING) {
     statusText = <FormattedMessage id="FileUpload.uploading" />;
-  } else if (verificationInProgress) {
+  } else if (uploadState === FILE_FINISHING_UPLOAD) {
+    statusText = <FormattedMessage id="FileUpload.finishingUpload" />;
+  } else if (uploadState === FILE_VERIFYING) {
     statusText = <FormattedMessage id="FileUpload.verifying" />;
-  } else if (hasError) {
+  } else if (uploadState === FILE_UPLOAD_FAILED) {
     statusText =
       error.message === 'verificationFailed' ? (
         <FormattedMessage id="FileUpload.verificationFailed" />
@@ -54,7 +102,7 @@ const StatusText = props => {
       ) : (
         <FormattedMessage id="FileUpload.uploadFailed" />
       );
-  } else if (hasCompletedUpload && !verificationInProgress) {
+  } else if (uploadState === FILE_UPLOAD_COMPLETE) {
     const { size } = file?.attributes;
     statusText = calculateFileSize(size, locale);
   }
@@ -62,34 +110,47 @@ const StatusText = props => {
   return <span className={css.statusText}>{statusText}</span>;
 };
 
+/**
+ * Displays a single file item during or after upload, with a status icon, file name, and
+ * status text. The displayed state is derived from the item's upload and verification flags.
+ * Renders nothing for items in an unrecognized state (e.g. before any upload has started).
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.item - Upload item from Redux state (TransactionPage.fileUploads entry)
+ * @param {string} props.item.tempId - Client-side temporary identifier
+ * @param {boolean} props.item.uploadInProgress - True while uploading to storage or in pendingUpload phase
+ * @param {boolean} props.item.verificationInProgress - True while the backend is verifying the file
+ * @param {number|null} props.item.progress - Upload progress 0–100; null before the first progress event
+ * @param {string|null} props.item.verificationStatus - SDK file state: 'pendingUpload' | 'pendingVerification' | 'available' | 'verificationFailed' | null
+ * @param {Object|null} props.item.file - SDK file entity; set once the file resource is created
+ * @param {File|null} props.item.sourceFile - Browser File object; present during upload, cleared on completion
+ * @param {Object|null} props.item.error - Error with a `message` string; null if no error
+ * @param {string} [props.rootClassName] - Overrides the root CSS class
+ * @param {string} [props.className] - Additional CSS classes appended to the root element
+ * @param {Function} props.onRemoveFile - Called with `tempId` when the remove button is clicked
+ * @param {Function} props.onDownloadFile - Called with `(fileId, download)` when the file name is clicked (COMPLETE state only)
+ * @returns {JSX.Element|null}
+ */
 const FileUpload = props => {
   const { item, rootClassName, className, onRemoveFile, onDownloadFile } = props;
-  const {
-    file,
-    tempId,
-    progress,
-    uploadInProgress,
-    verificationInProgress,
-    sourceFile,
-    error,
-  } = item;
+  const { file, tempId, progress, sourceFile, error } = item;
   const intl = useIntl();
 
   const name = file?.attributes?.name ?? sourceFile?.name;
 
-  const hasError = !uploadInProgress && !verificationInProgress && error && (sourceFile || file);
-  const hasCompletedUpload = !uploadInProgress && !error;
+  const uploadState = deriveFileUploadState(item);
 
-  const isKnownState =
-    uploadInProgress || verificationInProgress || hasError || (hasCompletedUpload && file);
-  if (!isKnownState) {
+  if (!uploadState) {
     return null;
   }
+
+  const hasError = uploadState === FILE_UPLOAD_FAILED && (sourceFile || file);
 
   const classes = classNames(rootClassName || css.root, className, { [css.error]: hasError });
   const fileInfoClass = classNames(css.fileInfo, { [css.error]: hasError });
 
-  const isDownloadable = hasCompletedUpload && !verificationInProgress;
+  const isDownloadable = uploadState === FILE_UPLOAD_COMPLETE;
   const fileNameElement = isDownloadable ? (
     <button
       type="button"
@@ -104,24 +165,11 @@ const FileUpload = props => {
 
   return (
     <div className={classes}>
-      <StatusIcon
-        uploadInProgress={uploadInProgress}
-        verificationInProgress={verificationInProgress}
-        hasError={hasError}
-        hasCompletedUpload={hasCompletedUpload}
-      />
+      <StatusIcon uploadState={uploadState} progress={progress} />
       <div className={fileInfoClass}>
         {fileNameElement}
 
-        <StatusText
-          uploadInProgress={uploadInProgress}
-          verificationInProgress={verificationInProgress}
-          hasError={hasError}
-          error={error}
-          hasCompletedUpload={hasCompletedUpload}
-          file={file}
-          locale={intl.locale}
-        />
+        <StatusText uploadState={uploadState} error={error} file={file} locale={intl.locale} />
       </div>
       <button
         className={css.removeButton}

@@ -443,6 +443,7 @@
   "FieldSelectUserType.label": "User type",
   "FieldSelectUserType.placeholder": "Choose a user type",
   "FieldSelectUserType.required": "You need to select a user type.",
+  "FileUpload.finishingUpload": "Finishing upload…",
   "FileUpload.mimeTypeError": "Upload failed. This file type isn't supported.",
   "FileUpload.removeFile": "Remove file {fileName}",
   "FileUpload.uploadFailed": "Upload failed. Please try again.",

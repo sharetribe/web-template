@@ -84,6 +84,11 @@
   flex-shrink: 0;
 }
 
+.iconProgressCircle {
+  color: var(--marketplaceColor);
+  flex-shrink: 0;
+}
+
 .iconSpinner {
   color: var(--marketplaceColor);
   flex-shrink: 0;
