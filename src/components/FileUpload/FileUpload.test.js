@@ -33,6 +33,19 @@ describe('FileUpload', () => {
     expect(screen.getByText('FileUpload.uploading')).toBeInTheDocument();
   });
 
+  it('shows filename and finishing upload status when progress reaches 100 but upload is still in progress', () => {
+    const item = createItem({
+      uploadInProgress: true,
+      progress: 100,
+      sourceFile: { name: 'document.pdf' },
+    });
+    render(<FileUpload item={item} onRemoveFile={noop} />);
+    expect(screen.getByText('document')).toBeInTheDocument();
+    expect(screen.getByText('.pdf')).toBeInTheDocument();
+    expect(screen.getByText('FileUpload.finishingUpload')).toBeInTheDocument();
+    expect(screen.queryByText('FileUpload.uploading')).not.toBeInTheDocument();
+  });
+
   it('shows filename and verifying status when upload is complete but file not yet available', () => {
     const item = createItem({
       uploadInProgress: false,

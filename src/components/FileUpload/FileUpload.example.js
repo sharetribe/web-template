@@ -3,6 +3,7 @@ import React from 'react';
 import FileUpload from './FileUpload';
 
 const onRemoveFile = tempId => console.log('remove file', tempId);
+const onDownloadFile = (fileId, download) => console.log('download file', fileId, download);
 
 export const FileUploadUploading = {
   component: FileUpload,
@@ -14,6 +15,23 @@ export const FileUploadUploading = {
       file: null,
       sourceFile: { name: 'document.pdf' },
       progress: 45,
+      error: null,
+      verificationStatus: null,
+    },
+    onRemoveFile,
+  },
+};
+
+export const FileUploadFinishingUpload = {
+  component: FileUpload,
+  props: {
+    item: {
+      tempId: 'temp-finishing-upload',
+      uploadInProgress: true,
+      verificationInProgress: false,
+      file: null,
+      sourceFile: { name: 'document.pdf' },
+      progress: 100,
       error: null,
       verificationStatus: null,
     },
@@ -72,23 +90,6 @@ export const FileUploadErrorVerificationFailed = {
   },
 };
 
-export const FileUploadErrorTimeout = {
-  component: FileUpload,
-  props: {
-    item: {
-      tempId: 'temp-error-timeout',
-      uploadInProgress: false,
-      verificationInProgress: false,
-      file: null,
-      sourceFile: { name: 'document.pdf' },
-      progress: null,
-      error: { message: 'timeout' },
-      verificationStatus: null,
-    },
-    onRemoveFile,
-  },
-};
-
 export const FileUploadErrorWithMessage = {
   component: FileUpload,
   props: {
@@ -130,12 +131,13 @@ export const FileUploadCompleted = {
       tempId: 'temp-completed',
       uploadInProgress: false,
       verificationInProgress: false,
-      file: { attributes: { name: 'video.mp4', size: 2 * 1024 * 1024 } },
+      file: { id: { uuid: 'file-uuid' }, attributes: { name: 'video.mp4', size: 2 * 1024 * 1024 } },
       sourceFile: null,
       progress: 100,
       error: null,
       verificationStatus: 'available',
     },
     onRemoveFile,
+    onDownloadFile,
   },
 };
