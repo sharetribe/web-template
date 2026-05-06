@@ -3,6 +3,7 @@ import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
 import * as negotiationProcess from './transactionProcessNegotiation';
+import * as downloadProcess from './transactionProcessDownload';
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
@@ -15,12 +16,14 @@ export const FIXED = 'fixed';
 export const INQUIRY = 'inquiry';
 export const OFFER = 'offer'; // The unitType 'offer' means that provider created the listing on default-negotiation process
 export const REQUEST = 'request'; // The unitType 'request' means that customer created the listing on default-negotiation process
+export const DIGITAL_ITEM = 'digital-item';
 
 // Then names of supported processes
 export const PURCHASE_PROCESS_NAME = 'default-purchase';
 export const BOOKING_PROCESS_NAME = 'default-booking';
 export const INQUIRY_PROCESS_NAME = 'default-inquiry';
 export const NEGOTIATION_PROCESS_NAME = 'default-negotiation';
+export const DOWNLOAD_PROCESS_NAME = 'default-download';
 
 /**
  * A process should export:
@@ -59,6 +62,12 @@ const PROCESSES = [
     alias: `${NEGOTIATION_PROCESS_NAME}/release-1`,
     process: negotiationProcess,
     unitTypes: [OFFER, REQUEST],
+  },
+  {
+    name: DOWNLOAD_PROCESS_NAME,
+    alias: `${DOWNLOAD_PROCESS_NAME}/release-1`,
+    process: downloadProcess,
+    unitTypes: [DIGITAL_ITEM],
   },
 ];
 
@@ -229,6 +238,8 @@ export const resolveLatestProcessName = processName => {
       return INQUIRY_PROCESS_NAME;
     case NEGOTIATION_PROCESS_NAME:
       return NEGOTIATION_PROCESS_NAME;
+    case DOWNLOAD_PROCESS_NAME:
+      return DOWNLOAD_PROCESS_NAME;
     default:
       return processName;
   }
@@ -356,6 +367,26 @@ export const isNegotiationProcess = processName => {
 export const isNegotiationProcessAlias = processAlias => {
   const processName = processAlias ? processAlias.split('/')[0] : null;
   return processAlias ? isNegotiationProcess(processName) : false;
+};
+/**
+ * Check if the process is download process
+ *
+ * @param {String} processName
+ */
+export const isDownloadProcess = processName => {
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+  return [DOWNLOAD_PROCESS_NAME].includes(processInfo?.name);
+};
+
+/**
+ * Check if the process/alias points to a download process
+ *
+ * @param {String} processAlias
+ */
+export const isDownloadProcessAlias = processAlias => {
+  const processName = processAlias ? processAlias.split('/')[0] : null;
+  return processAlias ? isDownloadProcess(processName) : false;
 };
 
 /**
