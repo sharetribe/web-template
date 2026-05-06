@@ -9,6 +9,7 @@ import {
   getCategoryDropdownsConfig,
   resolveDropdownMenuItems,
 } from './categoryDropdowns';
+import { fetchLocalDesignUsers, resolveUserDropdownMenuItems } from './userDropdowns';
 
 import css from './CustomLinksMenu.module.css';
 
@@ -108,6 +109,7 @@ const CustomLinksMenu = ({
   const [mounted, setMounted] = useState(false);
   const [moreLabelWidth, setMoreLabelWidth] = useState(0);
   const [localTopbarData, setLocalTopbarData] = useState(null);
+  const [localDesignUsers, setLocalDesignUsers] = useState(null);
   const [links, setLinks] = useState([
     /// ...createListingLinkConfigMaybe(intl, showCreateListingsLink),
     ...customLinks,
@@ -129,6 +131,20 @@ const CustomLinksMenu = ({
     fetchLocalTopbarData(window?.fetch?.bind(window)).then(data => {
       if (isActive && data) {
         setLocalTopbarData(data);
+      }
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    fetchLocalDesignUsers().then(users => {
+      if (isActive) {
+        setLocalDesignUsers(users);
       }
     });
 
@@ -211,12 +227,7 @@ const CustomLinksMenu = ({
     fallbackDropdown2
   );
 
-  const brandField = config?.listing?.listingFields?.find(field => field.key === 'brand');
-  const menuLinksDropdown3 = (brandField?.enumOptions || []).map(option => ({
-    group: 'primary',
-    href: `/s?pub_brand=${encodeURIComponent(option.option)}`,
-    text: option.label,
-  }));
+  const menuLinksDropdown3 = resolveUserDropdownMenuItems(localDesignUsers);
 
   // If there are no custom links, just render createListing link.
   if (customLinks?.length === 0) {

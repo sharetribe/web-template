@@ -151,3 +151,12 @@ export const createUserWithIdp = body => {
 export const deleteUserAccount = body => {
   return post('/api/delete-account', body);
 };
+
+export const topbarLocalDesignUsers = () => {
+  return request('/api/topbar/local-design-users', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+};

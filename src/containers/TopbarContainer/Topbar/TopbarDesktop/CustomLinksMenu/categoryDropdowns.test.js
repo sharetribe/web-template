@@ -71,13 +71,13 @@ describe('categoryDropdowns', () => {
 
     expect(items[0]).toEqual({
       group: 'primary',
-      href: '/s?pub_categoryLevel1=ropa',
+      href: '/s?pub_categoryLevel1=accesorios',
       text: 'Ver Todo',
     });
     expect(items[1]).toEqual({
       group: 'primary',
-      href: '/s?pub_categoryLevel1=ropa&pub_categoryLevel2=ropa-tops',
-      text: 'Tops',
+      href: '/s?pub_categoryLevel1=accesorios',
+      text: 'Accesorios',
     });
   });
 

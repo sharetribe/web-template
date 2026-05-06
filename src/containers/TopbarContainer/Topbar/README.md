@@ -96,8 +96,8 @@ Behavior:
   built-in dropdown definitions.
 - If the file exists but a dropdown key is omitted or set to an empty array, that dropdown renders
   nothing.
-- `menuLinksDropdown3` is still generated from the `brand` listing field options, not from this
-  JSON file.
+- `menuLinksDropdown3` is generated from the filtered `vendedor-tienda` user list, not from this
+  JSON file. Only users with the `localDesign` user field set to a truthy value are included.
 
 Operationally, this means updating the dropdown menus requires editing
 `public/static/data/top-bar.json` in the codebase and deploying the change. It is not managed
