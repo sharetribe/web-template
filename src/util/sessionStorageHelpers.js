@@ -3,6 +3,7 @@ import { types as sdkTypes } from '../util/sdkLoader';
 import { isAfterDate } from '../util/dates';
 
 export const REFERRAL_ID_SESSION_STORAGE_KEY = 'referralSource';
+const REFERRAL_SOURCE_DATA_PREFIX = 'referralSource_';
 const HOUR_IN_MS = 60 * 60 * 1000;
 
 /**
@@ -133,8 +134,10 @@ export const clearStoredReferralDataInSession = () => {
 };
 
 /**
- * Returns the subset of stored referral data that is valid for the given user type. Returns an empty object if there is no stored data, the data
- * has expired, or none of the stored keys match the user type's referral sources.
+ * Returns the subset of stored referral data, prefixed with 'referralSource_', that
+ * is valid for the given user type. Returns an empty object if there is no stored
+ * data, the data has expired, or none of the stored keys match the user type's
+ * referral sources.
  *
  * @param {Object} userTypeConfig - Config object for the selected user type
  * @param {Object} userTypeConfig.referralSources - Map of valid referral sources for this type
@@ -154,7 +157,9 @@ export const pickReferralData = userTypeConfig => {
   const entries = Object.entries(referralData.sources).filter(([key]) =>
     validReferralSources.some(validReferralSource => validReferralSource.parameter === key)
   );
-  return Object.fromEntries(entries);
+  return Object.fromEntries(
+    entries.map(([key, value]) => [`${REFERRAL_SOURCE_DATA_PREFIX}${key}`, value])
+  );
 };
 
 /**
