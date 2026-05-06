@@ -238,16 +238,21 @@ async function pollEvents() {
         continue;
       }
 
-      try {
-        if (eventType === 'user/created') {
-          await handleNewUser(resource);
-        } else if (eventType === 'transaction/transitioned') {
-          await handleTransactionEvent(resource);
-        } else if (eventType === 'message/created') {
-          await handleMessageEvent(resource);
-        }
-      } catch (err) {
-        console.error(`[eventPoller] Unhandled error for event type "${eventType}":`, err);
+      // Collect all handlers for this event type, then fire them in parallel.
+      // Events are still processed in sequenceId order; only per-event handlers run concurrently.
+      const handlers = [];
+      if (eventType === 'user/created') handlers.push(() => handleNewUser(resource));
+      else if (eventType === 'transaction/transitioned') handlers.push(() => handleTransactionEvent(resource));
+      else if (eventType === 'message/created') handlers.push(() => handleMessageEvent(resource));
+
+      if (handlers.length > 0) {
+        await Promise.allSettled(
+          handlers.map(h =>
+            h().catch(err =>
+              console.error(`[eventPoller] Handler error for event type "${eventType}":`, err)
+            )
+          )
+        );
       }
 
       rememberEventId(eventId);

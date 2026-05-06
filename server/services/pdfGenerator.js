@@ -1,12 +1,13 @@
 'use strict';
 
-const PDFDocument = require('pdfkit');
-
 /**
  * Generates a "Getting Started with Archivo Vintach" PDF guide.
  * Returns a Promise<Buffer> suitable for base64-encoding as a Brevo attachment.
  */
 function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
+  // Lazy-load PDFKit so it doesn't bloat the require cache on dynos that never
+  // generate a PDF (e.g. workers that restart before any user/created event).
+  const PDFDocument = require('pdfkit');
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ size: 'A4', margin: 50 });
     const chunks = [];

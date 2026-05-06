@@ -339,6 +339,11 @@ const BulkImportPageComponent = props => {
                       ))}
                     </tbody>
                   </table>
+                  {jobData.errorsWereCapped && (
+                    <p className={css.errorsCappedNotice}>
+                      <FormattedMessage id="BulkImportPage.errorsCapped" />
+                    </p>
+                  )}
                 </div>
               )}
 

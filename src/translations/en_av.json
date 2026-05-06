@@ -88,6 +88,7 @@
   "BulkImportPage.newImport": "New Import",
   "BulkImportPage.errorNoApiKey": "Please enter your import API key.",
   "BulkImportPage.errorNoZip": "Please select a ZIP file.",
+  "BulkImportPage.errorsCapped": "Some errors were omitted — only the first 200 are shown.",
   "NewsletterForm.emailPlaceholder": "Your Email",
   "NewsletterForm.errorMessage": "Subscription failed. Try again later.",
   "NewsletterForm.invalidEmail": "Please enter a valid email.",

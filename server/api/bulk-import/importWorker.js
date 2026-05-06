@@ -7,6 +7,7 @@ const { updateJob } = require('./jobStore');
 const { UUID, Money, LatLng } = types;
 
 const DELAY_BETWEEN_ROWS_MS = 500;
+const MAX_JOB_ERRORS = 200;
 
 const SLOT_ORDER = ['front', 'back', 'horizontal', 'details'];
 
@@ -170,16 +171,20 @@ async function processImportJob(jobId, rows, imageMap) {
 
       const job = updateJob(jobId, { processed: i + 1, failed });
       const serialized = serializeSdkError(err);
-      job.errors.push({
-        row: row.rowNum,
-        title: row.title,
-        error: serialized.message,
-        ...(serialized.status ? { status: serialized.status } : {}),
-        ...(serialized.sdkErrors ? { sdkErrors: serialized.sdkErrors } : {}),
-        ...(serialized.sdkErrorsTruncated
-          ? { sdkErrorsTruncated: serialized.sdkErrorsTruncated }
-          : {}),
-      });
+      if (job.errors.length < MAX_JOB_ERRORS) {
+        job.errors.push({
+          row: row.rowNum,
+          title: row.title,
+          error: serialized.message,
+          ...(serialized.status ? { status: serialized.status } : {}),
+          ...(serialized.sdkErrors ? { sdkErrors: serialized.sdkErrors } : {}),
+          ...(serialized.sdkErrorsTruncated
+            ? { sdkErrorsTruncated: serialized.sdkErrorsTruncated }
+            : {}),
+        });
+      } else {
+        updateJob(jobId, { errorsWereCapped: true });
+      }
 
       console.error(
         `[bulk-import] Row ${row.rowNum} ("${row.title}") failed:`,

@@ -30,7 +30,7 @@ export const sanitizeText = str =>
 const sanitizeEnum = (str, options) => (options.map(o => `${o.option}`).includes(str) ? str : null);
 const sanitizeMultiEnum = (arr, options) =>
   Array.isArray(arr)
-    ? arr.reduce((ret, value) => {
+    ? [...new Set(arr)].reduce((ret, value) => {
         const enumValue = sanitizeEnum(value, options);
         return enumValue ? [...ret, enumValue] : ret;
       }, [])

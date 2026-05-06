@@ -194,3 +194,12 @@
   margin-top: 20px;
   padding: 10px 20px;
 }
+
+.errorsCappedNotice {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #fff8e1;
+  border-left: 3px solid #f9a825;
+  font-size: 13px;
+  color: #555;
+}
