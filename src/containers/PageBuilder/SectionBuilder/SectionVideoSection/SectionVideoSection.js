@@ -68,6 +68,7 @@ const SectionVideoSection = props => {
     css.contentPane,
     !videoUrl ? css.fullWidth : null,
     customOption.hasPaddings ? css.contentPanePadded : null,
+    customOption.isCenterTitleText ? css.contentPaneCentered : null,
   );
 
   return (

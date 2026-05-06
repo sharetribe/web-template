@@ -66,6 +66,7 @@ const SectionHeroCustom = props => {
       rootClassName={classNames(rootClassName || css.root, customOption?.isShortHero ? css.shortHero : '')}
       appearance={appearance}
       options={fieldOptions}
+      customOption={customOption}
     >
       {hasHeaderFields ? (
         <header className={classNames(defaultClasses.sectionDetails, isLanding ? css.landingVersion : '')}>
