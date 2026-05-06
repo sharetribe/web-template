@@ -128,6 +128,36 @@ const listingFields = [
     },
   },
   {
+    key: 'color',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'amarillo', label: 'Amarillo' },
+      { option: 'negro', label: 'Negro' },
+      { option: 'multicolor', label: 'Multicolor' },
+    ],
+    showConfig: {
+      label: 'Color',
+      unselectedOptions: false,
+    },
+  },
+  {
+    key: 'all_sizes',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'xxs', label: 'XXS' },
+      { option: 'xs', label: 'XS' },
+      { option: 's', label: 'S' },
+      { option: 'm', label: 'M' },
+      { option: 'l', label: 'L' },
+    ],
+    showConfig: {
+      label: 'Tallas',
+      unselectedOptions: false,
+    },
+  },
+  {
     key: 'tags',
     scope: 'public',
     schemaType: 'multi-enum',
@@ -170,6 +200,8 @@ const publicData = {
   unitType: 'item',
   categoryLevel1: 'cats', // Ensure listing field can be tied to category
   cat: 'cat_1',
+  color: ['amarillo', 'negro'],
+  all_sizes: ['xxs', 'm'],
   tags: ['hot-list', 'ofertas'],
 };
 const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
@@ -265,6 +297,12 @@ describe('ListingPage variants', () => {
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
       expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
+      expect(getByRole('heading', { name: 'Color' })).toBeInTheDocument();
+      expect(getByText('Amarillo')).toBeInTheDocument();
+      expect(getByText('Negro')).toBeInTheDocument();
+      expect(getByRole('heading', { name: 'Tallas' })).toBeInTheDocument();
+      expect(getByText('XXS')).toBeInTheDocument();
+      expect(getByText('M')).toBeInTheDocument();
       expect(getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
       expect(getByText('HotList')).toBeInTheDocument();
       expect(getByText('Ofertas')).toBeInTheDocument();
@@ -323,6 +361,12 @@ describe('ListingPage variants', () => {
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
       expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
+      expect(getByRole('heading', { name: 'Color' })).toBeInTheDocument();
+      expect(getByText('Amarillo')).toBeInTheDocument();
+      expect(getByText('Negro')).toBeInTheDocument();
+      expect(getByRole('heading', { name: 'Tallas' })).toBeInTheDocument();
+      expect(getByText('XXS')).toBeInTheDocument();
+      expect(getByText('M')).toBeInTheDocument();
       expect(getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
       expect(getByText('HotList')).toBeInTheDocument();
       expect(getByText('Ofertas')).toBeInTheDocument();

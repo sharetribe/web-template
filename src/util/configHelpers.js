@@ -1340,6 +1340,21 @@ const union = (arr1, arr2, key) => {
   return [...map.values()];
 };
 
+// Keep `tags` as the last visible listing field so it doesn't interrupt the field flow.
+export const moveListingFieldToEnd = (listingFields, keyToMove) => {
+  if (!Array.isArray(listingFields) || !keyToMove) {
+    return listingFields;
+  }
+
+  const matchedFields = listingFields.filter(field => field?.key === keyToMove);
+  if (matchedFields.length === 0) {
+    return listingFields;
+  }
+
+  const remainingFields = listingFields.filter(field => field?.key !== keyToMove);
+  return [...remainingFields, ...matchedFields];
+};
+
 // For debugging, it becomes sometimes important to be able to merge and overwrite with local values
 // Note: We don't want to expose this to production by default.
 //       If you customization relies on multiple listing types or custom listing fields, you need to change this.
@@ -1362,7 +1377,10 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
   // listingFields: always merge hosted + code-defined defaults so large enum fields
   // (brands, color, all_sizes) can be managed in code rather than in Console.
   const listingTypes = hostedListingTypes;
-  const listingFields = union(hostedListingFields, defaultListingFields, 'key');
+  const listingFields = moveListingFieldToEnd(
+    union(hostedListingFields, defaultListingFields, 'key'),
+    'tags'
+  );
 
   const listingTypesInUse = listingTypes.map(lt => `${lt.listingType}`);
 

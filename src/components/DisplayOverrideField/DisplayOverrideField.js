@@ -72,7 +72,7 @@ const DisplayOverrideField = props => {
     : fieldConfig;
 
   return (
-    <div className={classNames(css.customField, className)}>
+    <div className={classNames('customField', css.customField, className)}>
       <CustomExtendedDataField
         fieldConfig={effectiveFieldConfig}
         inputComponents={AV_INPUT_COMPONENTS}

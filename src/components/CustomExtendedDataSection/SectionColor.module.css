@@ -1,0 +1,58 @@
+@import '../../styles/customMediaQueries.css';
+
+.sectionColor {
+  padding: 0px 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 24px;
+  }
+}
+
+.sectionHeading {
+  /* Font for sections titles */
+  composes: p from global;
+  padding: 0;
+  font-weight: var(--fontWeightBold);
+
+  margin-top: 0;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+}
+
+.circle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--colorGrey300);
+  flex-shrink: 0;
+}
+
+.label {
+  composes: marketplaceBodyFontStyles from global;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey900);
+  line-height: 24px;
+}

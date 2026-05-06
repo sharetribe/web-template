@@ -1,0 +1,67 @@
+@import '../../styles/customMediaQueries.css';
+
+.sectionAllSizes {
+  padding: 0px 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 24px;
+  }
+}
+
+.sectionHeading {
+  composes: p from global;
+  padding: 0;
+  font-weight: var(--fontWeightBold);
+  margin-top: 0;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--avYellow);
+  color: var(--avSecondary);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: var(--fontWeightMedium);
+  white-space: nowrap;
+}
+
+.label {
+  line-height: 24px;
+}
+
+.removeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  width: 16px;
+  height: 16px;
+}

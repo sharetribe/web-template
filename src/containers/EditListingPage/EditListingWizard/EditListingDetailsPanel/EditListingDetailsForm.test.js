@@ -116,6 +116,9 @@ describe('EditListingDetailsForm', () => {
     // Fill custom listing field
     await user.selectOptions(screen.getByLabelText('Clothing'), 'kids');
 
+    // Custom fields should keep the grid hook so they can render as two columns.
+    expect(document.querySelectorAll('.customField')).toHaveLength(2);
+
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();
   });

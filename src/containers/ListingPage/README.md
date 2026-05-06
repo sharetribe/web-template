@@ -25,6 +25,8 @@ which uses the following components:
 
 - **SectionDetails**: This shows all the listing fields with "enum" type search schema.
 - **SectionMultiEnum**: contains a single listing field with "multi-enum" search schema.
+- **SectionColor**: renders the `color` field as swatch circles.
+- **SectionAllSizes**: renders the `all_sizes` field as yellow chips.
 - **SectionText**: contains a single listing field with "text" search schema.
 - **SectionYoutubeVideo**: contains a single Youtube video link.
 

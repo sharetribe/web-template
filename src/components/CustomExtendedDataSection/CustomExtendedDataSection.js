@@ -5,6 +5,8 @@ import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from '.
 import SectionDetails from './SectionDetails';
 import SectionText from './SectionText';
 import SectionMultiEnum from './SectionMultiEnum';
+import SectionColor from './SectionColor';
+import SectionAllSizes from './SectionAllSizes';
 import SectionYoutubeVideo from './SectionYoutubeVideo';
 
 /**
@@ -39,7 +41,21 @@ const CustomExtendedDataSection = props => {
       <SectionDetails {...sectionDetailsProps} pickExtendedDataFields={pickExtendedDataFields} />
       {propsForCustomFields.map(customFieldProps => {
         const { schemaType, key, ...fieldProps } = customFieldProps;
-        return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
+        return schemaType === SCHEMA_TYPE_MULTI_ENUM && key === 'color' ? (
+          <SectionColor
+            key={key}
+            className={className}
+            rootClassName={rootClassName}
+            {...fieldProps}
+          />
+        ) : schemaType === SCHEMA_TYPE_MULTI_ENUM && key === 'all_sizes' ? (
+          <SectionAllSizes
+            key={key}
+            className={className}
+            rootClassName={rootClassName}
+            {...fieldProps}
+          />
+        ) : schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
           <SectionMultiEnum
             key={key}
             idPrefix={idPrefix}
