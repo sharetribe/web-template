@@ -12,7 +12,6 @@ exports[`Menu matches snapshot 1`] = `
     </button>
     <div
       class="root isClosed"
-      style="left: -10000px;"
     >
       <ul
         class="content"

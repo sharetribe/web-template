@@ -28,9 +28,13 @@ const CustomListingFields = props => {
   const currentCategories = Object.values(categoriesObj);
 
   // Fields are shown by default. Set showConfig.displayOnListingPage to false to explicitly hide a field.
-  const displayableFieldConfigs = listingFieldConfigs.filter(
-    fieldConfig => fieldConfig.showConfig?.displayOnListingPage !== false
-  );
+  const displayableFieldConfigs = listingFieldConfigs.filter(fieldConfig => {
+    const shouldDisplayOnListingPage = fieldConfig.showConfig?.displayOnListingPage !== false;
+
+    // The hosted listing-fields asset marks `tags` as hidden, but the marketplace
+    // should still show the selected tags on the listing page.
+    return shouldDisplayOnListingPage || fieldConfig.key === 'tags';
+  });
 
   const isFieldForSelectedCategories = fieldConfig => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);

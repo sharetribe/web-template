@@ -127,6 +127,21 @@ const listingFields = [
       group: 'secondary',
     },
   },
+  {
+    key: 'tags',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'hot-list', label: 'HotList' },
+      { option: 'ofertas', label: 'Ofertas' },
+      { option: 'mas-nuevo', label: 'Mas Nuevo' },
+    ],
+    showConfig: {
+      label: 'Tags',
+      displayOnListingPage: false,
+      unselectedOptions: false,
+    },
+  },
 ];
 
 const getConfig = variantType => {
@@ -155,6 +170,7 @@ const publicData = {
   unitType: 'item',
   categoryLevel1: 'cats', // Ensure listing field can be tied to category
   cat: 'cat_1',
+  tags: ['hot-list', 'ofertas'],
 };
 const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
 const listing1Own = createOwnListing(id, {}, { author: createCurrentUser('user-1') });
@@ -249,6 +265,9 @@ describe('ListingPage variants', () => {
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
       expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
+      expect(getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
+      expect(getByText('HotList')).toBeInTheDocument();
+      expect(getByText('Ofertas')).toBeInTheDocument();
 
       // Has details location title
       expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
@@ -304,6 +323,9 @@ describe('ListingPage variants', () => {
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
       expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
+      expect(getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
+      expect(getByText('HotList')).toBeInTheDocument();
+      expect(getByText('Ofertas')).toBeInTheDocument();
 
       // Has details location title
       expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();

@@ -248,10 +248,7 @@ class Menu extends Component {
         : { left: contentPlacementOffset, minWidth: menuWidth };
     }
 
-    // When the MenuContent is rendered for the first time
-    // (for the sake of width calculation),
-    // move it outside of viewport to prevent possible overflow.
-    return this.state.isOpen ? {} : { left: '-10000px' };
+    return {};
   }
 
   positionStyleForArrow(isPositionedRight) {

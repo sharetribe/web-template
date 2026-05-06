@@ -66,6 +66,10 @@
 .linkMenuContent {
   min-width: 276px;
   padding: 20px 0;
+  max-height: calc(100vh - var(--topbarHeightDesktop) - 24px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 /* left animated "border" like hover element */
