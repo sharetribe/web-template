@@ -217,40 +217,16 @@ export class SearchPageComponent extends Component {
       >
         <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
         <div className={css.layoutWrapperContainer}>
-          <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
-            <div className={css.filterColumnContent}>
-              {availableFilters.map(filterConfig => {
-                const key = `SearchFiltersDesktop.${filterConfig.scope || 'built-in'}.${
-                  filterConfig.key
-                }`;
-                const filterId = `SearchFiltersDesktop.${filterConfig.key.toLowerCase()}`;
-                return (
-                  <FilterComponent
-                    key={key}
-                    id={filterId}
-                    className={css.filter}
-                    config={filterConfig}
-                    containerId="SearchPageWithGrid_DesktopFilters"
-                    listingCategories={listingCategories}
-                    marketplaceCurrency={marketplaceCurrency}
-                    urlQueryParams={validQueryParams}
-                    initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                    getHandleChangedValueFn={this.getHandleChangedValueFn}
-                    intl={intl}
-                    liveEdit
-                    showAsPopup={true}
-                    isDesktop
-                  />
-                );
-              })}
-              <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
-                <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
-              </button>
-            </div>
-          </aside>
+
 
           <div id="main-content" className={css.layoutWrapperMain} role="main">
             <div className={css.searchResultContainer}>
+              <h1 className={css.pageTitle} >
+                Premium Courses
+              </h1>
+              <p className={css.pageSubTitle}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur facilisis sem finibus erat euismod, sit amet mattis mauris tincidunt.
+              </p>
               <SearchFiltersMobile
                 className={css.searchFiltersMobileList}
                 urlQueryParams={validQueryParams}
@@ -270,9 +246,8 @@ export class SearchPageComponent extends Component {
                 location={location}
               >
                 {availableFilters.map(filterConfig => {
-                  const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
-                    filterConfig.key
-                  }`;
+                  const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${filterConfig.key
+                    }`;
                   const filterId = `SearchFiltersMobile.${filterConfig.key.toLowerCase()}`;
 
                   return (
@@ -293,16 +268,48 @@ export class SearchPageComponent extends Component {
                   );
                 })}
               </SearchFiltersMobile>
-              <MainPanelHeader
-                className={css.mainPanel}
-                sortByComponent={sortBy('desktop')}
-                isSortByActive={sortConfig.active}
-                listingsAreLoaded={listingsAreLoaded}
-                resultsCount={totalItems}
-                searchInProgress={searchInProgress}
-                searchListingsError={searchListingsError}
-                noResultsInfo={noResultsInfo}
-              />
+              <div className={css.filters}>
+                <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
+                  <div className={css.filterColumnContent}>
+                    {availableFilters.map(filterConfig => {
+                      const key = `SearchFiltersDesktop.${filterConfig.scope || 'built-in'}.${filterConfig.key
+                        }`;
+                      const filterId = `SearchFiltersDesktop.${filterConfig.key.toLowerCase()}`;
+                      return (
+                        <FilterComponent
+                          key={key}
+                          id={filterId}
+                          className={css.filter}
+                          config={filterConfig}
+                          containerId="SearchPageWithGrid_DesktopFilters"
+                          listingCategories={listingCategories}
+                          marketplaceCurrency={marketplaceCurrency}
+                          urlQueryParams={validQueryParams}
+                          initialValues={initialValues(this.props, this.state.currentQueryParams)}
+                          getHandleChangedValueFn={this.getHandleChangedValueFn}
+                          intl={intl}
+                          liveEdit
+                          showAsPopup={true}
+                          isDesktop
+                        />
+                      );
+                    })}
+                    <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+                      <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
+                    </button>
+                  </div>
+                </aside>
+                <MainPanelHeader
+                  className={css.mainPanel}
+                  sortByComponent={sortBy('desktop')}
+                  isSortByActive={sortConfig.active}
+                  listingsAreLoaded={listingsAreLoaded}
+                  resultsCount={totalItems}
+                  searchInProgress={searchInProgress}
+                  searchListingsError={searchListingsError}
+                  noResultsInfo={noResultsInfo}
+                />
+              </div>
               <div
                 className={classNames(css.listingsForGridVariant, {
                   [css.newSearchInProgress]: !(listingsAreLoaded || searchListingsError),

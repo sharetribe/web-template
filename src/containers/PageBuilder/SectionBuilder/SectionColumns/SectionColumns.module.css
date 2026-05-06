@@ -69,6 +69,11 @@
       leading-trim: NONE;
       line-height: spacing/3;
       letter-spacing: 0%;
+      max-width: 544px;
+      &:last-child{
+        margin-top: 0;
+        padding-top: 0;
+      }
 
     }
 
@@ -76,6 +81,9 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      @media (max-width:767px) {
+        padding-left: 0;
+      }
 
       & li {
         list-style: none;
@@ -142,6 +150,7 @@
       grid-column: 2;
       grid-row: 1 / span 2;
       align-self: start;
+      margin-top: 75px;
     }
 
     & [class*='SectionBuilder_blockContainer']>header {
@@ -149,10 +158,17 @@
       grid-row: 2;
       height: 44px;
       padding: 0;
+      display: block;
       /* margin-top: -70px; */
-
+      justify-self: left;
+      width: 100%;
       &>div {
+        max-width: 400px;
+        width: 100%;
         margin-top: 0;
+        justify-self: left;
+        padding:2px 9px;
+        border-radius: 4px;
       }
     }
   }

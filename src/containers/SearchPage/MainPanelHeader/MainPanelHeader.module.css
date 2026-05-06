@@ -42,7 +42,7 @@
 
 .sortyByWrapper {
   display: inline-flex;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 
 .sortyBy {

@@ -115,6 +115,18 @@
   }
 }
 
+
+.LoginLink{
+  border: 1px solid #D5D7DA;
+  box-shadow: 0px 1px 2px 0px #0A0D120D;
+height: 44px;
+width: 77px;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-top: 13px;
+}
+
 .topbarLinkLabel {
   composes: textSmall from global;
   font-family: Nohemi;
@@ -126,7 +138,7 @@
   letter-spacing: 0%;
   color: #252B37;
   display: inline-block;
-  margin: 28px 0;
+  margin: 24px 0;
   text-decoration: inherit;
   position: relative;
 }

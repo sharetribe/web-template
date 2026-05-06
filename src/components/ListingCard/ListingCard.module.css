@@ -105,18 +105,30 @@
 
 /* Default card (landingPage-css): title + author overlaid on image */
 .title {
-  font-size: 22px;
-  line-height: 28px;
-  letter-spacing: -0.01em;
-  font-weight: 700;
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 24px;
+leading-trim: NONE;
+line-height: 32px;
+letter-spacing: 0%;
+vertical-align: middle;
+
   color: var(--colorWhite);
   margin: 0;
+  margin-bottom: 11px;
 }
 
 .authorInfo {
-  font-size: 14px;
-  line-height: 18px;
-  font-weight: 500;
+  font-family: Nohemi;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
 }
@@ -148,9 +160,15 @@
 }
 
 .pill {
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 500;
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0%;
+text-align: center;
+
   color: rgba(0, 0, 0, 0.85);
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(8px);
@@ -198,7 +216,7 @@
 
   @media (--viewportMedium) {
     flex: 1 1 52%;
-    padding: 28px 32px 28px 28px;
+    padding: 28px 32px 28px 0px;
     max-width: 52%;
   }
 }

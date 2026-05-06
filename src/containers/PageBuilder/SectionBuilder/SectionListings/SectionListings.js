@@ -22,11 +22,11 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 const COLUMN_CONFIG = {
   3: {
     css: css.threeColumns,
-    responsiveImageSizes: '(max-width: 767px) 100vw, (max-width: 1024px) 33vw, 330px',
+    responsiveImageSizes: '(max-width: 767px) 100vw, (max-width: 1024px) 33vw, 510px',
   },
   4: {
     css: css.fourColumns,
-    responsiveImageSizes: '(max-width: 767px) 100vw, (max-width: 1024px) 33vw, 240px',
+    responsiveImageSizes: '(max-width: 767px) 100vw, (max-width: 1024px) 33vw, 343px',
   },
 };
 
@@ -87,12 +87,16 @@ const calculateCarouselHeight = (
     return noListingsFoundHeight;
   }
 
-  const paddingHorizontal = 2 * 32; // 2x32px
-  const contentMaxWidthPages = 1120;
+  // NOTE: 3-column card width is calculated in CSS as full width / 3.
+  // Keep height math aligned with that decision (no extra padding/gutter subtraction).
+  const paddingHorizontal = numColumns === 3 ? 0 : 2 * 32; // 2x32px
+  // Keep in sync with SectionListings.module.css override.
+  // Figma page width: 1530px
+  const contentMaxWidthPages = 1530;
   const containerPaddingTop = 32;
   const containerPaddingBottom = 24;
 
-  const gutters = isMobileBreakpoint ? 0 : numColumns === 3 ? 64 : 96;
+  const gutters = isMobileBreakpoint ? 0 : numColumns === 3 ? 0 : 96;
 
   const mainColumnWidth = Math.min(contentMaxWidthPages, carouselWidth);
   const cardWidth =

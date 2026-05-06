@@ -68,7 +68,10 @@ const SortByPopup = props => {
     >
       <MenuLabel rootClassName={menuLabelClasses} id={labelId}>
         {menuLabel}
-        <IconArrowHead className={iconArrowClassName} direction="down" size="tiny" />
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 8H12M2 4H14M6 12H10" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
       </MenuLabel>
       <MenuContent className={css.menuContent}>
         {options.map(option => {

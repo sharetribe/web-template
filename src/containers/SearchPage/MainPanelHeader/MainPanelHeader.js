@@ -39,7 +39,7 @@ const MainPanelHeader = props => {
   return (
     <div className={classes}>
       <div className={css.searchOptions}>
-        <h1 className={css.searchResultSummary}>
+        {/* <h1 className={css.searchResultSummary}>
           <span className={css.resultsFound}>
             {searchInProgress ? (
               <FormattedMessage id="MainPanelHeader.loadingResults" />
@@ -50,12 +50,12 @@ const MainPanelHeader = props => {
               />
             )}
           </span>
-        </h1>
+        </h1> */}
         {isSortByActive ? (
           <div className={css.sortyByWrapper}>
-            <span className={css.sortyBy}>
+            {/* <span className={css.sortyBy}>
               <FormattedMessage id="MainPanelHeader.sortBy" />
-            </span>
+            </span> */}
             {sortByComponent}
           </div>
         ) : null}
