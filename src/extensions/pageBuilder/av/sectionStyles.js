@@ -100,6 +100,8 @@ export const parseSectionCustomOptions = sectionName => {
   customOption.isHeadingH = sectionName.indexOf('- Heading2') >= 0;
   customOption.isTwoThirdsCols = sectionName.indexOf('- 2/3 cols') >= 0;
   customOption.isShortHero = sectionName.indexOf('- ShortHero') >= 0;
+  customOption.isCenterTitleText = sectionName.indexOf('- CenterTitleText') >= 0;
+  customOption.isWhiteTitle = sectionName.indexOf('- WhiteTitle') >= 0;
 
   if (sectionName.includes('- TextGray')) customOption.hasTextGray = true;
 
