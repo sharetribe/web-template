@@ -34,6 +34,8 @@ const SectionContainer = props => {
   const innerCss = classNames(
     css.sectionContent,
     customOption?.isBlueTitle ? css.sectionContentBlueTitle : '',
+    customOption?.isCenterTitleText ? css.sectionContentCenterTitleText : '',
+    customOption?.isWhiteTitle ? css.sectionContentWhiteTitle : '',
     customOption?.isLarge ? css.sectionContentLarge : '',
     customOption?.isMedium ? css.sectionContentMedium : '',
     customOption?.isFullH ? css.sectionContentFullH : '',

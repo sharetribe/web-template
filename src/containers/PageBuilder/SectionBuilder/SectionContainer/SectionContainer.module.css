@@ -322,3 +322,25 @@
     }
   }
 }
+
+.sectionContentCenterTitleText {
+  header {
+    justify-content: center;
+  }
+
+  header > h1,
+  header > h2,
+  header > h3,
+  header > p {
+    text-align: center;
+    justify-self: center;
+  }
+}
+
+.sectionContentWhiteTitle {
+  header > h1,
+  header > h2,
+  header > h3 {
+    color: var(--colorWhite);
+  }
+}
