@@ -331,7 +331,7 @@
   header > h1,
   header > h2,
   header > h3,
-  header > p {
+  header p {
     text-align: center;
     justify-self: center;
   }
