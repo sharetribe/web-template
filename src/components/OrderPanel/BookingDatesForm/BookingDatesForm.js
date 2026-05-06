@@ -378,9 +378,13 @@ const isDayBlockedFn = params => {
       if (!monthFetched) {
         return !monthEntry;
       }
-      const hasAvailability =
-        hasAvailabilityOnDay ||
-        hasAvailabilityOrCheckoutOnDay(dayInListingTZ, allTimeSlots, timeZone);
+      // When only startDate is set (user picking end date), allow the slot's exclusive-end
+      // boundary day to appear unblocked so it can be selected as a checkout day.
+      // When both dates are set (calendar in review state), use strict availability so the
+      // exclusive-end boundary (e.g. Dec 1 when listing ends Nov 30) stays correctly blocked.
+      const hasAvailability = endDate
+        ? hasAvailabilityOnDay
+        : hasAvailabilityOnDay || hasAvailabilityOrCheckoutOnDay(dayInListingTZ, allTimeSlots, timeZone);
 
       return !hasAvailability;
     }
