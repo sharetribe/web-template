@@ -21,6 +21,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin: 0;
+  padding: 0;
 }
 .accountLinksWrapper {
   margin-bottom: 36px;
@@ -96,8 +98,8 @@
 .customLinkFont {
   /* Font */
   font-weight: var(--fontWeightBold);
-  font-size: 21px;
-  line-height: 24px;
+  font-size: 18px;
+  line-height: 22px;
 
   padding: 4px 0 2px 0;
   /* x * 6px */
@@ -105,8 +107,8 @@
   margin-bottom: 18px;
 
   @media (--viewportMedium) {
-    font-size: 30px;
-    line-height: 40px;
+    font-size: 26px;
+    line-height: 30px;
     padding: 1px 0 7px 0;
   }
 }
@@ -124,11 +126,20 @@
 .navigationLink {
   /* Font */
   composes: customLinkFont;
-  color: var(--marketplaceColor);
+  color: var(--colorGrey900);
 
   /* Layout */
   margin-top: 0;
   margin-bottom: 11px;
+
+  & a {
+    color: var(--colorGrey900);
+  }
+
+  &:hover,
+  & a:hover {
+    color: var(--avBlue);
+  }
 }
 .currentPageLink {
   color: var(--marketplaceColorDark);
@@ -183,4 +194,51 @@
 .spacer {
   width: 100%;
   height: 124px;
+}
+
+.mobileNavSectionTitle {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  font-size: 18px;
+  font-weight: var(--fontWeightBold);
+  letter-spacing: 0.1em;
+  color: var(--colorGrey900);
+  padding: 4px 0 2px 0;
+  margin-top: 0;
+  margin-bottom: 11px;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    color: var(--avBlue);
+  }
+}
+
+.mobileNavSectionTitleOpen {
+  color: var(--avBlue);
+}
+
+.mobileNavChevron {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  margin-bottom: 3px;
+}
+
+.mobileNavChevronOpen {
+  transform: rotate(-135deg);
+  margin-bottom: -3px;
+}
+
+.mobileNavSubItem {
+  padding-left: 12px;
+  font-size: 14px;
 }

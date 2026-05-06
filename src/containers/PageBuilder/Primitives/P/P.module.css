@@ -3,7 +3,7 @@
   line-height: 1.33;
   margin-top: 0;
   margin-bottom: 0;
-  letter-spacing: 0;
+  letter-spacing: 0.06em;
 
   /* Handle margin-top of next adjacent element against this p element */
   & + p,

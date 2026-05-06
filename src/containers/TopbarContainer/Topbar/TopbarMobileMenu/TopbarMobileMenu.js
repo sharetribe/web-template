@@ -16,9 +16,7 @@ import {
   NamedLink,
   NotificationBadge,
 } from '../../../../components';
-// TODO: THIS!
-import CustomLinksMenu from '../TopbarDesktop/CustomLinksMenu/CustomLinksMenu';
-// import { CreateListingMenuLink } from '../TopbarDesktop/CustomLinksMenu/PriorityLinks';
+import MobileCustomLinksMenu from './MobileCustomLinksMenu';
 
 import css from './TopbarMobileMenu.module.css';
 import { AV_PROFILE_LINKS } from '../../../../extensions/topbar/links';
@@ -96,12 +94,6 @@ const TopbarMobileMenu = props => {
   }, []);
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
-  /*
-  const createListingMaybe = authenticatedOnClientSide ? (
-    <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />
-  ) : null;
-  */
-
   const extraLinks = customLinks.map((linkConfig, index) => {
     return (
       <CustomLinkComponent
@@ -149,12 +141,7 @@ const TopbarMobileMenu = props => {
             />
           </div>
 
-          <CustomLinksMenu
-            currentPage={currentPage}
-            customLinks={customLinks}
-            intl={intl}
-            hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-          />
+          <MobileCustomLinksMenu intl={intl} />
 
           <ul className={css.customLinksWrapper}>{extraLinks}</ul>
 
@@ -226,6 +213,7 @@ const TopbarMobileMenu = props => {
             </NamedLink>
           </li>
         </ul>
+        <MobileCustomLinksMenu intl={intl} />
         <ul className={css.customLinksWrapper}>{extraLinks}</ul>
         <div className={css.spacer} />
       </div>
