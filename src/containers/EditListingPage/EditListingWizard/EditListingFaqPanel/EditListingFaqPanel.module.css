@@ -12,20 +12,11 @@
   flex-grow: 1;
 }
 
-.priceCurrencyInvalid {
-  color: var(--colorFail);
-}
-
 .description {
   composes: marketplaceBodyFontStyles from global;
   color: var(--colorGrey700);
   margin-top: 0;
   margin-bottom: 24px;
-
-  & a {
-    color: inherit;
-    text-decoration: underline;
-  }
 
   @media (--viewportMedium) {
     margin-bottom: 32px;

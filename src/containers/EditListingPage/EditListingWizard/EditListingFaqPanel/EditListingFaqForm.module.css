@@ -1,0 +1,101 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.field {
+  margin-bottom: 24px;
+}
+
+/* ── FAQ list ── */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.faqCard {
+  border: 1px solid var(--colorGrey200);
+  border-radius: 8px;
+  padding: 24px;
+  background-color: var(--colorWhite);
+}
+
+.faqField {
+  margin-bottom: 18px;
+}
+
+.faqCardActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.deleteButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--colorGrey200);
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--colorGrey700);
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--colorFail);
+    color: var(--colorFail);
+  }
+}
+
+.addFaqButton {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  color: var(--marketplaceColor);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.examples {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey500);
+  white-space: pre-line;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.error {
+  margin-top: 48px;
+  color: var(--colorFail);
+}
+
+.submitButton {
+  flex-shrink: 0;
+  margin-top: auto;
+  margin-bottom: 24px;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+    margin-top: 100px;
+  }
+}

@@ -38,6 +38,25 @@
   flex-shrink: 0;
 }
 
+.benefits {
+  composes: formMargins;
+  flex-shrink: 0;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+.charCount {
+  font-size: 12px;
+  font-weight: var(--fontWeightRegular);
+  color: var(--colorGrey400);
+  white-space: nowrap;
+}
+
 .listingTypeSelect {
   margin-bottom: 24px;
 

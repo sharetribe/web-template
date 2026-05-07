@@ -1,0 +1,31 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.field {
+  margin-bottom: 24px;
+}
+
+.error {
+  margin-top: 48px;
+  color: var(--colorFail);
+}
+
+.submitButton {
+  flex-shrink: 0;
+  margin-top: auto;
+  margin-bottom: 24px;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+    margin-top: 100px;
+  }
+}

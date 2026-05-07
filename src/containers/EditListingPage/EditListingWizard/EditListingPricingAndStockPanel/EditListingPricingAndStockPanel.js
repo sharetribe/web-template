@@ -89,6 +89,7 @@ const EditListingPricingAndStockPanel = props => {
     errors,
     updatePageTitle: UpdatePageTitle,
     intl,
+    commission,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -140,6 +141,23 @@ const EditListingPricingAndStockPanel = props => {
       <H3 as="h1">
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
+      <p className={css.description}>
+        <FormattedMessage
+          id="EditListingPricingAndStockPanel.description"
+          values={{
+            commission: commission?.providerCommission?.percentage ?? 20,
+            stripeLink: (
+              <a
+                href="https://stripe.com/nl/pricing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FormattedMessage id="EditListingPricingAndStockPanel.stripeFees" />
+              </a>
+            ),
+          }}
+        />
+      </p>
       {priceCurrencyValid ? (
         <EditListingPricingAndStockForm
           className={css.form}

@@ -252,6 +252,8 @@ const getInitialValues = (
   return {
     title,
     description,
+    additionalCategories: publicData?.additionalCategories || [],
+    benefits: publicData?.benefits || '',
     ...nestedCategories,
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo({ listingTypes, existingListingTypeInfo, preselectedListingType }),
@@ -389,6 +391,8 @@ const EditListingDetailsPanel = props => {
             const {
               title,
               description,
+              additionalCategories,
+              benefits,
               listingType,
               transactionProcessAlias,
               unitType,
@@ -423,6 +427,8 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
+                additionalCategories: additionalCategories || [],
+                benefits,
                 ...cleanedNestedCategories,
                 ...publicListingFields,
               },

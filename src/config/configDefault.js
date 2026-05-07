@@ -104,6 +104,7 @@ const defaultConfig = {
     analytics: '/integrations/analytics.json',
     googleSearchConsole: '/integrations/google-search-console.json',
     maps: '/integrations/map.json',
+    commission: '/transactions/commission.json',
     // NOTE: we don't fetch commission configuration here but on the server-side
   },
 

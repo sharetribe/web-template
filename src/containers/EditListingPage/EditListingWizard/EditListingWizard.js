@@ -58,6 +58,9 @@ import EditListingWizardTab, {
   AVAILABILITY,
   PHOTOS,
   STYLE,
+  CONTENT,
+  FAQ,
+  READY,
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
@@ -98,8 +101,24 @@ const tabsForListingType = (processName, listingTypeConfig) => {
   // Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
   //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
   const tabs = {
-    ['default-booking']: [DETAILS, ...locationMaybe, PRICING, AVAILABILITY, ...styleOrPhotosTab],
-    ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
+    ['default-booking']: [
+      DETAILS,
+      ...styleOrPhotosTab,
+      AVAILABILITY,
+      FAQ,
+      ...locationMaybe,
+      PRICING,
+      READY,
+    ],
+    ['default-purchase']: [
+      DETAILS,
+      ...styleOrPhotosTab,
+      CONTENT,
+      FAQ,
+      PRICING_AND_STOCK,
+      ...deliveryMaybe,
+      READY,
+    ],
     ['default-negotiation']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
     ['default-inquiry']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
   };
@@ -148,6 +167,15 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === STYLE) {
     labelKey = 'EditListingWizard.tabLabelStyle';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveStyle`;
+  } else if (tab === CONTENT) {
+    labelKey = 'EditListingWizard.tabLabelContent';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveContent`;
+  } else if (tab === FAQ) {
+    labelKey = 'EditListingWizard.tabLabelFaq';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveFaq`;
+  } else if (tab === READY) {
+    labelKey = 'EditListingWizard.tabLabelReady';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveReady`;
   }
 
   return {
@@ -272,6 +300,13 @@ const tabCompleted = (tab, listing, config) => {
       return images && images.length > 0;
     case STYLE:
       return !!cardStyle;
+    case CONTENT:
+      return true;
+    // return Array.isArray(digitalAssets) && digitalAssets?.length > 0;
+    case FAQ:
+      return true;
+    case READY:
+      return true;
     default:
       return false;
   }

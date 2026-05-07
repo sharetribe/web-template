@@ -9,36 +9,22 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
-import EditListingPhotosForm from './EditListingPhotosForm';
-import css from './EditListingPhotosPanel.module.css';
+import EditListingFaqForm from './EditListingFaqForm.js';
+import css from './EditListingFaqPanel.module.css';
 
 const getInitialValues = params => {
-  const { images = [] } = params;
-  return { images };
+  const { faqs = [] } = params.listing.attributes.publicData || {};
+  return { faqs };
 };
 
 /**
- * The EditListingPhotosPanel component.
+ * The EditListingFaqPanel component.
  *
  * @component
  * @param {Object} props
- * @param {string} [props.className] - Custom class that extends the default class for the root element
- * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
- * @param {Object} props.errors - The errors object
- * @param {boolean} props.disabled - Whether the form is disabled
- * @param {boolean} props.ready - Whether the form is ready
- * @param {Array} props.images - The images array
- * @param {propTypes.ownListing} props.listing - The listing object
- * @param {Function} props.onImageUpload - The image upload function
- * @param {string} props.submitButtonText - The submit button text
- * @param {boolean} props.panelUpdated - Whether the panel is updated
- * @param {boolean} props.updateInProgress - Whether the update is in progress
- * @param {Function} props.onSubmit - The submit function
- * @param {Function} props.onRemoveImage - The remove image function
- * @param {Object} props.listingImageConfig - The listing image config
  * @returns {JSX.Element}
  */
-const EditListingPhotosPanel = props => {
+const EditListingFaqPanel = props => {
   const {
     className,
     rootClassName,
@@ -46,13 +32,10 @@ const EditListingPhotosPanel = props => {
     disabled,
     ready,
     listing,
-    onImageUpload,
     submitButtonText,
     panelUpdated,
     updateInProgress,
     onSubmit,
-    onRemoveImage,
-    listingImageConfig,
     updatePageTitle: UpdatePageTitle,
     intl,
   } = props;
@@ -63,12 +46,12 @@ const EditListingPhotosPanel = props => {
 
   const panelHeadingProps = isPublished
     ? {
-        id: 'EditListingPhotosPanel.title',
+        id: 'EditListingFaqPanel.title',
         values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
         messageProps: { listingTitle: listing.attributes.title },
       }
     : {
-        id: 'EditListingPhotosPanel.createListingTitle',
+        id: 'EditListingFaqPanel.createListingTitle',
         values: { lineBreak: <br /> },
         messageProps: {},
       };
@@ -84,28 +67,28 @@ const EditListingPhotosPanel = props => {
       <H3 as="h1">
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
-      <p>
-        <FormattedMessage id="EditListingPhotosPanel.description" />
+      <p className={css.description}>
+        <FormattedMessage id="EditListingFaqPanel.description" />
       </p>
-      <EditListingPhotosForm
+      <EditListingFaqForm
         className={css.form}
         disabled={disabled}
         ready={ready}
         fetchErrors={errors}
         initialValues={getInitialValues(props)}
-        onImageUpload={onImageUpload}
         onSubmit={values => {
-          const { addImage, ...updateValues } = values;
+          const { faqs } = values;
+          const updateValues = {
+            publicData: { faqs: faqs || [] },
+          };
           onSubmit(updateValues);
         }}
-        onRemoveImage={onRemoveImage}
         saveActionMsg={submitButtonText}
         updated={panelUpdated}
         updateInProgress={updateInProgress}
-        listingImageConfig={listingImageConfig}
       />
     </main>
   );
 };
 
-export default EditListingPhotosPanel;
+export default EditListingFaqPanel;

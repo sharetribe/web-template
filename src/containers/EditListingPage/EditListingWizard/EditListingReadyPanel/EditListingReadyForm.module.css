@@ -1,0 +1,67 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.error {
+  margin-top: 48px;
+  color: var(--colorFail);
+}
+
+.checkboxList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.termsLink {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.bottomActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  margin-bottom: 24px;
+
+  @media (--viewportLarge) {
+    margin-top: 100px;
+  }
+}
+
+.previewButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: var(--borderRadius);
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  color: var(--colorGrey700);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: none;
+    border-color: var(--colorGrey500);
+  }
+
+  &::before {
+    content: '↗';
+  }
+}
+
+.submitButton {
+  flex-shrink: 0;
+}

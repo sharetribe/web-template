@@ -1,0 +1,142 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  position: relative;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+/* ---- Control (the trigger box) ---- */
+.control {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 44px 8px 12px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 4px;
+  background-color: var(--colorWhite);
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  outline: none;
+
+  @media (--viewportMedium) {
+    min-height: 52px;
+  }
+}
+
+.control:focus-visible {
+  border-color: var(--colorBlack);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.controlOpen {
+  border-color: var(--colorBlack);
+}
+
+.controlError {
+  border: var(--borderErrorField);
+}
+
+/* ---- Inner row (chips / placeholder) ---- */
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  align-items: center;
+  min-height: 28px;
+}
+
+.placeholder {
+  color: var(--colorGrey400);
+}
+
+/* ---- Chips ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #cff0e3;
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorBlack);
+  line-height: 1;
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--colorGrey700);
+}
+
+.chipRemove:hover {
+  color: var(--colorBlack);
+}
+
+/* ---- Chevron icon ---- */
+.chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--colorGrey700);
+  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+
+.chevronOpen {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* ---- Dropdown ---- */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  background-color: var(--colorWhite);
+  border: 1px solid var(--colorGrey300);
+  border-radius: 4px;
+  z-index: 100;
+  max-height: 240px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.option {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--colorBlack);
+}
+
+.option:hover {
+  background-color: var(--colorGrey50);
+}
+
+.optionSelected {
+  background-color: #f0fdf8;
+}
+
+.optionDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

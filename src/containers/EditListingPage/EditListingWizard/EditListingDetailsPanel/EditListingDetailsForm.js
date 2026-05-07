@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
@@ -21,6 +21,7 @@ import {
   Button,
   FieldSelect,
   FieldTextInput,
+  FieldMultiSelect,
   Heading,
   CustomExtendedDataField,
 } from '../../../../components';
@@ -28,6 +29,8 @@ import {
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
+const DESCRIPTION_MAX_LENGTH = 100;
+const BENEFITS_MAX_LENGTH = 1000;
 
 // Show various error messages
 const ErrorMessage = props => {
@@ -170,6 +173,7 @@ const CategoryField = props => {
               { categoryLevel: currentCategoryKey }
             )
           )}
+          helpText={intl.formatMessage({ id: 'EditListingDetailsForm.categoryHelpText' })}
         >
           <option disabled value="">
             {intl.formatMessage(
@@ -312,6 +316,7 @@ const EditListingDetailsForm = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
+    keepDirtyOnReinitialize
     render={formRenderProps => {
       const {
         autoFocus,
@@ -344,6 +349,17 @@ const EditListingDetailsForm = props => (
       const { listingType, transactionProcessAlias, unitType } = values;
       const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
 
+      // Reset additional categories when the primary category changes
+      const primaryCategoryId = values[`${categoryPrefix}1`];
+      const isFirstRender = useRef(true);
+      useEffect(() => {
+        if (isFirstRender.current) {
+          isFirstRender.current = false;
+          return;
+        }
+        formApi.change('additionalCategories', []);
+      }, [primaryCategoryId]);
+
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
       });
@@ -368,18 +384,30 @@ const EditListingDetailsForm = props => (
       );
 
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
+      const maxLength100Message = maxLength(
+        intl.formatMessage(
+          { id: 'EditListingDetailsForm.maxLength' },
+          { maxLength: DESCRIPTION_MAX_LENGTH }
+        ),
+        DESCRIPTION_MAX_LENGTH
+      );
+      const maxLength1000Message = maxLength(
+        intl.formatMessage(
+          { id: 'EditListingDetailsForm.maxLength' },
+          { maxLength: BENEFITS_MAX_LENGTH }
+        ),
+        BENEFITS_MAX_LENGTH
+      );
 
       const hasCategories = selectableCategories && selectableCategories.length > 0;
       const showCategories = listingType && hasCategories;
 
-      const showTitle = hasCategories ? allCategoriesChosen : listingType;
+      const showTitle = listingType;
 
       const config = useConfiguration();
       const listingTypeConfig = getListingTypeConfig(config, listingType);
       const showDescriptionMaybe = displayDescription(listingTypeConfig);
-      const showDescription = hasCategories
-        ? allCategoriesChosen && showDescriptionMaybe
-        : showDescriptionMaybe;
+      const showDescription = listingType && showDescriptionMaybe;
 
       const showListingFields = hasCategories ? allCategoriesChosen : listingType;
 
@@ -408,18 +436,6 @@ const EditListingDetailsForm = props => (
             intl={intl}
           />
 
-          {showCategories && isCompatibleCurrency && (
-            <FieldSelectCategory
-              values={values}
-              prefix={categoryPrefix}
-              listingCategories={selectableCategories}
-              formApi={formApi}
-              intl={intl}
-              allCategoriesChosen={allCategoriesChosen}
-              setAllCategoriesChosen={setAllCategoriesChosen}
-            />
-          )}
-
           {showTitle && isCompatibleCurrency && (
             <FieldTextInput
               id={`${formId}title`}
@@ -433,6 +449,7 @@ const EditListingDetailsForm = props => (
               maxLength={TITLE_MAX_LENGTH}
               validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
               autoFocus={autoFocus}
+              helpText={intl.formatMessage({ id: 'EditListingDetailsForm.titleHelpText' })}
             />
           )}
 
@@ -441,15 +458,53 @@ const EditListingDetailsForm = props => (
               id={`${formId}description`}
               name="description"
               className={css.description}
-              type="textarea"
-              label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
+              type="text"
+              label={
+                <span className={css.labelRow}>
+                  <span>{intl.formatMessage({ id: 'EditListingDetailsForm.description' })}</span>
+                  <span className={css.charCount}>
+                    {(values.description || '').length}/{DESCRIPTION_MAX_LENGTH}
+                  </span>
+                </span>
+              }
               placeholder={intl.formatMessage({
                 id: 'EditListingDetailsForm.descriptionPlaceholder',
               })}
-              validate={required(
-                intl.formatMessage({
-                  id: 'EditListingDetailsForm.descriptionRequired',
-                })
+              validate={composeValidators(
+                required(
+                  intl.formatMessage({
+                    id: 'EditListingDetailsForm.descriptionRequired',
+                  })
+                ),
+                maxLength100Message
+              )}
+            />
+          )}
+
+          {showDescription && isCompatibleCurrency && (
+            <FieldTextInput
+              id={`${formId}benefits`}
+              name="benefits"
+              className={css.benefits}
+              type="textarea"
+              label={
+                <span className={css.labelRow}>
+                  <span>{intl.formatMessage({ id: 'EditListingDetailsForm.benefits' })}</span>
+                  <span className={css.charCount}>
+                    {(values.benefits || '').length}/{BENEFITS_MAX_LENGTH}
+                  </span>
+                </span>
+              }
+              placeholder={intl.formatMessage({
+                id: 'EditListingDetailsForm.benefitsPlaceholder',
+              })}
+              validate={composeValidators(
+                required(
+                  intl.formatMessage({
+                    id: 'EditListingDetailsForm.benefitsRequired',
+                  })
+                ),
+                maxLength1000Message
               )}
             />
           )}
@@ -461,6 +516,38 @@ const EditListingDetailsForm = props => (
               selectedCategories={pickSelectedCategories(values)}
               formId={formId}
               intl={intl}
+            />
+          )}
+
+          {showCategories && isCompatibleCurrency && (
+            <FieldSelectCategory
+              values={values}
+              prefix={categoryPrefix}
+              listingCategories={selectableCategories}
+              formApi={formApi}
+              intl={intl}
+              allCategoriesChosen={allCategoriesChosen}
+              setAllCategoriesChosen={setAllCategoriesChosen}
+            />
+          )}
+
+          {showCategories && isCompatibleCurrency && !!values[`${categoryPrefix}1`] && (
+            <FieldMultiSelect
+              id={`${formId}additionalCategories`}
+              name="additionalCategories"
+              label={intl.formatMessage({
+                id: 'EditListingDetailsForm.additionalCategoriesLabel',
+              })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDetailsForm.additionalCategoriesPlaceholder',
+              })}
+              helpText={intl.formatMessage({
+                id: 'EditListingDetailsForm.additionalCategoriesHelpText',
+              })}
+              options={selectableCategories
+                .filter(cat => cat.id !== values[`${categoryPrefix}1`])
+                .map(cat => ({ key: cat.id, label: cat.name }))}
+              maxItems={3}
             />
           )}
 

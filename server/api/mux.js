@@ -5,12 +5,14 @@ const mux = getMux();
 const marketplaceUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 
 const getMuxUploadUrl = async (req, res) => {
+  const { playback_policy = ['public'] } = req.body || {};
+
   try {
     const upload = await mux.video.uploads.create({
       // Set the CORS origin to your application.
       cors_origin: marketplaceUrl,
       new_asset_settings: {
-        playback_policy: ['signed'],
+        playback_policy,
       },
     });
 

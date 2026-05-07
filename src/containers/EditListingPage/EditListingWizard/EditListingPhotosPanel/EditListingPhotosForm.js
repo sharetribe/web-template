@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
+import { getMuxUploadUrl, getMuxAsset } from '../../../../util/api';
 
 // Import shared components
 import { Button, Form, AspectRatioWrapper } from '../../../../components';
@@ -275,7 +276,7 @@ export const EditListingPhotosForm = props => {
             />
 
             <p className={css.tip}>
-              <FormattedMessage id="EditListingPhotosForm.addImagesTip" />
+              <FormattedMessage id="EditListingPhotosForm.sortTip" />
             </p>
 
             <PublishListingError error={publishListingError} />
