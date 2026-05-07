@@ -29,7 +29,9 @@
     leading-trim: NONE;
     line-height: 24px;
     letter-spacing: 0px;
-    color: #414651;
+    color: #101828;
+    margin-bottom: 12px;
+    display: inline-block;
 
     &:hover {
       color: var(--marketplaceColor);
@@ -59,5 +61,6 @@
     line-height: 24px;
     letter-spacing: 0px;
     color: #414651;
+    margin-bottom: 12px;
   }
 }

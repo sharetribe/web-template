@@ -1,7 +1,6 @@
 @import '../../styles/customMediaQueries.css';
 
-.layoutWrapperMain {
-}
+.layoutWrapperMain {}
 
 .root {
   flex-grow: 1;
@@ -27,33 +26,46 @@
     margin-bottom: 7.5vh;
     min-height: 700px;
   } */
-   max-width: 40%;
-   width: 100%;
-   padding: 0 20px;
-   @media (max-width: 768px) {
+  max-width: 40%;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #fff;
+
+  @media (max-width: 768px) {
     max-width: 100%;
     padding: 0 20px;
     margin-bottom: 30px;
-   }
-   & > div{
+  }
+
+  &>div {
     max-width: 360px;
     width: 100%;
     margin: 0 auto;
-   }
-}
-
-.rightImage{
-  max-width: 60%;
-  width: 100%;
-  @media (max-width: 768px) {
-display: none;
   }
 }
 
-.authenticationPage{
+.rightImage {
+  max-width: 60%;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+  & img{
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.authenticationPage {
   display: flex;
   overflow: hidden;
   max-width: 100vw;
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
@@ -181,6 +193,7 @@ display: none;
 .selectedLabel {
   composes: label from global;
 }
+
 .selectedValue {
   margin-top: 0;
   margin-bottom: 6px;
@@ -285,5 +298,4 @@ display: none;
   }
 }
 
-.confirmInfoText {
-}
+.confirmInfoText {}

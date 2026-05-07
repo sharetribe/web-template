@@ -76,7 +76,7 @@ const LoginFormComponent = props => (
         <NamedLink
           name={signupRouteName}
           params={signupRouteParams}
-          className={css.recoveryLink}
+          className={css.signUpLink}
           to={authLinkTo}
         >
           <FormattedMessage id="AuthenticationPage.signupLinkText" />
@@ -85,13 +85,17 @@ const LoginFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
+              <h2 className={css.createAccountTitle}>Login to your account</h2>
+          <p className={css.createAccountDescription}>
+          Welcome back! Please enter your details.
+          </p>
           <div>
             <FieldTextInput
               type="email"
               id={formId ? `${formId}.email` : 'email'}
               name="email"
               autoComplete="email"
-              label={emailLabel}
+              label={""}
               placeholder={emailPlaceholder}
               validate={validators.composeValidators(emailRequired, emailValid)}
             />
@@ -101,17 +105,13 @@ const LoginFormComponent = props => (
               id={formId ? `${formId}.password` : 'password'}
               name="password"
               autoComplete="current-password"
-              label={passwordLabel}
+              label={""}
               placeholder={passwordPlaceholder}
               validate={passwordRequired}
             />
           </div>
           <div className={css.bottomWrapper}>
-            <p className={css.bottomWrapperText}>
-              <span className={css.recoveryLinkInfo}>
-                <FormattedMessage id="LoginForm.signUpRedirectInfo" values={{ signUpLink }} />
-              </span>
-            </p>
+        
             <p className={css.bottomWrapperText}>
               <span className={css.recoveryLinkInfo}>
                 <FormattedMessage
@@ -120,9 +120,15 @@ const LoginFormComponent = props => (
                 />
               </span>
             </p>
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton className={css.primaryButton} type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="LoginForm.logIn" />
             </PrimaryButton>
+            <div className={css.createAccount}>
+              {signUpLink}
+              {/* <span className={css.recoveryLinkInfo}>
+                <FormattedMessage id="LoginForm.signUpRedirectInfo" values={{ signUpLink }} />
+              </span> */}
+            </div>
           </div>
         </Form>
       );

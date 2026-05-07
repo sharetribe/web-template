@@ -70,7 +70,8 @@
       line-height: spacing/3;
       letter-spacing: 0%;
       max-width: 544px;
-      &:last-child{
+
+      &:last-child {
         margin-top: 0;
         padding-top: 0;
       }
@@ -81,6 +82,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+
       @media (max-width:767px) {
         padding-left: 0;
       }
@@ -162,12 +164,13 @@
       /* margin-top: -70px; */
       justify-self: left;
       width: 100%;
+
       &>div {
         max-width: 400px;
         width: 100%;
         margin-top: 0;
         justify-self: left;
-        padding:2px 9px;
+        padding: 2px 9px;
         border-radius: 4px;
       }
     }
@@ -189,11 +192,19 @@
       max-width: 100%;
       width: 100%;
       text-align: left;
+      margin-top: 48px;
+      padding: 0;
     }
   }
 }
 
 :global(#your-chance) {
+  &>div {
+    &>div {
+      padding-top: 104px;
+    }
+  }
+
   & header {
     /* text-align: left; */
     display: block;
@@ -249,6 +260,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0;
+    color: #414651;
   }
 
   & p {
@@ -260,13 +272,14 @@
     line-height: 24px;
     letter-spacing: 0%;
     text-align: center;
-
+    color: #414651;
 
     & em {
       text-decoration: underline;
       text-decoration-style: solid;
       text-decoration-offset: 0%;
       text-decoration-thickness: 0%;
+      font-style: normal;
     }
 
   }
@@ -329,6 +342,10 @@
   }
 
   & [class*="SectionBuilder_blockContainer"] {
+    &>div {
+      margin-bottom: 32px;
+    }
+
     &>div:nth-child(1) {
       &:before {
         content: "01";
@@ -343,6 +360,7 @@
         margin-bottom: 20px;
       }
     }
+
     &>div:nth-child(2) {
       &:before {
         content: "02";
@@ -357,6 +375,7 @@
         margin-bottom: 20px;
       }
     }
+
     &>div:nth-child(3) {
       &:before {
         content: "03";
@@ -371,6 +390,7 @@
         margin-bottom: 20px;
       }
     }
+
     &>div:nth-child(4) {
       &:before {
         content: "04";
@@ -389,61 +409,64 @@
 }
 
 :global(#faq-section) {
-background: #FAFAFA;
-& header {
-  display: block;
+  background: #FAFAFA;
 
-  & h2 {
+  & header {
+    display: block;
+
+    & h2 {
+      font-family: Nohemi;
+      font-weight: 600;
+      font-style: Semi Bold;
+      font-size: 48px;
+      leading-trim: NONE;
+      line-height: 60px;
+      letter-spacing: 0px;
+
+      text-align: left;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    p {
+      font-family: Nunito Sans;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 16px;
+      leading-trim: NONE;
+      line-height: spacing/3;
+      letter-spacing: 0%;
+      text-align: left;
+      width: 100%;
+      max-width: 768px;
+      margin: 0;
+      justify-self: left;
+      text-wrap: auto;
+    }
+  }
+
+  & h3 {
     font-family: Nohemi;
     font-weight: 600;
     font-style: Semi Bold;
-    font-size: 48px;
-    leading-trim: NONE;
-    line-height: 60px;
-    letter-spacing: 0px;
+    font-size: 24px;
+    justify-self: left;
+    letter-spacing: 0%;
+    text-align: left;
+  }
 
+  p {
+    font-family: Nunito Sans;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: spacing/3;
+    letter-spacing: 0%;
     text-align: left;
     width: 100%;
-    max-width: 100%;
-  }
-  p{
-    font-family: Nunito Sans;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: NONE;
-line-height: spacing/3;
-letter-spacing: 0%;
-text-align: left;
-width: 100%;
-max-width: 768px;
-margin: 0;
-justify-self: left;
+    max-width: 768px;
+    margin: 0;
+    justify-self: left;
   }
 }
-& h3{
-  font-family: Nohemi;
-font-weight: 600;
-font-style: Semi Bold;
-font-size: 24px;
-justify-self: left;
-letter-spacing: 0%;
-text-align: left;
-}
-p{
-  font-family: Nunito Sans;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: NONE;
-line-height: spacing/3;
-letter-spacing: 0%;
-text-align: left;
-width: 100%;
-max-width: 768px;
-margin: 0;
-justify-self: left;
-}
-}
-
-

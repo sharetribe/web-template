@@ -118,8 +118,17 @@
 
 .resetAllButton {
   composes: h5 from global;
-  font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey600);
+  font-family: Nohemi;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 20px;
+  letter-spacing: 2%;
+  vertical-align: middle;
+  text-transform: uppercase;
+
+  color: #414651;
 
   /* Layout */
   display: inline;

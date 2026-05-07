@@ -84,10 +84,15 @@
   padding: 10px 14px;
   background: #ffffff;
   border: 1px solid #d0d5dd;
-  border-radius: 8px;
+  border-radius: 3px;
   font-family: Nunito Sans;
-  font-size: 14px;
-  line-height: 20px;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  
   color: #101828;
   outline: none;
 
@@ -103,14 +108,18 @@
 .newsletterButton {
   height: 44px;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 3px;
   border: 1px solid #0f6b3a;
   background: #008057;
   color: #ffffff;
-  font-family: Nunito Sans;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
   cursor: pointer;
   white-space: nowrap;
 
@@ -209,9 +218,18 @@
 
 .copyright {
   display: inline-block;
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--colorGrey600);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
+  
+  color: #A4A7AE;
   margin-top: 0px;
 }
 
@@ -288,6 +306,7 @@
 @media (--viewportLarge) {
   .detailsInfo {
     grid-area: details;
+    max-width: 320px;
   }
 
   .contentCol1 {
@@ -344,5 +363,6 @@
 
   .gridCol4 {
     grid-template-columns: repeat(4, 1fr);
+    margin-top: -45px;
   }
 }

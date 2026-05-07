@@ -564,7 +564,9 @@ textarea {
 
   /* Borders */
   border-radius: 6px;
-  border: 1px solid #d8dce6;
+  border: 1px solid #D5D7DA;
+  box-shadow: 0px 1px 2px 0px #0A0D120D;
+
   outline: none;
 
   /* Transition */
@@ -576,7 +578,7 @@ textarea {
 
   @media (--viewportMedium) {
     /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-    padding: 7px 16px 7px 16px;
+    padding: 4px 16px 4px 16px;
     line-height: 32px;
   }
 }
