@@ -17,7 +17,11 @@ import { parse } from './util/urlHelpers';
 import { difference, isEmpty } from './util/common';
 import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
-import { filterValidReferralData, storeReferralData } from './util/webStorageHelpers';
+import {
+  clearReferralDataIfExpired,
+  filterValidReferralData,
+  storeReferralData,
+} from './util/webStorageHelpers';
 import { includeCSSProperties } from './util/style';
 import { IncludeScripts } from './util/includeScripts';
 
@@ -215,6 +219,10 @@ export const ClientApp = props => {
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
   useEffect(() => {
+    // Clear referral data from session storage the expiration time has passed
+    clearReferralDataIfExpired();
+
+    // If URL contains new referral data, store it
     const urlReferralParams = parse(window?.location?.search);
     const { userTypes = [] } = appConfig.user;
     const isAuthenticated = store.getState()?.auth?.isAuthenticated;
