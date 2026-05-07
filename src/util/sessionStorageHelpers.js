@@ -62,9 +62,8 @@ export const filterValidReferralData = (referralData, userTypes) => {
  *
  *
  * @param {Object} referralData - Filtered referral params to store
- * @param {boolean} clearOnExpiry - Indicates if automatic clearing should happen after expiry
  */
-export const storeReferralDataToSession = (referralData, clearOnExpiry) => {
+export const storeReferralDataToSession = referralData => {
   const storedData = getStoredReferralDataFromSession();
 
   // Don't store the referral ID if it has already been stored and hasn't expired
@@ -89,9 +88,6 @@ export const storeReferralDataToSession = (referralData, clearOnExpiry) => {
 
       const storableData = JSON.stringify(data, replacer);
       window.sessionStorage.setItem(REFERRAL_ID_SESSION_STORAGE_KEY, storableData);
-      if (clearOnExpiry) {
-        window.setTimeout(() => clearReferralDataIfExpired(), HOUR_IN_MS);
-      }
     }
   }
 };

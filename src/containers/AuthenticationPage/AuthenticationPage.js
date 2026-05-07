@@ -275,7 +275,7 @@ export const AuthenticationPageComponent = props => {
   // Don't store referral data if the user is authenticated - meaning they have already completed
   // signup and have been redirected back here
   if (!isAuthenticated && !isEmpty(validReferralParams)) {
-    storeReferralDataToSession(validReferralParams, true);
+    storeReferralDataToSession(validReferralParams);
   }
 
   const user = ensureCurrentUser(currentUser);
