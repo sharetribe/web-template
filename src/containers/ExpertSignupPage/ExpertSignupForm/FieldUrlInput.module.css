@@ -1,0 +1,126 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  flex: 1;
+}
+
+.label {
+  display: block;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--colorGrey700);
+  margin-bottom: 6px;
+}
+
+/* ================ Row: icon (outside) + input box ================ */
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ================ Icon — outside the bordered box ================ */
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: var(--colorGrey500);
+
+  @media (--viewportMedium) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ================ Input box — mirrors FieldTextInput border ================ */
+
+.inputBox {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid #d5d7da;
+  border-radius: 6px;
+  box-shadow: 0px 1px 2px 0px #0a0d120d;
+  overflow: hidden;
+  transition: all ease-in-out 100ms;
+
+  &:focus-within {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: #b8bfd1;
+  }
+}
+
+.inputBoxError {
+  border-color: var(--colorFail);
+
+  &:focus-within {
+    border-color: var(--colorFail);
+    box-shadow: 0 0 0 0.2rem rgb(220 53 69 / 25%);
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: var(--colorFail);
+  }
+}
+
+/* ================ https:// prefix ================ */
+
+.prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 12px;
+  font-size: 14px;
+  color: var(--colorGrey500);
+  white-space: nowrap;
+  user-select: none;
+  flex-shrink: 0;
+  border-right: 1px solid #d5d7da;
+  height: 100%;
+
+  @media (--viewportMedium) {
+    font-size: 14px;
+  }
+}
+
+/* ================ Editable input ================ */
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  padding: 6px 12px 4px 10px;
+  font-size: 16px;
+  color: var(--colorBlack);
+
+  @media (--viewportMedium) {
+    padding: 4px 16px 4px 10px;
+    line-height: 32px;
+  }
+
+  &::placeholder {
+    color: var(--colorGrey300);
+  }
+
+  &:hover {
+    border: none;
+  }
+
+  &:focus {
+    border: none;
+    box-shadow: none;
+  }
+}

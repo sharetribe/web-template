@@ -1,0 +1,209 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ================ Name row ================ */
+
+.nameRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.firstNameRoot {
+  width: calc(50% - 9px);
+
+  @media (max-width: 600px) {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+}
+
+.lastNameRoot {
+  width: calc(50% - 9px);
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+
+/* ================ Two-column row (email + phone) ================ */
+
+.twoColRow {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 24px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.halfField {
+  flex: 1;
+  min-width: 0;
+
+  @media (max-width: 600px) {
+    margin-bottom: 24px;
+  }
+}
+
+/* ================ Generic field spacing ================ */
+
+.field {
+  margin-bottom: 24px;
+}
+
+/* ================ Links section ================ */
+
+.linksLabel {
+  display: block;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--colorGrey700);
+  margin-bottom: 8px;
+}
+
+.linksRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    gap: 18px;
+  }
+}
+
+/* ================ Company information section ================ */
+
+.companySection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--colorGrey100);
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    gap: 18px;
+  }
+}
+
+.companySectionLeft {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Top group grows to push VAT to the bottom */
+.companyTopGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.companySectionRight {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Address wrapper grows to push City to the bottom, level with VAT */
+.addressWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.companyInfoLabel {
+  margin: 0;
+  /* Match global label: Nohemi, 500, 13px mobile / 16px desktop */
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0px;
+  color: #101828;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.companyField {
+  /* no extra spacing — gap handles it */
+}
+
+/* ================ Expert Profile Section ================ */
+
+.expertProfileSection {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--colorGrey100);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dropdownsRow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    gap: 18px;
+  }
+}
+
+.dropdownField {
+  flex: 1;
+  min-width: 0;
+}
+
+.textareaField {
+  /* no extra margin — gap on parent handles spacing */
+}
+
+/* ================ Submit button ================ */
+
+.bottomWrapper {
+  margin-top: 8px;
+}
+
+.submitButton {
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+}

@@ -8,11 +8,29 @@ import css from './FieldTextInput.module.css';
 const CONTENT_MAX_LENGTH = 5000;
 
 const EyeIcon = props => (
-  <svg style={{ fill: "transparent" }} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0.666992 7.99999C0.666992 7.99999 3.33366 2.66666 8.00033 2.66666C12.667 2.66666 15.3337 7.99999 15.3337 7.99999C15.3337 7.99999 12.667 13.3333 8.00033 13.3333C3.33366 13.3333 0.666992 7.99999 0.666992 7.99999Z" stroke="#A4A7AE" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M8.00033 9.99999C9.1049 9.99999 10.0003 9.10456 10.0003 7.99999C10.0003 6.89542 9.1049 5.99999 8.00033 5.99999C6.89576 5.99999 6.00033 6.89542 6.00033 7.99999C6.00033 9.10456 6.89576 9.99999 8.00033 9.99999Z" stroke="#A4A7AE" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+  <svg
+    style={{ fill: 'transparent' }}
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0.666992 7.99999C0.666992 7.99999 3.33366 2.66666 8.00033 2.66666C12.667 2.66666 15.3337 7.99999 15.3337 7.99999C15.3337 7.99999 12.667 13.3333 8.00033 13.3333C3.33366 13.3333 0.666992 7.99999 0.666992 7.99999Z"
+      stroke="#A4A7AE"
+      stroke-width="1.33333"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M8.00033 9.99999C9.1049 9.99999 10.0003 9.10456 10.0003 7.99999C10.0003 6.89542 9.1049 5.99999 8.00033 5.99999C6.89576 5.99999 6.00033 6.89542 6.00033 7.99999C6.00033 9.10456 6.89576 9.99999 8.00033 9.99999Z"
+      stroke="#A4A7AE"
+      stroke-width="1.33333"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
   </svg>
-
 );
 
 const EyeOffIcon = props => (
@@ -78,16 +96,16 @@ const FieldTextInputComponent = props => {
   const maxLength = CONTENT_MAX_LENGTH;
   const inputProps = isTextarea
     ? {
-      className: inputClasses,
-      id,
-      rows: 1,
-      maxLength,
-      ...refMaybe,
-      ...inputWithoutType,
-      ...rest,
-    }
+        className: inputClasses,
+        id,
+        rows: 1,
+        maxLength,
+        ...refMaybe,
+        ...inputWithoutType,
+        ...rest,
+      }
     : isUncontrolled
-      ? {
+    ? {
         className: inputClasses,
         id,
         type: effectiveType,
@@ -96,7 +114,14 @@ const FieldTextInputComponent = props => {
         ...inputWithoutValue,
         ...rest,
       }
-      : { className: inputClasses, id, type: effectiveType, ...refMaybe, ...input, ...rest };
+    : {
+        className: inputClasses,
+        id,
+        type: effectiveType,
+        ...refMaybe,
+        ...inputWithoutType,
+        ...rest,
+      };
 
   const labelClassMaybe = labelClassName ? { className: labelClassName } : {};
   const classes = classNames(rootClassName || css.root, className);

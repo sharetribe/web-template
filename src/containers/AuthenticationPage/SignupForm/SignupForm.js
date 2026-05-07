@@ -261,8 +261,7 @@ const SignupFormComponent = props => (
               <FormattedMessage id="SignupForm.wishToBecomeTeacher" />
             </p>
             <NamedLink
-              name="SignupForUserTypePage"
-              params={{ userType: 'expert' }}
+              name="ExpertSignupPage"
               className={css.applyExpertButton}
             >
               <FormattedMessage id="SignupForm.applyForExpertAccount" />

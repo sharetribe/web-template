@@ -1,0 +1,100 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  /* matches FieldTextInput root spacing */
+}
+
+.label {
+  display: block;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--colorGrey700);
+  margin-bottom: 6px;
+}
+
+/* ================ Phone row — matches input height & border exactly ================ */
+
+.phoneRow {
+  display: flex;
+  align-items: stretch;
+  background-color: #fff;
+  border: 1px solid #d5d7da;
+  border-radius: 6px;
+  box-shadow: 0px 1px 2px 0px #0a0d120d;
+  overflow: hidden;
+  transition: all ease-in-out 100ms;
+
+  &:focus-within {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: #b8bfd1;
+  }
+}
+
+.phoneRowError {
+  border-color: var(--colorFail);
+
+  &:focus-within {
+    border-color: var(--colorFail);
+    box-shadow: 0 0 0 0.2rem rgb(220 53 69 / 25%);
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: var(--colorFail);
+  }
+}
+
+/* ================ Dial-code segment ================ */
+
+.dialCodeSegment {
+  display: flex;
+  align-items: center;
+  background-color: var(--colorGrey50);
+  border-right: 1px solid #d5d7da;
+  padding: 0 10px;
+  flex-shrink: 0;
+}
+
+.dialCodeText {
+  font-size: 14px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorGrey700);
+  white-space: nowrap;
+}
+
+/* ================ Number input ================ */
+
+.numberInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  padding: 6px 12px 4px 12px;
+  font-size: 16px;
+  color: var(--colorBlack);
+
+  @media (--viewportMedium) {
+    padding: 4px 16px;
+    line-height: 32px;
+  }
+
+  &::placeholder {
+    color: var(--colorGrey300);
+  }
+
+  /* Override global input hover/focus since parent handles it */
+  &:hover {
+    border: none;
+  }
+
+  &:focus {
+    border: none;
+    box-shadow: none;
+  }
+}

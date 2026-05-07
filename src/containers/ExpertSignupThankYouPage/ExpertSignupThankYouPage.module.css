@@ -1,0 +1,77 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  justify-content: center;
+  padding: 64px 24px 100px;
+
+  @media (max-width: 768px) {
+    padding: 40px 20px 72px;
+  }
+}
+
+.content {
+  width: 100%;
+  max-width: 720px;
+}
+
+.heading {
+  font-family: Nohemi;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #101828;
+  margin: 0 0 24px 0;
+
+  @media (--viewportMedium) {
+    font-size: 42px;
+  }
+}
+
+.intro {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #414651;
+  margin: 0 0 16px 0;
+}
+
+.outcomeList {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #414651;
+  margin: 0 0 24px 0;
+  padding-left: 24px;
+  list-style: disc;
+
+  & li {
+    margin-bottom: 10px;
+  }
+
+  & strong {
+    font-weight: 700;
+    color: #101828;
+  }
+}
+
+.closing {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #414651;
+  margin: 0 0 24px 0;
+}
+
+.signature {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #414651;
+  margin: 0;
+}

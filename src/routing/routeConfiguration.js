@@ -40,6 +40,8 @@ const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfSe
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
 const VideoMeetingPage = loadable(() => import(/* webpackChunkName: "VideoMeetingPage" */ '../containers/VideoMeetingPage/VideoMeetingPage'));
+const ExpertSignupPage = loadable(() => import(/* webpackChunkName: "ExpertSignupPage" */ '../containers/ExpertSignupPage/ExpertSignupPage'));
+const ExpertSignupThankYouPage = loadable(() => import(/* webpackChunkName: "ExpertSignupThankYouPage" */ '../containers/ExpertSignupThankYouPage/ExpertSignupThankYouPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -243,6 +245,18 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: AuthenticationPage,
       extraProps: { tab: 'signup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
+      path: '/apply-as-expert',
+      name: 'ExpertSignupPage',
+      component: ExpertSignupPage,
+    },
+    {
+      path: '/apply-as-expert/thank-you',
+      name: 'ExpertSignupThankYouPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ExpertSignupThankYouPage,
     },
     {
       path: '/confirm',
