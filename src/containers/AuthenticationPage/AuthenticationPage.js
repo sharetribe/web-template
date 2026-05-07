@@ -15,10 +15,7 @@ import {
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
 import { parse } from '../../util/urlHelpers';
-import {
-  storeReferralDataToSession,
-  filterValidReferralData,
-} from '../../util/webStorageHelpers';
+import { storeReferralData, filterValidReferralData } from '../../util/webStorageHelpers';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
@@ -275,7 +272,7 @@ export const AuthenticationPageComponent = props => {
   // Don't store referral data if the user is authenticated - meaning they have already completed
   // signup and have been redirected back here
   if (!isAuthenticated && !isEmpty(validReferralParams)) {
-    storeReferralDataToSession(validReferralParams);
+    storeReferralData(validReferralParams);
   }
 
   const user = ensureCurrentUser(currentUser);

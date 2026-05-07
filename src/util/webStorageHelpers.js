@@ -2,7 +2,7 @@ import { isEmpty } from './common';
 import { types as sdkTypes } from './sdkLoader';
 import { isAfterDate } from './dates';
 
-export const REFERRAL_ID_SESSION_STORAGE_KEY = 'referralSource';
+const REFERRAL_ID_STORAGE_KEY = 'referralSource';
 const REFERRAL_SOURCE_DATA_PREFIX = 'referralSource_';
 const HOUR_IN_MS = 60 * 60 * 1000;
 
@@ -63,8 +63,8 @@ export const filterValidReferralData = (referralData, userTypes) => {
  *
  * @param {Object} referralData - Filtered referral params to store
  */
-export const storeReferralDataToSession = referralData => {
-  const storedData = getStoredReferralDataFromSession();
+export const storeReferralData = referralData => {
+  const storedData = getStoredReferralData();
 
   // Don't store the referral ID if it has already been stored and hasn't expired
   if (!isReferralDataStored(storedData, referralData) || isReferralDataExpired(storedData)) {
@@ -87,7 +87,7 @@ export const storeReferralDataToSession = referralData => {
       };
 
       const storableData = JSON.stringify(data, replacer);
-      window.sessionStorage.setItem(REFERRAL_ID_SESSION_STORAGE_KEY, storableData);
+      window.sessionStorage.setItem(REFERRAL_ID_STORAGE_KEY, storableData);
     }
   }
 };
@@ -97,10 +97,10 @@ export const storeReferralDataToSession = referralData => {
  *
  * @returns {Object} Stored referral data or empty object if session storage is unavailable or no data is stored
  */
-export const getStoredReferralDataFromSession = () => {
+export const getStoredReferralData = () => {
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser && window?.sessionStorage) {
-    const retrievedReferralData = window.sessionStorage.getItem(REFERRAL_ID_SESSION_STORAGE_KEY);
+    const retrievedReferralData = window.sessionStorage.getItem(REFERRAL_ID_STORAGE_KEY);
 
     const reviver = (k, v) => {
       if (v && typeof v === 'object' && v._serializedType === 'SerializableDate') {
@@ -121,11 +121,11 @@ export const getStoredReferralDataFromSession = () => {
 /**
  * Removes referral data from session storage
  */
-export const clearStoredReferralDataInSession = () => {
+export const clearStoredReferralData = () => {
   const isBrowser = typeof window !== 'undefined';
 
   if (isBrowser && window?.sessionStorage) {
-    window.sessionStorage.removeItem(REFERRAL_ID_SESSION_STORAGE_KEY);
+    window.sessionStorage.removeItem(REFERRAL_ID_STORAGE_KEY);
   }
 };
 
@@ -140,7 +140,7 @@ export const clearStoredReferralDataInSession = () => {
  * @returns {Object} Referral key/value pairs to store in the user's private data
  */
 export const pickReferralData = userTypeConfig => {
-  const referralData = getStoredReferralDataFromSession();
+  const referralData = getStoredReferralData();
 
   // Keys configured as valid referral sources for this user type
   const validReferralSources = userTypeConfig?.referralSources;
@@ -167,11 +167,11 @@ export const pickReferralData = userTypeConfig => {
 export const clearReferralDataIfExpired = () => {
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser && window.sessionStorage) {
-    const referralData = getStoredReferralDataFromSession();
+    const referralData = getStoredReferralData();
 
     // Referral data has expired, clear it from session storage
     if (referralData != null && isReferralDataExpired(referralData)) {
-      clearStoredReferralDataInSession();
+      clearStoredReferralData();
     }
   }
 };
