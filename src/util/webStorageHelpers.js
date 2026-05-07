@@ -1,6 +1,6 @@
-import { isEmpty } from '../util/common';
-import { types as sdkTypes } from '../util/sdkLoader';
-import { isAfterDate } from '../util/dates';
+import { isEmpty } from './common';
+import { types as sdkTypes } from './sdkLoader';
+import { isAfterDate } from './dates';
 
 export const REFERRAL_ID_SESSION_STORAGE_KEY = 'referralSource';
 const REFERRAL_SOURCE_DATA_PREFIX = 'referralSource_';
