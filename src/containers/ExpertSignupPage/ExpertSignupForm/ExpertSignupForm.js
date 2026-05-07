@@ -60,6 +60,7 @@ const ExpertSignupFormComponent = props => (
         inProgress,
         invalid,
         intl,
+        termsAndConditions,
         values,
       } = formRenderProps;
 
@@ -370,6 +371,7 @@ const ExpertSignupFormComponent = props => (
           </div>
 
           <div className={css.bottomWrapper}>
+            {termsAndConditions}
             <PrimaryButton
               className={css.submitButton}
               type="submit"

@@ -19,6 +19,7 @@ import { loadData as RequestQuotePageLoader } from './RequestQuotePage/RequestQu
 import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
 import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
 import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
+import { loadData as ExpertSignupPageLoader } from './ExpertSignupPage/ExpertSignupPage.duck';
 import {
   loadData as TransactionPageLoader,
   setInitialValues as TransactionPageInitialValues,
@@ -79,6 +80,9 @@ const getPageDataLoadingAPI = () => {
     },
     TermsOfServicePage: {
       loadData: TermsOfServicePageLoader,
+    },
+    ExpertSignupPage: {
+      loadData: ExpertSignupPageLoader,
     },
     TransactionPage: {
       loadData: TransactionPageLoader,

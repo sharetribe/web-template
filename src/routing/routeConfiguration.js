@@ -250,6 +250,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       path: '/apply-as-expert',
       name: 'ExpertSignupPage',
       component: ExpertSignupPage,
+      loadData: pageDataLoadingAPI.ExpertSignupPage.loadData,
     },
     {
       path: '/apply-as-expert/thank-you',

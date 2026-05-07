@@ -1,16 +1,24 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { camelize } from '../../util/string';
 import { useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { signup, authenticationInProgress } from '../../ducks/auth.duck';
+import { manageDisableScrolling } from '../../ducks/ui.duck';
 
-import { Page, LayoutSingleColumn, NamedRedirect } from '../../components';
+import { Page, LayoutSingleColumn, NamedRedirect, Modal } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
+// We need to get ToS asset and get it rendered for the modal on this page.
+import { TermsOfServiceContent } from '../TermsOfServicePage/TermsOfServicePage';
+// We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
+import { PrivacyPolicyContent } from '../PrivacyPolicyPage/PrivacyPolicyPage';
+import TermsAndConditions from '../AuthenticationPage/TermsAndConditions/TermsAndConditions';
 
 import ExpertSignupForm from './ExpertSignupForm/ExpertSignupForm';
+import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './ExpertSignupPage.duck';
 
 import css from './ExpertSignupPage.module.css';
 
@@ -23,7 +31,7 @@ import css from './ExpertSignupPage.module.css';
  * @returns {Object} params for the signup thunk
  */
 const getExpertSignupParams = values => {
-  const { email, password, fname, lname, ...rest } = values;
+  const { email, password, fname, lname, terms, ...rest } = values;
 
   // Strip empty strings so privateData stays clean
   const privateData = Object.entries(rest).reduce((acc, [key, val]) => {
@@ -38,7 +46,10 @@ const getExpertSignupParams = values => {
     password,
     firstName: fname.trim(),
     lastName: lname.trim(),
-    privateData,
+    protectedData: { terms },
+    privateData: {
+      applicationData: privateData,
+    },
   };
 };
 
@@ -52,11 +63,18 @@ const ExpertSignupPage = () => {
   const dispatch = useDispatch();
   const intl = useIntl();
 
+  const [tosModalOpen, setTosModalOpen] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+
   // Redux state
   const authInProgress = useSelector(state => authenticationInProgress(state));
   const signupError = useSelector(state => state.auth?.signupError);
   const isAuthenticated = useSelector(state => state.auth?.isAuthenticated);
   const currentUser = useSelector(state => state.user?.currentUser);
+  const hostedAssets = useSelector(state => state.hostedAssets || {});
+  const pageAssetsData = hostedAssets.pageAssetsData;
+  const pageAssetsFetchInProgress = hostedAssets.inProgress;
+  const pageAssetsFetchError = hostedAssets.error;
 
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
@@ -68,12 +86,26 @@ const ExpertSignupPage = () => {
     [dispatch]
   );
 
+  const onManageDisableScrolling = useCallback(
+    (componentId, disableScrolling) =>
+      dispatch(manageDisableScrolling(componentId, disableScrolling)),
+    [dispatch]
+  );
+
   const title = intl.formatMessage({ id: 'ExpertSignupPage.title' });
 
   // Redirect to thank you page once the user is fully created
   if (isAuthenticated && currentUserLoaded) {
     return <NamedRedirect name="ExpertSignupThankYouPage" />;
   }
+
+  const termsAndConditions = (
+    <TermsAndConditions
+      onOpenTermsOfService={() => setTosModalOpen(true)}
+      onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+      intl={intl}
+    />
+  );
 
   return (
     <Page title={title} scrollingDisabled={false}>
@@ -95,10 +127,43 @@ const ExpertSignupPage = () => {
               formId="ExpertSignupForm"
               onSubmit={handleSubmit}
               inProgress={authInProgress}
+              termsAndConditions={termsAndConditions}
             />
           </div>
         </div>
       </LayoutSingleColumn>
+      <Modal
+        id="ExpertSignupPage.tos"
+        isOpen={tosModalOpen}
+        onClose={() => setTosModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.termsWrapper} role="complementary">
+          <TermsOfServiceContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
+            isOpen={tosModalOpen}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="ExpertSignupPage.privacyPolicy"
+        isOpen={privacyModalOpen}
+        onClose={() => setPrivacyModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.privacyWrapper} role="complementary">
+          <PrivacyPolicyContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
+            isOpen={privacyModalOpen}
+          />
+        </div>
+      </Modal>
     </Page>
   );
 };

@@ -44,3 +44,8 @@
   line-height: 20px;
   margin: 0 0 16px 0;
 }
+
+.termsWrapper,
+.privacyWrapper {
+  padding: 0 24px 24px;
+}
