@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { isEmpty } from '../../util/common';
 import { camelize } from '../../util/string';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
@@ -14,8 +13,6 @@ import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
-import { parse } from '../../util/urlHelpers';
-import { storeReferralData, filterValidReferralData } from '../../util/webStorageHelpers';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
@@ -264,16 +261,6 @@ export const AuthenticationPageComponent = props => {
   const fromMaybe = from ? { from } : {};
   const fromState = { state: { ...fromMaybe, ...userTypeMaybe } };
   const show404 = userType && !preselectedUserType;
-
-  const urlReferralParams = parse(location.search);
-
-  // Check if URL contains valid referral params.
-  const validReferralParams = filterValidReferralData(urlReferralParams, userTypes);
-  // Don't store referral data if the user is authenticated - meaning they have already completed
-  // signup and have been redirected back here
-  if (!isAuthenticated && !isEmpty(validReferralParams)) {
-    storeReferralData(validReferralParams);
-  }
 
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
