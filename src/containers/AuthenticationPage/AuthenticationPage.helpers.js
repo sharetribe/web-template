@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 
 import { isEmpty } from '../../util/common';
 import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
-import { pickReferralData } from '../../util/sessionStorageHelpers';
+import { pickReferralData } from '../../util/webStorageHelpers';
 
 // Returns full userType config based on selected userType
 const getUserTypeConfig = (userType, userTypes) => {

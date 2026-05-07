@@ -33,7 +33,7 @@ import { mergeConfig } from './util/configHelpers';
 import { matchPathname } from './util/routes';
 import * as apiUtils from './util/api';
 import * as log from './util/log';
-import { clearReferralDataIfExpired } from './util/sessionStorageHelpers';
+import { clearReferralDataIfExpired } from './util/webStorageHelpers';
 
 // Import relevant global duck files
 import { authInfo } from './ducks/auth.duck';

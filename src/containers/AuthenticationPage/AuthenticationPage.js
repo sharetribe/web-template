@@ -18,7 +18,7 @@ import { parse } from '../../util/urlHelpers';
 import {
   storeReferralDataToSession,
   filterValidReferralData,
-} from '../../util/sessionStorageHelpers';
+} from '../../util/webStorageHelpers';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
