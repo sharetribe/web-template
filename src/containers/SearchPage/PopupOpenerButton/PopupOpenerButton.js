@@ -28,7 +28,12 @@ const PopupOpenerButton = props => {
       onClick={() => toggleOpen()}
       {...rest}
     >
-      {children}
+      {children} &nbsp;
+      <svg style={{fill:"transparent"}} width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.75 0.75L4.75 4.75L8.75 0.75" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+
     </button>
   );
 };

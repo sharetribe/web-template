@@ -31,7 +31,7 @@ const SignupLink = () => {
 
 const LoginLink = () => {
   return (
-    <NamedLink id="login-link" name="LoginPage" className={css.topbarLink}>
+    <NamedLink id="login-link" name="LoginPage" className={css.LoginLink}>
       <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.login" />
       </span>
@@ -230,7 +230,7 @@ const TopbarDesktop = props => {
 
       {inboxLinkMaybe}
       {profileMenuMaybe}
-      {signupLinkMaybe}
+      {/* {signupLinkMaybe} */}
       {loginLinkMaybe}
     </nav>
   );

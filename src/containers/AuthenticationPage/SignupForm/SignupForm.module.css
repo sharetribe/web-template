@@ -15,7 +15,14 @@
   margin-bottom: 24px;
   margin-top: 20px;
   text-align: center;
-
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
   @media (--viewportMedium) {
     margin-bottom: 24px;
   }
@@ -23,6 +30,18 @@
 
 .switchToLoginLink {
   composes: marketplaceModalHelperLink from global;
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: spacing/3;
+letter-spacing: 0%;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-offset: 0%;
+text-decoration-thickness: 0%;
+
 }
 
 .defaultUserFields {
@@ -88,6 +107,7 @@ padding-bottom: 0;
 
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
+  margin-top: 50px;
 }
 
 .error {
@@ -100,4 +120,16 @@ padding-bottom: 0;
   @media (--viewportMedium) {
     padding: 8px 0;
   }
+}
+
+.signUpButton{
+  min-height: 44px;
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0px;
+
 }

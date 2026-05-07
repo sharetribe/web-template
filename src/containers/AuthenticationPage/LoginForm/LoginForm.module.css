@@ -6,27 +6,111 @@
   justify-content: flex-start;
 
   @media (--viewportMedium) {
-    justify-content: space-between;
+    /* justify-content: space-between; */
   }
 }
 
 .password {
   composes: marketplaceModalPasswordMargins from global;
+  margin-top: 20px;
 }
 
 .bottomWrapper {
-  composes: marketplaceModalBottomWrapper from global;
+  /* composes: marketplaceModalBottomWrapper from global; */
 }
 
 /* Adjust the bottomWrapper's margin to match modals without the helper text */
 .bottomWrapperText {
-  composes: marketplaceModalBottomWrapperText from global;
+  /* composes: marketplaceModalBottomWrapperText from global; */
+  margin: 24px 0;
 }
 
 .recoveryLink {
   composes: marketplaceModalHelperLink from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
+  color: #101828;
 }
 
 .recoveryLinkInfo {
   composes: marketplaceModalHelperText from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
+  color: #101828;
+}
+
+.primaryButton {
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+}
+
+.signUpLink {
+  border: 1px solid var(--border-border-primary, #D5D7DA);
+  height: 44px;
+  border-radius: 4px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #101828;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.createAccountTitle {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 32px;
+  leading-trim: NONE;
+  line-height: 44px;
+  letter-spacing: -2%;
+  color: #101828;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.createAccountDescription {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
+  margin-bottom: 24px;
+  padding-bottom: 0;
+  margin-top: 12px;
+  padding: 0;
 }

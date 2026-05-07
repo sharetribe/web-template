@@ -11,7 +11,19 @@
 
 .finePrint {
   composes: marketplaceModalHelperLink from global;
-  padding: 3px 0 5px 0;
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0%;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-offset: 0%;
+text-decoration-thickness: 0%;
+
+  padding: 0px 0 5px 0;
   text-align: left;
 }
 
@@ -19,7 +31,18 @@
 .termsLink {
   composes: marketplaceModalHelperLink from global;
   color: var(--marketplaceColor);
-
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
+  
   &:hover {
     color: var(--marketplaceColorDark);
     text-decoration: underline;

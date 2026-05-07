@@ -6,6 +6,42 @@
 .textarea {
 }
 
+.inputWrapper {
+  position: relative;
+}
+
+.inputWrapperPassword :global(input) {
+  padding-right: 48px;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--colorGrey700);
+  cursor: pointer;
+}
+
+.passwordToggle:hover {
+  /* color: var(--colorBlack);
+  background: color-mix(in srgb, var(--colorGrey100) 55%, transparent); */
+}
+
+.passwordToggle:focus-visible {
+  /* outline: 2px solid var(--colorBlack);
+  outline-offset: 2px; */
+}
+
 .inputSuccess {
 }
 .inputError {

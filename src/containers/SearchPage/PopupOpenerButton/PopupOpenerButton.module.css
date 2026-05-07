@@ -14,10 +14,16 @@
   cursor: pointer;
 
   /* Font */
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  line-height: 18px;
-  letter-spacing: 0.2px;
+  font-family: Nohemi;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 20px;
+  letter-spacing: 2%;
+  vertical-align: middle;
+  text-transform: uppercase;
+  
 
   /* Button text styles */
   /* Default button text is centered without decorations */
@@ -39,18 +45,16 @@
   @media (--viewportMedium) {
     height: auto;
     min-height: 0;
-    padding: var(--marketplaceButtonSmallDesktopPadding);
+    padding: 9px 16px 6px 16px;
     margin: 0;
 
-    font-weight: var(--fontWeightMedium);
-    font-size: 13px;
-    line-height: 20px;
+
   }
 }
 
 .label {
   /* Button borders */
-  border: 1px solid var(--colorGrey100);
+  border: 1px solid var(--border-border-primary, #D5D7DA);
   border-radius: var(--borderRadiusMedium);
 
   background-color: var(--colorWhite);

@@ -98,6 +98,10 @@
   grid-template-columns: 1fr;
 }
 
+.gridCol1{
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 .submitButton {
   min-height: 40px;
   min-width: 86px;
