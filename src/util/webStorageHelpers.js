@@ -4,7 +4,8 @@ import { isAfterDate } from './dates';
 
 const REFERRAL_ID_STORAGE_KEY = 'referralSource';
 const REFERRAL_SOURCE_DATA_PREFIX = 'referralSource_';
-const HOUR_IN_MS = 60 * 60 * 1000;
+const DAY_MS = 864e5; // milliseconds in a 24h
+const EXPIRATION_DURATION_90D = 90 * DAY_MS;
 
 /**
  * Returns true if the referral data's expiry timestamp has passed.
@@ -55,10 +56,10 @@ export const filterValidReferralData = (referralData, userTypes) => {
 };
 
 /**
- * Stores filtered referral data to local storage with a 1-hour expiry.
+ * Stores filtered referral data to local storage with a 90-day expiry.
  *
  * Skips storage if the same data is already stored and has not expired. If the
- * stored data has expired, it is overwritten with a fresh 1-hour expiry.
+ * stored data has expired, it is overwritten with a fresh 90-day expiry.
  *
  *
  * @param {Object} referralData - Filtered referral params to store
@@ -73,7 +74,7 @@ export const storeReferralData = referralData => {
     if (isBrowser && window?.localStorage) {
       const data = {
         sources: referralData,
-        expiresAt: new Date(Date.now() + HOUR_IN_MS),
+        expiresAt: new Date(Date.now() + EXPIRATION_DURATION_90D),
       };
 
       const replacer = function(k, v) {
