@@ -37,6 +37,20 @@ const isReferralDataStored = (storedData, urlReferralParams) => {
 };
 
 /**
+ * Extracts the referral source parameter names from all user type configs.
+ *
+ * @param {Array} userTypes - User type config objects
+ * @returns {Array} List of referral parameter names across all user types
+ */
+export const getReferralParams = userTypes => {
+  return userTypes.flatMap(userType =>
+    userType.referralSources
+      ? userType.referralSources.map(referralSource => referralSource.parameter)
+      : []
+  );
+};
+
+/**
  * Filters referral params down to only those whose keys match a referral source
  * configured on any user type.
  *
@@ -45,11 +59,7 @@ const isReferralDataStored = (storedData, urlReferralParams) => {
  * @returns {Object} Filtered referral params
  */
 export const filterValidReferralData = (referralData, userTypes) => {
-  const validReferralSources = userTypes.flatMap(userType =>
-    userType.referralSources
-      ? userType.referralSources.map(referralSource => referralSource.parameter)
-      : []
-  );
+  const validReferralSources = getReferralParams(userTypes);
   return Object.fromEntries(
     Object.entries(referralData).filter(([key]) => validReferralSources.includes(key))
   );
