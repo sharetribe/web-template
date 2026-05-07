@@ -17,10 +17,10 @@ const isReferralDataExpired = referralData => {
 };
 
 /**
- * Returns true if the given referral params are already stored in session storage
+ * Returns true if the given referral params are already stored in local storage
  * with matching keys and values.
  *
- * @param {Object} storedData - Data currently in session storage - consist of sources and expiresAt params
+ * @param {Object} storedData - Data currently in local storage - consist of sources and expiresAt params
  * @param {Object} urlReferralParams - Filtered referral params from the current URL
  * @returns {boolean}
  */
@@ -55,7 +55,7 @@ export const filterValidReferralData = (referralData, userTypes) => {
 };
 
 /**
- * Stores filtered referral data to session storage with a 1-hour expiry.
+ * Stores filtered referral data to local storage with a 1-hour expiry.
  *
  * Skips storage if the same data is already stored and has not expired. If the
  * stored data has expired, it is overwritten with a fresh 1-hour expiry.
@@ -70,7 +70,7 @@ export const storeReferralData = referralData => {
   if (!isReferralDataStored(storedData, referralData) || isReferralDataExpired(storedData)) {
     const isBrowser = typeof window !== 'undefined';
 
-    if (isBrowser && window?.sessionStorage) {
+    if (isBrowser && window?.localStorage) {
       const data = {
         sources: referralData,
         expiresAt: new Date(Date.now() + HOUR_IN_MS),
@@ -87,20 +87,20 @@ export const storeReferralData = referralData => {
       };
 
       const storableData = JSON.stringify(data, replacer);
-      window.sessionStorage.setItem(REFERRAL_ID_STORAGE_KEY, storableData);
+      window.localStorage.setItem(REFERRAL_ID_STORAGE_KEY, storableData);
     }
   }
 };
 
 /**
- * Retrieves and deserializes referral data from session storage.
+ * Retrieves and deserializes referral data from local storage.
  *
- * @returns {Object} Stored referral data or empty object if session storage is unavailable or no data is stored
+ * @returns {Object} Stored referral data or empty object if local storage is unavailable or no data is stored
  */
 export const getStoredReferralData = () => {
   const isBrowser = typeof window !== 'undefined';
-  if (isBrowser && window?.sessionStorage) {
-    const retrievedReferralData = window.sessionStorage.getItem(REFERRAL_ID_STORAGE_KEY);
+  if (isBrowser && window?.localStorage) {
+    const retrievedReferralData = window.localStorage.getItem(REFERRAL_ID_STORAGE_KEY);
 
     const reviver = (k, v) => {
       if (v && typeof v === 'object' && v._serializedType === 'SerializableDate') {
@@ -119,13 +119,13 @@ export const getStoredReferralData = () => {
 };
 
 /**
- * Removes referral data from session storage
+ * Removes referral data from local storage
  */
 export const clearStoredReferralData = () => {
   const isBrowser = typeof window !== 'undefined';
 
-  if (isBrowser && window?.sessionStorage) {
-    window.sessionStorage.removeItem(REFERRAL_ID_STORAGE_KEY);
+  if (isBrowser && window?.localStorage) {
+    window.localStorage.removeItem(REFERRAL_ID_STORAGE_KEY);
   }
 };
 
@@ -159,17 +159,17 @@ export const pickReferralData = userTypeConfig => {
 };
 
 /**
- * Clears referral data from session storage if it has expired.
+ * Clears referral data from local storage if it has expired.
  *
  * Called on every page load (src/index.js) to ensure stale referral data does
  * not persist across hard refreshes or cross-domain navigation within the same tab.
  */
 export const clearReferralDataIfExpired = () => {
   const isBrowser = typeof window !== 'undefined';
-  if (isBrowser && window.sessionStorage) {
+  if (isBrowser && window.localStorage) {
     const referralData = getStoredReferralData();
 
-    // Referral data has expired, clear it from session storage
+    // Referral data has expired, clear it from local storage
     if (referralData != null && isReferralDataExpired(referralData)) {
       clearStoredReferralData();
     }
