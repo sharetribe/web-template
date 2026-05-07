@@ -66,11 +66,10 @@
   leading-trim: NONE;
   line-height: 24px;
   letter-spacing: 0px;
-
 }
 
 .signUpLink {
-  border: 1px solid var(--border-border-primary, #D5D7DA);
+  border: 1px solid var(--border-border-primary, #d5d7da);
   height: 44px;
   border-radius: 4px;
   font-family: Nohemi;
@@ -85,6 +84,10 @@
   align-items: center;
   justify-content: center;
   margin-top: 16px;
+}
+
+.createAccount {
+  margin: 24px 0px 24px 0px;
 }
 
 .createAccountTitle {

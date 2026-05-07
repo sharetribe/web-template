@@ -4,14 +4,22 @@ import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput, NamedLink } from '../../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  NamedLink,
+  SecondaryButton,
+} from '../../../components';
 
 import css from './LoginForm.module.css';
+import { useHistory } from 'react-router-dom';
 
 const LoginFormComponent = props => (
   <FinalForm
     {...props}
     render={fieldRenderProps => {
+      const history = useHistory();
       const {
         rootClassName,
         className,
@@ -72,30 +80,17 @@ const LoginFormComponent = props => (
         </NamedLink>
       );
 
-      const signUpLink = (
-        <NamedLink
-          name={signupRouteName}
-          params={signupRouteParams}
-          className={css.signUpLink}
-          to={authLinkTo}
-        >
-          <FormattedMessage id="AuthenticationPage.signupLinkText" />
-        </NamedLink>
-      );
-
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-              <h2 className={css.createAccountTitle}>Login to your account</h2>
-          <p className={css.createAccountDescription}>
-          Welcome back! Please enter your details.
-          </p>
+          <h2 className={css.createAccountTitle}>Login to your account</h2>
+          <p className={css.createAccountDescription}>Welcome back! Please enter your details.</p>
           <div>
             <FieldTextInput
               type="email"
               id={formId ? `${formId}.email` : 'email'}
               name="email"
               autoComplete="email"
-              label={""}
+              label={''}
               placeholder={emailPlaceholder}
               validate={validators.composeValidators(emailRequired, emailValid)}
             />
@@ -105,13 +100,12 @@ const LoginFormComponent = props => (
               id={formId ? `${formId}.password` : 'password'}
               name="password"
               autoComplete="current-password"
-              label={""}
+              label={''}
               placeholder={passwordPlaceholder}
               validate={passwordRequired}
             />
           </div>
           <div className={css.bottomWrapper}>
-        
             <p className={css.bottomWrapperText}>
               <span className={css.recoveryLinkInfo}>
                 <FormattedMessage
@@ -120,11 +114,18 @@ const LoginFormComponent = props => (
                 />
               </span>
             </p>
-            <PrimaryButton className={css.primaryButton} type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton
+              className={css.primaryButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+            >
               <FormattedMessage id="LoginForm.logIn" />
             </PrimaryButton>
             <div className={css.createAccount}>
-              {signUpLink}
+              <SecondaryButton type="button" onClick={() => history.push('/signup')}>
+                <FormattedMessage id="LoginForm.signupLinkText" />
+              </SecondaryButton>
               {/* <span className={css.recoveryLinkInfo}>
                 <FormattedMessage id="LoginForm.signUpRedirectInfo" values={{ signUpLink }} />
               </span> */}

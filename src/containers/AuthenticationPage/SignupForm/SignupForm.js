@@ -22,6 +22,8 @@ import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
 import css from './SignupForm.module.css';
 
+export const CUSTOMER_USER_TYPE = 'customer';
+
 const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
 
@@ -40,7 +42,7 @@ const SignupFormComponent = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
-    initialValues={{ userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes) }}
+    initialValues={{ userType: CUSTOMER_USER_TYPE || getSoleUserTypeMaybe(props.userTypes) }}
     render={formRenderProps => {
       const {
         rootClassName,
@@ -128,33 +130,21 @@ const SignupFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-      
-          <h2 className={css.createAccountTitle}>Create your account</h2>
+          <h2 className={css.createAccountTitle}>
+            <FormattedMessage id="SignupForm.createAccountTitle" />
+          </h2>
           <p className={css.createAccountDescription}>
-            Creating an account on Class26 is completely free, and gives you access to a curated selection of premium courses you can’t find elsewhere.
+            <FormattedMessage id="SignupForm.createAccountDescription" />
           </p>
           <FieldSelectUserType
             name="userType"
             userTypes={userTypes}
-            hasExistingUserType={!!preselectedUserType}
+            hasExistingUserType={!!preselectedUserType || values?.userType === CUSTOMER_USER_TYPE}
             intl={intl}
           />
 
           {showDefaultUserFields ? (
             <div className={css.defaultUserFields}>
-              <FieldTextInput
-                type="email"
-                id={formId ? `${formId}.email` : 'email'}
-                name="email"
-                autoComplete="email"
-                label={intl.formatMessage({
-                  id: 'SignupForm.emailLabel',
-                })}
-                placeholder={intl.formatMessage({
-                  id: 'SignupForm.emailPlaceholder',
-                })}
-                validate={validators.composeValidators(emailRequired, emailValid)}
-              />
               <div className={css.name}>
                 <FieldTextInput
                   className={css.firstNameRoot}
@@ -193,6 +183,20 @@ const SignupFormComponent = props => (
                   )}
                 />
               </div>
+
+              <FieldTextInput
+                type="email"
+                id={formId ? `${formId}.email` : 'email'}
+                name="email"
+                autoComplete="email"
+                label={intl.formatMessage({
+                  id: 'SignupForm.emailLabel',
+                })}
+                placeholder={intl.formatMessage({
+                  id: 'SignupForm.emailPlaceholder',
+                })}
+                validate={validators.composeValidators(emailRequired, emailValid)}
+              />
 
               <UserFieldDisplayName
                 formName="SignupForm"
@@ -240,13 +244,30 @@ const SignupFormComponent = props => (
                 <FormattedMessage id="SignupForm.passwordRepeatedOnOtherFields" />
               </div>
             ) : null}
-            <PrimaryButton className={css.signUpButton} type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton
+              className={css.signUpButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+            >
               <FormattedMessage id="SignupForm.signUp" />
             </PrimaryButton>
           </div>
           <p className={css.switchToLogin}>
             <FormattedMessage id="SignupForm.logInRedirectInfo" values={{ logInLink }} />
           </p>
+          <div className={css.expertSection}>
+            <p className={css.expertSectionText}>
+              <FormattedMessage id="SignupForm.wishToBecomeTeacher" />
+            </p>
+            <NamedLink
+              name="SignupForUserTypePage"
+              params={{ userType: 'expert' }}
+              className={css.applyExpertButton}
+            >
+              <FormattedMessage id="SignupForm.applyForExpertAccount" />
+            </NamedLink>
+          </div>
         </Form>
       );
     }}

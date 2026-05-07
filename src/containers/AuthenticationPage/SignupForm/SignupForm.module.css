@@ -22,7 +22,7 @@
   leading-trim: NONE;
   line-height: spacing/3;
   letter-spacing: 0%;
-  
+
   @media (--viewportMedium) {
     margin-bottom: 24px;
   }
@@ -31,23 +31,22 @@
 .switchToLoginLink {
   composes: marketplaceModalHelperLink from global;
   font-family: Nunito Sans;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: NONE;
-line-height: spacing/3;
-letter-spacing: 0%;
-text-decoration: underline;
-text-decoration-style: solid;
-text-decoration-offset: 0%;
-text-decoration-thickness: 0%;
-
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
 }
 
 .defaultUserFields {
 }
 
-.createAccountTitle{
+.createAccountTitle {
   font-family: Nohemi;
   font-weight: 600;
   font-style: Semi Bold;
@@ -60,17 +59,17 @@ text-decoration-thickness: 0%;
   padding-bottom: 0;
 }
 
-.createAccountDescription{
+.createAccountDescription {
   font-family: Nunito Sans;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: NONE;
-line-height: spacing/3;
-letter-spacing: 0%;
-color: #414651;
-margin-bottom: 24px;
-padding-bottom: 0;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
+  margin-bottom: 24px;
+  padding-bottom: 0;
 }
 
 .name {
@@ -122,14 +121,42 @@ padding-bottom: 0;
   }
 }
 
-.signUpButton{
+.signUpButton {
   min-height: 44px;
   font-family: Nohemi;
-font-weight: 500;
-font-style: Medium;
-font-size: 16px;
-leading-trim: NONE;
-line-height: 24px;
-letter-spacing: 0px;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
 
+.expertSection {
+  border-top: 1px solid var(--colorGrey100);
+  text-align: center;
+}
+
+.expertSectionText {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #414651;
+  margin-bottom: 16px;
+}
+
+.applyExpertButton {
+  composes: buttonPrimary from global;
+  min-height: 44px;
+  padding: 10px 0;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  @media (--viewportMedium) {
+    padding: 10px 0;
+  }
 }

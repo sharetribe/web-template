@@ -15,6 +15,7 @@ import UserFieldDisplayName from '../UserFieldDisplayName';
 import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
 import css from './ConfirmSignupForm.module.css';
+import { CUSTOMER_USER_TYPE } from '../SignupForm/SignupForm';
 
 const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
@@ -23,7 +24,7 @@ const ConfirmSignupFormComponent = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
-    initialValues={{ userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes) }}
+    initialValues={{ userType: CUSTOMER_USER_TYPE || getSoleUserTypeMaybe(props.userTypes) }}
     render={formRenderProps => {
       const {
         rootClassName,
@@ -82,7 +83,7 @@ const ConfirmSignupFormComponent = props => (
           <FieldSelectUserType
             name="userType"
             userTypes={userTypes}
-            hasExistingUserType={!!preselectedUserType}
+            hasExistingUserType={!!preselectedUserType || values?.userType === CUSTOMER_USER_TYPE}
             intl={intl}
           />
 

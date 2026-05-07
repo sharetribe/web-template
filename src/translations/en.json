@@ -21,7 +21,6 @@
   "AuthenticationPage.sendingEmail": "Sending verification email…",
   "AuthenticationPage.signupFailed": "Signup failed. Please make sure all the information you entered is correct and try again.",
   "AuthenticationPage.signupFailedEmailAlreadyTaken": "An account with this email address already exists. Try logging in instead.",
-  "AuthenticationPage.signupLinkText": "Create an account",
   "AuthenticationPage.signupWithFacebook": "Continue with Facebook",
   "AuthenticationPage.signupWithGoogle": "Continue with Google",
   "AuthenticationPage.termsAndConditionsAcceptRequired": "You need to accept the Terms of Service",
@@ -1463,5 +1462,11 @@
   "EditListingDeliveryForm.uploadingProgress": "Uploading... {progress}%",
 
   "MuxPlayerModal.close": "Close video player",
-  "MuxPlayerModal.tokenError": "Failed to load the video. Please try again."
+  "MuxPlayerModal.tokenError": "Failed to load the video. Please try again.",
+
+  "SignupForm.wishToBecomeTeacher": "Wish to become a Class26 teacher?",
+  "SignupForm.applyForExpertAccount": "Apply for an Expert account",
+  "SignupForm.createAccountTitle": "Create your account",
+  "SignupForm.createAccountDescription": "Creating an account on Class26 is completely free, and gives you access to a curated selection of premium courses you can't find elsewhere.",
+   "LoginForm.signupLinkText": "Create an account"
 }

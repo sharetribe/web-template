@@ -102,12 +102,12 @@ const AuthenticationFormErrorMessage = props => {
     isLogin && !!idpAuthError
       ? 'AuthenticationPage.idpAuthFailed'
       : isLogin && !!loginError
-        ? 'AuthenticationPage.loginFailed'
-        : !!signupError && isSignupEmailTakenError(signupError)
-          ? 'AuthenticationPage.signupFailedEmailAlreadyTaken'
-          : !!signupError
-            ? 'AuthenticationPage.signupFailed'
-            : null;
+      ? 'AuthenticationPage.loginFailed'
+      : !!signupError && isSignupEmailTakenError(signupError)
+      ? 'AuthenticationPage.signupFailedEmailAlreadyTaken'
+      : !!signupError
+      ? 'AuthenticationPage.signupFailed'
+      : null;
 
   return translationId ? (
     <div className={css.error}>
@@ -464,7 +464,10 @@ export const AuthenticationPageComponent = props => {
             ) : null}
           </div>
           <div className={css.rightImage}>
-            <img src={isLogin? loginPageImage : AuthenticationPageImage} alt="Authentication Page" />
+            <img
+              src={isLogin ? loginPageImage : AuthenticationPageImage}
+              alt="Authentication Page"
+            />
           </div>
         </div>
         {/* </ResponsiveBackgroundImageContainer> */}
