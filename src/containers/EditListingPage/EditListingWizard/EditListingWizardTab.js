@@ -35,6 +35,7 @@ export const STYLE = 'style';
 export const CONTENT = 'content';
 export const FAQ = 'faq';
 export const READY = 'ready';
+const MIXED_MEDIA_LISTING_TYPES = ['video-course', 'digital-download'];
 
 // EditListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
@@ -130,6 +131,8 @@ const EditListingWizardTab = props => {
   const isNewListingFlow = isNewURI || isDraftURI;
 
   const currentListing = ensureListing(listing);
+  const listingType = currentListing?.attributes?.publicData?.listingType;
+  const mediaMode = MIXED_MEDIA_LISTING_TYPES.includes(listingType);
 
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
@@ -274,6 +277,7 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          mediaMode={mediaMode}
         />
       );
     }

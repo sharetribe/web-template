@@ -73,6 +73,7 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
+const MIXED_MEDIA_LISTING_TYPES = ['video-course', 'digital-download'];
 
 /**
  * Pick only allowed tabs for the given process and listing type configuration.
@@ -134,7 +135,14 @@ const tabsForListingType = (processName, listingTypeConfig) => {
  * @param {boolean} isNewListingFlow
  * @param {string} processName
  */
-const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, processName) => {
+const tabLabelAndSubmit = (
+  intl,
+  tab,
+  isNewListingFlow,
+  isPriceDisabled,
+  processName,
+  isMixedMediaListingType
+) => {
   const processNameString = isNewListingFlow ? `${processName}.` : '';
   const newOrEdit = isNewListingFlow ? 'new' : 'edit';
 
@@ -162,7 +170,9 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
     labelKey = 'EditListingWizard.tabLabelAvailability';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
   } else if (tab === PHOTOS) {
-    labelKey = 'EditListingWizard.tabLabelPhotos';
+    labelKey = isMixedMediaListingType
+      ? 'EditListingWizard.tabLabelMedia'
+      : 'EditListingWizard.tabLabelPhotos';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   } else if (tab === STYLE) {
     labelKey = 'EditListingWizard.tabLabelStyle';
@@ -564,6 +574,9 @@ class EditListingWizard extends Component {
       config
     );
     const existingListingType = currentListing.attributes?.publicData?.listingType;
+    const currentListingType =
+      existingListingType || this.state.selectedListingType?.listingType || null;
+    const isMixedMediaListingType = MIXED_MEDIA_LISTING_TYPES.includes(currentListingType);
     const invalidExistingListingType = existingListingType && !listingTypeConfig;
     // TODO: displayPrice aka config.defaultListingFields?.price with false value is only available with inquiry process
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
@@ -708,7 +721,8 @@ class EditListingWizard extends Component {
               tab,
               isNewListingFlow,
               isPriceDisabled,
-              resolveLatestProcessName(processName)
+              resolveLatestProcessName(processName),
+              isMixedMediaListingType
             );
             return (
               <EditListingWizardTab

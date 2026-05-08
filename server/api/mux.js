@@ -44,6 +44,10 @@ const getMuxAsset = async (req, res) => {
 const deleteMuxAsset = async (req, res) => {
   try {
     const { assetId } = req.body;
+    if (!assetId) {
+      return res.status(400).json({ error: 'assetId is required' });
+    }
+
     await mux.video.assets.delete(assetId);
     res.status(200).json({ success: true });
   } catch (error) {
@@ -59,7 +63,7 @@ const deleteMuxAsset = async (req, res) => {
  */
 const getMuxJwtToken = async (req, res) => {
   try {
-    const { playbackId } = req.query;
+    const { playbackId, type = 'video' } = req.query;
     const keyId = process.env.MUX_SIGNING_KEY_ID;
     const keySecret = process.env.MUX_SIGNING_KEY_SECRET;
 
@@ -75,7 +79,7 @@ const getMuxJwtToken = async (req, res) => {
       keyId,
       keySecret,
       expiration: '1h',
-      type: 'video',
+      type,
     });
 
     return res.status(200).json({ token });
@@ -88,5 +92,5 @@ module.exports = {
   getMuxUploadUrl,
   getMuxAsset,
   getMuxJwtToken,
-  // deleteMuxAsset,
+  deleteMuxAsset,
 };

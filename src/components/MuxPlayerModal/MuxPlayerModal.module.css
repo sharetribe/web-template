@@ -20,6 +20,17 @@
   overflow: hidden;
 }
 
+.videoCaption {
+  composes: marketplaceTinyFontStyles from global;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+  text-align: left;
+  color: var(--colorGrey600);
+}
+
 .loading {
   display: flex;
   align-items: center;

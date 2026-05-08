@@ -23,7 +23,7 @@ const { authenticateFacebook, authenticateFacebookCallback } = require('./api/au
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
 const middleware = require('./middleware');
 const generatePresignedUrl = require('./api/presigned-url');
-const { getMuxUploadUrl, getMuxAsset, getMuxJwtToken } = require('./api/mux');
+const { getMuxUploadUrl, getMuxAsset, getMuxJwtToken, deleteMuxAsset } = require('./api/mux');
 const videoConferenceRouter = require('./api/video-conference');
 
 const router = express.Router();
@@ -89,9 +89,10 @@ router.get('/auth/google/callback', authenticateGoogleCallback);
 router.post('/presigned-url', middleware.auth, generatePresignedUrl);
 
 // Mux endpoints
-router.get('/mux/upload-url', middleware.auth, getMuxUploadUrl);
+router.post('/mux/upload-url', middleware.auth, getMuxUploadUrl);
 router.get('/mux/get-asset', middleware.auth, getMuxAsset);
 router.get('/mux/jwt-token', middleware.auth, getMuxJwtToken);
+router.post('/mux/delete-asset', middleware.auth, deleteMuxAsset);
 
 // Video conference endpoints
 router.use('/video-conference', videoConferenceRouter);

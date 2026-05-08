@@ -165,8 +165,8 @@ export const generatePresignedUrl = body => {
   return post('/api/presigned-url', body);
 };
 
-export const getMuxUploadUrl = () => {
-  return get('/api/mux/upload-url');
+export const getMuxUploadUrl = (body = {}) => {
+  return post('/api/mux/upload-url', body);
 };
 
 export const getMuxAsset = (queryParams = {}) => {
@@ -175,6 +175,10 @@ export const getMuxAsset = (queryParams = {}) => {
 
 export const getMuxJwtToken = (queryParams = {}) => {
   return get('/api/mux/jwt-token?' + new URLSearchParams(queryParams).toString());
+};
+
+export const deleteMuxAsset = body => {
+  return post('/api/mux/delete-asset', body);
 };
 
 export const setupVideoConferenceRoom = body => {

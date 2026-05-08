@@ -71,6 +71,7 @@ const ListingImage = props => {
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
+    hideRemoveButton = false,
   } = props;
   const handleRemoveClick = e => {
     e.stopPropagation();
@@ -79,7 +80,8 @@ const ListingImage = props => {
 
   if (image.file && !image.attributes) {
     // Add remove button only when the image has been uploaded and can be removed
-    const removeButton = image.imageId ? <RemoveImageButton onClick={handleRemoveClick} /> : null;
+    const removeButton =
+      image.imageId && !hideRemoveButton ? <RemoveImageButton onClick={handleRemoveClick} /> : null;
 
     // While image is uploading we show overlay on top of thumbnail
     const uploadingOverlay = !image.imageId ? (
@@ -137,7 +139,7 @@ const ListingImage = props => {
               variants={variants}
             />
           </AspectRatioWrapper>
-          <RemoveImageButton onClick={handleRemoveClick} />
+          {hideRemoveButton ? null : <RemoveImageButton onClick={handleRemoveClick} />}
         </div>
       </div>
     );
