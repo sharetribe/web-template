@@ -294,6 +294,8 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     {
       path: '/admin/bulk-import',
       name: 'BulkImportPage',
+      auth: true,
+      authPage: 'LoginPage',
       component: BulkImportPage,
     },
     {

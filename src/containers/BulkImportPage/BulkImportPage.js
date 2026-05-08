@@ -143,40 +143,6 @@ const BulkImportPageComponent = props => {
 
   const templateDownloadUrl = '/api/bulk-import/template';
 
-  const handleTemplateDownload = useCallback(
-    async e => {
-      e.preventDefault();
-
-      if (!apiKey.trim()) {
-        setUploadError(intl.formatMessage({ id: 'BulkImportPage.errorNoApiKey' }));
-        return;
-      }
-
-      try {
-        const res = await fetch(templateDownloadUrl, {
-          headers: { 'X-Import-Key': apiKey },
-        });
-        if (!res.ok) {
-          throw new Error(`Template download failed: ${res.status}`);
-        }
-
-        const blob = await res.blob();
-        const objectUrl = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = objectUrl;
-        link.download = 'bulk-import-template.csv';
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.URL.revokeObjectURL(objectUrl);
-      } catch (err) {
-        console.error('Template download error:', err);
-        setUploadError(err.message);
-      }
-    },
-    [templateDownloadUrl, apiKey, intl]
-  );
-
   const progressPercent =
     jobData && jobData.total > 0 ? Math.round((jobData.processed / jobData.total) * 100) : 0;
 
@@ -243,7 +209,6 @@ const BulkImportPageComponent = props => {
                   href={templateDownloadUrl}
                   className={css.templateLink}
                   download
-                  onClick={handleTemplateDownload}
                 >
                   <FormattedMessage id="BulkImportPage.downloadTemplate" />
                 </a>

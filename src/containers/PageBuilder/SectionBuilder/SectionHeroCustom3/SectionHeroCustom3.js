@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useIntl } from 'react-intl';
 
 import Field from '../../Field';
 
@@ -56,6 +57,12 @@ const SectionHeroCustom3 = props => {
 
   if (!blocks.length) return null;
 
+  const intl = useIntl();
+  const bgLinkKeys = [
+    intl.formatMessage({ id: `AVHero2.${sectionId}.bgLink`, defaultMessage: '' }),
+    intl.formatMessage({ id: `AVHero2.${sectionId}.bgLink2`, defaultMessage: '' }),
+  ].map(v => (v && v !== '#' ? v : null));
+
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
 
@@ -91,10 +98,13 @@ const SectionHeroCustom3 = props => {
     >
       {halves.map((block, i) => {
         const imageUrl = getImageUrl(block.media);
+        const bgLink = bgLinkKeys[i];
+        const HalfTag = bgLink ? 'a' : 'div';
         return (
-          <div
+          <HalfTag
             key={block.blockId || block.blockName || i}
-            className={classNames(css.half, imageUrl ? css.hasBg : '')}
+            href={bgLink || undefined}
+            className={classNames(css.half, imageUrl ? css.hasBg : '', bgLink ? css.halfLinked : '')}
             style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}
           >
             <div className={classNames(css.content, alignmentClass(block.alignment))}>
@@ -108,7 +118,7 @@ const SectionHeroCustom3 = props => {
                 />
               ) : null}
             </div>
-          </div>
+          </HalfTag>
         );
       })}
     </section>

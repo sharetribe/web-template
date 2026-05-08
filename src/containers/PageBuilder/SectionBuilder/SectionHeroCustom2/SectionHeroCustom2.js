@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useIntl } from 'react-intl';
 
 import Field, { hasDataInFields } from '../../Field';
 
@@ -53,6 +54,10 @@ const SectionHeroCustom2 = props => {
     isLanding,
   } = props;
 
+  const intl = useIntl();
+  const rawBgLink = intl.formatMessage({ id: `AVHero2.${sectionId}.bgLink`, defaultMessage: '' });
+  const bgLink = rawBgLink && rawBgLink !== '#' ? rawBgLink : null;
+
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
 
@@ -93,6 +98,7 @@ const SectionHeroCustom2 = props => {
       appearance={appearance}
       options={fieldOptions}
       style={mobileStyle}
+      bgLink={bgLink}
     >
       {hasHeaderFields ? (
         <header

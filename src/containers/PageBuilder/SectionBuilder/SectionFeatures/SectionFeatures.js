@@ -93,10 +93,13 @@ const SectionFeatures = props => {
         <div
           className={classNames(defaultClasses.blockContainer, css.featuresMain, {
             [css.noSidePaddings]: isInsideContainer,
+            [css.featuresMainAvFeature]: customOption?.isAvFeature,
           })}
         >
           <BlockBuilder
-            rootClassName={css.block}
+            rootClassName={classNames(css.block, {
+              [css.blockAvFeature]: customOption?.isAvFeature,
+            })}
             ctaButtonClass={defaultClasses.ctaButton}
             blocks={blocks}
             sectionId={sectionId}

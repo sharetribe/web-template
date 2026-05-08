@@ -4,7 +4,7 @@ const express = require('express');
 const multer = require('multer');
 const { parseCsv, validateRows } = require('./csvParser');
 const { processImportJob, serializeSdkError } = require('./importWorker');
-const { createJob, getJob, updateJob } = require('./jobStore');
+const { createJob, getJob, updateJob, hasActiveJob } = require('./jobStore');
 const { extractZip } = require('./zipExtractor');
 
 const router = express.Router();
@@ -75,6 +75,11 @@ router.post('/start', authMiddleware, uploadSingle, (req, res) => {
       });
     }
 
+    // Prevent concurrent imports
+    if (hasActiveJob()) {
+      return res.status(409).json({ error: 'An import is already in progress. Wait for it to complete before starting a new one.' });
+    }
+
     // Create job and start processing
     const job = createJob(validation.rows.length);
 
@@ -116,8 +121,8 @@ router.get('/status/:jobId', authMiddleware, (req, res) => {
   });
 });
 
-// GET /api/bulk-import/template
-router.get('/template', authMiddleware, (req, res) => {
+// GET /api/bulk-import/template — no auth required, publicly downloadable
+router.get('/template', (req, res) => {
   const headers = [
     'title',
     'description',
@@ -135,6 +140,8 @@ router.get('/template', authMiddleware, (req, res) => {
     'image_back',
     'image_horizontal',
     'image_details',
+    'pd_categoryLevel1',
+    'pd_categoryLevel2',
     'pd_color',
     'pd_all_sizes',
     'pd_condition',
@@ -159,6 +166,8 @@ router.get('/template', authMiddleware, (req, res) => {
     'vestido01_back.jpg',
     'vestido01_horizontal.jpg',
     'vestido01_details.jpg',
+    'ropa',
+    'ropa-vestidos',
     'pink',
     's|m',
     'excellent',
@@ -166,7 +175,7 @@ router.get('/template', authMiddleware, (req, res) => {
     'Vintage Collection',
   ];
 
-  const csv = headers.join(',') + '\n' + exampleRow.map(v => `"${v}"`).join(',') + '\n';
+  const csv = headers.join(',') + '\n' + exampleRow.map(v => JSON.stringify(v)).join(',') + '\n';
 
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename="bulk-import-template.csv"');

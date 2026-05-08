@@ -102,6 +102,8 @@ export const parseSectionCustomOptions = sectionName => {
   customOption.isShortHero = sectionName.indexOf('- ShortHero') >= 0;
   customOption.isCenterTitleText = sectionName.indexOf('- CenterTitleText') >= 0;
   customOption.isWhiteTitle = sectionName.indexOf('- WhiteTitle') >= 0;
+  customOption.isSmallSubTitles = sectionName.indexOf('- smallSubTitles') >= 0;
+  customOption.isAvFeature = sectionName.indexOf('- AvFeature') >= 0;
 
   if (sectionName.includes('- TextGray')) customOption.hasTextGray = true;
 

@@ -41,12 +41,14 @@
   }
 
   .videoPane {
-    flex: 1;
+    flex: 0 0 50%;
+    width: 50%;
     min-height: unset;
   }
 
   .contentPane {
-    flex: 1;
+    flex: 0 0 50%;
+    width: 50%;
     padding: 56px 64px;
   }
 }

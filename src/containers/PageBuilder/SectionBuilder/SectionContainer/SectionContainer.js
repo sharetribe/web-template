@@ -28,7 +28,7 @@ import css from './SectionContainer.module.css';
  * @returns {JSX.Element} containing wrapper that can be used inside Block components.
  */
 const SectionContainer = props => {
-  const { className, rootClassName, id, as, children, appearance, options, customOption, ...otherProps } = props;
+  const { className, rootClassName, id, as, children, appearance, options, customOption, bgLink, ...otherProps } = props;
   const Tag = as || 'section';
   const classes = classNames(rootClassName || css.root, className);
   const innerCss = classNames(
@@ -36,6 +36,7 @@ const SectionContainer = props => {
     customOption?.isBlueTitle ? css.sectionContentBlueTitle : '',
     customOption?.isCenterTitleText ? css.sectionContentCenterTitleText : '',
     customOption?.isWhiteTitle ? css.sectionContentWhiteTitle : '',
+    customOption?.isSmallSubTitles ? css.sectionContentSmallSubTitles : '',
     customOption?.isLarge ? css.sectionContentLarge : '',
     customOption?.isMedium ? css.sectionContentMedium : '',
     customOption?.isFullH ? css.sectionContentFullH : '',
@@ -56,6 +57,7 @@ const SectionContainer = props => {
 
   return (
     <Tag className={classes} id={id} {...otherProps}>
+      {bgLink ? <a href={bgLink} className={css.bgClickArea} aria-hidden="true" tabIndex={-1} /> : null}
       {appearance?.fieldType === 'customAppearance' ? (
         <Field
           data={{ alt: `Background image for ${id}`, ...appearance }}

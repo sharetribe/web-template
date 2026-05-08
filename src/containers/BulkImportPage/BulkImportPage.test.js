@@ -114,55 +114,15 @@ describe('BulkImportPage', () => {
     });
   });
 
-  it('downloads the csv template through fetch when the link is clicked', async () => {
-    const clickSpy = jest.fn();
-    const appendSpy = jest.spyOn(document.body, 'appendChild');
-    const removeSpy = jest.fn();
-
-    document.createElement = jest.fn(tagName => {
-      const element = originalCreateElement(tagName);
-      if (tagName === 'a') {
-        element.click = clickSpy;
-        element.remove = removeSpy;
-      }
-      return element;
-    });
-
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      blob: async () => new Blob(['title,description,price'], { type: 'text/csv' }),
-    });
-
-    window.localStorage.setItem('bulkImportApiKey', 'secret-key');
-
+  it('template link uses direct browser navigation (no fetch required)', async () => {
     render(<BulkImportPage />, { initialState: baseState });
 
     const link = await screen.findByText('BulkImportPage.downloadTemplate');
+    expect(link.closest('a')).toHaveAttribute('href', '/api/bulk-import/template');
+    expect(link.closest('a')).toHaveAttribute('download');
+    // Template endpoint has no auth — browser navigates directly without fetch
     fireEvent.click(link);
-
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/bulk-import/template', {
-        headers: { 'X-Import-Key': 'secret-key' },
-      });
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
-      expect(clickSpy).toHaveBeenCalled();
-      expect(removeSpy).toHaveBeenCalled();
-      expect(window.URL.revokeObjectURL).toHaveBeenCalledWith('blob:test-url');
-    });
-
-    appendSpy.mockRestore();
-  });
-
-  it('shows API key error when downloading template without API key', async () => {
-    render(<BulkImportPage />, { initialState: baseState });
-
-    const link = await screen.findByText('BulkImportPage.downloadTemplate');
-    fireEvent.click(link);
-
-    await waitFor(() => {
-      expect(screen.getByText('BulkImportPage.errorNoApiKey')).toBeInTheDocument();
-    });
-    expect(global.fetch).not.toHaveBeenCalled();
+    expect(global.fetch).not.toHaveBeenCalledWith('/api/bulk-import/template', expect.anything());
   });
 
   it('shows error when submitting without API key', async () => {

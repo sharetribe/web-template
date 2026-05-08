@@ -14,6 +14,16 @@
   min-height: 56vw;
 }
 
+.halfLinked {
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 /* Dark scrim for text legibility when a bg image is present */
 .hasBg::before {
   content: '';
