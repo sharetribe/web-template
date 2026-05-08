@@ -121,10 +121,13 @@ const removeUnnecessaryBoundaries = timeSlots => {
  * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
  * @returns {Array<TimeSlot>}
  */
-const getAllTimeSlots = monthlyTimeSlots => {
+export const getAllTimeSlots = monthlyTimeSlots => {
   const timeSlotsRaw = Object.values(monthlyTimeSlots).reduce((picked, mts) => {
     return [...picked, ...(mts.timeSlots || [])];
   }, []);
+  // Sort chronologically so combineConsecutiveTimeSlots (which only scans forward) sees slots
+  // in start-date order regardless of which order async month fetches completed.
+  timeSlotsRaw.sort((a, b) => new Date(a.attributes.start) - new Date(b.attributes.start));
   return removeUnnecessaryBoundaries(timeSlotsRaw);
 };
 
@@ -358,7 +361,7 @@ const isOutsideRangeFn = (
  * Returns an isDayBlocked function that can be passed to
  * a DateRangePicker component.
  */
-const isDayBlockedFn = params => {
+export const isDayBlockedFn = params => {
   const { allTimeSlots, monthlyTimeSlots, isDaily, startDate, endDate, timeZone } = params || {};
 
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
@@ -606,7 +609,7 @@ const findIndexOfLastConsecutiveTimeSlot = (timeSlots, index, timeZone) =>
     : index;
 
 // Find and combine adjacent/consecutive timeslots into one timeslot
-const combineConsecutiveTimeSlots = (slots, startDate, timeZone) => {
+export const combineConsecutiveTimeSlots = (slots, startDate, timeZone) => {
   // Locate the index of the timeslot containing startDate.
   // Use day-level comparison in the listing timezone so that a slot starting a few hours
   // after midnight (due to UTC-offset mismatch when the exception was created) is still found.
@@ -931,10 +934,17 @@ export const BookingDatesForm = props => {
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(addTime(new Date(), 30, 'days'), dateFormatOptions);
 
-        const relevantTimeSlots =
+        // When startDate is set and endDate is not, narrow to the consecutive slot block
+        // containing startDate. If the result is empty (startDate's month is still in-flight
+        // and not yet in allTimeSlots), fall back to allTimeSlots so the months that ARE
+        // fetched remain visible — the re-render after the fetch completes will produce the
+        // correct narrowed slot.
+        const combinedConsecutive =
           startDate && !endDate
             ? combineConsecutiveTimeSlots(allTimeSlots, startDate, timeZone)
-            : allTimeSlots;
+            : null;
+        const relevantTimeSlots =
+          combinedConsecutive?.length > 0 ? combinedConsecutive : allTimeSlots;
 
         const twoMonths = typeof window !== 'undefined' && window.innerWidth >= 768;
         const firstAvailableDate =
