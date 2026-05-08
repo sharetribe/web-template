@@ -94,6 +94,7 @@ const SectionFeatures = props => {
           className={classNames(defaultClasses.blockContainer, css.featuresMain, {
             [css.noSidePaddings]: isInsideContainer,
             [css.featuresMainAvFeature]: customOption?.isAvFeature,
+            [css.featuresMainReverseFeature]: customOption?.isReverseFeature,
           })}
         >
           <BlockBuilder

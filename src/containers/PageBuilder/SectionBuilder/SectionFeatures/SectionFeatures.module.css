@@ -37,19 +37,69 @@
   padding-right: 0;
 }
 
-/* ── AvFeature: 2-column grid, no gap, 30px block padding ── */
+/* Reverses the default odd=image-right / even=image-left alternation */
+.featuresMainReverseFeature {
+  & .block {
+    @media (--viewportMedium) {
+      flex-direction: row;
+    }
+
+    &:nth-child(even) {
+      @media (--viewportMedium) {
+        flex-direction: row-reverse;
+      }
+    }
+  }
+}
+
+/* ── AvFeature: full-bleed 50/50 rows, no gaps or paddings ── */
 .featuresMainAvFeature {
-  grid-template-columns: repeat(2, 1fr);
   gap: 0;
   padding: 0;
   max-width: 100%;
 }
 
 .blockAvFeature {
-  padding: 30px;
+  padding: 0;
+  align-items: stretch;
   gap: 0;
 
   @media (--viewportMedium) {
     gap: 0;
+  }
+
+  /* Media and text each exactly 50% */
+  > * {
+    flex: 0 0 50%;
+    width: 50%;
+    min-width: 0;
+  }
+
+  /* Media side: fill the block height */
+  > :first-child {
+    border-radius: 0;
+    height: 100%;
+
+    & img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+    }
+  }
+
+  /* Text side: centered content + SectionVideoSection-style padding */
+  > :last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 24px;
+
+    @media (--viewportMedium) {
+      padding: 56px 64px;
+    }
   }
 }

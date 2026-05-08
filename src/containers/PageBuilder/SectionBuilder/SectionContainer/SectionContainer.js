@@ -49,6 +49,7 @@ const SectionContainer = props => {
     customOption?.hasNoPaddingsX ? css.sectionContentNoPaddingsX : '',
     customOption?.hasNoPaddingsY ? css.sectionContentNoPaddingsY : '',
     customOption?.hasTextGray ? css.sectionContentHasTextGray : '',
+    customOption?.isAvFeature ? css.sectionContentAvFeature : '',
     customOption?.hasStar ? css.starDeco : '',
     customOption?.hasStar ? (
       css[`starDeco${customOption?.starDeco}`] ?? '') : '',

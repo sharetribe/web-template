@@ -55,7 +55,8 @@ const SectionHeroCustom2 = props => {
   } = props;
 
   const intl = useIntl();
-  const rawBgLink = intl.formatMessage({ id: `AVHero2.${sectionId}.bgLink`, defaultMessage: '' });
+  const sectionKey = sectionId.replace(/^av-hero2-/, '');
+  const rawBgLink = intl.formatMessage({ id: `AVHero2.${sectionKey}.bgLink`, defaultMessage: '' });
   const bgLink = rawBgLink && rawBgLink !== '#' ? rawBgLink : null;
 
   const fieldComponents = options?.fieldComponents;
