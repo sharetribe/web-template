@@ -4,6 +4,7 @@ import classNames from 'classnames';
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { deleteMuxAsset } from '../../../../util/api';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
@@ -13,9 +14,36 @@ import EditListingContentForm from './EditListingContentForm';
 import css from './EditListingContentPanel.module.css';
 
 const getInitialValues = params => {
-  const { description = '' } = params.listing.attributes.publicData || {};
-  return { description };
+  const { publicData = {}, privateData = {} } = params.listing.attributes || {};
+  const isVideoCourse = publicData.listingType === 'video-course';
+  const { description = '' } = publicData;
+
+  return isVideoCourse ? { courseModules: privateData.courseModules || [] } : { description };
 };
+
+const courseStructureInfo = courseModules => {
+  const modules = courseModules || [];
+  const lessons = modules.reduce((count, module) => count + (module.lessons || []).length, 0);
+  const videoLessons = modules.reduce(
+    (count, module) =>
+      count + (module.lessons || []).filter(lesson => lesson.type === 'video').length,
+    0
+  );
+
+  return {
+    moduleCount: modules.length,
+    lessonCount: lessons,
+    videoLessonCount: videoLessons,
+  };
+};
+
+const courseVideoAssetIds = courseModules =>
+  (courseModules || []).reduce((assetIds, module) => {
+    const lessonAssetIds = (module.lessons || [])
+      .map(lesson => lesson.video?.asset_id)
+      .filter(Boolean);
+    return assetIds.concat(lessonAssetIds);
+  }, []);
 
 /**
  * The EditListingContentPanel component.
@@ -45,6 +73,11 @@ const EditListingContentPanel = props => {
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const { listingType } = listing?.attributes?.publicData || {};
   const isVideoCourse = listingType === 'video-course';
+  const uploadedVideoAssetIds = React.useRef([]);
+  const initialVideoAssetIds = React.useMemo(
+    () => courseVideoAssetIds(listing?.attributes?.privateData?.courseModules),
+    [listing?.id?.uuid, listing?.attributes?.privateData?.courseModules]
+  );
 
   const panelHeadingProps = isPublished
     ? {
@@ -88,12 +121,44 @@ const EditListingContentPanel = props => {
         ready={ready}
         fetchErrors={errors}
         initialValues={getInitialValues(props)}
+        isVideoCourse={isVideoCourse}
+        onManageDisableScrolling={props.onManageDisableScrolling}
         onSubmit={values => {
-          const { description } = values;
-          const updateValues = {
-            publicData: { description },
-          };
-          onSubmit(updateValues);
+          const { description, courseModules = [] } = values;
+          const finalVideoAssetIds = courseVideoAssetIds(courseModules);
+          const removedVideoAssetIds = Array.from(
+            new Set(initialVideoAssetIds.concat(uploadedVideoAssetIds.current))
+          ).filter(assetId => !finalVideoAssetIds.includes(assetId));
+          const updateValues = isVideoCourse
+            ? {
+                privateData: { courseModules },
+                publicData: {
+                  courseStructureInfo: courseStructureInfo(courseModules),
+                },
+              }
+            : {
+                publicData: { description },
+              };
+          return onSubmit(updateValues).then(response => {
+            if (isVideoCourse) {
+              uploadedVideoAssetIds.current = finalVideoAssetIds;
+            }
+
+            if (isVideoCourse && removedVideoAssetIds.length > 0) {
+              return Promise.all(
+                removedVideoAssetIds.map(assetId =>
+                  deleteMuxAsset({ assetId }).catch(e => {
+                    console.error('Failed to delete removed course Mux asset', e);
+                  })
+                )
+              ).then(() => response);
+            }
+
+            return response;
+          });
+        }}
+        onVideoUploaded={assetId => {
+          uploadedVideoAssetIds.current = uploadedVideoAssetIds.current.concat(assetId);
         }}
         saveActionMsg={submitButtonText}
         updated={panelUpdated}

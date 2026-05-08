@@ -25,19 +25,26 @@ export { default as IconEdit } from './IconEdit/IconEdit';
 export { default as IconEmailAttention } from './IconEmailAttention/IconEmailAttention';
 export { default as IconEmailSent } from './IconEmailSent/IconEmailSent';
 export { default as IconEmailSuccess } from './IconEmailSuccess/IconEmailSuccess';
+export { default as IconFilePlus } from './IconFilePlus/IconFilePlus';
 export { default as IconInquiry } from './IconInquiry/IconInquiry';
 export { default as IconKeys } from './IconKeys/IconKeys';
 export { default as IconKeysSuccess } from './IconKeysSuccess/IconKeysSuccess';
+export { default as IconPlay } from './IconPlay/IconPlay';
+export { default as IconPlaySolid } from './IconPlaySolid/IconPlaySolid';
 export { default as IconReviewStar } from './IconReviewStar/IconReviewStar';
 export { default as IconReviewUser } from './IconReviewUser/IconReviewUser';
 export { default as IconSearch } from './IconSearch/IconSearch';
 export { default as IconSynchronize } from './IconSynchronize/IconSynchronize';
 export { default as IconLocation } from './IconLocation/IconLocation';
+export { default as IconMenu } from './IconMenu/IconMenu';
 export { default as IconSocialMediaFacebook } from './IconSocialMediaFacebook/IconSocialMediaFacebook';
 export { default as IconSocialMediaInstagram } from './IconSocialMediaInstagram/IconSocialMediaInstagram';
 export { default as IconSocialMediaTwitter } from './IconSocialMediaTwitter/IconSocialMediaTwitter';
 export { default as IconSpinner } from './IconSpinner/IconSpinner';
 export { default as IconSuccess } from './IconSuccess/IconSuccess';
+export { default as IconTrash } from './IconTrash/IconTrash';
+export { default as IconVideo } from './IconVideo/IconVideo';
+export { default as IconZap } from './IconZap/IconZap';
 
 // Typography
 export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';

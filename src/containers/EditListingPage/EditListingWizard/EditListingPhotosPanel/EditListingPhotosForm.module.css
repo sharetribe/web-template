@@ -91,17 +91,26 @@
 }
 
 .videoPlayButton {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   z-index: 1;
-  min-width: 72px;
-  min-height: 42px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.64);
-  border-radius: 2px;
-  background-color: rgba(0, 0, 0, 0.36);
-  color: var(--colorWhite);
-  font-weight: var(--fontWeightSemiBold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  transform: translate(-50%, -50%);
   cursor: pointer;
+}
+
+.videoPlayButton svg {
+  width: 80px;
+  height: 80px;
 }
 
 .videoProgress {

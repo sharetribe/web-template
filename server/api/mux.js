@@ -34,6 +34,7 @@ const getMuxAsset = async (req, res) => {
     res.status(200).json({
       playback_id: assetRes.playback_ids[0].id,
       asset_id: assetRes.id,
+      duration: assetRes.duration,
       state: assetRes.progress.state,
     });
   } catch (error) {

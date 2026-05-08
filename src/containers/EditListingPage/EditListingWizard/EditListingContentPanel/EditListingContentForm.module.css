@@ -29,3 +29,515 @@
     margin-top: 100px;
   }
 }
+
+.courseBuilder {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.moduleCard {
+  border: 1px solid var(--colorGrey100);
+  border-radius: 8px;
+  background-color: var(--colorWhite);
+  overflow: hidden;
+}
+
+.moduleHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  min-height: 84px;
+  padding: 18px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    min-height: 96px;
+    padding: 24px;
+  }
+}
+
+.moduleTitleButton {
+  composes: h4 from global;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  color: var(--colorGrey700);
+  text-align: left;
+  cursor: pointer;
+}
+
+.moduleHeaderActions {
+  display: none;
+
+  @media (--viewportMedium) {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+}
+
+.moduleBody {
+  padding: 0 18px 24px;
+
+  @media (--viewportMedium) {
+    padding: 0 24px 32px;
+  }
+}
+
+.moduleDescription {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+  margin: 0 0 30px;
+}
+
+.iconButton,
+.chevronButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: 6px;
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
+  cursor: pointer;
+}
+
+.chevronButton {
+  width: 36px;
+  height: 36px;
+  border-color: transparent;
+}
+
+.deleteIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.deleteIcon path {
+  stroke: currentColor;
+}
+
+.editButton {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 6px;
+  background-color: #d8ffee;
+  color: var(--marketplaceColorDark);
+  cursor: pointer;
+}
+
+.addModuleButton,
+.addLessonButton {
+  composes: marketplaceBodyFontStyles from global;
+  display: inline-block;
+  width: max-content;
+  color: var(--marketplaceColorDark);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.addModuleButton {
+  margin-bottom: 36px;
+}
+
+.addLessonButton {
+  margin-bottom: 24px;
+}
+
+.inlineEditor,
+.lessonEditor {
+  padding: 24px 18px;
+
+  @media (--viewportMedium) {
+    padding: 32px 24px;
+  }
+}
+
+.lessonEditor {
+  margin: 0 -18px -24px;
+  border-top: 1px solid var(--colorGrey100);
+  background-color: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    margin: 0 -24px -32px;
+    padding-bottom: 0;
+  }
+}
+
+.label {
+  composes: marketplaceBodyFontStyles from global;
+  display: block;
+  margin-bottom: 12px;
+  color: var(--colorGrey700);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.textInput {
+  composes: marketplaceBodyFontStyles from global;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: 4px;
+  padding: 8px 18px;
+  color: var(--colorGrey700);
+  background-color: var(--colorWhite);
+  box-shadow: var(--boxShadow);
+}
+
+.textarea,
+.lessonTextarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.lessonTextarea {
+  min-height: 156px;
+}
+
+.inlineEditorActions,
+.lessonEditorActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+}
+
+.lessonEditorActions {
+  margin: 32px -18px 0;
+  padding: 24px 18px;
+  background-color: var(--colorGrey50);
+
+  @media (--viewportMedium) {
+    margin: 36px -24px 0;
+    padding: 32px 24px;
+  }
+}
+
+.smallPrimaryButton,
+.lessonSubmitButton {
+  width: auto;
+  min-height: 48px;
+  padding: 0 24px;
+}
+
+.lessonAssetButtons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+}
+
+.lessonAssetButton {
+  composes: marketplaceBodyFontStyles from global;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 72px;
+  border: 0;
+  border-radius: 8px;
+  background-color: #e7fff4;
+  color: var(--colorGrey700);
+  font-weight: var(--fontWeightSemiBold);
+  cursor: pointer;
+}
+
+.lessonAssetButton:disabled,
+.disabledAssetButton {
+  cursor: default;
+}
+
+.assetIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 50%;
+  background-color: #8bf7c4;
+  color: var(--marketplaceColorDark);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.assetIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.assetIcon path {
+  stroke: currentColor;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadCard {
+  border: 1px solid var(--colorGrey100);
+  border-radius: 8px;
+  padding: 18px;
+  margin-top: 24px;
+}
+
+.uploadCardHeader,
+.uploadProgressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.uploadCardHeader {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+}
+
+.uploadProgressRow {
+  margin-top: 18px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background-color: var(--colorGrey100);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--marketplaceColor);
+}
+
+.progressText,
+.fileSize {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+}
+
+.fileSize {
+  margin-top: 12px;
+}
+
+.sortableLesson {
+  position: relative;
+  margin: 36px 0 30px;
+  transition: opacity 150ms ease-out;
+}
+
+.sortableLessonDragging {
+  opacity: 0.75;
+  z-index: 1;
+}
+
+.lessonDragHandle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 72px;
+  border: 0;
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--colorGrey300);
+  cursor: grab;
+  touch-action: none;
+  transform: translateY(-50%);
+  transition: opacity 120ms ease-out, color 120ms ease-out;
+
+  @media (--viewportMedium) {
+    opacity: 0;
+  }
+}
+
+.lessonDragHandle:active {
+  cursor: grabbing;
+}
+
+.lessonDragHandle:hover,
+.lessonDragHandle:focus-visible,
+.sortableLesson:hover .lessonDragHandle,
+.sortableLessonDragging .lessonDragHandle {
+  color: var(--colorGrey500);
+
+  @media (--viewportMedium) {
+    opacity: 1;
+  }
+}
+
+.lessonDragHandle svg {
+  width: 24px;
+  height: 24px;
+}
+
+.lessonDragHandle path {
+  stroke: currentColor;
+}
+
+.lessonPreview {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  min-width: 0;
+
+  @media (--viewportMedium) {
+    grid-template-columns: minmax(260px, 40%) minmax(0, 1fr);
+    align-items: start;
+    gap: 32px;
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: minmax(320px, 40%) minmax(0, 1fr);
+  }
+}
+
+.videoPreviewSlot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.videoPreview {
+  position: relative;
+  display: block;
+  width: calc(100% - 36px);
+  height: 100%;
+  margin-left: 36px;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--colorGrey700);
+  color: var(--colorWhite);
+  text-align: left;
+  cursor: pointer;
+  transition: width 150ms ease-out;
+}
+
+.sortableLesson:hover .videoPreview,
+.sortableLessonDragging .videoPreview {
+  width: calc(100% - 36px);
+  margin-left: 36px;
+}
+
+@media (--viewportMedium) {
+  .videoPreview {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .sortableLesson .videoPreview {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .sortableLesson:hover .videoPreview,
+  .sortableLessonDragging .videoPreview {
+    width: calc(100% - 36px);
+  }
+}
+
+.videoThumbnail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+.videoThumbnailLoaded {
+  opacity: 1;
+}
+
+.videoPlayButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+}
+
+.videoPlayButton svg {
+  width: 80px;
+  height: 80px;
+}
+
+.lessonPreviewContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.lessonTitleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+}
+
+.lessonTitle {
+  margin: 0;
+  color: var(--colorGrey700);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.videoMeta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--marketplaceColorDark);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.lessonDescription {
+  margin: 0;
+  color: var(--colorGrey700);
+}
+
+.lessonActions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+
+  @media (--viewportMedium) {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+}

@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import classNames from 'classnames';
 
 // Import shared components
-import { AspectRatioWrapper, IconSpinner } from '../../../../components';
+import { AspectRatioWrapper, IconPlay, IconSpinner } from '../../../../components';
 
 // Import modules from this directory
 import ListingImage from './ListingImage';
@@ -140,7 +140,7 @@ const SortableMediaItem = props => {
                 }}
                 disabled={!item.playbackId}
               >
-                Play
+                <IconPlay />
               </button>
             </>
           )}
