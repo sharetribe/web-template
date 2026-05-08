@@ -3,6 +3,7 @@ import { updatedEntities, denormalisedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
+import { getReferralParams } from '../../util/webStorageHelpers';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -275,6 +276,17 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const page = queryParams.page || 1;
   dispatch(clearOpenListingError());
 
+  // Filter out potential referral data parameters so that they are not included in the API query
+  const { userTypes = [] } = config.user;
+  const validReferralSources = getReferralParams(userTypes);
+  const apiParamsRaw = Object.fromEntries(
+    Object.entries(queryParams).filter(entry => {
+      const [key, value] = entry;
+
+      return !validReferralSources.includes(key);
+    })
+  );
+
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -286,7 +298,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     dispatch(fetchCurrentUser()),
     dispatch(
       queryOwnListings({
-        ...queryParams,
+        ...apiParamsRaw,
         page,
         perPage: RESULT_PAGE_SIZE,
         include: ['images', 'currentStock'],
