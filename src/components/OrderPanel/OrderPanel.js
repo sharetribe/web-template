@@ -33,6 +33,7 @@ import {
   isNegotiationProcess,
   isInquiryProcess,
   isPurchaseProcess,
+  isDownloadProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
@@ -60,6 +61,10 @@ const InquiryWithoutPaymentForm = loadable(() =>
 );
 const ProductOrderForm = loadable(() =>
   import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
+);
+
+const DigitalDownloadForm = loadable(() =>
+  import(/* webpackChunkName: "DigitalDownloadForm" */ './DigitalDownloadForm/DigitalDownloadForm')
 );
 
 const NegotiationForm = loadable(() =>
@@ -319,7 +324,8 @@ const OrderPanel = props => {
   const isBooking = isBookingProcess(processName);
   const isPurchase = isPurchaseProcess(processName);
   const isNegotiation = isNegotiationProcess(processName);
-  const isPaymentProcess = isBooking || isPurchase || isNegotiation;
+  const isDownload = isDownloadProcess(processName);
+  const isPaymentProcess = isBooking || isPurchase || isNegotiation || isDownload;
 
   const showPriceMissing = isPaymentProcess && !isNegotiation && !price;
   const showInvalidCurrency =
@@ -350,6 +356,7 @@ const OrderPanel = props => {
   const showProductOrderForm =
     mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
 
+  const showDownloadForm = mounted && !isClosed && isDownload;
   const showInquiryForm = mounted && !isClosed && isInquiry;
   // if listing is a request, we show the negotiation form (reverse negotiation). User (provider) needs to make an offer first.
   const showNegotiationForm = mounted && !isClosed && isNegotiation && unitType === REQUEST;
@@ -531,6 +538,8 @@ const OrderPanel = props => {
             onContactUser={onContactUser}
             {...sharedProps}
           />
+        ) : showDownloadForm ? (
+          <DigitalDownloadForm formId="OrderPanelDigitalDownloadForm" {...sharedProps} />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm
             formId="OrderPanelInquiryForm"
