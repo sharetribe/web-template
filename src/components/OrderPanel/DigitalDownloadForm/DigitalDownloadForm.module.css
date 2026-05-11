@@ -1,0 +1,16 @@
+@import '../../../styles/customMediaQueries.css';
+
+.submitButton {
+  padding: 0 24px;
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 72px;
+  }
+}
+
+.finePrint {
+  composes: marketplaceTinyFontStyles from global;
+  text-align: center;
+}
