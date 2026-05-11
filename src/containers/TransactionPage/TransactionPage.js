@@ -631,10 +631,15 @@ export const TransactionPageComponent = props => {
     // logic, adjust this logic to filter out pending or failed uploads.
     const fileIds = allowFiles ? fileUploads.map(f => ({ fileId: f.file.id })) : null;
     onSendMessage(transaction.id, message, config, fileIds)
-      .then(messageId => {
-        form.reset();
-        onClearUploadedFiles(fileUploads.map(f => f.tempId));
-        scrollToMessage(messageId);
+      .then(resp => {
+        const messageId = resp.payload.uuid;
+        if (messageId) {
+          // Only clear the form and files if message id exists i.e.
+          // message was successfully sent
+          form.reset();
+          onClearUploadedFiles(fileUploads.map(f => f.tempId));
+          scrollToMessage(messageId);
+        }
       })
       .catch(() => {});
   };
