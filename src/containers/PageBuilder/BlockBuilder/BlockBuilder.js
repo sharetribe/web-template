@@ -108,7 +108,7 @@ const BlockBuilder = props => {
     <>
       {blocks.map((block, index) => {
         const blockId = block.blockId || `${sectionId}-block-${index + 1}`;
-        const effectiveBlockType = getEffectiveBlockType(blockId, block.blockType);
+        const effectiveBlockType = getEffectiveBlockType(blockId, block.blockName, block.blockType);
         const config = components[effectiveBlockType];
         const Block = config?.component;
         const blockCustomProps = blockCustomPropsList[index];

@@ -4,11 +4,10 @@
  */
 import React, { useEffect, useState } from 'react';
 
-import { FormattedMessage } from '../../../util/reactIntl';
-
 import { TabNav } from '../../../components';
 
 import { createGlobalState } from './hookGlobalState';
+import { getAccountSettingsTabs } from '../../../extensions/accountNav';
 
 import css from './LayoutSideNavigation.module.css';
 
@@ -90,63 +89,7 @@ const LayoutWrapperAccountSettingsSideNav = props => {
     }
   }, [mounted]);
 
-  const { currentPage, showPaymentMethods, showPayoutDetails } = accountSettingsNavProps;
-  const payoutDetailsMaybe = showPayoutDetails
-    ? [
-        {
-          text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
-          selected: currentPage === 'StripePayoutPage',
-          id: 'StripePayoutPageTab',
-          linkProps: {
-            name: 'StripePayoutPage',
-          },
-        },
-      ]
-    : [];
-
-  const paymentMethodsMaybe = showPaymentMethods
-    ? [
-        {
-          text: (
-            <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />
-          ),
-          selected: currentPage === 'PaymentMethodsPage',
-          id: 'PaymentMethodsPageTab',
-          linkProps: {
-            name: 'PaymentMethodsPage',
-          },
-        },
-      ]
-    : [];
-
-  const tabs = [
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle" />,
-      selected: currentPage === 'ContactDetailsPage',
-      id: 'ContactDetailsPageTab',
-      linkProps: {
-        name: 'ContactDetailsPage',
-      },
-    },
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.passwordTabTitle" />,
-      selected: currentPage === 'PasswordChangePage',
-      id: 'PasswordChangePageTab',
-      linkProps: {
-        name: 'PasswordChangePage',
-      },
-    },
-    ...payoutDetailsMaybe,
-    ...paymentMethodsMaybe,
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.manageAccountTabTitle" />,
-      selected: currentPage === 'ManageAccountPage',
-      id: 'ManageAccountPageTab',
-      linkProps: {
-        name: 'ManageAccountPage',
-      },
-    },
-  ];
+  const tabs = getAccountSettingsTabs(accountSettingsNavProps);
 
   return (
     <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} ariaLabel={ariaLabel} />

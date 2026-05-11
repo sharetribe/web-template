@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useIntl } from 'react-intl';
+import { useIntl } from '../../../../util/reactIntl';
 
 import Field, { hasDataInFields } from '../../Field';
 

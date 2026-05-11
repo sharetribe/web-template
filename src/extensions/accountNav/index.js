@@ -1,0 +1,1 @@
+export { getAccountSettingsTabs } from './tabs';

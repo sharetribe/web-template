@@ -7,9 +7,6 @@ import Field, { hasDataInFields } from '../../Field';
 import SectionContainer from '../SectionContainer';
 import css from './SectionSelectedUser.module.css';
 
-const KEY_CODE_ARROW_LEFT = 37;
-const KEY_CODE_ARROW_RIGHT = 39;
-
 const COLUMN_CONFIG = [
   { css: css.oneColumn },
   { css: css.twoColumns },
@@ -117,8 +114,8 @@ const SectionSelectedUser = props => {
   const onSlideLeft = e => { slide('left'); e.target.focus(); };
   const onSlideRight = e => { slide('right'); e.target.focus(); };
   const onKeyDown = e => {
-    if (e.keyCode === KEY_CODE_ARROW_LEFT) { e.preventDefault(); slide('left'); }
-    else if (e.keyCode === KEY_CODE_ARROW_RIGHT) { e.preventDefault(); slide('right'); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); slide('left'); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); slide('right'); }
   };
 
   return (

@@ -36,10 +36,11 @@ export const getAvBlockComponents = () => {
 
 // `blockId` shorthands let CMS authors use a fixed block id and skip the
 // blockType field entirely.
-export const getEffectiveBlockType = (blockId, fallbackType) => {
+export const getEffectiveBlockType = (blockId, blockName, fallbackType) => {
   if (blockId === 'av-insta-feed') return 'blockInstagramFeed';
   if (blockId?.startsWith('av-table-')) return 'blockMarkdownTable';
   if (blockId === 'av-contact-form') return 'blockBrevoForm';
+  if (blockName?.includes('2 cols buttons ::')) return 'blockWithCols';
   return fallbackType;
 };
 
@@ -238,17 +239,15 @@ export const createBlockCustomProps = (block, intl, css) => {
   if (block.blockName?.includes('large list :: ')) blockCustomProps.hasLargeList = true;
   if (block.blockName?.includes('newsletter form ::')) {
     blockCustomProps.hasNewsletterForm = true;
-    blockCustomProps.disclaimerText =
-      'Al ingresar tu correo, aceptas recibir correos promocionales de Archivo Vintach y nuestra Política de Privacidad. Puedes darte de baja en cualquier momento.';
-    blockCustomProps.okMsg = '¡Gracias! Por favor, revisa tu bandeja de entrada.';
-    blockCustomProps.errorMsg = 'La suscripción ha fallado. Inténtalo de nuevo más tarde.';
+    blockCustomProps.disclaimerText = intl.formatMessage({ id: 'NewsletterForm.disclaimerText' });
+    blockCustomProps.okMsg = intl.formatMessage({ id: 'NewsletterForm.successMessage' });
+    blockCustomProps.errorMsg = intl.formatMessage({ id: 'NewsletterForm.errorMessage' });
   }
   if (block.blockName?.includes('icon img ::')) blockCustomProps.hasIconImg = true;
   if (block.blockName?.includes('social links ::')) blockCustomProps.hasSocialLinks = true;
   if (block.blockName?.includes('content short ::')) blockCustomProps.hasShortContent = true;
 
   if (block.blockName?.includes('2 cols buttons ::')) {
-    block.blockType = 'blockWithCols';
     blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
     blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
 

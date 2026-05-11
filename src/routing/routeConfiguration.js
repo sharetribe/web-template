@@ -48,11 +48,12 @@ const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" *
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
 
 export const ACCOUNT_SETTINGS_PAGES = [
+  'ProfileSettingsPage',
   'ContactDetailsPage',
   'PasswordChangePage',
   'StripePayoutPage',
   'PaymentMethodsPage',
-  'ManageAccountPage'
+  'ManageAccountPage',
 ];
 
 // https://en.wikipedia.org/wiki/Universally_unique_identifier#Nil_UUID

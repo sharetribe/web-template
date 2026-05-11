@@ -31,3 +31,8 @@
   float: right;
   flex-shrink: 0;
 }
+
+.desktopTopbar,
+.mobileTopbar {
+  box-shadow: none;
+}

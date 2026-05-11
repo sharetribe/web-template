@@ -4,6 +4,11 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+// Heroku note: os.tmpdir() (/tmp) is ephemeral — wiped on dyno restart.
+// On restart the cursor falls back to a 10-minute lookback (handled in eventPoller.js).
+// Multi-dyno deployments: each dyno maintains its own cursor and will duplicate
+// notifications. Single-dyno operation is assumed for Archivo Vintach.
+// Override with AV_EVENT_POLLER_CURSOR_PATH for a persistent path (external mount).
 const DEFAULT_PATH = path.join(os.tmpdir(), 'av-event-poller-cursor.json');
 const CURSOR_PATH = process.env.AV_EVENT_POLLER_CURSOR_PATH || DEFAULT_PATH;
 

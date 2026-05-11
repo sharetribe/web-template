@@ -12,10 +12,11 @@ import {
   isUserAuthorized,
   pickUserFieldsData,
   showCreateListingLinkForUser,
+  showPaymentDetailsForUser,
 } from '../../util/userHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
+import { H3, Page, UserNav, NamedLink, LayoutSideNavigation } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -158,20 +159,33 @@ export const ProfileSettingsPageComponent = props => {
   const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
+  const { showPayoutDetails, showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const accountSettingsNavProps = {
+    currentPage: 'ProfileSettingsPage',
+    showPaymentMethods,
+    showPayoutDetails,
+  };
 
   return (
     <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSingleColumn
+      <LayoutSideNavigation
         topbar={
           <>
-            <TopbarContainer />
+            <TopbarContainer
+              desktopClassName={css.desktopTopbar}
+              mobileClassName={css.mobileTopbar}
+            />
             <UserNav
               currentPage="ProfileSettingsPage"
               showManageListingsLink={showManageListingsLink}
             />
           </>
         }
+        sideNav={null}
+        useAccountSettingsNav
+        accountSettingsNavProps={accountSettingsNavProps}
         footer={<FooterContainer />}
+        intl={intl}
       >
         <div className={css.content}>
           <div className={css.headingContainer}>
@@ -183,7 +197,7 @@ export const ProfileSettingsPageComponent = props => {
           </div>
           {profileSettingsForm}
         </div>
-      </LayoutSingleColumn>
+      </LayoutSideNavigation>
     </Page>
   );
 };
