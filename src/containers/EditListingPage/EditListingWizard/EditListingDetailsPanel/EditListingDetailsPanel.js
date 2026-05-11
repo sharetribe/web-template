@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 // Import util modules
@@ -19,10 +19,12 @@ import { isBookingProcessAlias } from '../../../../transactions/transaction';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
+import { requireListingImage } from '../../../../util/configHelpers';
 
 // Import modules from this directory
 import ErrorMessage from './ErrorMessage';
 import EditListingDetailsForm from './EditListingDetailsForm';
+import PhotoGallerySection from './PhotoGallerySection';
 import css from './EditListingDetailsPanel.module.css';
 
 /**
@@ -309,6 +311,10 @@ const EditListingDetailsPanel = props => {
     config,
     updatePageTitle: UpdatePageTitle,
     intl,
+    images = [],
+    onImageUpload,
+    onRemoveImage,
+    listingImageConfig,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -356,6 +362,13 @@ const EditListingDetailsPanel = props => {
     hasListingTypesSet && (!hasExistingListingType || hasValidExistingListingType);
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
 
+  const [photoError, setPhotoError] = useState(null);
+
+  const listingTypeConfig = listingTypes.find(
+    conf => conf.listingType === existingListingTypeInfo.listingType
+  );
+  const requiresImages = requireListingImage(listingTypeConfig);
+
   const panelHeadingProps = isPublished
     ? {
         id: 'EditListingDetailsPanel.title',
@@ -381,82 +394,104 @@ const EditListingDetailsPanel = props => {
       </H3>
 
       {canShowEditListingDetailsForm ? (
-        <EditListingDetailsForm
-          className={css.form}
-          initialValues={initialValues}
-          saveActionMsg={submitButtonText}
-          onSubmit={values => {
-            const {
-              title,
-              description,
-              listingType,
-              transactionProcessAlias,
-              unitType,
-              ...rest
-            } = values;
-
-            const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
-            // Remove old categories by explicitly saving null for them.
-            const cleanedNestedCategories = {
-              ...[1, 2, 3].reduce((a, i) => ({ ...a, [`${categoryKey}${i}`]: null }), {}),
-              ...nestedCategories,
-            };
-            const publicListingFields = pickListingFieldsData(
-              rest,
-              'public',
-              listingType,
-              nestedCategories,
-              listingFields
-            );
-            const privateListingFields = pickListingFieldsData(
-              rest,
-              'private',
-              listingType,
-              nestedCategories,
-              listingFields
-            );
-            // New values for listing attributes
-            const updateValues = {
-              title: title.trim(),
-              description,
-              publicData: {
+        <>
+          {requiresImages && (
+            <PhotoGallerySection
+              images={images}
+              onImageUpload={onImageUpload}
+              onRemoveImage={onRemoveImage}
+              uploadImageError={errors?.uploadImageError}
+              listingImageConfig={listingImageConfig}
+              photoError={photoError}
+            />
+          )}
+          <EditListingDetailsForm
+            className={css.form}
+            initialValues={initialValues}
+            saveActionMsg={submitButtonText}
+            onSubmit={values => {
+              const {
+                title,
+                description,
                 listingType,
                 transactionProcessAlias,
                 unitType,
-                ...cleanedNestedCategories,
-                ...publicListingFields,
-              },
-              privateData: privateListingFields,
-              ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
-            };
+                ...rest
+              } = values;
 
-            onSubmit(updateValues);
-          }}
-          selectableListingTypes={listingTypes.map(conf =>
-            getTransactionInfo({
-              listingTypes: [conf],
-              existingListingTypeInfo: {},
-              includeLabel: true,
-            })
-          )}
-          hasPredefinedListingType={hasExistingListingType || !!validPreselectedListingType}
-          selectableCategories={listingCategories}
-          pickSelectedCategories={values =>
-            pickCategoryFields(values, categoryKey, 1, listingCategories)
-          }
-          categoryPrefix={categoryKey}
-          onListingTypeChange={onListingTypeChange}
-          listingFieldsConfig={listingFields}
-          listingCurrency={listing?.attributes?.price?.currency}
-          marketplaceCurrency={config.currency}
-          marketplaceName={config.marketplaceName}
-          disabled={disabled}
-          ready={ready}
-          updated={panelUpdated}
-          updateInProgress={updateInProgress}
-          fetchErrors={errors}
-          autoFocus
-        />
+              const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
+              const cleanedNestedCategories = {
+                ...[1, 2, 3].reduce((a, i) => ({ ...a, [`${categoryKey}${i}`]: null }), {}),
+                ...nestedCategories,
+              };
+              const publicListingFields = pickListingFieldsData(
+                rest,
+                'public',
+                listingType,
+                nestedCategories,
+                listingFields
+              );
+              const privateListingFields = pickListingFieldsData(
+                rest,
+                'private',
+                listingType,
+                nestedCategories,
+                listingFields
+              );
+              const updateValues = {
+                title: title.trim(),
+                description,
+                publicData: {
+                  listingType,
+                  transactionProcessAlias,
+                  unitType,
+                  ...cleanedNestedCategories,
+                  ...publicListingFields,
+                },
+                privateData: privateListingFields,
+                ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
+              };
+
+              if (requiresImages) {
+                const uploadInProgress = images.some(img => img.file && !img.imageId);
+                if (uploadInProgress) {
+                  setPhotoError('EditListingDetailsPanel.photosUploadInProgress');
+                  return;
+                }
+                if (images.length < 3) {
+                  setPhotoError('EditListingDetailsPanel.photosMinRequired');
+                  return;
+                }
+              }
+              setPhotoError(null);
+              onSubmit({ ...updateValues, images });
+            }}
+            selectableListingTypes={listingTypes.map(conf =>
+              getTransactionInfo({
+                listingTypes: [conf],
+                existingListingTypeInfo: {},
+                includeLabel: true,
+              })
+            )}
+            hasPredefinedListingType={hasExistingListingType || !!validPreselectedListingType}
+            selectableCategories={listingCategories}
+            pickSelectedCategories={values =>
+              pickCategoryFields(values, categoryKey, 1, listingCategories)
+            }
+            categoryPrefix={categoryKey}
+            onListingTypeChange={onListingTypeChange}
+            listingFieldsConfig={listingFields}
+            listingCurrency={listing?.attributes?.price?.currency}
+            marketplaceCurrency={config.currency}
+            marketplaceName={config.marketplaceName}
+            disabled={disabled}
+            ready={ready}
+            updated={panelUpdated}
+            updateInProgress={updateInProgress}
+            fetchErrors={errors}
+            autoFocus
+          />
+        </>
       ) : (
         <ErrorMessage
           marketplaceName={config.marketplaceName}

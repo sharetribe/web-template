@@ -108,5 +108,10 @@
   "UserNav.myPurchases": "Mis Compras",
   "UserNav.myBalance": "Mi Balance",
   "UserNav.mySales": "Mis Ventas",
-  "EditListingPhotosForm.minImagesRequired": "Se requieren al menos 3 fotos (frontal, posterior y horizontal)."
+  "EditListingPhotosForm.minImagesRequired": "Se requieren al menos 3 fotos (frontal, posterior y horizontal).",
+  "EditListingDetailsPanel.photosTitle": "Fotos",
+  "EditListingDetailsPanel.photosMinRequired": "Agrega al menos 3 fotos para continuar.",
+  "EditListingDetailsPanel.photosAddTip": "Puedes agregar hasta 100 fotos.",
+  "EditListingDetailsPanel.photosMaxReached": "Has alcanzado el máximo de 100 fotos.",
+  "EditListingDetailsPanel.photosUploadInProgress": "Espera a que terminen de subir todas las fotos."
 }

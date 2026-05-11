@@ -14,7 +14,6 @@ import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditLis
 import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
 import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
-import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 import EditListingStylePanel from './EditListingStylePanel/EditListingStylePanel';
@@ -27,7 +26,6 @@ export const PRICING_AND_STOCK = 'pricing-and-stock';
 export const DELIVERY = 'delivery';
 export const LOCATION = 'location';
 export const AVAILABILITY = 'availability';
-export const PHOTOS = 'photos';
 export const STYLE = 'style';
 
 // EditListingWizardTab component supports these tabs
@@ -38,7 +36,6 @@ export const SUPPORTED_TABS = [
   DELIVERY,
   LOCATION,
   AVAILABILITY,
-  PHOTOS,
   STYLE,
 ];
 
@@ -201,6 +198,10 @@ const EditListingWizardTab = props => {
           {...panelProps(DETAILS)}
           onListingTypeChange={onListingTypeChange}
           config={config}
+          images={images}
+          onImageUpload={onImageUpload}
+          onRemoveImage={onRemoveImage}
+          listingImageConfig={config.layout.listingImage}
         />
       );
     }
@@ -253,18 +254,6 @@ const EditListingWizardTab = props => {
           history={history}
           routeConfiguration={routeConfiguration}
           {...panelProps(AVAILABILITY)}
-        />
-      );
-    }
-    case PHOTOS: {
-      return (
-        <EditListingPhotosPanel
-          {...panelProps(PHOTOS)}
-          listingImageConfig={config.layout.listingImage}
-          images={images}
-          onImageUpload={onImageUpload}
-          onRemoveImage={onRemoveImage}
-          photoMode={config?.listing?.photoMode}
         />
       );
     }

@@ -108,5 +108,10 @@
   "TopbarMobileMenu.mySalesLink": "My Sales",
   "UserNav.myPurchases": "My Purchases",
   "UserNav.myBalance": "My Balance",
-  "UserNav.mySales": "My Sales"
+  "UserNav.mySales": "My Sales",
+  "EditListingDetailsPanel.photosTitle": "Photos",
+  "EditListingDetailsPanel.photosMinRequired": "Add at least 3 photos to continue.",
+  "EditListingDetailsPanel.photosAddTip": "You can add up to 100 photos.",
+  "EditListingDetailsPanel.photosMaxReached": "Maximum of 100 photos reached.",
+  "EditListingDetailsPanel.photosUploadInProgress": "Please wait for all photos to finish uploading."
 }

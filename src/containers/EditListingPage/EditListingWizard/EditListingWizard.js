@@ -56,7 +56,6 @@ import EditListingWizardTab, {
   DELIVERY,
   LOCATION,
   AVAILABILITY,
-  PHOTOS,
   STYLE,
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
@@ -89,7 +88,7 @@ const tabsForListingType = (processName, listingTypeConfig) => {
     displayDeliveryPickup(listingTypeConfig) || displayDeliveryShipping(listingTypeConfig)
       ? [DELIVERY]
       : [];
-  const styleOrPhotosTab = requireListingImage(listingTypeConfig) ? [PHOTOS] : [STYLE];
+  const styleOrPhotosTab = requireListingImage(listingTypeConfig) ? [] : [STYLE];
 
   // You can reorder these panels.
   // Note 1: You need to change save button translations for new listing flow
@@ -142,9 +141,6 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === AVAILABILITY) {
     labelKey = 'EditListingWizard.tabLabelAvailability';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
-  } else if (tab === PHOTOS) {
-    labelKey = 'EditListingWizard.tabLabelPhotos';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   } else if (tab === STYLE) {
     labelKey = 'EditListingWizard.tabLabelStyle';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveStyle`;
@@ -254,7 +250,8 @@ const tabCompleted = (tab, listing, config) => {
         listingType &&
         transactionProcessAlias &&
         unitType &&
-        hasValidListingFieldsInExtendedData(publicData, privateData, config)
+        hasValidListingFieldsInExtendedData(publicData, privateData, config) &&
+        (!requireListingImage(listingTypeConfig) || (images && images.length >= 3))
       );
     case PRICING:
       return !!price;
@@ -266,8 +263,6 @@ const tabCompleted = (tab, listing, config) => {
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
       return !!availabilityPlan;
-    case PHOTOS:
-      return images && images.length > 0;
     case STYLE:
       return !!cardStyle;
     default:
@@ -380,7 +375,7 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
  * @param {string} props.params.id - The id of the listing
  * @param {string} props.params.slug - The slug of the listing
  * @param {'new'|'draft'|'edit'} props.params.type - The type of the listing
- * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | LOCATION | AVAILABILITY | PHOTOS} props.params.tab - The name of the tab
+ * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | LOCATION | AVAILABILITY | STYLE} props.params.tab - The name of the tab
  * @param {propTypes.ownListing} props.listing - The listing object
  * @param {propTypes.error} [props.errors.createListingDraftError] - The error object for createListingDraft
  * @param {propTypes.error} [props.errors.publishListingError] - The error object for publishListing

@@ -1,0 +1,77 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--colorGrey100);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.imageWrapper {
+  position: relative;
+}
+
+.addImageWrapper {
+  border: 2px dashed var(--colorGrey200);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--colorGrey400);
+  }
+}
+
+.addImageLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.addImageIcon {
+  font-size: 36px;
+  line-height: 1;
+  color: var(--colorGrey400);
+}
+
+.fileInput {
+  display: none;
+}
+
+.error {
+  color: var(--colorFail);
+  font-size: 14px;
+  margin: 8px 0 0 0;
+}
+
+.tip {
+  color: var(--colorGrey500);
+  font-size: 13px;
+  margin: 8px 0 0 0;
+}

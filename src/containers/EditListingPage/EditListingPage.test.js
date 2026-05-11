@@ -29,7 +29,6 @@ import {
   DELIVERY,
   DETAILS,
   LOCATION,
-  PHOTOS,
   PRICING,
   PRICING_AND_STOCK,
 } from './EditListingWizard/EditListingWizardTab';
@@ -847,7 +846,7 @@ describe('EditListingPage', () => {
     ).toBeEnabled();
   });
 
-  it('Purchase: edit flow on photos tab', async () => {
+  it('Purchase: edit flow on details tab with image uploads', async () => {
     const config = getConfig(listingTypesPurchase, listingFieldsPurchase);
     const routeConfiguration = getRouteConfiguration(config.layout);
     const listing = createOwnListing(
@@ -876,7 +875,7 @@ describe('EditListingPage', () => {
         id: listing.id.uuid,
         slug: 'slug',
         type: LISTING_PAGE_PARAM_TYPE_EDIT,
-        tab: PHOTOS,
+        tab: DETAILS,
       },
     };
 
@@ -887,17 +886,12 @@ describe('EditListingPage', () => {
     });
 
     await waitFor(() => {
-      // Navigation to tab
-      const tabLabel = 'EditListingWizard.tabLabelPhotos';
+      // Navigation to Details tab (photos now integrated here)
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
       expect(getByText(tabLabel)).toBeInTheDocument();
 
-      // Tab: panel title
-      expect(getByText('EditListingPhotosPanel.title')).toBeInTheDocument();
-
-      expect(getByText('EditListingPhotosForm.slotLabel.front')).toBeInTheDocument();
-      expect(getByText('EditListingPhotosForm.slotLabel.back')).toBeInTheDocument();
-      expect(getByText('EditListingPhotosForm.addImagesTip')).toBeInTheDocument();
-      expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
+      // Submit button for Details panel
+      expect(getByText('EditListingWizard.edit.saveDetails')).toBeInTheDocument();
     });
   });
 
@@ -2227,70 +2221,6 @@ describe('EditListingPage', () => {
     ).toBeInTheDocument();
   }, 10000);
 
-  it('Booking (day): edit flow on photos tab', async () => {
-    const config = getConfig(listingTypesBookingDay, listingFieldsBooking);
-    const routeConfiguration = getRouteConfiguration(config.layout);
-    const listing = createOwnListing('listing-day', {
-      title: 'the listing',
-      description: 'Lorem ipsum',
-      price: new Money(1000, 'USD'),
-      availabilityPlan: {
-        type: 'availability-plan/time',
-        timezone: 'Etc/UTC',
-        entries: [
-          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
-          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
-          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
-          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
-          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
-          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
-          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
-        ],
-      },
-
-      publicData: {
-        listingType: 'rent-bicycles-daily',
-        transactionProcessAlias: 'default-booking/release-1',
-        unitType: 'hour',
-        amenities: ['dog_1'],
-        location: {
-          address: 'Main Street 123',
-          building: 'A 1',
-        },
-      },
-    });
-
-    const props = {
-      ...commonProps,
-      params: {
-        id: listing.id.uuid,
-        slug: 'slug',
-        type: LISTING_PAGE_PARAM_TYPE_EDIT,
-        tab: PHOTOS,
-      },
-    };
-
-    const { getByText } = render(<EditListingPage {...props} />, {
-      initialState: initialState(listing),
-      config,
-      routeConfiguration,
-    });
-
-    await waitFor(() => {
-      // Navigation to tab
-      const tabLabel = 'EditListingWizard.tabLabelPhotos';
-      expect(getByText(tabLabel)).toBeInTheDocument();
-
-      // Tab: panel title
-      expect(getByText('EditListingPhotosPanel.title')).toBeInTheDocument();
-
-      expect(getByText('EditListingPhotosForm.slotLabel.front')).toBeInTheDocument();
-      expect(getByText('EditListingPhotosForm.slotLabel.back')).toBeInTheDocument();
-      expect(getByText('EditListingPhotosForm.addImagesTip')).toBeInTheDocument();
-      expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
-    });
-  });
-
   it('Booking (day): edit flow no location on details tab', async () => {
     const listingTypeDailyBooking = listingTypesBookingDay[0];
     const dailyBookingNoLocation = {
@@ -2335,7 +2265,7 @@ describe('EditListingPage', () => {
         id: listing.id.uuid,
         slug: 'slug',
         type: LISTING_PAGE_PARAM_TYPE_EDIT,
-        tab: PHOTOS,
+        tab: DETAILS,
       },
     };
 
@@ -2802,7 +2732,7 @@ describe('EditListingPage', () => {
     });
   });
 
-  it('Inquiry: edit flow on photos tab', async () => {
+  it('Inquiry: edit flow on details tab with image uploads', async () => {
     const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
     const routeConfiguration = getRouteConfiguration(config.layout);
     const listing = createOwnListing('listing-item', {
@@ -2827,7 +2757,7 @@ describe('EditListingPage', () => {
         id: listing.id.uuid,
         slug: 'slug',
         type: LISTING_PAGE_PARAM_TYPE_EDIT,
-        tab: PHOTOS,
+        tab: DETAILS,
       },
     };
 
@@ -2838,17 +2768,12 @@ describe('EditListingPage', () => {
     });
 
     await waitFor(() => {
-      // Navigation to tab
-      const tabLabel = 'EditListingWizard.tabLabelPhotos';
+      // Navigation to Details tab (photos now integrated here)
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
       expect(getByText(tabLabel)).toBeInTheDocument();
 
-      // Tab: panel title
-      expect(getByText('EditListingPhotosPanel.title')).toBeInTheDocument();
-
-      expect(getByText('EditListingPhotosForm.slotLabel.front')).toBeInTheDocument();
-      expect(getByText('EditListingPhotosForm.slotLabel.back')).toBeInTheDocument();
-      expect(getByText('EditListingPhotosForm.addImagesTip')).toBeInTheDocument();
-      expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
+      // Submit button for Details panel
+      expect(getByText('EditListingWizard.edit.saveDetails')).toBeInTheDocument();
     });
   });
 
@@ -3137,7 +3062,7 @@ describe('EditListingPageComponent', () => {
     const tabLabelDetails = 'EditListingWizard.tabLabelDetails';
     expect(screen.getByText(tabLabelDetails)).toBeInTheDocument();
 
-    // Check that default photos panel is not shown initially (it's added after listing type is selected)
+    // Check that photos panel is not shown (photos now live in Details panel)
     const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
     expect(screen.queryByText(tabLabelPhotos)).not.toBeInTheDocument();
 
@@ -3159,6 +3084,7 @@ describe('EditListingPageComponent', () => {
     expect(screen.getByText(tabLabelPricingAndStock)).toBeInTheDocument();
     const tabLabelDelivery = 'EditListingWizard.tabLabelDelivery';
     expect(screen.getByText(tabLabelDelivery)).toBeInTheDocument();
-    expect(screen.getByText(tabLabelPhotos)).toBeInTheDocument();
+    // Photos tab no longer exists (photos now live in Details panel)
+    expect(screen.queryByText(tabLabelPhotos)).not.toBeInTheDocument();
   });
 });
