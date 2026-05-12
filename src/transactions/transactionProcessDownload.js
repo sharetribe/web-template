@@ -22,7 +22,7 @@ export const transitions = {
   // A customer can also initiate a transaction with an inquiry, and
   // then transition that with a purchase.
   INQUIRE: 'transition/inquire',
-  PURCHASE_AFTER_INQUIRY: 'transition/purchase-after-inquiry',
+  REQUEST_PAYMENT_AFTER_INQUIRY: 'transition/request-payment-after-inquiry',
 
   // Stripe SDK might need to ask 3D security from customer, in a separate front-end step.
   // Therefore we need to make another transition to Marketplace API,
@@ -104,7 +104,7 @@ export const graph = {
     },
     [states.INQUIRY]: {
       on: {
-        [transitions.PURCHASE_AFTER_INQUIRY]: states.PENDING_PAYMENT,
+        [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PENDING_PAYMENT,
       },
     },
 
@@ -179,7 +179,9 @@ export const isProviderReview = () => false;
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
 export const isPrivileged = transition => {
-  return [transitions.REQUEST_PAYMENT, transitions.PURCHASE_AFTER_INQUIRY].includes(transition);
+  return [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(
+    transition
+  );
 };
 
 // Check when transaction is completed (file access confirmed and review period started)
