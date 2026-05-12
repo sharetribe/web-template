@@ -4,12 +4,14 @@ import {
   INQUIRY_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
   NEGOTIATION_PROCESS_NAME,
+  DOWNLOAD_PROCESS_NAME,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForInquiryProcess } from './TransactionPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
 import { getStateDataForNegotiationProcess } from './TransactionPage.stateDataNegotiation.js';
+import { getStateDataForDownloadProcess } from './TransactionPage.stateDataDownload.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -151,6 +153,8 @@ export const getStateData = (params, process) => {
 
   if (processName === PURCHASE_PROCESS_NAME) {
     return getStateDataForPurchaseProcess(params, processInfo());
+  } else if (processName === DOWNLOAD_PROCESS_NAME) {
+    return getStateDataForDownloadProcess(params, processInfo());
   } else if (processName === BOOKING_PROCESS_NAME) {
     return getStateDataForBookingProcess(params, processInfo());
   } else if (processName === INQUIRY_PROCESS_NAME) {

@@ -310,6 +310,7 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     showListingImage,
+    hideAuthorAvatar,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -467,7 +468,7 @@ const OrderPanel = props => {
         />
 
         <div className={css.author}>
-          <AvatarSmall user={author} className={css.providerAvatar} />
+          {!hideAuthorAvatar && <AvatarSmall user={author} className={css.providerAvatar} />}
           <span className={css.providerNameLinked}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
           </span>

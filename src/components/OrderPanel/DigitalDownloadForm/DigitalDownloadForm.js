@@ -90,11 +90,7 @@ const renderForm = formRenderProps => {
         <PrimaryButton inProgress={submitInProgress} disabled={submitDisabled} type="submit">
           <FormattedMessage id="DigitalDownloadForm.ctaButton" />
         </PrimaryButton>
-        <FinePrint
-          payoutDetailsWarning={payoutDetailsWarning}
-          isOwnListing={isOwnListing}
-          // omitYouWontBeChargedMessage={true} TODO: Ask Vesa should this be included or not
-        />
+        <FinePrint payoutDetailsWarning={payoutDetailsWarning} isOwnListing={isOwnListing} />
       </div>
     </Form>
   );

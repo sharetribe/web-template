@@ -785,6 +785,7 @@ export const TransactionPageComponent = props => {
             </H4>
           }
           author={listing.author}
+          hideAuthorAvatar
           onSubmit={isNegotiationProcess ? onMakeOffer : handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
           {...restOfProps}

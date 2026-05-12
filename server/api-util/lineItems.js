@@ -185,6 +185,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
+      : unitType === 'digital-item'
+      ? getDigitalItemQuantityAndLineItems(orderData)
       : unitType === 'fixed'
       ? getFixedQuantityAndLineItems(orderData)
       : unitType === 'hour'
@@ -193,8 +195,6 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ? getDateRangeQuantityAndLineItems(orderData, code)
       : isNegotiationUnitType
       ? getOfferQuantityAndLineItems(orderData)
-      : unitType === 'digital-item'
-      ? getDigitalItemQuantityAndLineItems(orderData)
       : {};
 
   const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
