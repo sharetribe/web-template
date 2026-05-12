@@ -42,7 +42,7 @@ const renderForm = formRenderProps => {
     lineItems,
     price,
     fetchLineItemsInProgress,
-    fetchLineItemsError = true,
+    fetchLineItemsError,
     onFetchTransactionLineItems,
     marketplaceName,
     finePrintComponent: FinePrint,
