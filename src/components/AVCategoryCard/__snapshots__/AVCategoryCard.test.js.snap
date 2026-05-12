@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AVCategoryCard matches snapshot 1`] = `
 <a
@@ -10,8 +10,9 @@ exports[`AVCategoryCard matches snapshot 1`] = `
   >
     <img
       alt="Blazers category"
-      class="image"
-      src="https://example.com/blazers-medium.jpg"
+      class="root image"
+      sizes="(max-width: 767px) 50vw, 25vw"
+      srcset=""
     />
     <div
       class="overlay"

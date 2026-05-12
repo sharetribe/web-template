@@ -4,6 +4,14 @@
   margin-bottom: 32px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--colorGrey100);
+  border-radius: 4px;
+  transition: background-color 0.15s ease, outline 0.15s ease;
+}
+
+.rootDragActive {
+  background-color: var(--colorGrey50);
+  outline: 2px dashed var(--marketplaceColor);
+  outline-offset: 4px;
 }
 
 .title {

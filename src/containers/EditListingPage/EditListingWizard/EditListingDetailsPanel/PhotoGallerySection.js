@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 
@@ -34,6 +34,8 @@ const PhotoGallerySection = props => {
 
   const intl = useIntl();
   const fileInputRef = useRef(null);
+  const dragCounterRef = useRef(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const {
     aspectWidth = 1,
@@ -43,27 +45,73 @@ const PhotoGallerySection = props => {
 
   const isMaxReached = images.length >= MAX_IMAGES;
 
+  const uploadFiles = files => {
+    if (isMaxReached) return;
+    const ts = Date.now();
+    // Upload sequentially to avoid concurrent-request limits; errors are
+    // managed via Redux state (uploadImageError) so rejections can be swallowed here.
+    Array.from(files)
+      .filter(f => f.type.startsWith('image/'))
+      .reduce((chain, file, index) => {
+        return chain.then(() =>
+          Promise.resolve(
+            onImageUpload({ id: `${file.name}_${ts}_${index}`, file }, listingImageConfig)
+          ).catch(() => {})
+        );
+      }, Promise.resolve());
+  };
+
   const handleFileChange = e => {
-    const files = Array.from(e.target.files || []);
-    files.forEach(file => {
-      onImageUpload({ id: `${file.name}_${Date.now()}`, file }, listingImageConfig);
-    });
+    uploadFiles(e.target.files || []);
     e.target.value = '';
+  };
+
+  const handleDragEnter = e => {
+    e.preventDefault();
+    dragCounterRef.current += 1;
+    if (dragCounterRef.current === 1) setIsDragging(true);
+  };
+
+  const handleDragLeave = e => {
+    e.preventDefault();
+    dragCounterRef.current -= 1;
+    if (dragCounterRef.current === 0) setIsDragging(false);
+  };
+
+  const handleDragOver = e => {
+    e.preventDefault();
+  };
+
+  const handleDrop = e => {
+    e.preventDefault();
+    dragCounterRef.current = 0;
+    setIsDragging(false);
+    uploadFiles(e.dataTransfer.files);
   };
 
   const savedImageAltText = intl.formatMessage({
     id: 'EditListingPhotosForm.savedImageAltText',
   });
 
+  const rootClass = isDragging && !isMaxReached
+    ? `${css.root} ${css.rootDragActive}`
+    : css.root;
+
   return (
-    <div className={css.root}>
+    <div
+      className={rootClass}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       <h3 className={css.title}>
         <FormattedMessage id="EditListingDetailsPanel.photosTitle" />
       </h3>
 
       <div className={css.imageGrid}>
         {images.map(image => (
-          <div key={image.id} className={css.imageWrapper}>
+          <div key={image.id?.uuid || image.id} className={css.imageWrapper}>
             <ListingImage
               image={image}
               savedImageAltText={savedImageAltText}

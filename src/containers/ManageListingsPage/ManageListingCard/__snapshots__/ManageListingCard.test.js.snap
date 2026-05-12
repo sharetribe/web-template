@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ManageListingCard matches snapshot (purchase) 1`] = `
 <div
@@ -152,7 +152,6 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
           </button>
           <div
             class="menuContent isClosed"
-            style="left: -10000px;"
           >
             <ul
               class="content"

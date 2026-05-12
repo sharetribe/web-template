@@ -259,7 +259,12 @@ class ProfileSettingsFormComponent extends Component {
           const classes = classNames(rootClassName || css.root, className);
           const submitInProgress = updateInProgress;
           const submittedOnce = Object.keys(this.submittedValues).length > 0;
-          const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
+          // Exclude profileImage from comparison: its value type changes between submit-time
+          // (file wrapper {id, imageId, file}) and post-save reinit (Sharetribe image entity),
+          // which would cause isEqual to always return false after a save.
+          const { profileImage: _pi1, ...comparableValues } = values;
+          const { profileImage: _pi2, ...comparableSubmittedValues } = this.submittedValues;
+          const pristineSinceLastSubmit = submittedOnce && isEqual(comparableValues, comparableSubmittedValues);
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
