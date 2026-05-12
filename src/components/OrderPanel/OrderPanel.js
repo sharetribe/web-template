@@ -23,6 +23,9 @@ import {
   LISTING_STATE_PUBLISHED,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
+import { types as sdkTypes } from '../../util/sdkLoader';
+
+const { Money } = sdkTypes;
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
@@ -173,6 +176,15 @@ const PriceMaybe = props => {
   // Original money format.
   const formattedPriceOriginal = formatMoneyIfSupportedCurrency(price, intl);
 
+  const originalPriceRaw = publicData?.originalPrice;
+  const originalPriceMoney =
+    originalPriceRaw && originalPriceRaw.amount > price.amount
+      ? new Money(originalPriceRaw.amount, originalPriceRaw.currency)
+      : null;
+  const formattedOriginalPrice = originalPriceMoney
+    ? customFormatPrice(originalPriceMoney, marketplaceCurrency, intl).formattedPrice
+    : null;
+
   
   const priceValue = (
     <span className={css.priceValue}>{formattedPrice}</span>
@@ -199,6 +211,9 @@ const PriceMaybe = props => {
     </div>
   ) : (
     <div className={css.priceContainer}>
+      {formattedOriginalPrice ? (
+        <s className={css.originalPrice}>{formattedOriginalPrice}</s>
+      ) : null}
       <p className={css.price}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
       </p>

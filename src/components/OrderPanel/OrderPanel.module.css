@@ -67,6 +67,18 @@
     padding: 0;
   }
 }
+.originalPrice {
+  font-size: 14px;
+  color: var(--colorGrey500);
+  text-decoration: line-through;
+  display: block;
+  margin: 0 0 2px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 2px 0;
+  }
+}
+
 .priceValue {
   color: var(--avBlue);
 }
