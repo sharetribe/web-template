@@ -12,7 +12,7 @@
     {:name :action/privileged-set-line-items}
     {:name :action/stripe-create-payment-intent}],
    :to :state/pending-payment}
-  {:name :transition/purchase-after-inquiry,
+  {:name :transition/request-payment-after-inquiry,
    :actor :actor.role/customer,
    :privileged? true,
    :actions
