@@ -478,6 +478,7 @@ class StripePaymentForm extends Component {
       stripePublishableKey,
       marketplaceName,
       isBooking,
+      isDownload,
       isFuzzyLocation,
       transactionFieldConfigs = [],
       showTransactionFields,
@@ -711,12 +712,14 @@ class StripePaymentForm extends Component {
               />
             )}
           </PrimaryButton>
-          <p className={css.paymentInfo}>
-            <FormattedMessage
-              id="StripePaymentForm.submitConfirmPaymentFinePrint"
-              values={{ isBooking: isBookingYesNo, name: providerDisplayName }}
-            />
-          </p>
+          {!isDownload && (
+            <p className={css.paymentInfo}>
+              <FormattedMessage
+                id="StripePaymentForm.submitConfirmPaymentFinePrint"
+                values={{ isBooking: isBookingYesNo, name: providerDisplayName }}
+              />
+            </p>
+          )}
         </div>
       </Form>
     ) : (

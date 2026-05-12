@@ -14,6 +14,7 @@ import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
 import {
   getProcess,
   isBookingProcessAlias,
+  isDownloadProcessAlias,
   resolveLatestProcessName,
   BOOKING_PROCESS_NAME,
   NEGOTIATION_PROCESS_NAME,
@@ -648,6 +649,7 @@ export const CheckoutPageWithPayment = props => {
                 stripePublishableKey={config.stripe.publishableKey}
                 marketplaceName={config.marketplaceName}
                 isBooking={isBookingProcessAlias(transactionProcessAlias)}
+                isDownload={isDownloadProcessAlias(transactionProcessAlias)}
                 isFuzzyLocation={config.maps.fuzzy.enabled}
                 transactionFieldConfigs={transactionFieldConfigs}
                 showTransactionFields={showTransactionFields}
