@@ -539,7 +539,12 @@ const OrderPanel = props => {
             {...sharedProps}
           />
         ) : showDownloadForm ? (
-          <DigitalDownloadForm formId="OrderPanelDigitalDownloadForm" {...sharedProps} />
+          <DigitalDownloadForm
+            formId="OrderPanelDigitalDownloadForm"
+            finePrintComponent={SubmitFinePrint}
+            isOwnListing={isOwnListing}
+            {...sharedProps}
+          />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm
             formId="OrderPanelInquiryForm"
