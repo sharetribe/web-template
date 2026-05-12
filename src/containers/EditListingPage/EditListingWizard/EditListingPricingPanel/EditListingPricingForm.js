@@ -139,7 +139,7 @@ export const EditListingPricingForm = props => (
       const isUsingPriceVariants = isFixedLengthBooking || isBookingPriceVariationsInUse;
 
       return (
-        <Form onSubmit={handleSubmit} className={classes}>dsds
+        <Form onSubmit={handleSubmit} className={classes}>
           <ErrorMessages fetchErrors={fetchErrors} />
 
           {isUsingPriceVariants ? (
@@ -188,7 +188,6 @@ export const EditListingPricingForm = props => (
               />
             </>
           )}
-das
           {isFixedLengthBooking ? (
             <StartTimeInterval
               name="startTimeInterval"
