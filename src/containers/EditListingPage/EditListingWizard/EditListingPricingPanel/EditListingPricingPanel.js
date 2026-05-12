@@ -208,9 +208,11 @@ const EditListingPricingPanel = props => {
                     },
                   }
                 : {};
-              const originalPriceMaybe = originalPrice
-                ? { originalPrice: { amount: originalPrice.amount, currency: originalPrice.currency } }
-                : {};
+              const originalPriceMaybe = {
+                originalPrice: originalPrice
+                  ? { amount: originalPrice.amount, currency: originalPrice.currency }
+                  : null,
+              };
               updateValues = {
                 price,
                 ...priceVariationsEnabledMaybe,
