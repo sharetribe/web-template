@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { useRouteConfiguration } from '../context/routeConfigurationContext';
@@ -6,6 +6,16 @@ import { matchPathname } from '../util/routes';
 
 const MAPBOX_SCRIPT_ID = 'mapbox_GL_JS';
 const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
+const STRIPE_SCRIPT_ID = 'stripe_js_v3';
+
+/** Dispatched on `window` when Stripe.js has loaded (`window.Stripe` is available). */
+export const STRIPE_JS_LOADED_EVENT = 'stripe-js-loaded';
+
+const dispatchStripeJsLoadedEvent = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(STRIPE_JS_LOADED_EVENT));
+  }
+};
 
 /**
  * Map library is shown on some of the pages, but ReusableMapContainer is used app wide.
@@ -38,8 +48,9 @@ const canDeferStripeLibrary = (initialPathname, routeConfiguration) => {
  * Include scripts (like Map Provider).
  * These scripts are relevant for whole application: location search in Topbar and maps on different pages.
  * However, if you don't need location search and maps, you can just omit this component from app.js
- * Note: another common point to add <scripts>, <links> and <meta> tags is Page.js
- *       and Stripe script is added in public/index.html
+ * Note: another common point to add <scripts>, <links> and <meta> tags is Page.js.
+ *       Stripe.js is injected here when `stripe.publishableKey` is set; consumers can
+ *       wait for {@link STRIPE_JS_LOADED_EVENT} on `window` if the script may still be loading.
  *
  * Note 2: When adding new external scripts/styles/fonts/etc.,
  *         if a Content Security Policy (CSP) is turned on, the new URLs
@@ -77,6 +88,8 @@ export const IncludeScripts = props => {
     // https://docs.stripe.com/js/including
     stripeLibrary.push(
       <script
+        id={STRIPE_SCRIPT_ID}
+        key="stripe_js_v3"
         src="https://js.stripe.com/v3/"
         crossOrigin="anonymous"
         {...deferStripeLibrary}
@@ -202,8 +215,35 @@ export const IncludeScripts = props => {
       if (foundScript) {
         foundScript.addEventListener('load', onMapLibLoaded, { once: true });
       }
+      const stripeScript = addedTags.scriptTags.find(s => s.id === STRIPE_SCRIPT_ID);
+      if (stripeScript) {
+        stripeScript.addEventListener('load', dispatchStripeJsLoadedEvent, { once: true });
+      }
     }
   };
+
+  // After Helmet writes the Stripe script into the document, either dispatch immediately
+  // (Stripe already ran, e.g. cached) or wait for `load` so listeners (e.g. payment forms)
+  // can rely on STRIPE_JS_LOADED_EVENT. Complements onChangeClientState for injected tags.
+  useEffect(() => {
+    if (!stripe?.publishableKey || typeof document === 'undefined') {
+      return undefined;
+    }
+    const script = document.getElementById(STRIPE_SCRIPT_ID);
+    if (!script) {
+      return undefined;
+    }
+
+    if (window.Stripe) {
+      dispatchStripeJsLoadedEvent();
+      return undefined;
+    }
+
+    script.addEventListener('load', dispatchStripeJsLoadedEvent, { once: true });
+    return () => {
+      script.removeEventListener('load', dispatchStripeJsLoadedEvent);
+    };
+  }, [stripe?.publishableKey]);
 
   const allScripts = [...stripeLibrary, ...analyticsLibraries, ...mapLibraries];
   return <Helmet onChangeClientState={onChangeClientState}>{allScripts}</Helmet>;
