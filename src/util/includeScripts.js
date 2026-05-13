@@ -25,6 +25,14 @@ const canDeferMapLibrary = (initialPathname, routeConfiguration) => {
   const currentRouteConfig = matchedRoutes.length > 0 ? matchedRoutes[0]?.route : null;
   return currentRouteConfig?.prioritizeLibraryLoading?.map !== true;
 };
+const canDeferStripeLibrary = (initialPathname, routeConfiguration) => {
+  if (!initialPathname) {
+    return false;
+  }
+  const matchedRoutes = matchPathname(initialPathname, routeConfiguration);
+  const currentRouteConfig = matchedRoutes.length > 0 ? matchedRoutes[0]?.route : null;
+  return currentRouteConfig?.prioritizeLibraryLoading?.stripe !== true;
+};
 
 /**
  * Include scripts (like Map Provider).
@@ -38,7 +46,7 @@ const canDeferMapLibrary = (initialPathname, routeConfiguration) => {
  *         should be whitelisted in the policy. Check: server/csp.js
  */
 export const IncludeScripts = props => {
-  const { marketplaceRootURL: rootURL, maps, analytics } = props?.config || {};
+  const { marketplaceRootURL: rootURL, maps, analytics, stripe } = props?.config || {};
   const { googleAnalyticsId, plausibleDomains } = analytics;
 
   const routeConfiguration = useRouteConfiguration();
@@ -56,8 +64,25 @@ export const IncludeScripts = props => {
   const hasGoogleAnalyticsv4Id = googleAnalyticsId?.indexOf('G-') === 0;
 
   // Collect relevant map libraries
+  let stripeLibrary = [];
   let mapLibraries = [];
   let analyticsLibraries = [];
+
+  if (stripe?.publishableKey) {
+    const deferStripeLibrary = canDeferStripeLibrary(props?.initialPathname, routeConfiguration)
+      ? { defer: '' }
+      : {};
+
+    // Stripe script should be on every page, not just the pages that use the API:
+    // https://docs.stripe.com/js/including
+    stripeLibrary.push(
+      <script
+        src="https://js.stripe.com/v3/"
+        crossOrigin="anonymous"
+        {...deferStripeLibrary}
+      ></script>
+    );
+  }
 
   if (isMapboxInUse) {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
@@ -180,6 +205,6 @@ export const IncludeScripts = props => {
     }
   };
 
-  const allScripts = [...analyticsLibraries, ...mapLibraries];
+  const allScripts = [...stripeLibrary, ...analyticsLibraries, ...mapLibraries];
   return <Helmet onChangeClientState={onChangeClientState}>{allScripts}</Helmet>;
 };
