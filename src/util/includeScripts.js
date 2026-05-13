@@ -23,7 +23,7 @@ const canDeferMapLibrary = (initialPathname, routeConfiguration) => {
   }
   const matchedRoutes = matchPathname(initialPathname, routeConfiguration);
   const currentRouteConfig = matchedRoutes.length > 0 ? matchedRoutes[0]?.route : null;
-  return currentRouteConfig?.prioritizeMapLibraryLoading !== true;
+  return currentRouteConfig?.prioritizeLibraryLoading?.map !== true;
 };
 
 /**
