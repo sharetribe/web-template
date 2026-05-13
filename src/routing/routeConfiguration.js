@@ -96,7 +96,9 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ...authForPrivateMarketplace,
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
-      prioritizeMapLibraryLoading: isSearchPageWithMap,
+      prioritizeLibraryLoading: {
+        map: isSearchPageWithMap,
+      },
     },
     {
       path: '/s/:listingType',
@@ -104,7 +106,9 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ...authForPrivateMarketplace,
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
-      prioritizeMapLibraryLoading: isSearchPageWithMap,
+      prioritizeLibraryLoading: {
+        map: isSearchPageWithMap,
+      },
     },
     {
       path: '/l',
@@ -117,7 +121,9 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
-      prioritizeMapLibraryLoading: true,
+      prioritizeLibraryLoading: {
+        map: true,
+      },
     },
     {
       path: '/l/:slug/:id/make-offer',
@@ -148,7 +154,9 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
-      prioritizeMapLibraryLoading: true,
+      prioritizeLibraryLoading: {
+        map: true,
+      },
     },
     {
       path: '/l/new',
@@ -184,7 +192,9 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
-      prioritizeMapLibraryLoading: true,
+      prioritizeLibraryLoading: {
+        map: true,
+      },
     },
     {
       path: '/u',
