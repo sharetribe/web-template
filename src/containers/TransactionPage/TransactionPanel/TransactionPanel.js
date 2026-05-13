@@ -177,6 +177,7 @@ export class TransactionPanelComponent extends Component {
       sendMessageInProgress,
       sendMessageError,
       onOpenDisputeModal,
+      onOpenReportModal,
       showListingImage,
       intl,
       stateData = {},
@@ -300,6 +301,8 @@ export class TransactionPanelComponent extends Component {
                     id="mobile_disputeOrderButton"
                     showDispute={stateData.showDispute}
                     onOpenDisputeModal={onOpenDisputeModal}
+                    showReport={stateData.showReport}
+                    onOpenReportModal={onOpenReportModal}
                   />
                 </div>
 
@@ -418,6 +421,8 @@ export class TransactionPanelComponent extends Component {
                 id="desktop_disputeOrderButton"
                 showDispute={stateData.showDispute}
                 onOpenDisputeModal={onOpenDisputeModal}
+                showReport={stateData.showReport}
+                onOpenReportModal={onOpenReportModal}
               />
             </div>
           </div>

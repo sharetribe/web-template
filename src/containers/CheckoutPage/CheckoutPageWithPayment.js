@@ -190,8 +190,7 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
     // TODO NOT SURE ABOUT THIS FIX
 
     const requestTransition = isInquiryInPaymentProcess
-      ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY ||
-        process.transitions.PURCHASE_AFTER_INQUIRY
+      ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
       : isOfferPendingInNegotiationProcess
       ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
       : process.transitions.REQUEST_PAYMENT;

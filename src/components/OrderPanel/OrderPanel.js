@@ -310,7 +310,8 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     showListingImage,
-    hideAuthorAvatar,
+    hideAuthorInfo,
+    hidePrice,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -458,24 +459,27 @@ const OrderPanel = props => {
             {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
           </div>
         )}
+        {!hidePrice && (
+          <PriceMaybe
+            price={price}
+            publicData={publicData}
+            validListingTypes={validListingTypes}
+            intl={intl}
+            marketplaceCurrency={marketplaceCurrency}
+          />
+        )}
 
-        <PriceMaybe
-          price={price}
-          publicData={publicData}
-          validListingTypes={validListingTypes}
-          intl={intl}
-          marketplaceCurrency={marketplaceCurrency}
-        />
-
-        <div className={css.author}>
-          {!hideAuthorAvatar && <AvatarSmall user={author} className={css.providerAvatar} />}
-          <span className={css.providerNameLinked}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
-          </span>
-          <span className={css.providerNamePlain}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
-          </span>
-        </div>
+        {!hideAuthorInfo && (
+          <div className={css.author}>
+            <AvatarSmall user={author} className={css.providerAvatar} />
+            <span className={css.providerNameLinked}>
+              <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+            </span>
+            <span className={css.providerNamePlain}>
+              <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
+            </span>
+          </div>
+        )}
 
         {showPriceMissing ? (
           <PriceMissing />
@@ -612,6 +616,8 @@ const OrderPanel = props => {
               <FormattedMessage id="OrderPanel.ctaButtonMessageMakeOffer" />
             ) : showRequestQuoteForm ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageRequestAQuote" />
+            ) : showDownloadForm ? (
+              <FormattedMessage id="DigitalDownloadForm.ctaButton" />
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
             )}

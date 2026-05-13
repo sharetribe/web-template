@@ -3,6 +3,7 @@ import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import {
   LINE_ITEM_DAY,
+  LINE_ITEM_DIGITAL_ITEM,
   LINE_ITEM_FIXED,
   LINE_ITEM_HOUR,
   LINE_ITEM_NIGHT,
@@ -25,13 +26,16 @@ import css from './OrderBreakdown.module.css';
  */
 const LineItemBasePriceMaybe = props => {
   const { lineItems, code, intl } = props;
+  const isDigitalItem = code === LINE_ITEM_DIGITAL_ITEM;
   const isNightly = code === LINE_ITEM_NIGHT;
   const isDaily = code === LINE_ITEM_DAY;
   const isHourly = code === LINE_ITEM_HOUR;
   const isFixed = code === LINE_ITEM_FIXED;
   const isRequest = code === LINE_ITEM_REQUEST;
   const isOffer = code === LINE_ITEM_OFFER;
-  const translationKey = isNightly
+  const translationKey = isDigitalItem
+    ? 'OrderBreakdown.baseUnitDigitalItem'
+    : isNightly
     ? 'OrderBreakdown.baseUnitNight'
     : isDaily
     ? 'OrderBreakdown.baseUnitDay'
@@ -46,7 +50,7 @@ const LineItemBasePriceMaybe = props => {
     : 'OrderBreakdown.baseUnitQuantity';
 
   // Find correct line-item for given code prop.
-  // It should be one of the following: 'line-item/night, 'line-item/day', 'line-item/hour', 'line-item/fixed', 'line-item/item', 'line-item/offer', 'line-item/request'
+  // It should be one of the following: 'line-item/night, 'line-item/day', 'line-item/hour', 'line-item/fixed', 'line-item/item', 'line-item/offer', 'line-item/request' or 'line-item/digital-item
   // These are defined in '../../util/types';
   const unitPurchase = lineItems.find(item => item.code === code && !item.reversal);
 
