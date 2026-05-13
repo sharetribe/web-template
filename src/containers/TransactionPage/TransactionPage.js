@@ -33,6 +33,7 @@ import {
   isPurchaseProcess,
   PURCHASE_PROCESS_NAME,
   isInquiryProcess,
+  DOWNLOAD_PROCESS_NAME,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -65,6 +66,7 @@ import Offer from './Offer/Offer';
 import TransactionFields from './TransactionFields/TransactionFields.js';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
+import ReportModal from './ReportModal/ReportModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import RequestChangesModal from './RequestChangesModal/RequestChangesModal';
 import MakeCounterOfferModal from './MakeCounterOfferModal/MakeCounterOfferModal';
@@ -301,6 +303,7 @@ const useUploadNavigationBlock = (isBlockNavigation, history, message) => {
 export const TransactionPageComponent = props => {
   const [isDisputeModalOpen, setDisputeModalOpen] = useState(false);
   const [disputeSubmitted, setDisputeSubmitted] = useState(false);
+  const [isReportModalOpen, setReportModalOpen] = useState(false);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [isRequestChangesModalOpen, setRequestChangesModalOpen] = useState(false);
@@ -529,6 +532,11 @@ export const TransactionPageComponent = props => {
   // Open dispute modal
   const onOpenDisputeModal = () => {
     setDisputeModalOpen(true);
+  };
+
+  // Open report modal
+  const onOpenReportModal = () => {
+    setReportModalOpen(true);
   };
 
   const deletedListingTitle = intl.formatMessage({
@@ -814,6 +822,7 @@ export const TransactionPageComponent = props => {
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
       onOpenDisputeModal={onOpenDisputeModal}
+      onOpenReportModal={onOpenReportModal}
       stateData={stateData}
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
@@ -932,7 +941,8 @@ export const TransactionPageComponent = props => {
             </H4>
           }
           author={listing.author}
-          hideAuthorAvatar
+          hideAuthorInfo={true}
+          hidePrice={processName === DOWNLOAD_PROCESS_NAME}
           onSubmit={isNegotiationProcess ? onMakeOffer : handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
           {...restOfProps}
@@ -997,6 +1007,15 @@ export const TransactionPageComponent = props => {
           sendReviewError={sendReviewError}
           marketplaceName={config.marketplaceName}
         />
+        {process?.transitions?.REPORT ? (
+          <ReportModal
+            id="ReportOrderModal"
+            isOpen={isReportModalOpen}
+            focusElementId={`${actionButtonContainer}_reportOrderButton`}
+            onCloseModal={() => setReportModalOpen(false)}
+            onManageDisableScrolling={onManageDisableScrolling}
+          />
+        ) : null}
         {process?.transitions?.DISPUTE ? (
           <DisputeModal
             id="DisputeOrderModal"

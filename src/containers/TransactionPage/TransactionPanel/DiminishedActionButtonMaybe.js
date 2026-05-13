@@ -11,17 +11,30 @@ import css from './TransactionPanel.module.css';
 // but like ActionButtonsMayne, this could be customized to handle different actions too.
 // Essentially, this is just a placeholder for diminished actions.
 const DiminishedActionButtonMaybe = props => {
-  const { id, className, rootClassName, showDispute, onOpenDisputeModal } = props;
+  const {
+    id,
+    className,
+    rootClassName,
+    showDispute,
+    onOpenDisputeModal,
+    showReport,
+    onOpenReportModal,
+  } = props;
 
-  const diminishedActionButton = onOpenDisputeModal ? (
-    <InlineTextButton id={id} className={css.diminishedActionButton} onClick={onOpenDisputeModal}>
-      <FormattedMessage id="TransactionPanel.disputeOrder" />
-    </InlineTextButton>
-  ) : null;
+  const diminishedActionButton =
+    showReport && onOpenReportModal ? (
+      <InlineTextButton id={id} className={css.diminishedActionButton} onClick={onOpenReportModal}>
+        <FormattedMessage id="TransactionPanel.reportOrder" />
+      </InlineTextButton>
+    ) : onOpenDisputeModal ? (
+      <InlineTextButton id={id} className={css.diminishedActionButton} onClick={onOpenDisputeModal}>
+        <FormattedMessage id="TransactionPanel.disputeOrder" />
+      </InlineTextButton>
+    ) : null;
 
   const classes = classNames(rootClassName || css.diminishedActionButtonRoot, className);
 
-  return showDispute ? <div className={classes}>{diminishedActionButton}</div> : null;
+  return showDispute || showReport ? <div className={classes}>{diminishedActionButton}</div> : null;
 };
 
 export default DiminishedActionButtonMaybe;
