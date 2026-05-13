@@ -8,6 +8,7 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
+import { STRIPE_JS_LOADED_EVENT } from '../../../util/includeScripts';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 
 import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress, H4 } from '../../../components';
@@ -99,34 +100,51 @@ class PaymentMethodsForm extends Component {
     this.handleCardValueChange = this.handleCardValueChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.paymentForm = this.paymentForm.bind(this);
+    this.handleStripeJsLoadedEvent = this.handleStripeJsLoadedEvent.bind(this);
     this.finalFormAPI = null;
     this.stripe = null;
   }
 
-  componentDidMount() {
-    if (!window.Stripe) {
-      throw new Error('Stripe must be loaded for PaymentMethodsForm');
+  handleStripeJsLoadedEvent() {
+    if (this.stripe || typeof window === 'undefined' || !window.Stripe) {
+      return;
+    }
+    const publishableKey = this.props.config?.stripe?.publishableKey;
+    if (!publishableKey) {
+      return;
     }
 
-    const publishableKey = this.props.config?.stripe?.publishableKey;
-    if (publishableKey) {
-      this.stripe = window.Stripe(publishableKey);
+    window.removeEventListener(STRIPE_JS_LOADED_EVENT, this.handleStripeJsLoadedEvent);
 
-      const elements = this.stripe.elements(stripeElementsOptions);
-      this.card = elements.create('card', { style: cardStyles });
-      this.card.mount(this.cardContainer);
-      this.card.addEventListener('change', this.handleCardValueChange);
-      // EventListener is the only way to simulate breakpoints with Stripe.
-      window.addEventListener('resize', () => {
+    this.stripe = window.Stripe(publishableKey);
+
+    const elements = this.stripe.elements(stripeElementsOptions);
+    this.card = elements.create('card', { style: cardStyles });
+    this.card.mount(this.cardContainer);
+    this.card.addEventListener('change', this.handleCardValueChange);
+    // EventListener is the only way to simulate breakpoints with Stripe.
+    window.addEventListener('resize', () => {
+      if (this.card) {
         if (window.innerWidth < 768) {
           this.card.update({ style: { base: { fontSize: '14px', lineHeight: '24px' } } });
         } else {
           this.card.update({ style: { base: { fontSize: '18px', lineHeight: '24px' } } });
         }
-      });
+      }
+    });
+  }
+
+  componentDidMount() {
+    const publishableKey = this.props.config?.stripe?.publishableKey;
+    if (!publishableKey) {
+      return;
     }
+
+    window.addEventListener(STRIPE_JS_LOADED_EVENT, this.handleStripeJsLoadedEvent);
+    this.handleStripeJsLoadedEvent();
   }
   componentWillUnmount() {
+    window.removeEventListener(STRIPE_JS_LOADED_EVENT, this.handleStripeJsLoadedEvent);
     if (this.card) {
       this.card.removeEventListener('change', this.handleCardValueChange);
       this.card.unmount();
