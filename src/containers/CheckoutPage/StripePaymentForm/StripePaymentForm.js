@@ -12,6 +12,7 @@ import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
 import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers';
+import { STRIPE_JS_LOADED_EVENT } from '../../../util/includeScripts';
 
 import {
   Heading,
@@ -307,33 +308,48 @@ class StripePaymentForm extends Component {
     this.initializeStripeElement = this.initializeStripeElement.bind(this);
     this.handleStripeElementRef = this.handleStripeElementRef.bind(this);
     this.changePaymentMethod = this.changePaymentMethod.bind(this);
+    this.handleStripeJsLoadedEvent = this.handleStripeJsLoadedEvent.bind(this);
     this.finalFormAPI = null;
     this.cardContainer = null;
   }
 
-  componentDidMount() {
-    if (!window.Stripe) {
-      throw new Error('Stripe must be loaded for StripePaymentForm');
+  handleStripeJsLoadedEvent() {
+    if (this.stripe || typeof window === 'undefined' || !window.Stripe) {
+      return;
+    }
+    const publishableKey = this.props.stripePublishableKey;
+    if (!publishableKey) {
+      return;
     }
 
-    const publishableKey = this.props.stripePublishableKey;
-    if (publishableKey) {
-      const {
-        onStripeInitialized,
-        hasHandledCardPayment,
-        defaultPaymentMethod,
-        loadingData,
-      } = this.props;
-      this.stripe = window.Stripe(publishableKey);
-      onStripeInitialized(this.stripe);
+    window.removeEventListener(STRIPE_JS_LOADED_EVENT, this.handleStripeJsLoadedEvent);
 
-      if (!(hasHandledCardPayment || defaultPaymentMethod || loadingData)) {
-        this.initializeStripeElement();
-      }
+    const {
+      onStripeInitialized,
+      hasHandledCardPayment,
+      defaultPaymentMethod,
+      loadingData,
+    } = this.props;
+    this.stripe = window.Stripe(publishableKey);
+    onStripeInitialized(this.stripe);
+
+    if (!(hasHandledCardPayment || defaultPaymentMethod || loadingData)) {
+      this.initializeStripeElement();
     }
   }
 
+  componentDidMount() {
+    const publishableKey = this.props.stripePublishableKey;
+    if (!publishableKey) {
+      return;
+    }
+
+    window.addEventListener(STRIPE_JS_LOADED_EVENT, this.handleStripeJsLoadedEvent);
+    this.handleStripeJsLoadedEvent();
+  }
+
   componentWillUnmount() {
+    window.removeEventListener(STRIPE_JS_LOADED_EVENT, this.handleStripeJsLoadedEvent);
     if (this.card) {
       this.card.removeEventListener('change', this.handleCardValueChange);
       this.card.unmount();
