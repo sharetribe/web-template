@@ -2,6 +2,14 @@ import Cookies from 'js-cookie';
 
 import { isEmpty } from '../../util/common';
 import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
+import { pickReferralData } from '../../util/webStorageHelpers';
+
+// Returns full userType config based on selected userType
+const getUserTypeConfig = (userType, userTypes) => {
+  return userTypes.find(config => {
+    return config.userType === userType;
+  });
+};
 
 /**
  * Filters out configured user-field entries, returning only the remaining key/value pairs.
@@ -39,17 +47,22 @@ export const getNonUserFieldParams = (values, userFieldConfigs) => {
  * @param {Array} userFields - User field configurations
  * @returns {{ publicData: Object, privateData: Object, protectedData: Object } | {}}
  */
-export const getExtendedDataMaybe = (submitValues, userType, userFields) => {
+export const getExtendedDataMaybe = (submitValues, userType, userFields, extraData) => {
+  const { publicData, privateData, protectedData } = extraData;
+
   return !isEmpty(submitValues)
     ? {
         publicData: {
+          ...publicData,
           userType,
           ...pickUserFieldsData(submitValues, 'public', userType, userFields),
         },
         privateData: {
+          ...privateData,
           ...pickUserFieldsData(submitValues, 'private', userType, userFields),
         },
         protectedData: {
+          ...protectedData,
           ...pickUserFieldsData(submitValues, 'protected', userType, userFields),
           // If the form has any additional values, pass them forward as user's protected data
           ...getNonUserFieldParams(submitValues, userFields),
@@ -67,9 +80,13 @@ export const getExtendedDataMaybe = (submitValues, userType, userFields) => {
  * @param {Array} params.userFields
  * @returns {(values: Object) => void}
  */
-export const getHandleSubmitSignup = ({ submitSignup, userFields }) => values => {
+export const getHandleSubmitSignup = ({ submitSignup, userFields, userTypes }) => values => {
   const { userType, email, password, fname, lname, displayName, ...rest } = values;
   const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
+
+  // Set referral to user private data if it exists and is valid
+  const userTypeConfig = getUserTypeConfig(userType, userTypes);
+  const extraPrivateData = pickReferralData(userTypeConfig);
 
   const submitParams = {
     email,
@@ -77,7 +94,9 @@ export const getHandleSubmitSignup = ({ submitSignup, userFields }) => values =>
     firstName: fname.trim(),
     lastName: lname.trim(),
     ...displayNameMaybe,
-    ...getExtendedDataMaybe(rest, userType, userFields),
+    ...getExtendedDataMaybe(rest, userType, userFields, {
+      privateData: extraPrivateData,
+    }),
   };
 
   submitSignup(submitParams);
@@ -93,7 +112,12 @@ export const getHandleSubmitSignup = ({ submitSignup, userFields }) => values =>
  * @param {Array} params.userFields
  * @returns {(values: Object) => void}
  */
-export const getHandleSubmitConfirm = ({ authInfo, submitSingupWithIdp, userFields }) => values => {
+export const getHandleSubmitConfirm = ({
+  authInfo,
+  submitSingupWithIdp,
+  userFields,
+  userTypes,
+}) => values => {
   const { idpToken, email, firstName, lastName, idpId } = authInfo;
 
   const {
@@ -115,8 +139,14 @@ export const getHandleSubmitConfirm = ({ authInfo, submitSingupWithIdp, userFiel
     ...(newLastName !== lastName && { lastName: newLastName }),
   };
 
+  // Set referral to user private data if it exists and is valid
+  const userTypeConfig = getUserTypeConfig(userType, userTypes);
+  const extraPrivateData = pickReferralData(userTypeConfig);
+
   // Pass other values as extended data according to user field configuration
-  const extendedDataMaybe = getExtendedDataMaybe(rest, userType, userFields, true);
+  const extendedDataMaybe = getExtendedDataMaybe(rest, userType, userFields, {
+    privateData: extraPrivateData,
+  });
 
   submitSingupWithIdp({
     idpToken,

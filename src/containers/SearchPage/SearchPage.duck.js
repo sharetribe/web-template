@@ -13,6 +13,7 @@ import {
 import { constructQueryParamName, isOriginInUse } from '../../util/search';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
+import { getReferralParams } from '../../util/webStorageHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -278,6 +279,17 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   const seatsMaybe = seatsSearchParams(seats, datesMaybe);
   const sortMaybe = sortSearchParams(sort, searchParams?.keywords !== undefined);
 
+  // Filter out potential referral data parameters so that they are not included in the API query
+  const { userTypes = [] } = config.user;
+  const validReferralSources = getReferralParams(userTypes);
+  const apiParamsRaw = Object.fromEntries(
+    Object.entries(restOfParams).filter(entry => {
+      const [key, value] = entry;
+
+      return !validReferralSources.includes(key);
+    })
+  );
+
   const params = {
     // The params that are related to listing fields and categories are prepared here.
     // We add handler functions that check category and integer range configurations.
@@ -286,7 +298,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     // - With integer range params, we prepare the property for API.
     //   I.e. the range end must be exclusive. E.g. 1000,2000 -> 1000,2001
     // Note: invalid independent search params are still passed through
-    ...prepareAPIParams(restOfParams, [prepareCategoryParams, prepareIntegerRangeParam]),
+    ...prepareAPIParams(apiParamsRaw, [prepareCategoryParams, prepareIntegerRangeParam]),
     // If the search page variant is of type /s/:listingType, this sets the pub_listingType
     // query parameter to the value of the listing type path parameter. The ordering matters here,
     // since this value overrides any possible pub_listingType value coming from query parameters

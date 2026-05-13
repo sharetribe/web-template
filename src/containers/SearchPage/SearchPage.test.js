@@ -635,6 +635,9 @@ describe('Duck', () => {
       ...defaultConfig.listingTypes,
     },
     accessControl: { marketplace: { private: true } },
+    user: {
+      userTypes: defaultConfig.userTypes.userTypes,
+    },
   };
   // Shared parameters for viewing rights loadData tests
   const fakeResponse = resource => ({ data: { data: resource, include: [] } });

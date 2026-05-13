@@ -386,6 +386,7 @@ export const AuthenticationPageComponent = props => {
                   onSubmit={getHandleSubmitSignup({
                     submitSignup,
                     userFields,
+                    userTypes,
                   })}
                   inProgress={authInProgress}
                   termsAndConditions={termsAndConditions}
@@ -430,6 +431,7 @@ export const AuthenticationPageComponent = props => {
                   authInfo,
                   submitSingupWithIdp,
                   userFields,
+                  userTypes,
                 })}
                 termsAndConditions={termsAndConditions}
                 authInfo={authInfo}
