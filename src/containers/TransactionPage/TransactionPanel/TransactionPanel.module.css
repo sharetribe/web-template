@@ -8,6 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-width: 100vw;
 
   @media (--viewportLarge) {
     flex-direction: row;
@@ -24,6 +25,7 @@
 
 .txInfo {
   margin-bottom: 36px;
+  overflow: hidden;
 
   @media (--viewportLarge) {
     flex-basis: 538px;
@@ -438,20 +440,6 @@
   }
   @media (--viewportLarge) {
     margin: 24px 0 0 0;
-  }
-}
-
-/* Prop to be passed to SendMessageForm component */
-.sendMessageForm {
-  position: relative;
-  margin: 46px 24px 0 24px;
-
-  @media (--viewportMedium) {
-    margin: 49px 24px 0 24px;
-    border-top: 0;
-  }
-  @media (--viewportLarge) {
-    margin: 48px 0 0 0;
   }
 }
 
