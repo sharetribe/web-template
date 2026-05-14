@@ -46,7 +46,12 @@ const getInitialValues = props => {
       : 1;
   const stockTypeInfinity = [];
 
-  return { price, stock, stockTypeInfinity };
+  const originalPriceRaw = publicData?.originalPrice;
+  const originalPrice = originalPriceRaw
+    ? new Money(originalPriceRaw.amount, originalPriceRaw.currency)
+    : null;
+
+  return { price, stock, stockTypeInfinity, originalPrice };
 };
 
 /**
@@ -145,7 +150,7 @@ const EditListingPricingAndStockPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, stock, stockTypeInfinity } = values;
+            const { price, stock, stockTypeInfinity, originalPrice } = values;
 
             // Update stock only if the value has changed, or stock is infinity in stockType,
             // but not current stock is a small number (might happen with old listings)
@@ -174,9 +179,16 @@ const EditListingPricingAndStockPanel = props => {
                   }
                 : {};
 
+            const originalPriceMaybe = {
+              originalPrice: originalPrice
+                ? { amount: originalPrice.amount, currency: originalPrice.currency }
+                : null,
+            };
+
             // New values for listing attributes
             const updateValues = {
               price,
+              publicData: originalPriceMaybe,
               ...stockUpdateMaybe,
             };
             // Save the initialValues to state
@@ -186,6 +198,7 @@ const EditListingPricingAndStockPanel = props => {
                 price,
                 stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
                 stockTypeInfinity,
+                originalPrice,
               },
             });
             onSubmit(updateValues);

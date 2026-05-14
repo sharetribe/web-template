@@ -183,6 +183,16 @@ export const EditListingPricingAndStockForm = props => (
             </p>
           ) : null}
           <FieldCurrencyInput
+            id={`${formId}.originalPrice`}
+            name="originalPrice"
+            className={css.input}
+            label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.originalPrice' })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingAndStockForm.originalPricePlaceholder',
+            })}
+            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+          />
+          <FieldCurrencyInput
             id={`${formId}.price`}
             name="price"
             className={css.input}
