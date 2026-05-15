@@ -54,7 +54,7 @@
   margin-bottom: 1px;
   margin-top: 16px;
 
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     font-size: 40px;
     line-height: 56px;
     padding: 5px 0 3px 0;
@@ -106,7 +106,7 @@
   margin-top: 24px;
   margin-bottom: 18px;
 
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     font-size: 26px;
     line-height: 30px;
     padding: 1px 0 7px 0;

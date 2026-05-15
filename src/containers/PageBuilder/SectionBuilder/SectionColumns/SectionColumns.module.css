@@ -39,7 +39,7 @@
 
 .twoThirdsCols {
   composes: baseColumn;
-  @media (--viewportMedium) {
+  @media (--viewportMLarge) {
     grid-template-columns: 2fr 1fr;
     gap: 64px;
   }

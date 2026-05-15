@@ -63,29 +63,50 @@
   padding: 0;
   align-items: stretch;
   gap: 0;
+  flex-direction: column;
 
-  @media (--viewportMedium) {
-    gap: 0;
+  @media (--viewportMLarge) {
+    flex-direction: row-reverse;
   }
 
-  /* Media and text each exactly 50% */
+  &:nth-child(even) {
+    @media (--viewportMLarge) {
+      flex-direction: row;
+    }
+  }
+
+  /* Stack full width on mobile; side-by-side 50/50 on larger screens */
   > * {
-    flex: 0 0 50%;
-    width: 50%;
+    flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
+
+    @media (--viewportMLarge) {
+      flex: 0 0 50%;
+      width: 50%;
+    }
   }
 
-  /* Media side: fill the block height */
+  /* Media side: natural height on mobile, fill block height on side-by-side */
   > :first-child {
     border-radius: 0;
-    height: 100%;
+    height: auto;
+    overflow: hidden;
 
     & img {
       display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       border-radius: 0;
+    }
+
+    @media (--viewportMLarge) {
+      height: 100%;
+
+      & img {
+        height: 100%;
+        object-fit: cover;
+      }
     }
   }
 
