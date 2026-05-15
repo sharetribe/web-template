@@ -30,7 +30,7 @@ function createMockSdk() {
       create: jest.fn().mockResolvedValue({
         data: { data: { id: { uuid: 'listing-uuid-456' } } },
       }),
-      open: jest.fn().mockResolvedValue({}),
+      close: jest.fn().mockResolvedValue({}),
     },
     stock: {
       compareAndSet: jest.fn().mockResolvedValue({}),
@@ -161,27 +161,27 @@ describe('processImportJob', () => {
     expect(stockCall.oldTotal).toBeNull();
   });
 
-  it('calls listings.open when publish is true', async () => {
+  it('does not call listings.close when publish is true', async () => {
     const mockSdk = createMockSdk();
     getIntegrationSdk.mockReturnValue(mockSdk);
 
     const job = createJob(1);
     await processImportJob(job.id, [makeRow({ publish: true })], new Map());
 
-    expect(mockSdk.listings.open).toHaveBeenCalledTimes(1);
+    expect(mockSdk.listings.close).not.toHaveBeenCalled();
   });
 
-  it('skips listings.open when publish is false', async () => {
+  it('calls listings.close when publish is false', async () => {
     const mockSdk = createMockSdk();
     getIntegrationSdk.mockReturnValue(mockSdk);
 
     const job = createJob(1);
     await processImportJob(job.id, [makeRow({ publish: false })], new Map());
 
-    expect(mockSdk.listings.open).not.toHaveBeenCalled();
+    expect(mockSdk.listings.close).toHaveBeenCalledTimes(1);
 
     const finalJob = getJob(job.id);
-    expect(finalJob.results[0].status).toBe('draft');
+    expect(finalJob.results[0].status).toBe('closed');
   });
 
   it('includes geolocation when lat/lng provided', async () => {

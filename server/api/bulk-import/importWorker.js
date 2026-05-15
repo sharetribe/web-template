@@ -1,5 +1,9 @@
 'use strict';
 
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
 const { getIntegrationSdk } = require('../../services/integrationSdk');
 const { types } = require('sharetribe-flex-integration-sdk');
 const { updateJob } = require('./jobStore');
@@ -45,12 +49,24 @@ function delay(ms) {
 /**
  * Upload a single image buffer to Sharetribe via Integration SDK.
  * Returns the image UUID string.
+ *
+ * The SDK's MultipartRequest interceptor calls fd.append(key, value) without
+ * content-type options. Passing a raw Buffer causes form-data to use
+ * Content-Type: application/octet-stream (→ API returns 500). Passing a file
+ * path string makes the SDK call fs.createReadStream(), from which form-data
+ * can both stat() the real file for Content-Length and infer the MIME type
+ * from the extension. The temp file is deleted immediately after upload.
  */
-async function uploadImage(sdk, imageBuffer) {
-  const res = await sdk.images.upload({
-    image: imageBuffer,
-  });
-  return res.data.data.id.uuid;
+async function uploadImage(sdk, imageBuffer, filename) {
+  const ext = path.extname(filename) || '.jpg';
+  const tmpFile = path.join(os.tmpdir(), `av-bulk-${process.pid}-${Date.now()}${ext}`);
+  fs.writeFileSync(tmpFile, imageBuffer);
+  try {
+    const res = await sdk.images.upload({ image: tmpFile });
+    return res.data.data.id.uuid;
+  } finally {
+    try { fs.unlinkSync(tmpFile); } catch (_) {}
+  }
 }
 
 /**
@@ -65,7 +81,7 @@ async function processRow(sdk, row, imageMap, config) {
     const filename = row.imageSlots[slotKey];
     if (filename && imageMap.has(filename)) {
       const buffer = imageMap.get(filename);
-      const uuid = await uploadImage(sdk, buffer);
+      const uuid = await uploadImage(sdk, buffer, filename);
       imageSlotMapping[slotKey] = uuid;
       imageUuids.push(new UUID(uuid));
     }
@@ -80,6 +96,22 @@ async function processRow(sdk, row, imageMap, config) {
     pickupEnabled: row.pickupEnabled,
     ...row.publicData,
   };
+
+  // originalPrice must be stored as { amount (subunits), currency } to match
+  // the Money format expected by OrderPanel and EditListingPricingAndStockPanel.
+  if (publicData.originalPrice != null && publicData.originalPrice !== '') {
+    const rawVal = parseFloat(publicData.originalPrice);
+    if (!isNaN(rawVal) && rawVal > 0) {
+      publicData.originalPrice = {
+        amount: Math.round(rawVal * 100),
+        currency: row.currency,
+      };
+    } else {
+      delete publicData.originalPrice;
+    }
+  } else {
+    delete publicData.originalPrice;
+  }
 
   if (Object.keys(imageSlotMapping).length > 0) {
     publicData.imageSlots = imageSlotMapping;
@@ -99,6 +131,7 @@ async function processRow(sdk, row, imageMap, config) {
 
   const listingParams = {
     authorId: new UUID(authorId),
+    state: 'published',
     title: row.title,
     description: row.description,
     price: new Money(priceAmount, row.currency),
@@ -110,7 +143,9 @@ async function processRow(sdk, row, imageMap, config) {
     listingParams.geolocation = new LatLng(row.lat, row.lng);
   }
 
-  // Create listing via Integration API
+  // Create listing via Integration API.
+  // The Integration API only supports 'published' (or 'closed') on create —
+  // 'draft' is a Marketplace API concept for user-initiated flows.
   const createRes = await sdk.listings.create(listingParams, {
     expand: true,
     include: ['author', 'images'],
@@ -127,9 +162,9 @@ async function processRow(sdk, row, imageMap, config) {
     });
   }
 
-  // Publish if requested
-  if (row.publish) {
-    await sdk.listings.open({ id: new UUID(listingId) }, { expand: true });
+  // Close if publish:no — listing was created published, so close it back down.
+  if (!row.publish) {
+    await sdk.listings.close({ id: new UUID(listingId) }, { expand: true });
   }
 
   return listingId;
@@ -164,7 +199,7 @@ async function processImportJob(jobId, rows, imageMap) {
         row: row.rowNum,
         title: row.title,
         listingId,
-        status: row.publish ? 'published' : 'draft',
+        status: row.publish ? 'published' : 'closed',
       });
     } catch (err) {
       failed += 1;
@@ -188,7 +223,7 @@ async function processImportJob(jobId, rows, imageMap) {
 
       console.error(
         `[bulk-import] Row ${row.rowNum} ("${row.title}") failed:`,
-        serialized
+        JSON.stringify(serialized, null, 2)
       );
     }
 

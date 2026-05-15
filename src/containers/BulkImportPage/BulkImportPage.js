@@ -299,7 +299,16 @@ const BulkImportPageComponent = props => {
                         <tr key={idx}>
                           <td>{err.row}</td>
                           <td>{err.title}</td>
-                          <td className={css.errorCell}>{err.error}</td>
+                          <td className={css.errorCell}>
+                            <div>{err.error}</div>
+                            {err.sdkErrors && err.sdkErrors.length > 0 && (
+                              <ul style={{ margin: '4px 0 0', paddingLeft: '16px', fontSize: '11px', opacity: 0.8 }}>
+                                {err.sdkErrors.map((e, i) => (
+                                  <li key={i}>{e.code}: {e.title}{e.source ? ` (${JSON.stringify(e.source)})` : ''}</li>
+                                ))}
+                              </ul>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

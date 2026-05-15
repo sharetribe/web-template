@@ -147,6 +147,7 @@ router.get('/template', (req, res) => {
     'pd_condition',
     'pd_era',
     'pd_brand',
+    'pd_originalPrice',
   ];
 
   const exampleRow = [
@@ -168,11 +169,12 @@ router.get('/template', (req, res) => {
     'vestido01_details.jpg',
     'ropa',
     'ropa-vestidos',
-    'pink',
+    'rosa',
     's|m',
     'excellent',
     '80s',
-    'Vintage Collection',
+    'vintage',
+    '',
   ];
 
   const csv = headers.join(',') + '\n' + exampleRow.map(v => JSON.stringify(v)).join(',') + '\n';
