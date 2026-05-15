@@ -82,7 +82,7 @@ const getInclusiveEndDate = (date, timeZone) => {
 const getMonthlyFetchRange = (monthlyTimeSlots, timeZone) => {
   const monthStrings = Object.entries(monthlyTimeSlots).reduce((picked, entry) => {
     return Array.isArray(entry[1].timeSlots) ? [...picked, entry[0]] : picked;
-  }, []);
+  }, []).sort(); // sort so async fetch completions don't corrupt the range
   const firstMonth = getMonthStartInTimeZone(monthStrings[0], timeZone);
   const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1], timeZone);
   const exclusiveEndMonth = nextMonthFn(lastMonth, timeZone);
@@ -121,10 +121,13 @@ const removeUnnecessaryBoundaries = timeSlots => {
  * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
  * @returns {Array<TimeSlot>}
  */
-const getAllTimeSlots = monthlyTimeSlots => {
+export const getAllTimeSlots = monthlyTimeSlots => {
   const timeSlotsRaw = Object.values(monthlyTimeSlots).reduce((picked, mts) => {
     return [...picked, ...(mts.timeSlots || [])];
   }, []);
+  // Sort chronologically so combineConsecutiveTimeSlots (which only scans forward) sees slots
+  // in start-date order regardless of which order async month fetches completed.
+  timeSlotsRaw.sort((a, b) => new Date(a.attributes.start) - new Date(b.attributes.start));
   return removeUnnecessaryBoundaries(timeSlotsRaw);
 };
 
@@ -358,7 +361,7 @@ const isOutsideRangeFn = (
  * Returns an isDayBlocked function that can be passed to
  * a DateRangePicker component.
  */
-const isDayBlockedFn = params => {
+export const isDayBlockedFn = params => {
   const { allTimeSlots, monthlyTimeSlots, isDaily, startDate, endDate, timeZone } = params || {};
 
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
@@ -372,19 +375,24 @@ const isDayBlockedFn = params => {
     const hasAvailabilityOnDay = timeSlotsData[dayIdString]?.hasAvailability === true;
 
     if (!isDaily && startDate) {
-      // If this day's month hasn't been fetched yet, don't block it (optimistic).
       const dayMonthId = monthIdString(dayInListingTZ, timeZone);
-      const monthFetched = Array.isArray(monthlyTimeSlots?.[dayMonthId]?.timeSlots);
+      const monthEntry = monthlyTimeSlots?.[dayMonthId];
+      const monthFetched = Array.isArray(monthEntry?.timeSlots);
       if (!monthFetched) {
-        return false;
+        return !monthEntry;
       }
-      const hasAvailability =
-        hasAvailabilityOnDay ||
-        hasAvailabilityOrCheckoutOnDay(dayInListingTZ, allTimeSlots, timeZone);
+      // When only startDate is set (user picking end date), allow the slot's exclusive-end
+      // boundary day to appear unblocked so it can be selected as a checkout day.
+      // When both dates are set (calendar in review state), use strict availability so the
+      // exclusive-end boundary (e.g. Dec 1 when listing ends Nov 30) stays correctly blocked.
+      const hasAvailability = endDate
+        ? hasAvailabilityOnDay
+        : hasAvailabilityOnDay || hasAvailabilityOrCheckoutOnDay(dayInListingTZ, allTimeSlots, timeZone);
+
       return !hasAvailability;
     }
 
-    // Daily
+    // Daily booking: use timeSlotsData directly (no optimistic guard needed).
     return !hasAvailabilityOnDay;
   };
 };
@@ -575,24 +583,33 @@ const getMinSeatsOptions = (allTimeSlots, startDate, endDate) => {
     : [];
 };
 
-// Checks if two timeslots are consequtive
-const areConsecutiveTimeSlots = (timeSlotA, timeSlotB) =>
-  new Date(timeSlotA.attributes.end).getTime() === new Date(timeSlotB.attributes.start).getTime();
+// Checks if two timeslots are consecutive (back-to-back) using day-level comparison in the
+// listing timezone. Exact millisecond equality fails because Sharetribe API responses for
+// adjacent availability windows may produce slightly different UTC representations of the
+// same local-midnight boundary depending on how the exception was created.
+const areConsecutiveTimeSlots = (timeSlotA, timeSlotB, timeZone) => {
+  if (timeZone) {
+    const endDay = getStartOf(new Date(timeSlotA.attributes.end), 'day', timeZone).getTime();
+    const startDay = getStartOf(new Date(timeSlotB.attributes.start), 'day', timeZone).getTime();
+    return endDay === startDay;
+  }
+  return new Date(timeSlotA.attributes.end).getTime() === new Date(timeSlotB.attributes.start).getTime();
+};
 
 // Find the index of a the first consecutive timeslot in a list of timeslots
-const findIndexOfFirstConsecutiveTimeSlot = (timeSlots, index) =>
-  index > 0 && areConsecutiveTimeSlots(timeSlots[index - 1], timeSlots[index])
-    ? findIndexOfFirstConsecutiveTimeSlot(timeSlots, index - 1)
+const findIndexOfFirstConsecutiveTimeSlot = (timeSlots, index, timeZone) =>
+  index > 0 && areConsecutiveTimeSlots(timeSlots[index - 1], timeSlots[index], timeZone)
+    ? findIndexOfFirstConsecutiveTimeSlot(timeSlots, index - 1, timeZone)
     : index;
 
 // find the index of the last consecutive timeslot in a list of timeslots
-const findIndexOfLastConsecutiveTimeSlot = (timeSlots, index) =>
-  index < timeSlots.length - 1 && areConsecutiveTimeSlots(timeSlots[index], timeSlots[index + 1])
-    ? findIndexOfLastConsecutiveTimeSlot(timeSlots, index + 1)
+const findIndexOfLastConsecutiveTimeSlot = (timeSlots, index, timeZone) =>
+  index < timeSlots.length - 1 && areConsecutiveTimeSlots(timeSlots[index], timeSlots[index + 1], timeZone)
+    ? findIndexOfLastConsecutiveTimeSlot(timeSlots, index + 1, timeZone)
     : index;
 
 // Find and combine adjacent/consecutive timeslots into one timeslot
-const combineConsecutiveTimeSlots = (slots, startDate, timeZone) => {
+export const combineConsecutiveTimeSlots = (slots, startDate, timeZone) => {
   // Locate the index of the timeslot containing startDate.
   // Use day-level comparison in the listing timezone so that a slot starting a few hours
   // after midnight (due to UTC-offset mismatch when the exception was created) is still found.
@@ -614,8 +631,8 @@ const combineConsecutiveTimeSlots = (slots, startDate, timeZone) => {
   if (startIndex === -1) return [];
 
   // Determine the full range of consecutive timeslots
-  const indexOfFirstTimeSlot = findIndexOfFirstConsecutiveTimeSlot(slots, startIndex);
-  const indexOfLastTimeSlot = findIndexOfLastConsecutiveTimeSlot(slots, startIndex);
+  const indexOfFirstTimeSlot = findIndexOfFirstConsecutiveTimeSlot(slots, startIndex, timeZone);
+  const indexOfLastTimeSlot = findIndexOfLastConsecutiveTimeSlot(slots, startIndex, timeZone);
 
   // Combine the consecutive timeslots into a single slot
   const combinedSlot = {
@@ -789,13 +806,30 @@ export const BookingDatesForm = props => {
     if (prefetchInitialRangeRef.current || !initialBookingDates?.startDate || !onFetchTimeSlots) return;
     prefetchInitialRangeRef.current = true;
     const startMonth = getStartOf(initialBookingDates.startDate, 'month', timeZone);
-    // Always pre-fetch the month after startDate (second visible month in two-month calendar)
+
+    // Fetch startDate's own month (first visible month when calendar opens at URL-param dates).
+    // Without this, timeSlotsData has no entry for this month and isDayBlocked falsely
+    // blocks every day in it after the && !endDate guard change.
+    const startMonthId = monthIdString(startMonth, timeZone);
+    if (!Array.isArray(monthlyTimeSlots?.[startMonthId]?.timeSlots)) {
+      fetchMonthData(startMonth, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+    }
+
+    // Fetch the month after startDate (second visible month in the two-month calendar)
     const monthAfterStart = nextMonthFn(startMonth, timeZone);
     const monthAfterStartId = monthIdString(monthAfterStart, timeZone);
     if (!Array.isArray(monthlyTimeSlots?.[monthAfterStartId]?.timeSlots)) {
       fetchMonthData(monthAfterStart, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
     }
-    // Also pre-fetch the end date's month if it's further ahead
+
+    // Fetch the month before startDate so backward-navigation is ready without a flash.
+    const monthBeforeStart = prevMonthFn(startMonth, timeZone);
+    const monthBeforeStartId = monthIdString(monthBeforeStart, timeZone);
+    if (!Array.isArray(monthlyTimeSlots?.[monthBeforeStartId]?.timeSlots)) {
+      fetchMonthData(monthBeforeStart, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
+    }
+
+    // Also pre-fetch the end date's month if it's further ahead than monthAfterStart
     if (initialBookingDates.endDate) {
       const endMonth = getStartOf(initialBookingDates.endDate, 'month', timeZone);
       const endMonthId = monthIdString(endMonth, timeZone);
@@ -803,6 +837,7 @@ export const BookingDatesForm = props => {
         fetchMonthData(endMonth, listingId, dayCountAvailableForBooking, timeZone, onFetchTimeSlots);
       }
     }
+
     // Sync currentMonth so navigation arrows fetch the right subsequent months
     setCurrentMonth(startMonth);
   }, []);
@@ -899,10 +934,17 @@ export const BookingDatesForm = props => {
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(addTime(new Date(), 30, 'days'), dateFormatOptions);
 
-        const relevantTimeSlots =
+        // When startDate is set and endDate is not, narrow to the consecutive slot block
+        // containing startDate. If the result is empty (startDate's month is still in-flight
+        // and not yet in allTimeSlots), fall back to allTimeSlots so the months that ARE
+        // fetched remain visible — the re-render after the fetch completes will produce the
+        // correct narrowed slot.
+        const combinedConsecutive =
           startDate && !endDate
             ? combineConsecutiveTimeSlots(allTimeSlots, startDate, timeZone)
-            : allTimeSlots;
+            : null;
+        const relevantTimeSlots =
+          combinedConsecutive?.length > 0 ? combinedConsecutive : allTimeSlots;
 
         const twoMonths = typeof window !== 'undefined' && window.innerWidth >= 768;
         const firstAvailableDate =

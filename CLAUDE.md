@@ -53,9 +53,51 @@ The T&C checkbox on listing publish only appears for new/draft listings (`isNewL
 
 ---
 
+## Booking Date Picker — Architecture (complete)
+
+All calendar logic lives in `src/components/OrderPanel/BookingDatesForm/BookingDatesForm.js`.
+
+### Key functions and invariants
+
+**`getAllTimeSlots(monthlyTimeSlots)`**
+Flattens the Redux `monthlyTimeSlots` map into a single array, **sorted chronologically**, then
+runs `removeUnnecessaryBoundaries` to merge back-to-back same-seat slots. The sort is critical:
+async API fetches complete in unpredictable order, so months may be inserted out of sequence.
+`findIndexOfLastConsecutiveTimeSlot` only scans forward — without the sort, out-of-order months
+break the consecutive-block detection.
+
+**`areConsecutiveTimeSlots(slotA, slotB, timeZone)`**
+Compares at **day-level in the listing's timezone**, not raw UTC milliseconds. The Sharetribe API
+returns slightly different UTC timestamps for adjacent slot boundaries across separate fetches
+(Africa/Nairobi UTC+3, no DST). Raw UTC comparison misses valid consecutive pairs.
+
+**`combineConsecutiveTimeSlots(allTimeSlots, startDate, timeZone)`**
+When the user picks a start date, narrows available end dates to the continuous availability
+block containing that start date. If the result is empty (start-date month still in-flight),
+the caller falls back to `allTimeSlots` so other fetched months remain visible.
+
+**`isDayBlockedFn({ allTimeSlots, startDate, endDate, timeZone })`**
+Controls the strikethrough rendering in `FieldDateRangePicker`.
+- When **only `startDate` is set** (user picking end date): uses the permissive
+  `hasAvailabilityOrCheckoutOnDay` check, which allows the slot's exclusive-end boundary day
+  to appear unblocked so it can be selected as a checkout day.
+- When **both dates are set** (calendar in review state): uses the strict `hasAvailabilityOnDay`
+  check so the exclusive-end boundary stays correctly blocked.
+
+Do not collapse these two paths back into a single check — the Dec 1 / exclusive-end bug
+reappears immediately.
+
+### Relevant time slot helpers
+- `hasAvailabilityOnDay` — strict: returns false for the exclusive-end boundary day.
+- `hasAvailabilityOrCheckoutOnDay` — permissive: returns true for the exclusive-end boundary day (checkout day).
+- `removeUnnecessaryBoundaries` — merges adjacent slots with the same seat count; must receive chronologically sorted input.
+
+---
+
 ## Other Completed Work (merged to main/develop)
 - 30-night minimum stay enforced across all date pickers and search filter sync.
 - Booking date picker back-navigation snap-back fixed (`useMemo` on `initialValues` in `OrderPanel` and `BookingDatesForm`).
+- Availability calendar blocking fixes — consecutive-slot timezone comparison, exclusive-end boundary, async fetch ordering (see changelog 2026-05-08).
 - CI testing pipeline added.
 - Stripe `STRIPE_SECRET_KEY` env var configured in Render for test.patamali.com.
 - Room listing type snap-back fixed (`useMemo` on `getInitialValues` in `EditListingDetailsPanel`).
