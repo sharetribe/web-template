@@ -37,6 +37,8 @@ const SectionContainer = props => {
     customOption?.isCenterTitleText ? css.sectionContentCenterTitleText : '',
     customOption?.isWhiteTitle ? css.sectionContentWhiteTitle : '',
     customOption?.isSmallSubTitles ? css.sectionContentSmallSubTitles : '',
+    customOption?.isLargeDesc ? css.sectionContentLargeDesc : '',
+    customOption?.isCenterDescText ? css.sectionContentCenterDescText : '',
     customOption?.isLarge ? css.sectionContentLarge : '',
     customOption?.isMedium ? css.sectionContentMedium : '',
     customOption?.isFullH ? css.sectionContentFullH : '',

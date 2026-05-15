@@ -103,6 +103,8 @@ export const parseSectionCustomOptions = sectionName => {
   customOption.isCenterTitleText = sectionName.indexOf('- CenterTitleText') >= 0;
   customOption.isWhiteTitle = sectionName.indexOf('- WhiteTitle') >= 0;
   customOption.isSmallSubTitles = sectionName.indexOf('- SmallSubTitles') >= 0;
+  customOption.isLargeDesc = sectionName.indexOf('- LargeDesc') >= 0;
+  customOption.isCenterDescText = sectionName.indexOf('- CenterDescText') >= 0;
   customOption.isAvFeature = sectionName.indexOf('- AvFeature') >= 0;
   customOption.isReverseFeature = sectionName.indexOf('- ReverseFeature') >= 0;
 

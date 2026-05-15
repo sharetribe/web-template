@@ -358,7 +358,7 @@ describe('validateRows', () => {
     const result = validateRows(
       [
         validRow({
-          pd_color: 'blue',
+          pd_color: 'azul',
           pd_brand: 'Levi',
           image_front: 'front.jpg',
           image_back: 'back.jpg',
@@ -367,7 +367,68 @@ describe('validateRows', () => {
       ],
       imageMap
     );
-    expect(result.rows[0].publicData).toEqual({ color: 'blue', brand: 'Levi' });
+    // color is multi-enum: single value becomes an array
+    expect(result.rows[0].publicData).toEqual({ color: ['azul'], brand: 'Levi' });
+  });
+
+  it('pd_color single value is stored as an array', () => {
+    const result = validateRows(
+      [
+        validRow({
+          pd_color: 'negro',
+          image_front: 'front.jpg',
+          image_back: 'back.jpg',
+          image_horizontal: 'front.jpg',
+        }),
+      ],
+      imageMap
+    );
+    expect(result.rows[0].publicData.color).toEqual(['negro']);
+  });
+
+  it('pd_color multiple pipe-separated values stored as array', () => {
+    const result = validateRows(
+      [
+        validRow({
+          pd_color: 'azul|negro',
+          image_front: 'front.jpg',
+          image_back: 'back.jpg',
+          image_horizontal: 'front.jpg',
+        }),
+      ],
+      imageMap
+    );
+    expect(result.rows[0].publicData.color).toEqual(['azul', 'negro']);
+  });
+
+  it('pd_estilo single value is stored as an array', () => {
+    const result = validateRows(
+      [
+        validRow({
+          pd_estilo: 'vintage',
+          image_front: 'front.jpg',
+          image_back: 'back.jpg',
+          image_horizontal: 'front.jpg',
+        }),
+      ],
+      imageMap
+    );
+    expect(result.rows[0].publicData.estilo).toEqual(['vintage']);
+  });
+
+  it('pd_all_sizes single value is stored as an array', () => {
+    const result = validateRows(
+      [
+        validRow({
+          pd_all_sizes: 's',
+          image_front: 'front.jpg',
+          image_back: 'back.jpg',
+          image_horizontal: 'front.jpg',
+        }),
+      ],
+      imageMap
+    );
+    expect(result.rows[0].publicData.all_sizes).toEqual(['s']);
   });
 
   it('splits pipe-separated pd_* values into arrays', () => {

@@ -201,6 +201,14 @@
   } 
 }
 
+.sectionContentLargeDesc {
+  @media (--viewportMedium) {
+    header > p {
+      max-width: 968px;
+    }
+  }
+}
+
 .sectionContentHasTextGray {
   header > p {
     color: var(--colorGrey300);
@@ -360,10 +368,15 @@
 
   header > h1,
   header > h2,
-  header > h3,
-  header p {
+  header > h3 {
     text-align: center;
     justify-self: center;
+  }
+}
+
+.sectionContentCenterDescText {
+  header > p {
+    text-align: center;
   }
 }
 

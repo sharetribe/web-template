@@ -197,4 +197,36 @@ describe('bulk import router', () => {
     expect(res.body).toContain('image_front,image_back,image_horizontal,image_details');
     expect(res.body).toContain('vestido01_horizontal.jpg');
   });
+
+  describe('csv template fields', () => {
+    let templateBody;
+
+    beforeEach(() => {
+      const req = {};
+      const res = createMockRes();
+      templateHandler(req, res);
+      templateBody = res.body;
+    });
+
+    it('template includes pd_originalPrice header', () => {
+      expect(templateBody).toContain('pd_originalPrice');
+    });
+
+    it('template includes pd_genero header', () => {
+      expect(templateBody).toContain('pd_genero');
+    });
+
+    it('template includes pd_estado header', () => {
+      expect(templateBody).toContain('pd_estado');
+    });
+
+    it('template includes pd_estilo header', () => {
+      expect(templateBody).toContain('pd_estilo');
+    });
+
+    it('template includes pd_categoryLevel3 header', () => {
+      expect(templateBody).toContain('pd_categoryLevel3');
+    });
+
+  });
 });

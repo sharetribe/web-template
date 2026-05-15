@@ -7,6 +7,9 @@ const IMAGE_COLUMNS = ['image_front', 'image_back', 'image_horizontal', 'image_d
 const REQUIRED_IMAGE_COLUMNS = ['image_front', 'image_back', 'image_horizontal'];
 const MAX_ROWS = 100;
 const RESERVED_PD_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+// Fields defined as multi-enum in the Console — single values are wrapped in arrays
+// so the Sharetribe API always receives an array for these fields.
+const MULTI_ENUM_PD_FIELDS = new Set(['color', 'all_sizes', 'estilo']);
 
 /**
  * Parse a CSV buffer and return structured rows.
@@ -103,11 +106,15 @@ function validateRows(rows, imageMap) {
           );
           continue;
         }
-        // Pipe-separated values become arrays (multi-enum)
-        if (value.includes('|')) {
-          publicData[pdKey] = value.split('|').map(v => v.trim());
+        const trimmed = value.trim();
+        if (trimmed.includes('|')) {
+          // Pipe-separated → always an array
+          publicData[pdKey] = trimmed.split('|').map(v => v.trim());
+        } else if (MULTI_ENUM_PD_FIELDS.has(pdKey)) {
+          // Multi-enum fields: single value must also be an array
+          publicData[pdKey] = [trimmed];
         } else {
-          publicData[pdKey] = value.trim();
+          publicData[pdKey] = trimmed;
         }
       }
     }
