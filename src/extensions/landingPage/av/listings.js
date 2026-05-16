@@ -21,16 +21,12 @@ const AV_LISTING_PUBLIC_DATA_FIELDS = [
   'publicData.transactionProcessAlias',
   'publicData.unitType',
   'publicData.brand',
-  'publicData.talla',
+  'publicData.all_sizes',
 ];
 
 const createListingsBaseQueryParams = (config = {}) => {
   const listingImage = config?.layout?.listingImage || {};
-  const {
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
-  } = listingImage;
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
   return {
@@ -114,7 +110,7 @@ const pickListingsById = (state, ids) => {
   return uuids.length > 0 ? getListingsById(state, uuids) : [];
 };
 
-const queryUserById = (userId) => (dispatch, getState, sdk) => {
+const queryUserById = userId => (dispatch, getState, sdk) => {
   return sdk.users
     .show({
       id: userId,
@@ -165,9 +161,7 @@ export const loadCustomSectionListings = ({ pageData, dispatch, config }) => {
     if (filterParams) {
       calls.push(
         dispatch(queryListingsByFilter(filterParams, config)).then(response => {
-          const ids = (response?.data?.data || [])
-            .map(l => l?.id?.uuid)
-            .filter(Boolean);
+          const ids = (response?.data?.data || []).map(l => l?.id?.uuid).filter(Boolean);
           tagListingIdsAccumulator[sectionId] = ids;
         })
       );
@@ -178,9 +172,7 @@ export const loadCustomSectionListings = ({ pageData, dispatch, config }) => {
   // Note: Sharetribe's public Marketplace API doesn't accept an id-array filter on
   // sdk.users.query, so true batching isn't available — we deduplicate via Set
   // and let Promise.all dispatch the fan-out in parallel below.
-  const allUserIds = [
-    ...new Set(Object.values(selectedUsersSections).flat()),
-  ];
+  const allUserIds = [...new Set(Object.values(selectedUsersSections).flat())];
   allUserIds.forEach(userId => {
     calls.push(dispatch(queryUserById(userId)));
   });
@@ -215,8 +207,8 @@ const pickUsersByIdFromEntities = (entities, ids) => {
 // when entities, tagListingIds, or pageData change by reference.
 const customSectionListingsSelector = createSelector(
   [
-    (state) => state.marketplaceData?.entities,
-    (state) => state.avLandingExtension?.tagListingIds,
+    state => state.marketplaceData?.entities,
+    state => state.avLandingExtension?.tagListingIds,
     (_state, pageData) => pageData,
   ],
   (entities, tagListingIdsBySection, pageData) => {

@@ -440,7 +440,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.priceVariants',
         // For AV custom Listing Card.
         'publicData.brand',
-        'publicData.talla'
+        'publicData.all_sizes',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [

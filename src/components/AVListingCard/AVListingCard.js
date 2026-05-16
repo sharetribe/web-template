@@ -35,8 +35,7 @@ const buildEnumLookup = listingFields => {
   return out;
 };
 
-const getEnumLabel = (lookup, fieldKey, option) =>
-  lookup?.[fieldKey]?.[option] || option;
+const getEnumLabel = (lookup, fieldKey, option) => lookup?.[fieldKey]?.[option] || option;
 
 const PriceMaybe = props => {
   const { price, publicData, config, intl } = props;
@@ -95,12 +94,13 @@ export const AVListingCard = props => {
     setActiveListing,
     showAuthorInfo = true,
     showTallCards = true,
-    showListingTitle = false
+    showListingTitle = false,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
   const { title = '', price, publicData } = currentListing.attributes;
+  const sizes = publicData?.all_sizes || [];
   const slug = createSlug(title);
   const author = ensureUser(listing?.author);
   const authorName = author?.attributes?.profile?.displayName || '';
@@ -124,10 +124,9 @@ export const AVListingCard = props => {
       }
     : null;
 
-  const enumLookup = useMemo(
-    () => buildEnumLookup(config.listing.listingFields),
-    [config.listing.listingFields]
-  );
+  const enumLookup = useMemo(() => buildEnumLookup(config.listing.listingFields), [
+    config.listing.listingFields,
+  ]);
 
   return (
     <div className={classes}>
@@ -167,10 +166,10 @@ export const AVListingCard = props => {
           </div>
         ) : null}
 
-        {publicData?.talla ? (
+        {sizes.length > 0 ? (
           <div className={css.sizes}>
             <FormattedMessage id="AVListingCard.sizeLabel" />{' '}
-            {getEnumLabel(enumLookup, 'talla', publicData?.talla)}
+            {sizes.map(size => getEnumLabel(enumLookup, 'all_sizes', size)).join(', ')}
           </div>
         ) : null}
         <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
