@@ -1431,5 +1431,20 @@
   "UserNav.accountSettings": "Configuración de la cuenta",
   "UserNav.profileSettings": "Configuración de perfil",
   "UserNav.screenreader.userNav": "Navegación de perfil de usuario",
-  "UserNav.yourListings": "Tus anuncios"
+  "UserNav.yourListings": "Tus anuncios",
+
+  "AVWelcomePopup.vendedor.imageUrl": "",
+  "AVWelcomePopup.vendedor.title": "",
+  "AVWelcomePopup.vendedor.text": "",
+  "AVWelcomePopup.vendedor.primaryButtonLabel": "",
+  "AVWelcomePopup.vendedor.primaryButtonUrl": "",
+  "AVWelcomePopup.vendedor.secondaryButtonLabel": "",
+  "AVWelcomePopup.vendedor.secondaryButtonUrl": "",
+  "AVWelcomePopup.vendedor-tienda.imageUrl": "",
+  "AVWelcomePopup.vendedor-tienda.title": "",
+  "AVWelcomePopup.vendedor-tienda.text": "",
+  "AVWelcomePopup.vendedor-tienda.primaryButtonLabel": "",
+  "AVWelcomePopup.vendedor-tienda.primaryButtonUrl": "",
+  "AVWelcomePopup.vendedor-tienda.secondaryButtonLabel": "",
+  "AVWelcomePopup.vendedor-tienda.secondaryButtonUrl": ""
 }

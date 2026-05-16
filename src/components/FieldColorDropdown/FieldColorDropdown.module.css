@@ -134,13 +134,13 @@
 }
 
 .colorCell:hover {
-  background-color: var(--colorGrey50);
-  border-color: var(--colorGrey200);
+  background-color: var(--avPurpleLight);
+  border-color: var(--avPurple);
 }
 
 .colorCellSelected {
-  border-color: var(--marketplaceColor);
-  background-color: var(--marketplaceColorLight);
+  border-color: var(--avYellow);
+  background-color: var(--avYellowLight);
 }
 
 .circleWrapper {
@@ -155,7 +155,7 @@
 }
 
 .colorCellSelected .circleWrapper {
-  border-color: var(--marketplaceColor);
+  border-color: var(--avYellow);
   border-width: 2px;
 }
 
@@ -178,7 +178,7 @@
 }
 
 .colorCellSelected .colorLabel {
-  color: var(--marketplaceColor);
+  color: var(--avBlue);
   font-weight: var(--fontWeightMedium);
 }
 

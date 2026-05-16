@@ -1431,5 +1431,20 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.screenreader.userNav": "User profile navigation",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+
+  "AVWelcomePopup.vendedor.imageUrl": "",
+  "AVWelcomePopup.vendedor.title": "",
+  "AVWelcomePopup.vendedor.text": "",
+  "AVWelcomePopup.vendedor.primaryButtonLabel": "",
+  "AVWelcomePopup.vendedor.primaryButtonUrl": "",
+  "AVWelcomePopup.vendedor.secondaryButtonLabel": "",
+  "AVWelcomePopup.vendedor.secondaryButtonUrl": "",
+  "AVWelcomePopup.vendedor-tienda.imageUrl": "",
+  "AVWelcomePopup.vendedor-tienda.title": "",
+  "AVWelcomePopup.vendedor-tienda.text": "",
+  "AVWelcomePopup.vendedor-tienda.primaryButtonLabel": "",
+  "AVWelcomePopup.vendedor-tienda.primaryButtonUrl": "",
+  "AVWelcomePopup.vendedor-tienda.secondaryButtonLabel": "",
+  "AVWelcomePopup.vendedor-tienda.secondaryButtonUrl": ""
 }

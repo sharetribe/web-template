@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useField } from 'react-final-form';
+import classNames from 'classnames';
 import { useIntl } from '../../util/reactIntl';
 import css from './FieldGroupedMultiSelect.module.css';
 
@@ -18,28 +19,96 @@ import css from './FieldGroupedMultiSelect.module.css';
  * @param {string} [props.placeholder] - Placeholder text when nothing selected
  */
 const FieldGroupedMultiSelect = props => {
-  const { name, id, label, groups = [], validate, placeholder } = props;
+  const { name, id, label, groups = [], validate, placeholder, className } = props;
   const intl = useIntl();
 
   const { input, meta } = useField(name, { validate });
   const value = Array.isArray(input.value) ? input.value : [];
 
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef(null);
 
-  // Build a flat map of option key → label for chip rendering
-  const optionLabelMap = {};
-  groups.forEach(group => {
-    group.options.forEach(opt => {
-      optionLabelMap[opt.option] = opt.label;
-    });
-  });
+  const listboxId = `${id}-listbox`;
+
+  const flatOptions = useMemo(
+    () =>
+      groups.reduce((options, group) => {
+        const groupOptions = Array.isArray(group.options) ? group.options : [];
+        return options.concat(groupOptions);
+      }, []),
+    [groups]
+  );
+
+  // Build a flat map of option key -> label for chip rendering.
+  const optionLabelMap = useMemo(
+    () =>
+      flatOptions.reduce((labels, opt) => {
+        labels[opt.option] = opt.label;
+        return labels;
+      }, {}),
+    [flatOptions]
+  );
 
   const toggleOption = optionKey => {
     const next = value.includes(optionKey)
       ? value.filter(k => k !== optionKey)
       : [...value, optionKey];
     input.onChange(next);
+  };
+
+  const openDropdown = nextActiveIndex => {
+    if (flatOptions.length === 0) {
+      return;
+    }
+    setIsOpen(true);
+    setActiveIndex(nextActiveIndex);
+  };
+
+  const closeDropdown = () => {
+    setIsOpen(false);
+    setActiveIndex(-1);
+  };
+
+  const toggleDropdown = () => {
+    if (isOpen) {
+      closeDropdown();
+    } else {
+      openDropdown(0);
+    }
+  };
+
+  const handleTriggerKeyDown = e => {
+    const lastIndex = flatOptions.length - 1;
+    const hasOptions = flatOptions.length > 0;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!hasOptions) {
+        return;
+      }
+      const nextIndex = isOpen ? (activeIndex + 1 > lastIndex ? 0 : activeIndex + 1) : 0;
+      openDropdown(nextIndex);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!hasOptions) {
+        return;
+      }
+      const nextIndex = isOpen ? (activeIndex - 1 < 0 ? lastIndex : activeIndex - 1) : lastIndex;
+      openDropdown(nextIndex);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!isOpen) {
+        openDropdown(0);
+      } else if (activeIndex >= 0 && flatOptions[activeIndex]) {
+        toggleOption(flatOptions[activeIndex].option);
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      closeDropdown();
+    } else if (e.key === 'Tab') {
+      closeDropdown();
+    }
   };
 
   const removeOption = (e, optionKey) => {
@@ -69,41 +138,67 @@ const FieldGroupedMultiSelect = props => {
     placeholder || intl.formatMessage({ id: 'FieldGroupedMultiSelect.placeholder' });
 
   const hasError = meta.touched && meta.error;
+  const activeOption = isOpen && activeIndex >= 0 ? flatOptions[activeIndex] : null;
+  const activeDescendant = activeOption ? `${id}-option-${activeOption.option}` : undefined;
 
   return (
-    <div className={css.root} ref={containerRef}>
+    <div className={classNames(css.root, className)} ref={containerRef}>
       {label && (
         <label className={css.label} htmlFor={id}>
           {label}
         </label>
       )}
       <div
-        id={id}
         className={`${css.control} ${isOpen ? css.controlOpen : ''} ${hasError ? css.controlError : ''}`}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
       >
-        <div className={css.selectedArea} onClick={() => setIsOpen(o => !o)}>
+        <div className={css.selectedArea}>
           {value.length === 0 ? (
-            <span className={css.placeholder}>{defaultPlaceholder}</span>
+            <button
+              id={id}
+              type="button"
+              className={css.trigger}
+              role="combobox"
+              aria-expanded={isOpen}
+              aria-haspopup="listbox"
+              aria-controls={listboxId}
+              aria-activedescendant={activeDescendant}
+              onClick={toggleDropdown}
+              onKeyDown={handleTriggerKeyDown}
+            >
+              <span className={css.placeholder}>{defaultPlaceholder}</span>
+            </button>
           ) : (
-            value.map(key => (
-              <span key={key} className={css.chip}>
-                {optionLabelMap[key] || key}
-                <button
-                  type="button"
-                  className={css.chipRemove}
-                  aria-label={intl.formatMessage(
-                    { id: 'FieldGroupedMultiSelect.removeOption' },
-                    { label: optionLabelMap[key] || key }
-                  )}
-                  onClick={e => removeOption(e, key)}
-                >
-                  ×
-                </button>
-              </span>
-            ))
+            <>
+              {value.map(key => (
+                <span key={key} className={css.chip}>
+                  {optionLabelMap[key] || key}
+                  <button
+                    type="button"
+                    className={css.chipRemove}
+                    aria-label={intl.formatMessage(
+                      { id: 'FieldGroupedMultiSelect.removeOption' },
+                      { label: optionLabelMap[key] || key }
+                    )}
+                    onClick={e => removeOption(e, key)}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+              <button
+                id={id}
+                type="button"
+                className={css.trigger}
+                role="combobox"
+                aria-label={defaultPlaceholder}
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+                aria-controls={listboxId}
+                aria-activedescendant={activeDescendant}
+                onClick={toggleDropdown}
+                onKeyDown={handleTriggerKeyDown}
+              />
+            </>
           )}
         </div>
         <div className={css.controls}>
@@ -120,7 +215,7 @@ const FieldGroupedMultiSelect = props => {
           <button
             type="button"
             className={css.toggleBtn}
-            onClick={() => setIsOpen(o => !o)}
+            onClick={toggleDropdown}
             aria-label={intl.formatMessage({
               id: isOpen ? 'FieldGroupedMultiSelect.collapse' : 'FieldGroupedMultiSelect.expand',
             })}
@@ -131,19 +226,26 @@ const FieldGroupedMultiSelect = props => {
       </div>
 
       {isOpen && (
-        <div className={css.dropdown} role="listbox" aria-multiselectable="true">
+        <div
+          id={listboxId}
+          className={css.dropdown}
+          role="listbox"
+          aria-multiselectable="true"
+        >
           {groups.map(group => (
             <div key={group.key}>
               <div className={css.groupHeader}>{group.label}</div>
-              {group.options.map(opt => {
+              {(group.options || []).map(opt => {
                 const isSelected = value.includes(opt.option);
+                const isActive = activeOption?.option === opt.option;
                 return (
                   <button
                     key={opt.option}
+                    id={`${id}-option-${opt.option}`}
                     type="button"
                     role="option"
                     aria-selected={isSelected}
-                    className={`${css.option} ${isSelected ? css.optionSelected : ''}`}
+                    className={`${css.option} ${isSelected ? css.optionSelected : ''} ${isActive ? css.optionActive : ''}`}
                     onClick={() => toggleOption(opt.option)}
                   >
                     <span className={css.optionCheck}>{isSelected ? '✓' : ''}</span>
