@@ -7,7 +7,7 @@ import Field from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 import renderMarkdown from '../../markdownProcessor';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionFooter.module.css';
 
 // The number of columns (numberOfColumns) affects styling
@@ -112,7 +112,7 @@ const SectionFooter = props => {
   const blocksHasSocial = blocks.some((obj, idx, list) => obj.blockName?.startsWith('social links ::') ?? false);
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       as="footer"
       id={sectionId}
       className={className || css.root}
@@ -153,7 +153,7 @@ const SectionFooter = props => {
           </div>
         </div>
       </div>
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

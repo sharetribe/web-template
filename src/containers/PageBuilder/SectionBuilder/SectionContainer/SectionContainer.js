@@ -28,39 +28,13 @@ import css from './SectionContainer.module.css';
  * @returns {JSX.Element} containing wrapper that can be used inside Block components.
  */
 const SectionContainer = props => {
-  const { className, rootClassName, id, as, children, appearance, options, customOption, bgLink, ...otherProps } = props;
+  const { className, rootClassName, id, as, children, appearance, options, ...otherProps } = props;
   const Tag = as || 'section';
   const classes = classNames(rootClassName || css.root, className);
-  const innerCss = classNames(
-    css.sectionContent,
-    customOption?.isBlueTitle ? css.sectionContentBlueTitle : '',
-    customOption?.isCenterTitleText ? css.sectionContentCenterTitleText : '',
-    customOption?.isWhiteTitle ? css.sectionContentWhiteTitle : '',
-    customOption?.isSmallSubTitles ? css.sectionContentSmallSubTitles : '',
-    customOption?.isLargeDesc ? css.sectionContentLargeDesc : '',
-    customOption?.isCenterDescText ? css.sectionContentCenterDescText : '',
-    customOption?.isLarge ? css.sectionContentLarge : '',
-    customOption?.isMedium ? css.sectionContentMedium : '',
-    customOption?.isFullH ? css.sectionContentFullH : '',
-    customOption?.isFullW ? css.sectionContentFullW : '',
-    customOption?.isShortC ? css.sectionContentShortC : '',
-    customOption?.isSmallerT ? css.sectionContentSmallerTitle : '',
-    customOption?.isMediumT ? css.sectionContentMediumTitle : '',
-    customOption?.hasPaddings ? css.sectionContentHasPaddings : '',
-    customOption?.hasNoPaddings ? css.sectionContentNoPaddings : '',
-    customOption?.hasNoPaddingsX ? css.sectionContentNoPaddingsX : '',
-    customOption?.hasNoPaddingsY ? css.sectionContentNoPaddingsY : '',
-    customOption?.hasTextGray ? css.sectionContentHasTextGray : '',
-    customOption?.isAvFeature ? css.sectionContentAvFeature : '',
-    customOption?.hasStar ? css.starDeco : '',
-    customOption?.hasStar ? (
-      css[`starDeco${customOption?.starDeco}`] ?? '') : '',
-    as == 'footer' ? css.customFooter : ''
-  );
+  const innerCss = css.sectionContent;
 
   return (
     <Tag className={classes} id={id} {...otherProps}>
-      {bgLink ? <a href={bgLink} className={css.bgClickArea} aria-hidden="true" tabIndex={-1} /> : null}
       {appearance?.fieldType === 'customAppearance' ? (
         <Field
           data={{ alt: `Background image for ${id}`, ...appearance }}

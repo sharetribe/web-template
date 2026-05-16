@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionColumns.module.css';
 
 // The number of columns (numColumns) affects styling and responsive images
@@ -87,7 +87,7 @@ const SectionColumns = props => {
   const hasBlocks = blocks?.length > 0;
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -121,7 +121,7 @@ const SectionColumns = props => {
           />
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

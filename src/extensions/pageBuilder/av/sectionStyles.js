@@ -83,34 +83,33 @@ export const parseSectionCustomOptions = sectionName => {
   const customOption = {};
   if (!sectionName) return customOption;
 
-  customOption.isBlueTitle = sectionName.indexOf('- BlueTitle') >= 0;
-  customOption.isLarge = sectionName.indexOf('- Large') >= 0;
-  customOption.isMedium = sectionName.indexOf('- Medium') >= 0;
-  customOption.isFullH = sectionName.indexOf('- FullH') >= 0;
-  customOption.isFullW = sectionName.indexOf('- FullW') >= 0;
-  customOption.isShortC = sectionName.indexOf('- ShortContent') >= 0;
-  customOption.isSmallerT = sectionName.indexOf('- SmallerTitle') >= 0;
-  customOption.isMediumT = sectionName.indexOf('- SmallTitle') >= 0;
+  customOption.isBlueTitle = sectionName.includes('- BlueTitle');
+  customOption.isLarge = sectionName.includes('- Large');
+  customOption.isMedium = sectionName.includes('- Medium');
+  customOption.isFullH = sectionName.includes('- FullH');
+  customOption.isFullW = sectionName.includes('- FullW');
+  customOption.isShortC = sectionName.includes('- ShortContent');
+  customOption.isSmallerT = sectionName.includes('- SmallerTitle');
+  customOption.isMediumT = sectionName.includes('- SmallTitle');
 
-  customOption.hasPaddings = sectionName.indexOf('- Paddings') >= 0;
+  customOption.hasPaddings = sectionName.includes('- Paddings');
   customOption.hasNoPaddings = /- NoPaddings(?![XY])/.test(sectionName);
-  customOption.hasNoPaddingsX = sectionName.indexOf('- NoPaddingsX') >= 0;
-  customOption.hasNoPaddingsY = sectionName.indexOf('- NoPaddingsY') >= 0;
+  customOption.hasNoPaddingsX = sectionName.includes('- NoPaddingsX');
+  customOption.hasNoPaddingsY = sectionName.includes('- NoPaddingsY');
 
-  customOption.isHeadingH = sectionName.indexOf('- Heading2') >= 0;
-  customOption.isTwoThirdsCols = sectionName.indexOf('- 2/3 cols') >= 0;
-  customOption.isShortHero = sectionName.indexOf('- ShortHero') >= 0;
-  customOption.isCenterTitleText = sectionName.indexOf('- CenterTitleText') >= 0;
-  customOption.isWhiteTitle = sectionName.indexOf('- WhiteTitle') >= 0;
-  customOption.isSmallSubTitles = sectionName.indexOf('- SmallSubTitles') >= 0;
-  customOption.isLargeDesc = sectionName.indexOf('- LargeDesc') >= 0;
-  customOption.isCenterDescText = sectionName.indexOf('- CenterDescText') >= 0;
-  customOption.isAvFeature = sectionName.indexOf('- AvFeature') >= 0;
-  customOption.isReverseFeature = sectionName.indexOf('- ReverseFeature') >= 0;
+  customOption.isHeadingH = sectionName.includes('- Heading2');
+  customOption.isTwoThirdsCols = sectionName.includes('- 2/3 cols');
+  customOption.isShortHero = sectionName.includes('- ShortHero');
+  customOption.isCenterTitleText = sectionName.includes('- CenterTitleText');
+  customOption.isWhiteTitle = sectionName.includes('- WhiteTitle');
+  customOption.isSmallSubTitles = sectionName.includes('- SmallSubTitles');
+  customOption.isLargeDesc = sectionName.includes('- LargeDesc');
+  customOption.isCenterDescText = sectionName.includes('- CenterDescText');
+  customOption.isAvFeature = sectionName.includes('- AvFeature');
+  customOption.isReverseFeature = sectionName.includes('- ReverseFeature');
+  customOption.hasTextGray = sectionName.includes('- TextGray');
 
-  if (sectionName.includes('- TextGray')) customOption.hasTextGray = true;
-
-  customOption.hasStar = sectionName.indexOf('- Star') >= 0;
+  customOption.hasStar = sectionName.includes('- Star');
   if (customOption.hasStar) {
     const starPos = sectionName.indexOf('- Star');
     customOption.starDeco = parseInt(sectionName.substring(starPos + 6, starPos + 7));

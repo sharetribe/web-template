@@ -5,7 +5,7 @@ import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionCarousel.module.css';
 
 const KEY_CODE_ARROW_LEFT = 37;
@@ -138,7 +138,7 @@ const SectionCarousel = props => {
   };
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -179,7 +179,7 @@ const SectionCarousel = props => {
           </div>
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

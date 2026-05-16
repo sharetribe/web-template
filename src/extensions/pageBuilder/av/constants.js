@@ -4,6 +4,8 @@
 
 export { avHeroSecionId, avPriceSelectorSecionId } from '../../../containers/CMSPage/CMSPage.duck';
 
+// Intentionally 'hero' (not 'avHero') — overrides the upstream SectionHero on CMSPage.
+// LandingPage uses 'avHero' as a distinct type; CMSPage replaces the built-in hero entirely.
 export const AV_HERO_SECTION_TYPE = 'hero';
 export const AV_HERO2_SECTION_TYPE = 'avHero2';
 export const AV_HERO3_SECTION_TYPE = 'avHero3';

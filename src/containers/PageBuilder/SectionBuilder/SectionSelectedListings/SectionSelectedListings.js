@@ -6,7 +6,7 @@ import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize
 
 import Field, { hasDataInFields } from '../../Field';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionSelectedListings.module.css';
 
 const KEY_CODE_ARROW_LEFT = 37;
@@ -145,7 +145,7 @@ const SectionSelectedListings = props => {
   };
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -195,7 +195,7 @@ const SectionSelectedListings = props => {
           </div>
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

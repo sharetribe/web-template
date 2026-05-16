@@ -5,7 +5,7 @@ import AVCategoryCard from '../../../../components/AVCategoryCard/AVCategoryCard
 import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import Field, { hasDataInFields } from '../../Field';
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionSelectedCat.module.css';
 
 const KEY_CODE_ARROW_LEFT = 37;
@@ -116,7 +116,7 @@ const SectionSelectedCat = props => {
   };
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -162,7 +162,7 @@ const SectionSelectedCat = props => {
           </div>
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

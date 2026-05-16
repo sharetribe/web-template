@@ -5,7 +5,7 @@ import { ListingCard } from '../../../../components';
 
 import Field, { hasDataInFields } from '../../Field';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionRecommendedListings.module.css';
 
 // The number of columns (numColumns) affects styling and responsive images
@@ -49,7 +49,7 @@ const SectionRecommendedListings = props => {
   const hasListings = listings.length > 0;
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -75,7 +75,7 @@ const SectionRecommendedListings = props => {
           ))}
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

@@ -4,7 +4,7 @@ import { AVListingCard } from '../../../../components';
 import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import Field, { hasDataInFields } from '../../Field';
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionTagCatListings.module.css';
 
 const KEY_CODE_ARROW_LEFT = 37;
@@ -117,7 +117,7 @@ const SectionTagCatListings = props => {
   };
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -158,7 +158,7 @@ const SectionTagCatListings = props => {
           </div>
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

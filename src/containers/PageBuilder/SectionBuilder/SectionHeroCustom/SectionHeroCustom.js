@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionHeroCustom.module.css';
 
 /**
@@ -60,7 +60,7 @@ const SectionHeroCustom = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={classNames(className, css[classWrap] ?? '')}
       rootClassName={classNames(rootClassName || css.root, customOption?.isShortHero ? css.shortHero : '')}
@@ -78,7 +78,7 @@ const SectionHeroCustom = props => {
           </div>
         </header>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

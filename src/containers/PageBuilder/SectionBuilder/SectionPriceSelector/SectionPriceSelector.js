@@ -3,7 +3,7 @@ import React from 'react';
 import Field, { hasDataInFields } from '../../Field';
 import PricingToggle from '../../../../components/PricingToggle/PricingToggle';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 
 /**
  * @typedef {Object} BlockConfig
@@ -66,7 +66,7 @@ const SectionPriceSelector = props => {
     const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 
     return (
-        <SectionContainer
+        <AVSectionContainer
             id={sectionId}
             className={className}
             rootClassName={rootClassName}
@@ -83,7 +83,7 @@ const SectionPriceSelector = props => {
             ) : null}
 
             <PricingToggle plans={plans} toggles={toggles} />
-        </SectionContainer>
+        </AVSectionContainer>
     );
 };
 

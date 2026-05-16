@@ -4,7 +4,7 @@ import { useIntl } from '../../../../util/reactIntl';
 
 import Field, { hasDataInFields } from '../../Field';
 
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionHeroCustom2.module.css';
 
 /**
@@ -92,7 +92,7 @@ const SectionHeroCustom2 = props => {
     : undefined;
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={classNames(className, css[classWrap] ?? '', mobileBackgroundImageUrl ? css.hasMobileBg : '')}
       rootClassName={classNames(rootClassName || css.root)}
@@ -119,7 +119,7 @@ const SectionHeroCustom2 = props => {
           ) : null}
         </header>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 

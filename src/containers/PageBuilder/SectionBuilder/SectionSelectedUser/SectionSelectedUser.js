@@ -4,7 +4,7 @@ import AVUserCard from '../../../../components/AVUserCard/AVUserCard';
 import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 
 import Field, { hasDataInFields } from '../../Field';
-import SectionContainer from '../SectionContainer';
+import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionSelectedUser.module.css';
 
 const COLUMN_CONFIG = [
@@ -119,7 +119,7 @@ const SectionSelectedUser = props => {
   };
 
   return (
-    <SectionContainer
+    <AVSectionContainer
       id={sectionId}
       className={className}
       rootClassName={rootClassName}
@@ -169,7 +169,7 @@ const SectionSelectedUser = props => {
           </div>
         </div>
       ) : null}
-    </SectionContainer>
+    </AVSectionContainer>
   );
 };
 
