@@ -71,13 +71,18 @@ describe('SectionTagCatListings', () => {
         listings={[makeListing('listing-1'), makeListing('listing-2')]} // 2 ≤ 4
       />
     );
-    const arrowsEl = container.querySelector('button[aria-label="Previous"]')?.parentElement;
+    const arrowsEl = container.querySelector('button[aria-label="AVCarousel.previous"]')
+      ?.parentElement;
     expect(arrowsEl?.className).toMatch(/hideArrows/);
   });
 
   it('shows arrows when listing count exceeds numColumns', () => {
     const listings = [
-      makeListing('l1'), makeListing('l2'), makeListing('l3'), makeListing('l4'), makeListing('l5'),
+      makeListing('l1'),
+      makeListing('l2'),
+      makeListing('l3'),
+      makeListing('l4'),
+      makeListing('l5'),
     ];
     const { container } = render(
       <SectionTagCatListings
@@ -87,7 +92,29 @@ describe('SectionTagCatListings', () => {
         listings={listings} // 5 > 3
       />
     );
-    const arrowsEl = container.querySelector('button[aria-label="Previous"]')?.parentElement;
+    const arrowsEl = container.querySelector('button[aria-label="AVCarousel.previous"]')
+      ?.parentElement;
     expect(arrowsEl?.className).not.toMatch(/hideArrows/);
+  });
+
+  it('uses translated carousel arrow labels', () => {
+    const listings = [makeListing('l1'), makeListing('l2')];
+    render(
+      <SectionTagCatListings
+        sectionId="av-tag-listings-hot"
+        defaultClasses={defaultClasses}
+        numColumns={1}
+        listings={listings}
+      />,
+      {
+        messages: {
+          'AVCarousel.previous': 'Back',
+          'AVCarousel.next': 'Forward',
+        },
+      }
+    );
+
+    expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Forward' })).toBeInTheDocument();
   });
 });

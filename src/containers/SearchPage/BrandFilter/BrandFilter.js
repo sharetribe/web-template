@@ -78,7 +78,7 @@ const BrandFilter = props => {
         <input
           type="text"
           className={css.searchInput}
-          placeholder="Buscar marca…"
+          placeholder={intl.formatMessage({ id: 'BrandFilter.searchPlaceholder' })}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           autoComplete="off"

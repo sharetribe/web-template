@@ -126,7 +126,28 @@ describe('SectionSelectedCat', () => {
       />
     );
     // arrows container should have hideArrows class applied
-    const arrowsEl = container.querySelector('button[aria-label="Previous"]')?.parentElement;
+    const arrowsEl = container.querySelector('button[aria-label="AVCarousel.previous"]')
+      ?.parentElement;
     expect(arrowsEl?.className).toMatch(/hideArrows/);
+  });
+
+  it('uses translated carousel arrow labels', () => {
+    render(
+      <SectionSelectedCat
+        sectionId="av-selected-cats"
+        defaultClasses={defaultClasses}
+        numColumns={1}
+        blocks={mockBlocks}
+      />,
+      {
+        messages: {
+          'AVCarousel.previous': 'Back',
+          'AVCarousel.next': 'Forward',
+        },
+      }
+    );
+
+    expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Forward' })).toBeInTheDocument();
   });
 });

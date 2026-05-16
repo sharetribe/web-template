@@ -104,6 +104,8 @@ const SectionSelectedListings = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasListings = listings.length > 0;
   const hideArrows = listings.length <= normalizedColumns;
+  const previousLabel = intl.formatMessage({ id: 'AVCarousel.previous' });
+  const nextLabel = intl.formatMessage({ id: 'AVCarousel.next' });
   const renderSizes = getResponsiveImageSizes(normalizedColumns);
 
   const slide = direction => {
@@ -118,8 +120,7 @@ const SectionSelectedListings = props => {
     const itemWidth = firstItem?.getBoundingClientRect()?.width || container.clientWidth;
     const gap = getGapValue(slider);
     const step = normalizedColumns * itemWidth + Math.max(normalizedColumns - 1, 0) * gap;
-    const nextLeft =
-      direction === 'left' ? slider.scrollLeft - step : slider.scrollLeft + step;
+    const nextLeft = direction === 'left' ? slider.scrollLeft - step : slider.scrollLeft + step;
 
     slider.scrollTo({ left: nextLeft, behavior: 'smooth' });
   };
@@ -156,10 +157,22 @@ const SectionSelectedListings = props => {
       {hasHeaderFields ? (
         <header className={classNames(css.sectionHeader, defaultClasses.sectionDetailsH)}>
           <div className={css.textBlock}>
-            <Field data={title} className={classNames(defaultClasses.title, css.title)} options={fieldOptions} />
-            <Field data={description} className={classNames(defaultClasses.description, css.description)} options={fieldOptions} />
+            <Field
+              data={title}
+              className={classNames(defaultClasses.title, css.title)}
+              options={fieldOptions}
+            />
+            <Field
+              data={description}
+              className={classNames(defaultClasses.description, css.description)}
+              options={fieldOptions}
+            />
           </div>
-          <Field data={callToAction} className={classNames(defaultClasses.ctaButton, css.ctaButton)} options={fieldOptions} />
+          <Field
+            data={callToAction}
+            className={classNames(defaultClasses.ctaButton, css.ctaButton)}
+            options={fieldOptions}
+          />
         </header>
       ) : null}
       {hasListings ? (
@@ -174,14 +187,27 @@ const SectionSelectedListings = props => {
               [css.hideArrows]: hideArrows,
             })}
           >
-            <button className={css.carouselArrow} onClick={onSlideLeft} onKeyDown={onKeyDown} aria-label="Previous">
+            <button
+              className={css.carouselArrow}
+              onClick={onSlideLeft}
+              onKeyDown={onKeyDown}
+              aria-label={previousLabel}
+            >
               ‹
             </button>
-            <button className={css.carouselArrow} onClick={onSlideRight} onKeyDown={onKeyDown} aria-label="Next">
+            <button
+              className={css.carouselArrow}
+              onClick={onSlideRight}
+              onKeyDown={onKeyDown}
+              aria-label={nextLabel}
+            >
               ›
             </button>
           </div>
-          <div className={classNames(css.slider, getColumnClass(normalizedColumns))} ref={sliderRef}>
+          <div
+            className={classNames(css.slider, getColumnClass(normalizedColumns))}
+            ref={sliderRef}
+          >
             {listings.map(l => (
               <div key={l.id.uuid} className={css.carouselItem}>
                 <AVListingCard

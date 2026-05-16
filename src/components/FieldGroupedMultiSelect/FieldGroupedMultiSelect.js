@@ -21,6 +21,7 @@ import css from './FieldGroupedMultiSelect.module.css';
 const FieldGroupedMultiSelect = props => {
   const { name, id, label, groups = [], validate, placeholder, className } = props;
   const intl = useIntl();
+  const optionGroups = Array.isArray(groups) ? groups : [];
 
   const { input, meta } = useField(name, { validate });
   const value = Array.isArray(input.value) ? input.value : [];
@@ -30,14 +31,15 @@ const FieldGroupedMultiSelect = props => {
   const containerRef = useRef(null);
 
   const listboxId = `${id}-listbox`;
+  const labelId = label ? `${id}-label` : undefined;
 
   const flatOptions = useMemo(
     () =>
-      groups.reduce((options, group) => {
+      optionGroups.reduce((options, group) => {
         const groupOptions = Array.isArray(group.options) ? group.options : [];
         return options.concat(groupOptions);
       }, []),
-    [groups]
+    [optionGroups]
   );
 
   // Build a flat map of option key -> label for chip rendering.
@@ -136,6 +138,7 @@ const FieldGroupedMultiSelect = props => {
 
   const defaultPlaceholder =
     placeholder || intl.formatMessage({ id: 'FieldGroupedMultiSelect.placeholder' });
+  const triggerLabel = label ? undefined : defaultPlaceholder;
 
   const hasError = meta.touched && meta.error;
   const activeOption = isOpen && activeIndex >= 0 ? flatOptions[activeIndex] : null;
@@ -144,12 +147,14 @@ const FieldGroupedMultiSelect = props => {
   return (
     <div className={classNames(css.root, className)} ref={containerRef}>
       {label && (
-        <label className={css.label} htmlFor={id}>
+        <label id={labelId} className={css.label} htmlFor={id}>
           {label}
         </label>
       )}
       <div
-        className={`${css.control} ${isOpen ? css.controlOpen : ''} ${hasError ? css.controlError : ''}`}
+        className={`${css.control} ${isOpen ? css.controlOpen : ''} ${
+          hasError ? css.controlError : ''
+        }`}
       >
         <div className={css.selectedArea}>
           {value.length === 0 ? (
@@ -158,6 +163,8 @@ const FieldGroupedMultiSelect = props => {
               type="button"
               className={css.trigger}
               role="combobox"
+              aria-label={triggerLabel}
+              aria-labelledby={labelId}
               aria-expanded={isOpen}
               aria-haspopup="listbox"
               aria-controls={listboxId}
@@ -190,7 +197,8 @@ const FieldGroupedMultiSelect = props => {
                 type="button"
                 className={css.trigger}
                 role="combobox"
-                aria-label={defaultPlaceholder}
+                aria-label={triggerLabel}
+                aria-labelledby={labelId}
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
                 aria-controls={listboxId}
@@ -207,6 +215,7 @@ const FieldGroupedMultiSelect = props => {
               type="button"
               className={css.clearBtn}
               onClick={clearAll}
+              aria-label={intl.formatMessage({ id: 'FieldGroupedMultiSelect.clearAll' })}
               title={intl.formatMessage({ id: 'FieldGroupedMultiSelect.clearAll' })}
             >
               ×
@@ -226,13 +235,8 @@ const FieldGroupedMultiSelect = props => {
       </div>
 
       {isOpen && (
-        <div
-          id={listboxId}
-          className={css.dropdown}
-          role="listbox"
-          aria-multiselectable="true"
-        >
-          {groups.map(group => (
+        <div id={listboxId} className={css.dropdown} role="listbox" aria-multiselectable="true">
+          {optionGroups.map(group => (
             <div key={group.key}>
               <div className={css.groupHeader}>{group.label}</div>
               {(group.options || []).map(opt => {
@@ -245,10 +249,14 @@ const FieldGroupedMultiSelect = props => {
                     type="button"
                     role="option"
                     aria-selected={isSelected}
-                    className={`${css.option} ${isSelected ? css.optionSelected : ''} ${isActive ? css.optionActive : ''}`}
+                    className={`${css.option} ${isSelected ? css.optionSelected : ''} ${
+                      isActive ? css.optionActive : ''
+                    }`}
                     onClick={() => toggleOption(opt.option)}
                   >
-                    <span className={css.optionCheck}>{isSelected ? '✓' : ''}</span>
+                    <span className={css.optionCheck} aria-hidden="true">
+                      {isSelected ? '✓' : ''}
+                    </span>
                     {opt.label}
                   </button>
                 );

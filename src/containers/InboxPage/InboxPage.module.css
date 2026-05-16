@@ -21,7 +21,7 @@
     height: var(--topbarHeightDesktop);
   }
 
-  @media (--viewportLarge) {
+  @media (--viewportWide) {
     display: none;
   }
 }
@@ -30,7 +30,7 @@
 .mobileTopbar {
   box-shadow: none;
 
-  @media (--viewportLarge) {
+  @media (--viewportWide) {
     box-shadow: var(--boxShadowLight);
   }
 }

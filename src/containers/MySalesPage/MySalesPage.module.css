@@ -14,7 +14,7 @@
     height: var(--topbarHeightDesktop);
   }
 
-  @media (--viewportLarge) {
+  @media (--viewportWide) {
     display: none;
   }
 }
@@ -23,7 +23,7 @@
 .mobileTopbar {
   box-shadow: none;
 
-  @media (--viewportLarge) {
+  @media (--viewportWide) {
     box-shadow: var(--boxShadowLight);
   }
 }
@@ -88,9 +88,15 @@
 }
 
 @keyframes loadingSpinnerFadeIn {
-  0% { opacity: 0; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .listItemsLoading {

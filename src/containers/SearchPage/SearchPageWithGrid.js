@@ -190,7 +190,10 @@ export class SearchPageComponent extends Component {
         key: 'grouped_sizes',
         scope: 'public',
         schemaType: 'grouped_enum',
-        filterConfig: { label: 'Talla', filterType: 'GroupedSelectMultipleFilter' },
+        filterConfig: {
+          label: intl.formatMessage({ id: 'SearchPage.groupedSizesLabel' }),
+          filterType: 'GroupedSelectMultipleFilter',
+        },
         childFilters: tmpSizeFilters,
       });
     }

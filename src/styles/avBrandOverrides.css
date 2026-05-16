@@ -36,6 +36,9 @@
   --ctaSecondary: var(--colorWhite);
   --ctaSecondaryBG: var(--avBlue);
 
+  /* ================ Topbar related ================ */
+  --TopbarMobileMenu_topMargin: 46px;
+
   /* ================ Font Families ================ */
   --fontFamily: 'Non Bureau', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';

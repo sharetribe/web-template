@@ -55,7 +55,7 @@
   margin-top: 16px;
 
   @media (--viewportLarge) {
-    font-size: 40px;
+    font-size: 48px;
     line-height: 56px;
     padding: 5px 0 3px 0;
     /* x * 8px */
@@ -107,7 +107,7 @@
   margin-bottom: 18px;
 
   @media (--viewportLarge) {
-    font-size: 26px;
+    font-size: 24px;
     line-height: 30px;
     padding: 1px 0 7px 0;
   }
@@ -158,6 +158,7 @@
 
 .createNewListingLink {
   composes: buttonPrimary from global;
+  color: var(--colorWhite);
 }
 
 .authenticationGreeting {
@@ -201,7 +202,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .5rem;
+  gap: 0.5rem;
   font-size: 18px;
   font-weight: var(--fontWeightBold);
   letter-spacing: 0.1em;
@@ -214,6 +215,12 @@
 
   &:hover {
     color: var(--avBlue);
+  }
+
+  @media (--viewportLarge) {
+    font-size: 24px;
+    line-height: 30px;
+    padding: 1px 0 7px 0;
   }
 }
 
@@ -241,4 +248,8 @@
 .mobileNavSubItem {
   padding-left: 12px;
   font-size: 14px;
+
+  @media (--viewportLarge) {
+    font-size: 18px;
+  }
 }

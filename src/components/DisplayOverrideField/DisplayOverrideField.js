@@ -1,10 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { CustomExtendedDataField } from '../../components';
-import FieldGroupedMultiSelect from '../FieldGroupedMultiSelect/FieldGroupedMultiSelect';
-import FieldColorDropdown from '../FieldColorDropdown/FieldColorDropdown';
 import { listingFieldDisplayOverrides } from '../../config/configListingDisplay';
+import { useIntl } from '../../util/reactIntl';
+import { CustomExtendedDataField } from '../../components';
+import FieldColorDropdown from '../FieldColorDropdown/FieldColorDropdown';
+import FieldGroupedMultiSelect from '../FieldGroupedMultiSelect/FieldGroupedMultiSelect';
 
 import css from './DisplayOverrideField.module.css';
 
@@ -12,13 +13,29 @@ import css from './DisplayOverrideField.module.css';
 // inside upstream CustomExtendedDataField. Each receives:
 //   { name, id, label, saveConfig, enumOptions, createFilterOptions, validate? }
 const groupedMultiSelectInput = props => {
-  const { name, id, label, saveConfig, validate } = props;
+  const { name, id, label, saveConfig, enumOptions, validate } = props;
+  const intl = useIntl();
+  const enumLabels = (enumOptions || []).reduce((labels, option) => {
+    labels[option.option] = option.label;
+    return labels;
+  }, {});
+  const groups = (saveConfig?.groups || []).map(group => ({
+    ...group,
+    label: group.labelTranslationKey
+      ? intl.formatMessage({ id: group.labelTranslationKey })
+      : group.label,
+    options: (group.options || []).map(optionKey => ({
+      option: optionKey,
+      label: enumLabels[optionKey] || optionKey,
+    })),
+  }));
+
   return (
     <FieldGroupedMultiSelect
       name={name}
       id={id}
       label={label}
-      groups={saveConfig?.groups || []}
+      groups={groups}
       validate={validate}
     />
   );

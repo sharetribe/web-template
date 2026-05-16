@@ -14,9 +14,10 @@
 
 .control {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   min-height: 48px;
+  padding: 8px 12px;
   border: 1px solid var(--colorGrey300);
   border-bottom: 3px solid var(--marketplaceColor);
   border-radius: 4px;
@@ -41,8 +42,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  padding: 8px 8px;
-  min-height: 48px;
   align-items: center;
 }
 
@@ -114,7 +113,6 @@
 .controls {
   display: flex;
   align-items: center;
-  padding: 8px 8px;
   gap: 4px;
   flex-shrink: 0;
 }

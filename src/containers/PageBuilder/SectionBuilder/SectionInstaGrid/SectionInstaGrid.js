@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
+import { useIntl } from '../../../../util/reactIntl';
 import Field from '../../Field';
 import useDebouncedWindowResize from '../../../../hooks/useDebouncedWindowResize';
 import css from './SectionInstaGrid.module.css';
@@ -17,34 +18,48 @@ const getImageUrl = (media, preferSmall = false) => {
   const variants = media?.image?.attributes?.variants || {};
   if (preferSmall) {
     return (
-      variants['scaled-medium'] ||
-      variants['original400'] ||
-      variants['original800'] ||
-      Object.values(variants)[0]
-    )?.url || null;
+      (
+        variants['scaled-medium'] ||
+        variants['original400'] ||
+        variants['original800'] ||
+        Object.values(variants)[0]
+      )?.url || null
+    );
   }
   return (
-    variants['original2400'] ||
-    variants['original1200'] ||
-    variants['original800'] ||
-    variants['original400'] ||
-    Object.values(variants)[0]
-  )?.url || null;
+    (
+      variants['original2400'] ||
+      variants['original1200'] ||
+      variants['original800'] ||
+      variants['original400'] ||
+      Object.values(variants)[0]
+    )?.url || null
+  );
 };
 
 const InstaIcon = ({ size = 28 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" strokeWidth="1.5" />
     <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.5" />
     <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
   </svg>
 );
 
-const PostModal = ({ block, username, onClose, fieldOptions }) => {
+const PostModal = ({ block, username, onClose, fieldOptions, intl }) => {
   const imageUrl = getImageUrl(block.media);
+  const dialogLabel = intl.formatMessage({ id: 'SectionInstaGrid.dialogLabel' });
+  const closeLabel = intl.formatMessage({ id: 'SectionInstaGrid.closePost' });
 
   useEffect(() => {
-    const onKey = e => { if (e.key === 'Escape') onClose(); };
+    const onKey = e => {
+      if (e.key === 'Escape') onClose();
+    };
     window.addEventListener('keydown', onKey);
     // Prevent body scroll while modal is open
     const prev = document.body.style.overflow;
@@ -61,7 +76,7 @@ const PostModal = ({ block, username, onClose, fieldOptions }) => {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Instagram post"
+      aria-label={dialogLabel}
     >
       <div className={css.modal} onClick={e => e.stopPropagation()}>
         {/* Left: post image */}
@@ -75,24 +90,20 @@ const PostModal = ({ block, username, onClose, fieldOptions }) => {
           <div className={css.modalHeader}>
             <InstaIcon size={24} />
             <span className={css.modalUsername}>{username || 'archivovintach'}</span>
-            <button className={css.modalClose} onClick={onClose} aria-label="Close post">
+            <button className={css.modalClose} onClick={onClose} aria-label={closeLabel}>
               ×
             </button>
           </div>
           <hr className={css.modalDivider} />
           <div className={css.modalCaption}>
-            {block.text ? (
-              <Field data={block.text} options={fieldOptions} />
-            ) : null}
+            {block.text ? <Field data={block.text} options={fieldOptions} /> : null}
           </div>
           {block.callToAction ? (
             <div className={css.modalCta}>
               <Field data={block.callToAction} options={fieldOptions} />
             </div>
           ) : null}
-          {block.blockName ? (
-            <div className={css.modalDate}>{block.blockName}</div>
-          ) : null}
+          {block.blockName ? <div className={css.modalDate}>{block.blockName}</div> : null}
         </div>
       </div>
     </div>
@@ -100,14 +111,8 @@ const PostModal = ({ block, username, onClose, fieldOptions }) => {
 };
 
 const SectionInstaGrid = props => {
-  const {
-    sectionId,
-    className,
-    rootClassName,
-    title,
-    blocks = [],
-    options,
-  } = props;
+  const intl = useIntl();
+  const { sectionId, className, rootClassName, title, blocks = [], options } = props;
 
   const [activeBlock, setActiveBlock] = useState(null);
   const [columns, setColumns] = useState(6);
@@ -130,7 +135,7 @@ const SectionInstaGrid = props => {
               key={block.blockId || block.blockName || i}
               className={css.cell}
               onClick={() => setActiveBlock(block)}
-              aria-label={`View Instagram post ${i + 1}`}
+              aria-label={intl.formatMessage({ id: 'SectionInstaGrid.viewPost' }, { index: i + 1 })}
             >
               <div
                 className={css.cellImage}
@@ -150,6 +155,7 @@ const SectionInstaGrid = props => {
           username={username}
           onClose={() => setActiveBlock(null)}
           fieldOptions={fieldOptions}
+          intl={intl}
         />
       ) : null}
     </section>
