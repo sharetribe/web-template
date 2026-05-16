@@ -59,7 +59,7 @@
     height: var(--topbarHeightDesktop);
   }
 
-  @media (--viewportLarge) {
+  @media (--viewportWide) {
     display: none;
   }
 }
@@ -161,7 +161,7 @@
 .desktop {
   display: none;
 
-  @media (--viewportLarge) {
+  @media (--viewportWide) {
     display: block;
   }
 }

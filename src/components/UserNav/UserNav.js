@@ -44,11 +44,11 @@ const UserNav = props => {
     ...manageListingsTabMaybe,
     ...avTabs,
     {
-      text: <FormattedMessage id="UserNav.accountSettings" />,
-      selected: ACCOUNT_SETTINGS_PAGES.includes(currentPage),
+      text: <FormattedMessage id="UserNav.profileSettings" />,
+      selected: currentPage === 'ProfileSettingsPage',
       disabled: false,
       linkProps: {
-        name: 'ContactDetailsPage',
+        name: 'ProfileSettingsPage',
       },
     },
   ];

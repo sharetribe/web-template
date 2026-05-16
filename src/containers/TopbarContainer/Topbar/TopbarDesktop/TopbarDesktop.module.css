@@ -201,6 +201,7 @@
 .profileMenuContent {
   min-width: 276px;
   padding-top: 20px;
+  right: 0;
 }
 
 /* left animated "border" like hover element */
