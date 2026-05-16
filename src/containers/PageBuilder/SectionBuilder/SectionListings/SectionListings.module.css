@@ -10,13 +10,6 @@
   &:hover .carouselArrows {
     opacity: 1;
   }
-
-  /* smartphones, touchscreens: we don't need to show arrows */
-  @media (any-hover: none) and (pointer: coarse) {
-    &:hover .carouselArrows {
-      opacity: 0;
-    }
-  }
 }
 
 .dynamicContainer {
@@ -28,6 +21,10 @@
   opacity: 0;
   z-index: 2;
   transition: all ease-in-out 500ms;
+
+  @media (any-hover: none) and (pointer: coarse) {
+    opacity: 0.75;
+  }
 }
 
 .carouselArrowPrev,

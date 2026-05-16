@@ -1,0 +1,87 @@
+@import '../../../styles/customMediaQueries.css';
+
+/* Search input wrapper — sits above the scrollable list, outside FilterForm scroll */
+.searchWrapper {
+  padding: 4px 12px 8px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  border: 1px solid var(--colorGrey100);
+  border-radius: 4px;
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
+  outline: none;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--colorGrey300);
+  }
+
+  &:focus {
+    border-color: var(--marketplaceColor);
+  }
+}
+
+/* Scrollable list container */
+.scrollContainer {
+  max-height: 260px;
+  overflow-y: auto;
+
+  /* Slim scrollbar — Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--colorGrey200) transparent;
+
+  /* Slim scrollbar — Chrome / Safari */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--colorGrey200);
+    border-radius: 2px;
+  }
+}
+
+.fieldGroup {
+  margin: 0;
+  padding: 0 12px 6px;
+  border: none;
+
+  @media (--viewportMedium) {
+    padding: 0 0 4px 12px;
+  }
+}
+
+.accessibilityLegend {
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: 4px 0 2px;
+
+  @media (--viewportMedium) {
+    padding: 4px 0;
+  }
+}
+
+.noResults {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--colorGrey300);
+}

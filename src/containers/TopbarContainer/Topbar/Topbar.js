@@ -29,7 +29,7 @@ import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 import css from './Topbar.module.css';
 import { getCurrentUserTypeRoles, showCreateListingLinkForUser } from '../../../util/userHelpers';
 
-const MAX_MOBILE_SCREEN_WIDTH = 1024;
+const MAX_MOBILE_SCREEN_WIDTH = 1599;
 
 const SEARCH_DISPLAY_ALWAYS = 'always';
 const SEARCH_DISPLAY_NOT_LANDING_PAGE = 'notLandingPage';

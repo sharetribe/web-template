@@ -88,7 +88,8 @@
   transition: opacity 200ms ease-in-out;
 
   @media (any-hover: none) and (pointer: coarse) {
-    display: none;
+    opacity: 0.75;
+    pointer-events: auto;
   }
 }
 
@@ -110,7 +111,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 150ms ease-in-out, transform 150ms ease-in-out, opacity 150ms ease-in-out;
+  transition: background-color 150ms ease-in-out, transform 150ms ease-in-out,
+    opacity 150ms ease-in-out;
   opacity: 0.8;
 
   &:hover {
@@ -159,8 +161,8 @@
 .twoColumns .carouselItem {
   width: calc(
     (
-        min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2) -
-          var(--carouselGap)
+        min(var(--contentMaxWidthPages), var(--carouselWidth)) -
+          (var(--carouselHorizontalPadding) * 2) - var(--carouselGap)
       ) / 2
   );
 }
@@ -168,8 +170,8 @@
 .threeColumns .carouselItem {
   width: calc(
     (
-        min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2) -
-          (var(--carouselGap) * 2)
+        min(var(--contentMaxWidthPages), var(--carouselWidth)) -
+          (var(--carouselHorizontalPadding) * 2) - (var(--carouselGap) * 2)
       ) / 3
   );
 }
@@ -177,8 +179,8 @@
 .fourColumns .carouselItem {
   width: calc(
     (
-        min(var(--contentMaxWidthPages), var(--carouselWidth)) - (var(--carouselHorizontalPadding) * 2) -
-          (var(--carouselGap) * 3)
+        min(var(--contentMaxWidthPages), var(--carouselWidth)) -
+          (var(--carouselHorizontalPadding) * 2) - (var(--carouselGap) * 3)
       ) / 4
   );
 }

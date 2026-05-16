@@ -198,6 +198,7 @@
   composes: ctaButton;
   border: none;
   outline-offset: 0;
+  text-align: center;
   background-color: var(--_av-bg);
   color: var(--_av-color);
   outline: 1px var(--_av-outline-style, solid) var(--_av-outline-color);
@@ -225,7 +226,6 @@
   --_av-outline-style: solid;
 }
 
-
 .ctaButtonLightBlue {
   composes: avCtaButton;
   --_av-bg: var(--avBlueLight);
@@ -234,7 +234,6 @@
   --_av-outline-color: var(--avYellowLight);
   --_av-outline-style: solid;
 }
-
 
 .ctaButtonPurple {
   composes: avCtaButton;
@@ -245,7 +244,6 @@
   --_av-outline-style: solid;
 }
 
-
 .ctaButtonPink {
   composes: avCtaButton;
   --_av-bg: var(--avPink);
@@ -254,7 +252,6 @@
   --_av-outline-color: var(--avYellowLight);
   --_av-outline-style: solid;
 }
-
 
 .ctaButtonYellow {
   composes: avCtaButton;
@@ -265,24 +262,41 @@
   --_av-outline-style: solid;
 }
 
-
 /* ── AV button modifiers — override single theming vars ── */
 /* Usage: space-separate with a base style, e.g. "blue roundedFull headingFont" */
 
 /* border-radius */
-.roundedFull  { --_av-radius: 9999px; }
-.rounded      { --_av-radius: 10px; }
-.square       { --_av-radius: 4px; }
+.roundedFull {
+  --_av-radius: 9999px;
+}
+.rounded {
+  --_av-radius: 10px;
+}
+.square {
+  --_av-radius: 4px;
+}
 
 /* outline style */
-.dashed       { --_av-outline-style: dashed; }
-.solid        { --_av-outline-style: solid; }
-.noOutline    { --_av-outline-color: transparent; }
+.dashed {
+  --_av-outline-style: dashed;
+}
+.solid {
+  --_av-outline-style: solid;
+}
+.noOutline {
+  --_av-outline-color: transparent;
+}
 
 /* font */
-.headingFont  { --_av-font: var(--fontFamilyHeadings); }
-.bodyFont     { --_av-font: var(--fontFamily); }
-.accentFont   { --_av-font: var(--fontFamilyAccent); }
+.headingFont {
+  --_av-font: var(--fontFamilyHeadings);
+}
+.bodyFont {
+  --_av-font: var(--fontFamily);
+}
+.accentFont {
+  --_av-font: var(--fontFamilyAccent);
+}
 
 /* layout: center a single CTA button */
 .ctaBtnCenter {

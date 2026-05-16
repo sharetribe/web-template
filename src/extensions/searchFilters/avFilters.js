@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { listingFieldDisplayOverrides } from '../../config/configListingDisplay';
+import BrandFilter from '../../containers/SearchPage/BrandFilter/BrandFilter';
 import GroupedEnumFilter from '../../containers/SearchPage/GroupedEnumFilter/GroupedEnumFilter';
 import GroupedMultiSelectFilter from '../../containers/SearchPage/GroupedMultiSelectFilter/GroupedMultiSelectFilter';
 import SelectMultipleFilter from '../../containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter';
@@ -102,8 +103,26 @@ export const getAvFilter = ({
   if (schemaType === 'enum') {
     const { scope, enumOptions, filterConfig = {} } = config;
     const { label, filterType } = filterConfig;
+    const queryParamNames = [constructQueryParamName(key, scope)];
+
+    // Brand: searchable list with scroll.
+    if (key === 'brand') {
+      return (
+        <BrandFilter
+          id={componentId}
+          label={label}
+          getAriaLabel={getAriaLabel}
+          name={name}
+          queryParamNames={queryParamNames}
+          initialValues={initialValues(queryParamNames, liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          options={enumOptions}
+          {...rest}
+        />
+      );
+    }
+
     if (filterType === 'ColorSwatchFilter' || key === 'color') {
-      const queryParamNames = [constructQueryParamName(key, scope)];
       // For enum + color, upstream uses SelectMultipleFilter (single-pick swatch UI).
       return (
         <SelectMultipleFilter

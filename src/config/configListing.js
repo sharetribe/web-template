@@ -798,6 +798,9 @@ export const listingFields = [
     },
     filterConfig: {
       indexForSearch: true,
+      showFilter: true,
+      filterType: 'SelectMultipleFilter',
+      searchMode: 'has_any',
       label: 'Marca',
       group: 'primary',
     },
