@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -16,7 +16,7 @@ import {
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
-import { sendVerificationEmail, markVendedorOnboarded } from '../../ducks/user.duck';
+import { sendVerificationEmail } from '../../ducks/user.duck';
 import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 
@@ -222,10 +222,6 @@ export const AuthenticationPageComponent = props => {
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
   const [authError, setAuthError] = useState(getAuthErrorFromCookies());
   const [mounted, setMounted] = useState(false);
-  const vendedorOnboardingDispatched = useRef(false);
-  const dispatch = useDispatch();
-  const history = useHistory();
-
   const config = useConfiguration();
   const intl = useIntl();
 
@@ -242,21 +238,6 @@ export const AuthenticationPageComponent = props => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [tosModalOpen, privacyModalOpen]);
-
-  useEffect(() => {
-    if (!mounted || !isAuthenticated || !currentUser?.id?.uuid) return;
-    if (vendedorOnboardingDispatched.current) return;
-    const publicData = currentUser.attributes?.profile?.publicData || {};
-    if (!publicData.onboardingCompleted) {
-      const landingByType = { 'vendedor-tienda': '/p/landing-tienda', vendedor: '/p/landing-vendedor' };
-      const landingPage = landingByType[publicData.userType];
-      if (landingPage) {
-        vendedorOnboardingDispatched.current = true;
-        dispatch(markVendedorOnboarded());
-        history.push(landingPage);
-      }
-    }
-  }, [mounted, isAuthenticated, currentUser?.id?.uuid]);
 
   // History API has potentially state tied to this route
   // We have used that state to store previous URL ("from"),
@@ -319,19 +300,6 @@ export const AuthenticationPageComponent = props => {
     // Already authenticated, redirect back to the page the user tried to access
     return <Redirect to={from} />;
   } else if (shouldRedirectToLandingPage) {
-    const publicData = user.attributes.profile.publicData || {};
-    const vendedorLandingPages = { 'vendedor-tienda': '/p/landing-tienda', vendedor: '/p/landing-vendedor' };
-    if (vendedorLandingPages[publicData.userType] && !publicData.onboardingCompleted) {
-      // useEffect will redirect to the vendedor landing page and update publicData — show blank page while it runs
-      return (
-        <BlankPage
-          schemaTitle={schemaTitle}
-          schemaDescription={schemaDescription}
-          topbarClasses={topbarClasses}
-        />
-      );
-    }
-    // Already authenticated, redirect to the landing page (this was direct access to /login or /signup)
     return <NamedRedirect name="LandingPage" />;
   } else if (show404) {
     // User type not found, show 404
