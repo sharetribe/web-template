@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
+import {
+  sendVerificationEmail,
+  hasCurrentUserErrors,
+  markVendedorOnboarded,
+} from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
 import { manageDisableScrolling } from '../../ducks/ui.duck';
+import AVWelcomePopup from '../../components/AVWelcomePopup';
 
 const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/Topbar'));
 
@@ -24,10 +29,44 @@ const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/
  * @returns {JSX.Element}
  */
 export const TopbarContainerComponent = props => {
-  const { notificationCount = 0, hasGenericError, ...rest } = props;
+  const {
+    notificationCount = 0,
+    hasGenericError,
+    currentUser,
+    onManageDisableScrolling,
+    onMarkVendedorOnboarded,
+    ...rest
+  } = props;
+
+  const [popupDismissed, setPopupDismissed] = useState(false);
+
+  const publicData = currentUser?.attributes?.profile?.publicData || {};
+  const showWelcomePopup =
+    !popupDismissed &&
+    ['vendedor', 'vendedor-tienda'].includes(publicData.userType) &&
+    !publicData.onboardingCompleted;
+
+  const handlePopupClose = () => {
+    setPopupDismissed(true);
+    onMarkVendedorOnboarded();
+  };
 
   return (
-    <Topbar notificationCount={notificationCount} showGenericError={hasGenericError} {...rest} />
+    <>
+      <Topbar
+        notificationCount={notificationCount}
+        showGenericError={hasGenericError}
+        currentUser={currentUser}
+        onManageDisableScrolling={onManageDisableScrolling}
+        {...rest}
+      />
+      <AVWelcomePopup
+        userType={publicData.userType}
+        isOpen={showWelcomePopup}
+        onClose={handlePopupClose}
+        onManageDisableScrolling={onManageDisableScrolling}
+      />
+    </>
   );
 };
 
@@ -65,6 +104,7 @@ const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
+  onMarkVendedorOnboarded: () => dispatch(markVendedorOnboarded()),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -75,10 +115,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const TopbarContainer = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(TopbarContainerComponent);
 
 export default TopbarContainer;

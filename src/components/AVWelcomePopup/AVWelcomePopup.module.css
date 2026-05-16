@@ -1,0 +1,87 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.body {
+  padding: 24px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 12px;
+  color: var(--colorBlack);
+  font-family: var(--fontFamilyHeadings);
+}
+
+.text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--colorGrey600);
+  margin: 0 0 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* avCtaButton-style buttons (mirrors SectionBuilder.module.css — cannot compose cross-module) */
+.primaryButton {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 13px 20px;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--fontFamilyHeadings);
+  border: none;
+  background-color: var(--avBlue);
+  color: var(--avYellowLight);
+  transition: var(--colorTransition);
+
+  &:hover {
+    text-decoration: none;
+    background-color: #1d4ed8;
+    color: var(--avYellowLight);
+  }
+}
+
+.secondaryButton {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 13px 20px;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--fontFamilyHeadings);
+  border: none;
+  background-color: var(--avPink);
+  color: var(--avYellowLight);
+  transition: var(--colorTransition);
+
+  &:hover {
+    text-decoration: none;
+    background-color: #db2777;
+    color: var(--avYellowLight);
+  }
+}

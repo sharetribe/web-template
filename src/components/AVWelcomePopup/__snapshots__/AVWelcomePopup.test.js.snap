@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AVWelcomePopup renders without crashing when closed 1`] = `<div />`;
+
+exports[`AVWelcomePopup renders without crashing when open 1`] = `<div />`;
