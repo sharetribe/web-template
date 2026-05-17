@@ -12,9 +12,7 @@ if (!BREVO_API_KEY || !BREVO_LIST_ID) {
 }
 
 // Basic email sanity check.
-const isEmail = str =>
-  typeof str === 'string' &&
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
+const isEmail = str => typeof str === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
 
 router.post('/subscribe', async (req, res) => {
   try {
@@ -46,33 +44,51 @@ router.post('/subscribe', async (req, res) => {
       if (r.status >= 400) {
         const j = await r.json().catch(() => ({}));
         // eslint-disable-next-line no-console
-        console.error('[brevo] contact upsert failed', { status: r.status, email: email.trim(), body: j });
+        console.error('[brevo] contact upsert failed', {
+          status: r.status,
+          email: email.trim(),
+          body: j,
+        });
         return res.status(400).json({ ok: false, error: 'brevo_create_failed' });
       }
     }
 
     // 2) Add to target list by email.
     {
-      const r = await fetch(`https://api.brevo.com/v3/contacts/lists/${BREVO_LIST_ID}/contacts/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': BREVO_API_KEY,
-          accept: 'application/json',
-        },
-        body: JSON.stringify({ emails: [email.trim()] }),
-      });
+      const r = await fetch(
+        `https://api.brevo.com/v3/contacts/lists/${BREVO_LIST_ID}/contacts/add`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': BREVO_API_KEY,
+            accept: 'application/json',
+          },
+          body: JSON.stringify({ emails: [email.trim()] }),
+        }
+      );
 
       if (r.status >= 400) {
         const j = await r.json().catch(() => ({}));
+        // Brevo returns 400 with code "invalid_parameter" when the contact is already in the
+        // list. Treat this as success — the user is already subscribed, which is the desired state.
+        if (j.code === 'invalid_parameter') {
+          return res.json({ ok: true });
+        }
         // eslint-disable-next-line no-console
-        console.error('[brevo] add-to-list failed', { status: r.status, email: email.trim(), body: j });
+        console.error('[brevo] add-to-list failed', {
+          status: r.status,
+          email: email.trim(),
+          body: j,
+        });
         return res.status(400).json({ ok: false, error: 'brevo_add_to_list_failed' });
       }
     }
 
     return res.json({ ok: true });
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('[brevo] unexpected error', e);
     return res.status(500).json({ ok: false, error: 'server_error' });
   }
 });

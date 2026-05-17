@@ -35,6 +35,8 @@
   "EditListingPhotosForm.slotLabel.details": "Detalles",
   "EditListingPricingForm.originalPrice": "Precio Original (opcional)",
   "EditListingPricingForm.originalPricePlaceholder": "Agrega el precio original…",
+  "EditListingPricingAndStockForm.originalPrice": "Precio Original (opcional)",
+  "EditListingPricingAndStockForm.originalPricePlaceholder": "Agrega el precio original…",
   "EarningsEstimator.title": "Ganancias Estimadas",
   "EarningsEstimator.listingPrice": "Precio del anuncio",
   "EarningsEstimator.marketplaceFeeLabel": "Comisión del marketplace",
