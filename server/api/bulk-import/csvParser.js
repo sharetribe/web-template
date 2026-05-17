@@ -2,6 +2,29 @@
 
 const { parse } = require('csv-parse/sync');
 
+// Spanish column names exported by the Archivo Vintach Google Sheets template.
+// Keys are trimmed header strings from the sheet; values are canonical English column names.
+const COLUMN_ALIASES = {
+  Título: 'title',
+  Descripción: 'description',
+  'Precio Venta (mxn)': 'price',
+  'Precio Original (opcional)': 'pd_originalPrice',
+  'Imagen 1: Frontal*': 'image_front',
+  'Imagen 2: Posterior*': 'image_back',
+  // GS labels slot 3 "Detalle" but the system calls it "horizontal" (landscape orientation)
+  'Imagen 3: Detalle*': 'image_horizontal',
+  'Imagen 4: opcional': 'image_details',
+  Categoría: 'pd_categoryLevel1',
+  'Subcategoría 1': 'pd_categoryLevel2',
+  'Subcategoría 2': 'pd_categoryLevel3',
+  Color: 'pd_color',
+  Talla: 'pd_all_sizes',
+  Marca: 'pd_brand',
+  Genero: 'pd_genero',
+  Estado: 'pd_estado',
+  Estilo: 'pd_estilo',
+};
+
 const REQUIRED_COLUMNS = ['title', 'price', 'description'];
 const IMAGE_COLUMNS = ['image_front', 'image_back', 'image_horizontal', 'image_details'];
 const REQUIRED_IMAGE_COLUMNS = ['image_front', 'image_back', 'image_horizontal'];
@@ -10,6 +33,24 @@ const RESERVED_PD_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 // Fields defined as multi-enum in the Console — single values are wrapped in arrays
 // so the Sharetribe API always receives an array for these fields.
 const MULTI_ENUM_PD_FIELDS = new Set(['color', 'all_sizes', 'estilo']);
+
+/**
+ * Remap Spanish column headers exported by the Google Sheets template to their
+ * canonical English equivalents. Rows with English headers pass through unchanged.
+ */
+function normalizeColumns(rows) {
+  if (rows.length === 0) return rows;
+  const hasAlias = Object.keys(rows[0]).some(k => k.trim() in COLUMN_ALIASES);
+  if (!hasAlias) return rows;
+  return rows.map(row => {
+    const out = {};
+    for (const [k, v] of Object.entries(row)) {
+      const canonical = COLUMN_ALIASES[k.trim()];
+      out[canonical !== undefined ? canonical : k.trim()] = v;
+    }
+    return out;
+  });
+}
 
 /**
  * Parse a CSV buffer and return structured rows.
@@ -22,7 +63,7 @@ function parseCsv(buffer) {
     trim: true,
     bom: true,
   });
-  return records;
+  return normalizeColumns(records);
 }
 
 /**
@@ -168,4 +209,4 @@ function validateRows(rows, imageMap) {
   };
 }
 
-module.exports = { parseCsv, validateRows };
+module.exports = { parseCsv, validateRows, normalizeColumns, COLUMN_ALIASES };

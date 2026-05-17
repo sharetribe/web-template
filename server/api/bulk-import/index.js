@@ -6,37 +6,60 @@ const { parseCsv, validateRows } = require('./csvParser');
 const { processImportJob, serializeSdkError } = require('./importWorker');
 const { createJob, getJob, updateJob, hasActiveJob } = require('./jobStore');
 const { extractZip } = require('./zipExtractor');
+const { authorizeAction, requireActionToken, requireOperatorSession } = require('./auth');
 
 const router = express.Router();
 
-// Multer config: memory storage, single ZIP file up to 200MB
+const MAX_ZIP_UPLOAD_BYTES = 50 * 1024 * 1024; // 50 MB compressed ZIP
+
+const isZipUpload = file => {
+  const originalName = file?.originalname || '';
+  const mimeType = file?.mimetype || '';
+  return (
+    originalName.toLowerCase().endsWith('.zip') &&
+    ['application/zip', 'application/x-zip-compressed', 'application/octet-stream'].includes(
+      mimeType
+    )
+  );
+};
+
+// Multer config: memory storage, single ZIP file with a compressed-size cap.
+// zipExtractor enforces per-entry and total uncompressed-size caps before use.
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 200 * 1024 * 1024, // 200MB — entire ZIP
+    fileSize: MAX_ZIP_UPLOAD_BYTES,
     files: 1,
+  },
+  fileFilter: (req, file, cb) => {
+    if (!isZipUpload(file)) {
+      return cb(new Error('Upload must be a .zip file with ZIP content type.'));
+    }
+    return cb(null, true);
   },
 });
 
 const uploadSingle = upload.single('zipFile');
 
-// Auth middleware
-function authMiddleware(req, res, next) {
-  const apiKey = process.env.BULK_IMPORT_API_KEY;
-  if (!apiKey) {
-    return res
-      .status(503)
-      .json({ error: 'Bulk import is not configured (missing BULK_IMPORT_API_KEY).' });
-  }
-  const provided = req.headers['x-import-key'];
-  if (provided !== apiKey) {
-    return res.status(401).json({ error: 'Invalid or missing X-Import-Key header.' });
-  }
-  next();
-}
+const uploadZip = (req, res, next) => {
+  uploadSingle(req, res, err => {
+    if (!err) {
+      return next();
+    }
+    if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+      return res
+        .status(400)
+        .json({ error: 'ZIP file is too large. Maximum upload size is 50 MB.' });
+    }
+    return res.status(400).json({ error: err.message });
+  });
+};
+
+// POST /api/bulk-import/authorize
+router.post('/authorize', requireOperatorSession, authorizeAction);
 
 // POST /api/bulk-import/start
-router.post('/start', authMiddleware, uploadSingle, (req, res) => {
+router.post('/start', requireOperatorSession, requireActionToken, uploadZip, (req, res) => {
   try {
     // Validate ZIP file was uploaded
     if (!req.file) {
@@ -77,7 +100,10 @@ router.post('/start', authMiddleware, uploadSingle, (req, res) => {
 
     // Prevent concurrent imports
     if (hasActiveJob()) {
-      return res.status(409).json({ error: 'An import is already in progress. Wait for it to complete before starting a new one.' });
+      return res.status(409).json({
+        error:
+          'An import is already in progress. Wait for it to complete before starting a new one.',
+      });
     }
 
     // Create job and start processing
@@ -102,7 +128,7 @@ router.post('/start', authMiddleware, uploadSingle, (req, res) => {
 });
 
 // GET /api/bulk-import/status/:jobId
-router.get('/status/:jobId', authMiddleware, (req, res) => {
+router.get('/status/:jobId', requireOperatorSession, requireActionToken, (req, res) => {
   const job = getJob(req.params.jobId);
   if (!job) {
     return res.status(404).json({ error: 'Job not found. It may have expired (1hr TTL).' });
@@ -189,3 +215,4 @@ router.get('/template', (req, res) => {
 });
 
 module.exports = router;
+module.exports._test = { isZipUpload, MAX_ZIP_UPLOAD_BYTES };

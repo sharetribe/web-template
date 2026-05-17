@@ -1,8 +1,14 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const { createTTLCache } = require('../api-util/cache');
+const { createRateLimiter } = require('../api-util/rateLimit');
 
 const router = express.Router();
+const feedRateLimit = createRateLimiter({
+  windowMs: 60 * 1000,
+  max: 60,
+  message: { ok: false, error: 'rate_limited' },
+});
 
 const ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
 const GRAPH_BASE = 'https://graph.instagram.com/v18.0';
@@ -19,7 +25,7 @@ const fetchJSON = async url => {
   return r.json();
 };
 
-router.get('/feed', async (_req, res) => {
+router.get('/feed', feedRateLimit, async (_req, res) => {
   if (!ACCESS_TOKEN) {
     return res.status(503).json({ ok: false, error: 'not_configured' });
   }
@@ -51,7 +57,7 @@ router.get('/feed', async (_req, res) => {
       posts: (mediaData.data || []).map(p => ({
         id: p.id,
         mediaUrl: p.media_type === 'VIDEO' ? p.thumbnail_url : p.media_url,
-        videoUrl: p.media_type === 'VIDEO' ? (p.media_url || null) : null,
+        videoUrl: p.media_type === 'VIDEO' ? p.media_url || null : null,
         permalink: p.permalink,
         caption: p.caption || '',
         likeCount: p.like_count ?? null,

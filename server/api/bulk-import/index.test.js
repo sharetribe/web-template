@@ -8,10 +8,17 @@ jest.mock('./zipExtractor', () => ({
   extractZip: jest.fn(),
 }));
 
+jest.mock('../../api-util/sdk', () => ({
+  getSdk: jest.fn(),
+}));
+
 const { processImportJob } = require('./importWorker');
 const { extractZip } = require('./zipExtractor');
 const { createJob } = require('./jobStore');
+const { getSdk } = require('../../api-util/sdk');
 const router = require('./index');
+const { _test: authTest } = require('./auth');
+const { isZipUpload, MAX_ZIP_UPLOAD_BYTES } = router._test;
 
 const ORIGINAL_ENV = process.env;
 
@@ -60,17 +67,33 @@ function createMockRes() {
 }
 
 describe('bulk import router', () => {
-  const [startAuthMiddleware, , startHandler] = getRouteStack('/start', 'post');
-  const [statusAuthMiddleware, statusHandler] = getRouteStack('/status/:jobId', 'get');
+  const [authorizeSessionMiddleware, authorizeHandler] = getRouteStack('/authorize', 'post');
+  const [, startTokenMiddleware, , startHandler] = getRouteStack('/start', 'post');
+  const [, statusTokenMiddleware, statusHandler] = getRouteStack('/status/:jobId', 'get');
   const [templateHandler] = getRouteStack('/template', 'get');
 
   beforeEach(() => {
     jest.clearAllMocks();
+    authTest.tokenStore.clear();
     process.env = {
       ...ORIGINAL_ENV,
-      BULK_IMPORT_API_KEY: 'test-import-key',
+      BULK_IMPORT_OPERATOR_EMAILS: 'operator@example.com',
       BULK_IMPORT_DEFAULT_AUTHOR_ID: 'default-author-id',
     };
+    getSdk.mockReturnValue({
+      currentUser: {
+        show: jest.fn(() =>
+          Promise.resolve({
+            data: {
+              data: {
+                id: { uuid: 'operator-user-id' },
+                attributes: { email: 'operator@example.com' },
+              },
+            },
+          })
+        ),
+      },
+    });
     // Default: successful extraction
     extractZip.mockReturnValue({ csvBuffer: validCsvBuffer, imageMap: defaultImageMap });
   });
@@ -91,16 +114,97 @@ describe('bulk import router', () => {
     expect(processImportJob).toHaveBeenCalledTimes(1);
   });
 
-  it('returns 401 for missing api key', () => {
-    const req = { headers: {} };
+  it('issues an action token for an allowed operator session', async () => {
+    const req = {};
     const res = createMockRes();
     const next = jest.fn();
 
-    statusAuthMiddleware(req, res, next);
+    await authorizeSessionMiddleware(req, res, next);
+    expect(next).toHaveBeenCalledTimes(1);
+
+    authorizeHandler(req, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.token).toEqual(expect.any(String));
+    expect(authTest.validateActionToken(res.body.token, 'operator-user-id')).toBe(true);
+  });
+
+  it('returns 401 when operator session is missing', async () => {
+    getSdk.mockReturnValue({
+      currentUser: {
+        show: jest.fn(() => Promise.reject(new Error('no session'))),
+      },
+    });
+
+    const req = {};
+    const res = createMockRes();
+    const next = jest.fn();
+
+    await authorizeSessionMiddleware(req, res, next);
 
     expect(res.statusCode).toBe(401);
-    expect(res.body.error).toMatch(/X-Import-Key/);
+    expect(res.body.error).toMatch(/signed-in operator session/);
     expect(next).not.toHaveBeenCalled();
+  });
+
+  it('returns 403 when signed-in user is not in the operator allowlist', async () => {
+    getSdk.mockReturnValue({
+      currentUser: {
+        show: jest.fn(() =>
+          Promise.resolve({
+            data: {
+              data: {
+                id: { uuid: 'other-user-id' },
+                attributes: { email: 'other@example.com' },
+              },
+            },
+          })
+        ),
+      },
+    });
+
+    const req = {};
+    const res = createMockRes();
+    const next = jest.fn();
+
+    await authorizeSessionMiddleware(req, res, next);
+
+    expect(res.statusCode).toBe(403);
+    expect(res.body.error).toMatch(/not allowed/);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it('returns 401 when action token is missing', () => {
+    const req = {
+      get: jest.fn(() => undefined),
+      bulkImportUser: { userId: 'operator-user-id' },
+    };
+    const res = createMockRes();
+    const next = jest.fn();
+
+    statusTokenMiddleware(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toMatch(/action token/);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it('allows start and status with a valid action token for the current operator', async () => {
+    const { token } = authTest.issueActionToken('operator-user-id');
+    const req = {
+      get: jest.fn(name => (name === 'X-Bulk-Import-Token' ? token : undefined)),
+      bulkImportUser: { userId: 'operator-user-id' },
+    };
+    const res = createMockRes();
+    const next = jest.fn();
+
+    startTokenMiddleware(req, res, next);
+    expect(next).toHaveBeenCalledTimes(1);
+
+    statusTokenMiddleware(req, res, next);
+    expect(next).toHaveBeenCalledTimes(2);
+    expect(res.statusCode).toBe(200);
   });
 
   it('returns 400 when zip file is missing', () => {
@@ -227,6 +331,29 @@ describe('bulk import router', () => {
     it('template includes pd_categoryLevel3 header', () => {
       expect(templateBody).toContain('pd_categoryLevel3');
     });
+  });
 
+  describe('upload validation', () => {
+    it('accepts .zip files with common ZIP MIME types', () => {
+      expect(isZipUpload({ originalname: 'import.zip', mimetype: 'application/zip' })).toBe(true);
+      expect(
+        isZipUpload({
+          originalname: 'import.ZIP',
+          mimetype: 'application/x-zip-compressed',
+        })
+      ).toBe(true);
+      expect(
+        isZipUpload({ originalname: 'import.zip', mimetype: 'application/octet-stream' })
+      ).toBe(true);
+    });
+
+    it('rejects non-ZIP extensions and MIME types', () => {
+      expect(isZipUpload({ originalname: 'import.csv', mimetype: 'application/zip' })).toBe(false);
+      expect(isZipUpload({ originalname: 'import.zip', mimetype: 'text/csv' })).toBe(false);
+    });
+
+    it('caps compressed ZIP uploads at 50 MB', () => {
+      expect(MAX_ZIP_UPLOAD_BYTES).toBe(50 * 1024 * 1024);
+    });
   });
 });

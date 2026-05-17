@@ -1,7 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { types as sdkTypes, createImageVariantConfig } from '../../../util/sdkLoader';
-import { addMarketplaceEntities, getListingsById } from '../../../ducks/marketplaceData.duck';
+import { addMarketplaceEntities } from '../../../ducks/marketplaceData.duck';
 import { denormalisedEntities } from '../../../util/data';
+import * as log from '../../../util/log';
 import { setTagListingIds } from '../../../ducks/avExtension.duck';
 
 import {
@@ -13,6 +14,16 @@ import {
 } from './sections';
 
 const { UUID } = sdkTypes;
+
+const MAX_LISTING_IDS_PER_SECTION = 24;
+const MAX_TOTAL_LISTING_ID_QUERY = 100;
+const MAX_FILTER_SECTIONS = 8;
+const MAX_FILTER_LISTINGS_PER_SECTION = 24;
+const MAX_SELECTED_USERS = 24;
+const USER_CACHE_TTL_MS = 5 * 60 * 1000;
+const USER_CACHE_MAX_ENTRIES = 200;
+
+const publicUserResponseCache = new Map();
 
 // AV-specific listing fields fetched for landing page sections.
 // Keep in sync with publicData fields defined in configListing.js.
@@ -52,6 +63,28 @@ const createListingsQueryParams = (config = {}, listingIds = []) => {
   return { ids, ...createListingsBaseQueryParams(config) };
 };
 
+const capIds = (ids = [], limit) => ids.filter(Boolean).slice(0, limit);
+
+const capSectionIds = sections =>
+  Object.entries(sections || {}).reduce(
+    (collected, [sectionId, ids]) => ({
+      ...collected,
+      [sectionId]: capIds(ids, MAX_LISTING_IDS_PER_SECTION),
+    }),
+    {}
+  );
+
+const firstUniqueIds = (ids = [], limit) => [...new Set(ids.filter(Boolean))].slice(0, limit);
+
+const filterKeyFromParams = filterParams =>
+  JSON.stringify(Object.entries(filterParams || {}).sort());
+
+const safeLoadCall = (promise, code, data = {}) =>
+  promise.catch(e => {
+    log.error(e, code, data);
+    return null;
+  });
+
 const queryListingsByIds = (listingIds, config) => (dispatch, getState, sdk) => {
   if (!listingIds || listingIds.length === 0) {
     return Promise.resolve();
@@ -84,7 +117,7 @@ const queryListingsByFilter = (filterParams, config) => (dispatch, getState, sdk
   const params = {
     ...createListingsBaseQueryParams(config),
     ...filterParams,
-    perPage: 24,
+    perPage: MAX_FILTER_LISTINGS_PER_SECTION,
   };
 
   return sdk.listings.query(params).then(response => {
@@ -105,12 +138,37 @@ const toUUID = id => {
   }
 };
 
-const pickListingsById = (state, ids) => {
-  const uuids = (ids || []).map(toUUID).filter(Boolean);
-  return uuids.length > 0 ? getListingsById(state, uuids) : [];
+const getCachedUserResponse = userId => {
+  const cached = publicUserResponseCache.get(userId);
+  if (!cached) return null;
+
+  if (Date.now() - cached.cachedAt > USER_CACHE_TTL_MS) {
+    publicUserResponseCache.delete(userId);
+    return null;
+  }
+
+  // Refresh recency for simple LRU behavior.
+  publicUserResponseCache.delete(userId);
+  publicUserResponseCache.set(userId, cached);
+  return cached.response;
+};
+
+const setCachedUserResponse = (userId, response) => {
+  publicUserResponseCache.set(userId, { response, cachedAt: Date.now() });
+
+  if (publicUserResponseCache.size > USER_CACHE_MAX_ENTRIES) {
+    const oldestKey = publicUserResponseCache.keys().next().value;
+    publicUserResponseCache.delete(oldestKey);
+  }
 };
 
 const queryUserById = userId => (dispatch, getState, sdk) => {
+  const cachedResponse = getCachedUserResponse(userId);
+  if (cachedResponse) {
+    dispatch(addMarketplaceEntities(cachedResponse));
+    return Promise.resolve(cachedResponse);
+  }
+
   return sdk.users
     .show({
       id: userId,
@@ -118,19 +176,10 @@ const queryUserById = userId => (dispatch, getState, sdk) => {
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
     .then(response => {
+      setCachedUserResponse(userId, response);
       dispatch(addMarketplaceEntities(response));
       return response;
     });
-};
-
-const pickUsersById = (state, ids) => {
-  const { entities } = state.marketplaceData;
-  const refs = (ids || [])
-    .map(toUUID)
-    .filter(Boolean)
-    .map(id => ({ id, type: 'user' }));
-  if (!refs.length) return [];
-  return denormalisedEntities(entities, refs, false).filter(Boolean);
 };
 
 export const loadCustomSectionListings = ({ pageData, dispatch, config }) => {
@@ -138,43 +187,72 @@ export const loadCustomSectionListings = ({ pageData, dispatch, config }) => {
     return Promise.resolve();
   }
 
-  const recommendedListingIds = getRecommendedListingIds(pageData);
-  const selectionsSections = getSelectionsSections(pageData);
+  const recommendedListingIds = capIds(
+    getRecommendedListingIds(pageData),
+    MAX_LISTING_IDS_PER_SECTION
+  );
+  const selectionsSections = capSectionIds(getSelectionsSections(pageData));
   const tagListingsSectionsMap = getTagListingsSections(pageData);
   const selectedUsersSections = getSelectedUsersSections(pageData);
   const calls = [];
 
-  if (recommendedListingIds.length > 0) {
-    calls.push(dispatch(queryListingsByIds(recommendedListingIds, config)));
+  const explicitListingIds = firstUniqueIds(
+    [recommendedListingIds, ...Object.values(selectionsSections)].flat(),
+    MAX_TOTAL_LISTING_ID_QUERY
+  );
+  if (explicitListingIds.length > 0) {
+    calls.push(
+      safeLoadCall(
+        dispatch(queryListingsByIds(explicitListingIds, config)),
+        'av-landing-listings-failed',
+        {
+          sectionType: 'explicit-listing-ids',
+          listingCount: explicitListingIds.length,
+        }
+      )
+    );
   }
-
-  Object.values(selectionsSections).forEach(ids => {
-    if (ids.length > 0) {
-      calls.push(dispatch(queryListingsByIds(ids, config)));
-    }
-  });
 
   // For each tag/category filter section, query listings and store the returned IDs
   const tagListingIdsAccumulator = {};
-  Object.entries(tagListingsSectionsMap).forEach(([sectionId, blockName]) => {
-    const filterParams = parseFilterFromBlockName(blockName);
-    if (filterParams) {
-      calls.push(
+  const filterSectionsByKey = {};
+  Object.entries(tagListingsSectionsMap)
+    .slice(0, MAX_FILTER_SECTIONS)
+    .forEach(([sectionId, blockName]) => {
+      const filterParams = parseFilterFromBlockName(blockName);
+      if (filterParams) {
+        const filterKey = filterKeyFromParams(filterParams);
+        const sectionIds = filterSectionsByKey[filterKey]?.sectionIds || [];
+        filterSectionsByKey[filterKey] = { filterParams, sectionIds: [...sectionIds, sectionId] };
+        tagListingIdsAccumulator[sectionId] = [];
+      }
+    });
+
+  Object.values(filterSectionsByKey).forEach(({ filterParams, sectionIds }) => {
+    calls.push(
+      safeLoadCall(
         dispatch(queryListingsByFilter(filterParams, config)).then(response => {
           const ids = (response?.data?.data || []).map(l => l?.id?.uuid).filter(Boolean);
-          tagListingIdsAccumulator[sectionId] = ids;
-        })
-      );
-    }
+          sectionIds.forEach(sectionId => {
+            tagListingIdsAccumulator[sectionId] = ids;
+          });
+        }),
+        'av-landing-filter-listings-failed',
+        { sectionIds, filterParams }
+      )
+    );
   });
 
   // Fetch each unique user ID across all selected-users sections.
   // Note: Sharetribe's public Marketplace API doesn't accept an id-array filter on
   // sdk.users.query, so true batching isn't available — we deduplicate via Set
   // and let Promise.all dispatch the fan-out in parallel below.
-  const allUserIds = [...new Set(Object.values(selectedUsersSections).flat())];
+  const allUserIds = firstUniqueIds(
+    Object.values(selectedUsersSections).flat(),
+    MAX_SELECTED_USERS
+  );
   allUserIds.forEach(userId => {
-    calls.push(dispatch(queryUserById(userId)));
+    calls.push(safeLoadCall(dispatch(queryUserById(userId)), 'av-landing-user-failed', { userId }));
   });
 
   return Promise.all(calls).then(() => {
@@ -216,9 +294,18 @@ const customSectionListingsSelector = createSelector(
       return { hasCustomSections: false };
     }
 
-    const recommendedListingIds = getRecommendedListingIds(pageData);
-    const selectionsSections = getSelectionsSections(pageData);
-    const selectedUsersSections = getSelectedUsersSections(pageData);
+    const recommendedListingIds = capIds(
+      getRecommendedListingIds(pageData),
+      MAX_LISTING_IDS_PER_SECTION
+    );
+    const selectionsSections = capSectionIds(getSelectionsSections(pageData));
+    const selectedUsersSections = Object.entries(getSelectedUsersSections(pageData)).reduce(
+      (collected, [sectionId, ids]) => ({
+        ...collected,
+        [sectionId]: capIds(ids, MAX_SELECTED_USERS),
+      }),
+      {}
+    );
 
     const listings = pickListingsByIdFromEntities(entities, recommendedListingIds);
     const selectionsListings = Object.entries(selectionsSections).reduce(

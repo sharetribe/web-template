@@ -2,6 +2,13 @@
 
 jest.mock('node-fetch');
 
+const ORIGINAL_ENV = process.env;
+process.env = {
+  ...ORIGINAL_ENV,
+  BREVO_API_KEY: 'test-api-key',
+  BREVO_LIST_ID: '9',
+};
+
 const fetch = require('node-fetch');
 const router = require('./brevo');
 
@@ -37,10 +44,8 @@ function createRes() {
 
 function getSubscribeHandler() {
   const layer = router.stack.find(l => l.route?.path === '/subscribe' && l.route.methods?.post);
-  return layer.route.stack[0].handle;
+  return layer.route.stack[layer.route.stack.length - 1].handle;
 }
-
-const ORIGINAL_ENV = process.env;
 
 beforeEach(() => {
   jest.clearAllMocks();

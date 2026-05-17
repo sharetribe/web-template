@@ -12,8 +12,6 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './BulkImportPage.module.css';
 
-const API_KEY_STORAGE_KEY = 'bulkImportApiKey';
-
 const STATUS_IDLE = 'idle';
 const STATUS_UPLOADING = 'uploading';
 const STATUS_PROCESSING = 'processing';
@@ -24,12 +22,7 @@ const BulkImportPageComponent = props => {
   const { scrollingDisabled } = props;
   const intl = useIntl();
 
-  const [apiKey, setApiKey] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
-    }
-    return '';
-  });
+  const [actionToken, setActionToken] = useState(null);
   const [zipFile, setZipFile] = useState(null);
   const [status, setStatus] = useState(STATUS_IDLE);
   const [jobId, setJobId] = useState(null);
@@ -37,23 +30,31 @@ const BulkImportPageComponent = props => {
   const [uploadError, setUploadError] = useState(null);
   const pollRef = useRef(null);
 
-  // Persist API key
-  const handleApiKeyChange = useCallback(e => {
-    const key = e.target.value;
-    setApiKey(key);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(API_KEY_STORAGE_KEY, key);
+  const requestActionToken = useCallback(async () => {
+    const res = await fetch('/api/bulk-import/authorize', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Bulk import authorization failed.');
     }
+
+    setActionToken(data.token);
+    return data.token;
   }, []);
 
   // Poll for job status
   useEffect(() => {
-    if (status !== STATUS_PROCESSING || !jobId || !apiKey) return;
+    if (status !== STATUS_PROCESSING || !jobId || !actionToken) return;
 
     const poll = async () => {
       try {
         const res = await fetch(`/api/bulk-import/status/${jobId}`, {
-          headers: { 'X-Import-Key': apiKey },
+          credentials: 'include',
+          headers: { 'X-Bulk-Import-Token': actionToken },
         });
         if (!res.ok) {
           throw new Error(`Status check failed: ${res.status}`);
@@ -80,17 +81,13 @@ const BulkImportPageComponent = props => {
         pollRef.current = null;
       }
     };
-  }, [status, jobId, apiKey]);
+  }, [status, jobId, actionToken]);
 
   const handleSubmit = async e => {
     e.preventDefault();
     setUploadError(null);
     setJobData(null);
 
-    if (!apiKey.trim()) {
-      setUploadError(intl.formatMessage({ id: 'BulkImportPage.errorNoApiKey' }));
-      return;
-    }
     if (!zipFile) {
       setUploadError(intl.formatMessage({ id: 'BulkImportPage.errorNoZip' }));
       return;
@@ -102,9 +99,11 @@ const BulkImportPageComponent = props => {
     formData.append('zipFile', zipFile);
 
     try {
+      const token = await requestActionToken();
       const res = await fetch('/api/bulk-import/start', {
         method: 'POST',
-        headers: { 'X-Import-Key': apiKey },
+        credentials: 'include',
+        headers: { 'X-Bulk-Import-Token': token },
         body: formData,
       });
 
@@ -159,21 +158,6 @@ const BulkImportPageComponent = props => {
             <FormattedMessage id="BulkImportPage.description" />
           </p>
 
-          {/* API Key */}
-          <div className={css.section}>
-            <label className={css.label} htmlFor="apiKey">
-              <FormattedMessage id="BulkImportPage.apiKeyLabel" />
-            </label>
-            <input
-              id="apiKey"
-              type="password"
-              className={css.input}
-              value={apiKey}
-              onChange={handleApiKeyChange}
-              placeholder={intl.formatMessage({ id: 'BulkImportPage.apiKeyPlaceholder' })}
-            />
-          </div>
-
           {/* Upload Form */}
           {(status === STATUS_IDLE || status === STATUS_ERROR) && (
             <form onSubmit={handleSubmit}>
@@ -205,11 +189,7 @@ const BulkImportPageComponent = props => {
                 <button type="submit" className={css.submitButton}>
                   <FormattedMessage id="BulkImportPage.startImport" />
                 </button>
-                <a
-                  href={templateDownloadUrl}
-                  className={css.templateLink}
-                  download
-                >
+                <a href={templateDownloadUrl} className={css.templateLink} download>
                   <FormattedMessage id="BulkImportPage.downloadTemplate" />
                 </a>
               </div>
@@ -302,9 +282,19 @@ const BulkImportPageComponent = props => {
                           <td className={css.errorCell}>
                             <div>{err.error}</div>
                             {err.sdkErrors && err.sdkErrors.length > 0 && (
-                              <ul style={{ margin: '4px 0 0', paddingLeft: '16px', fontSize: '11px', opacity: 0.8 }}>
+                              <ul
+                                style={{
+                                  margin: '4px 0 0',
+                                  paddingLeft: '16px',
+                                  fontSize: '11px',
+                                  opacity: 0.8,
+                                }}
+                              >
                                 {err.sdkErrors.map((e, i) => (
-                                  <li key={i}>{e.code}: {e.title}{e.source ? ` (${JSON.stringify(e.source)})` : ''}</li>
+                                  <li key={i}>
+                                    {e.code}: {e.title}
+                                    {e.source ? ` (${JSON.stringify(e.source)})` : ''}
+                                  </li>
                                 ))}
                               </ul>
                             )}

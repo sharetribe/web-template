@@ -1,6 +1,13 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const { createRateLimiter } = require('../api-util/rateLimit');
+
 const router = express.Router();
+const subscribeRateLimit = createRateLimiter({
+  windowMs: 60 * 1000,
+  max: 20,
+  message: { ok: false, error: 'rate_limited' },
+});
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_LIST_ID = process.env.BREVO_LIST_ID;
@@ -14,7 +21,7 @@ if (!BREVO_API_KEY || !BREVO_LIST_ID) {
 // Basic email sanity check.
 const isEmail = str => typeof str === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
 
-router.post('/subscribe', async (req, res) => {
+router.post('/subscribe', subscribeRateLimit, async (req, res) => {
   try {
     const { email, hp } = req.body || {};
 

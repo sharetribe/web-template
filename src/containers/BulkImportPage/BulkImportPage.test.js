@@ -3,9 +3,8 @@ import '@testing-library/jest-dom';
 
 // CustomLinksMenu fetches /static/data/top-bar.json in a useEffect (via fetchLocalTopbarData).
 // Mock the whole component to prevent it from consuming global.fetch responses meant for tests.
-jest.mock(
-  '../TopbarContainer/Topbar/TopbarDesktop/CustomLinksMenu/CustomLinksMenu',
-  () => () => null
+jest.mock('../TopbarContainer/Topbar/TopbarDesktop/CustomLinksMenu/CustomLinksMenu', () => () =>
+  null
 );
 
 import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
@@ -67,14 +66,15 @@ describe('BulkImportPage', () => {
     });
   });
 
-  it('renders API key input', async () => {
+  it('does not render or persist an import API key', async () => {
     render(<BulkImportPage />, { initialState: baseState });
 
     await waitFor(() => {
-      const input = screen.getByLabelText('BulkImportPage.apiKeyLabel');
-      expect(input).toBeInTheDocument();
-      expect(input.type).toBe('password');
+      expect(screen.getByText('BulkImportPage.startImport')).toBeInTheDocument();
     });
+
+    expect(screen.queryByLabelText('BulkImportPage.apiKeyLabel')).not.toBeInTheDocument();
+    expect(window.localStorage.getItem('bulkImportApiKey')).toBeNull();
   });
 
   it('renders ZIP file input', async () => {
@@ -125,23 +125,7 @@ describe('BulkImportPage', () => {
     expect(global.fetch).not.toHaveBeenCalledWith('/api/bulk-import/template', expect.anything());
   });
 
-  it('shows error when submitting without API key', async () => {
-    render(<BulkImportPage />, { initialState: baseState });
-
-    await waitFor(() => {
-      expect(screen.getByText('BulkImportPage.startImport')).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByText('BulkImportPage.startImport'));
-
-    await waitFor(() => {
-      expect(screen.getByText('BulkImportPage.errorNoApiKey')).toBeInTheDocument();
-    });
-  });
-
   it('shows error when submitting without a ZIP file', async () => {
-    window.localStorage.setItem('bulkImportApiKey', 'secret-key');
-
     render(<BulkImportPage />, { initialState: baseState });
 
     await waitFor(() => {
@@ -156,15 +140,18 @@ describe('BulkImportPage', () => {
   });
 
   it('shows validation error returned from start endpoint', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({
-        error: 'CSV validation failed.',
-        details: ['Row 2: "image_back" is required.'],
-      }),
-    });
-
-    window.localStorage.setItem('bulkImportApiKey', 'secret-key');
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true, token: 'action-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({
+          error: 'CSV validation failed.',
+          details: ['Row 2: "image_back" is required.'],
+        }),
+      });
 
     render(<BulkImportPage />, { initialState: baseState });
 
@@ -179,10 +166,18 @@ describe('BulkImportPage', () => {
       expect(screen.getByText(/image_back/)).toBeInTheDocument();
     });
     expect(global.fetch).toHaveBeenCalledWith(
+      '/api/bulk-import/authorize',
+      expect.objectContaining({
+        method: 'POST',
+        credentials: 'include',
+      })
+    );
+    expect(global.fetch).toHaveBeenCalledWith(
       '/api/bulk-import/start',
       expect.objectContaining({
         method: 'POST',
-        headers: { 'X-Import-Key': 'secret-key' },
+        credentials: 'include',
+        headers: { 'X-Bulk-Import-Token': 'action-token' },
       })
     );
   });
@@ -191,6 +186,10 @@ describe('BulkImportPage', () => {
     jest.useFakeTimers();
 
     global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true, token: 'action-token' }),
+      })
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ jobId: 'job-123', total: 2 }),
@@ -225,8 +224,6 @@ describe('BulkImportPage', () => {
         }),
       });
 
-    window.localStorage.setItem('bulkImportApiKey', 'secret-key');
-
     render(<BulkImportPage />, { initialState: baseState });
 
     const zipInput = await screen.findByLabelText('BulkImportPage.zipLabel');
@@ -253,19 +250,25 @@ describe('BulkImportPage', () => {
       '/api/bulk-import/start',
       expect.objectContaining({
         method: 'POST',
-        headers: { 'X-Import-Key': 'secret-key' },
+        credentials: 'include',
+        headers: { 'X-Bulk-Import-Token': 'action-token' },
       })
     );
     expect(global.fetch).toHaveBeenCalledWith(
       '/api/bulk-import/status/job-123',
       expect.objectContaining({
-        headers: { 'X-Import-Key': 'secret-key' },
+        credentials: 'include',
+        headers: { 'X-Bulk-Import-Token': 'action-token' },
       })
     );
   });
 
   it('resets the form after a completed import', async () => {
     global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true, token: 'action-token' }),
+      })
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ jobId: 'job-123', total: 1 }),
@@ -283,8 +286,6 @@ describe('BulkImportPage', () => {
           results: [{ row: 2, title: 'Imported listing', status: 'published' }],
         }),
       });
-
-    window.localStorage.setItem('bulkImportApiKey', 'secret-key');
 
     render(<BulkImportPage />, { initialState: baseState });
 

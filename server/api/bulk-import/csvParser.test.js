@@ -1,6 +1,6 @@
 'use strict';
 
-const { parseCsv, validateRows } = require('./csvParser');
+const { parseCsv, validateRows, normalizeColumns, COLUMN_ALIASES } = require('./csvParser');
 
 // Helper to build a CSV buffer from header + row arrays
 function buildCsv(headers, ...rows) {
@@ -573,6 +573,110 @@ describe('validateRows', () => {
     );
     expect(result.rows[0].rowNum).toBe(2);
     expect(result.rows[1].rowNum).toBe(3);
+  });
+
+  // --- Spanish column alias (Google Sheets format) ---
+
+  it('accepts Spanish column names exported from Google Sheets', () => {
+    const imageMap = new Map([
+      ['camisa_frontal.jpg', Buffer.from('img')],
+      ['camisa_posterior.jpg', Buffer.from('img')],
+      ['camisa_detalle.jpg', Buffer.from('img')],
+    ]);
+    const buf = Buffer.from(
+      [
+        'Título,Descripción ,Precio Venta (mxn),Imagen 1: Frontal* ,Imagen 2: Posterior*,Imagen 3: Detalle*,Categoría,Subcategoría 1,Color,Talla,Marca,Genero,Estado,Estilo',
+        'Camisa NOA,Hermosa camisa vintage,1500,camisa_frontal.jpg,camisa_posterior.jpg,camisa_detalle.jpg,ropa,ropa-camisas,rosa,s|m,vintage,mujer,como-nuevo,vintage',
+      ].join('\n')
+    );
+    const rows = parseCsv(buf);
+    expect(rows[0].title).toBe('Camisa NOA');
+    expect(rows[0].price).toBe('1500');
+    expect(rows[0].description).toBe('Hermosa camisa vintage');
+    expect(rows[0].image_front).toBe('camisa_frontal.jpg');
+    expect(rows[0].image_back).toBe('camisa_posterior.jpg');
+    expect(rows[0].image_horizontal).toBe('camisa_detalle.jpg');
+    expect(rows[0].pd_categoryLevel1).toBe('ropa');
+    expect(rows[0].pd_categoryLevel2).toBe('ropa-camisas');
+    expect(rows[0].pd_color).toBe('rosa');
+    expect(rows[0].pd_all_sizes).toBe('s|m');
+    expect(rows[0].pd_brand).toBe('vintage');
+    expect(rows[0].pd_genero).toBe('mujer');
+    expect(rows[0].pd_estado).toBe('como-nuevo');
+    expect(rows[0].pd_estilo).toBe('vintage');
+
+    const result = validateRows(rows, imageMap);
+    expect(result.valid).toBe(true);
+    expect(result.rows[0].title).toBe('Camisa NOA');
+    expect(result.rows[0].publicData.categoryLevel1).toBe('ropa');
+    expect(result.rows[0].publicData.color).toEqual(['rosa']);
+  });
+
+  it('passes through English column names unchanged', () => {
+    const buf = Buffer.from('title,price,description\nHat,50,A hat\n');
+    const rows = parseCsv(buf);
+    expect(rows[0].title).toBe('Hat');
+    expect(rows[0].price).toBe('50');
+    expect(rows[0].description).toBe('A hat');
+  });
+
+  // --- normalizeColumns ---
+
+  describe('normalizeColumns', () => {
+    it('returns empty array unchanged', () => {
+      expect(normalizeColumns([])).toEqual([]);
+    });
+
+    it('maps each Spanish alias to its canonical key', () => {
+      const input = [{ Título: 'Test', 'Precio Venta (mxn)': '100', Descripción: 'Desc' }];
+      const result = normalizeColumns(input);
+      expect(result[0]).toEqual({ title: 'Test', price: '100', description: 'Desc' });
+    });
+
+    it('trims trailing/leading whitespace from Spanish header keys', () => {
+      const input = [{ 'Título ': 'Test', ' Descripción': 'Desc', 'Precio Venta (mxn)': '50' }];
+      const result = normalizeColumns(input);
+      expect(result[0].title).toBe('Test');
+      expect(result[0].description).toBe('Desc');
+    });
+
+    it('maps Imagen 3 to image_horizontal', () => {
+      const input = [{ Título: 'x', 'Imagen 3: Detalle*': 'photo.jpg' }];
+      const result = normalizeColumns(input);
+      expect(result[0].image_horizontal).toBe('photo.jpg');
+    });
+
+    it('passes through unknown keys unchanged', () => {
+      const input = [{ Título: 'x', extra_column: 'val' }];
+      const result = normalizeColumns(input);
+      expect(result[0].extra_column).toBe('val');
+    });
+
+    it('exports all expected aliases', () => {
+      const expectedTargets = [
+        'title',
+        'description',
+        'price',
+        'pd_originalPrice',
+        'image_front',
+        'image_back',
+        'image_horizontal',
+        'image_details',
+        'pd_categoryLevel1',
+        'pd_categoryLevel2',
+        'pd_categoryLevel3',
+        'pd_color',
+        'pd_all_sizes',
+        'pd_brand',
+        'pd_genero',
+        'pd_estado',
+        'pd_estilo',
+      ];
+      const aliasValues = Object.values(COLUMN_ALIASES);
+      for (const target of expectedTargets) {
+        expect(aliasValues).toContain(target);
+      }
+    });
   });
 
   // --- Multiple errors ---

@@ -1,7 +1,15 @@
 'use strict';
 
 const AdmZip = require('adm-zip');
-const { extractZip } = require('./zipExtractor');
+const {
+  extractZip,
+  MAX_CSV_BYTES,
+  MAX_IMAGE_BYTES,
+  MAX_UNCOMPRESSED_BYTES,
+} = require('./zipExtractor');
+
+const JPG = Buffer.from([0xff, 0xd8, 0xff, 0xd9]);
+const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 const VALID_CSV = Buffer.from(
   'title,description,price,image_front,image_back,image_horizontal\n' +
@@ -21,11 +29,17 @@ function buildZip(files) {
   return zip.toBuffer();
 }
 
+function buildJpeg(size) {
+  const buf = Buffer.alloc(size);
+  JPG.copy(buf, 0);
+  return buf;
+}
+
 describe('extractZip — valid ZIPs (happy path)', () => {
   it('extracts csvBuffer and imageMap from a minimal valid ZIP', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'front.jpg': Buffer.from('img1'),
+      'front.jpg': JPG,
     });
 
     const { csvBuffer, imageMap } = extractZip(zipBuf);
@@ -38,21 +52,21 @@ describe('extractZip — valid ZIPs (happy path)', () => {
   it('uses basename as imageMap key for images inside subdirectories', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'photos/front.jpg': Buffer.from('img1'),
-      'photos/sub/back.jpg': Buffer.from('img2'),
+      'photos/front.jpg': JPG,
+      'photos/sub/back.png': PNG,
     });
 
     const { imageMap } = extractZip(zipBuf);
 
     expect(imageMap.has('front.jpg')).toBe(true);
-    expect(imageMap.has('back.jpg')).toBe(true);
+    expect(imageMap.has('back.png')).toBe(true);
     expect(imageMap.size).toBe(2);
   });
 
   it('handles CSV located in a subdirectory', () => {
     const zipBuf = buildZip({
       'data/listings.csv': VALID_CSV,
-      'front.jpg': Buffer.from('img'),
+      'front.jpg': JPG,
     });
 
     const { csvBuffer } = extractZip(zipBuf);
@@ -74,7 +88,7 @@ describe('extractZip — valid ZIPs (happy path)', () => {
     zip.addFile('listings.csv', VALID_CSV);
     // Add a directory entry (empty buffer, name ends with /)
     zip.addFile('images/', Buffer.alloc(0));
-    zip.addFile('images/front.jpg', Buffer.from('img'));
+    zip.addFile('images/front.jpg', JPG);
     const zipBuf = zip.toBuffer();
 
     const { imageMap } = extractZip(zipBuf);
@@ -86,7 +100,7 @@ describe('extractZip — valid ZIPs (happy path)', () => {
   it('skips macOS __MACOSX metadata entries', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'front.jpg': Buffer.from('img'),
+      'front.jpg': JPG,
       '__MACOSX/._front.jpg': Buffer.from('meta'),
       '__MACOSX/._listings.csv': Buffer.from('meta'),
     });
@@ -101,7 +115,7 @@ describe('extractZip — valid ZIPs (happy path)', () => {
   it('skips ._ resource fork files even outside __MACOSX', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'front.jpg': Buffer.from('img'),
+      'front.jpg': JPG,
       '._front.jpg': Buffer.from('resource fork'),
     });
 
@@ -114,9 +128,7 @@ describe('extractZip — valid ZIPs (happy path)', () => {
 
 describe('extractZip — Rule 1: invalid ZIP format', () => {
   it('throws on a corrupt/non-ZIP buffer', () => {
-    expect(() => extractZip(Buffer.from('this is not a zip file'))).toThrow(
-      /Invalid ZIP file/
-    );
+    expect(() => extractZip(Buffer.from('this is not a zip file'))).toThrow(/Invalid ZIP file/);
   });
 
   it('throws on an empty buffer', () => {
@@ -155,11 +167,9 @@ describe('extractZip — Rule 2: path traversal', () => {
   });
 
   it('throws when .. appears as a mid-path segment', () => {
-    const zipBuf = buildZipWithRawEntryName(
-      'images/../../../etc/passwd',
-      Buffer.from('evil'),
-      { 'listings.csv': VALID_CSV }
-    );
+    const zipBuf = buildZipWithRawEntryName('images/../../../etc/passwd', Buffer.from('evil'), {
+      'listings.csv': VALID_CSV,
+    });
 
     expect(() => extractZip(zipBuf)).toThrow(/path traversal/);
   });
@@ -167,7 +177,7 @@ describe('extractZip — Rule 2: path traversal', () => {
   it('does NOT throw for filenames that contain two consecutive dots but are not a traversal segment (e.g. "v1..2.jpg")', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'v1..2.jpg': Buffer.from('img'),
+      'v1..2.jpg': JPG,
     });
 
     expect(() => extractZip(zipBuf)).not.toThrow();
@@ -176,7 +186,7 @@ describe('extractZip — Rule 2: path traversal', () => {
 
 describe('extractZip — Rule 3: CSV count', () => {
   it('throws when ZIP contains no .csv file', () => {
-    const zipBuf = buildZip({ 'front.jpg': Buffer.from('img') });
+    const zipBuf = buildZip({ 'front.jpg': JPG });
 
     expect(() => extractZip(zipBuf)).toThrow(/no .csv file/);
   });
@@ -185,7 +195,7 @@ describe('extractZip — Rule 3: CSV count', () => {
     const zipBuf = buildZip({
       'a.csv': VALID_CSV,
       'b.csv': VALID_CSV,
-      'front.jpg': Buffer.from('img'),
+      'front.jpg': JPG,
     });
 
     expect(() => extractZip(zipBuf)).toThrow(/2 .csv files/);
@@ -194,7 +204,7 @@ describe('extractZip — Rule 3: CSV count', () => {
   it('accepts a CSV with uppercase .CSV extension', () => {
     const zipBuf = buildZip({
       'LISTINGS.CSV': VALID_CSV,
-      'front.jpg': Buffer.from('img'),
+      'front.jpg': JPG,
     });
 
     expect(() => extractZip(zipBuf)).not.toThrow();
@@ -205,8 +215,8 @@ describe('extractZip — Rule 4: duplicate image basenames', () => {
   it('throws when two images share the same basename across different directories', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'photos/front.jpg': Buffer.from('img1'),
-      'other/front.jpg': Buffer.from('img2'),
+      'photos/front.jpg': JPG,
+      'other/front.jpg': JPG,
     });
 
     expect(() => extractZip(zipBuf)).toThrow(/duplicate image filename "front.jpg"/);
@@ -215,8 +225,8 @@ describe('extractZip — Rule 4: duplicate image basenames', () => {
   it('does not throw when all image basenames are unique', () => {
     const zipBuf = buildZip({
       'listings.csv': VALID_CSV,
-      'a/front.jpg': Buffer.from('img1'),
-      'b/back.jpg': Buffer.from('img2'),
+      'a/front.jpg': JPG,
+      'b/back.png': PNG,
     });
 
     expect(() => extractZip(zipBuf)).not.toThrow();
@@ -227,7 +237,7 @@ describe('extractZip — Rule 5: entry count limit', () => {
   it('throws when ZIP has more than 401 entries', () => {
     const files = { 'listings.csv': VALID_CSV };
     for (let i = 0; i < 401; i++) {
-      files[`img${i}.jpg`] = Buffer.from(`img${i}`);
+      files[`img${i}.jpg`] = JPG;
     }
     const zipBuf = buildZip(files); // 1 CSV + 401 images = 402
 
@@ -237,7 +247,7 @@ describe('extractZip — Rule 5: entry count limit', () => {
   it('accepts exactly 401 entries (boundary)', () => {
     const files = { 'listings.csv': VALID_CSV };
     for (let i = 0; i < 400; i++) {
-      files[`img${i}.jpg`] = Buffer.from(`img${i}`);
+      files[`img${i}.jpg`] = JPG;
     }
     const zipBuf = buildZip(files); // 1 CSV + 400 images = 401
 
@@ -246,11 +256,70 @@ describe('extractZip — Rule 5: entry count limit', () => {
   });
 });
 
+describe('extractZip — file type and decompression limits', () => {
+  it('throws when an image extension is unsupported', () => {
+    const zipBuf = buildZip({
+      'listings.csv': VALID_CSV,
+      'front.exe': Buffer.from('not an image'),
+    });
+
+    expect(() => extractZip(zipBuf)).toThrow(/unsupported file type ".exe"/);
+  });
+
+  it('throws when an image extension does not match supported image bytes', () => {
+    const zipBuf = buildZip({
+      'listings.csv': VALID_CSV,
+      'front.jpg': Buffer.from('not really a jpeg'),
+    });
+
+    expect(() => extractZip(zipBuf)).toThrow(/does not match its file extension/);
+  });
+
+  it('accepts supported PNG image bytes', () => {
+    const zipBuf = buildZip({
+      'listings.csv': VALID_CSV,
+      'front.png': PNG,
+    });
+
+    const { imageMap } = extractZip(zipBuf);
+    expect(imageMap.get('front.png')).toEqual(PNG);
+  });
+
+  it('throws when CSV uncompressed size exceeds the CSV limit', () => {
+    const zipBuf = buildZip({
+      'listings.csv': Buffer.alloc(MAX_CSV_BYTES + 1, 'a'),
+    });
+
+    expect(() => extractZip(zipBuf)).toThrow(/Maximum allowed CSV size/);
+  });
+
+  it('throws when an image uncompressed size exceeds the per-image limit', () => {
+    const zipBuf = buildZip({
+      'listings.csv': VALID_CSV,
+      'front.jpg': buildJpeg(MAX_IMAGE_BYTES + 1),
+    });
+
+    expect(() => extractZip(zipBuf)).toThrow(/Maximum allowed image size/);
+  });
+
+  it('throws when total uncompressed size exceeds the archive limit', () => {
+    const files = { 'listings.csv': VALID_CSV };
+    for (let i = 0; i < 11; i++) {
+      files[`img${i}.jpg`] = buildJpeg(MAX_IMAGE_BYTES);
+    }
+    const zipBuf = buildZip(files);
+
+    expect(() => extractZip(zipBuf)).toThrow(
+      new RegExp(`exceeds ${Math.round((MAX_UNCOMPRESSED_BYTES / 1024 / 1024) * 10) / 10} MB`)
+    );
+  });
+});
+
 describe('extractZip — edge cases', () => {
   it('throws when the CSV entry inside the ZIP is empty (zero bytes)', () => {
     const zipBuf = buildZip({
       'listings.csv': Buffer.alloc(0),
-      'front.jpg': Buffer.from('img'),
+      'front.jpg': JPG,
     });
 
     expect(() => extractZip(zipBuf)).toThrow(/CSV file inside the ZIP is empty/);

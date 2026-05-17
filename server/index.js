@@ -46,9 +46,7 @@ const dataLoader = require('./dataLoader');
 const { generateCSPNonce, csp } = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 const { getSDKProxy } = require('./api-util/sdkCacheProxy');
-
-const brevoRouter = require('./api/brevo');
-const instagramRouter = require('./api/instagram');
+const { mountCustomApiRoutes } = require('./customApiRoutes');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
@@ -82,16 +80,6 @@ checkEnvVariables(MANDATORY_ENV_VARIABLES);
 
 const app = express();
 app.use(express.json());
-
-app.use('/api/brevo', brevoRouter);
-app.use('/api/instagram', instagramRouter);
-
-const myBalanceRouter = require('./api/my-balance');
-app.use('/api/my-balance', myBalanceRouter);
-
-// Bulk import router (mounted separately to avoid Transit body-parser conflict with multer)
-const bulkImportRouter = require('./api/bulk-import');
-app.use('/api/bulk-import', bulkImportRouter);
 
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
@@ -239,6 +227,9 @@ if (!dev) {
 app.use(passport.initialize());
 
 // Server-side routes that do not render the application
+// Custom API routes are mounted after Helmet/CSP and staging basic auth so they
+// get the same protection boundary as upstream /api routes.
+mountCustomApiRoutes(app);
 app.use('/api', apiRouter);
 
 const noCacheHeaders = {
