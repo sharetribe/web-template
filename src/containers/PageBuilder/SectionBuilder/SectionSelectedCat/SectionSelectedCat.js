@@ -76,6 +76,7 @@ const SectionSelectedCat = props => {
   const normalizedColumns = Math.min(Math.max(effectiveColumns, 1), COLUMN_CONFIG.length);
 
   const setCarouselWidth = () => {
+    if (typeof window === 'undefined') return;
     if (!blocks.length) return;
     const container = sliderContainerRef.current;
     if (!container) return;
