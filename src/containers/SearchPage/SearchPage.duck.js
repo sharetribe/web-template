@@ -124,7 +124,11 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
    * @returns {Object} The prepared parameter object.
    */
   const prepareIntegerRangeParam = (paramName, params) => {
-    const integerRangeConfig = config.listing.listingFields?.find(f => f.schemaType === 'long');
+    const integerRangeConfig = config.listing.listingFields?.find(f => {
+      const isInteger = f.schemaType === 'long';
+      const isCorrectExtendedDataKey = constructQueryParamName(f.key, f.scope) === paramName;
+      return isInteger && isCorrectExtendedDataKey;
+    });
     const { key, scope } = integerRangeConfig || {};
     const integerParamPrefix = constructQueryParamName(key, scope);
     return paramName.startsWith(integerParamPrefix)
