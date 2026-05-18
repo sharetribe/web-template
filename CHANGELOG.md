@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] SearchPage.duck.js: fix integer filter preparation (configs were mixed)
+  [#848](https://github.com/sharetribe/web-template/pull/848)
 - [fix] ContactDetailsPage.duck.js: fix an 'undefined' bug with saveEmailAndPhoneNumberThunk.
   [#846](https://github.com/sharetribe/web-template/pull/846)
 - [add] Adds codebase support for saving referral ID to user private data on sign-up.
