@@ -283,6 +283,14 @@ const CheckoutPage = props => {
   );
 };
 
-CheckoutPage.displayName = 'CheckoutPage';
+// setInitialValues is used to clear redux state and ensure it matches the data
+// of the listing the user is currently viewing
+CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
+  if (saveToSessionStorage) {
+    const { listing, orderData } = initialValues;
+    storeData(orderData, listing, null, STORAGE_KEY);
+  }
+  return setInitialValues(initialValues);
+};
 
 export default CheckoutPage;
