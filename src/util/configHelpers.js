@@ -695,7 +695,16 @@ const validShowConfig = config => {
 };
 
 // numberConfig is passed along with listing fields that use the schema type `long`
-const validNumberConfig = config => {
+const validNumberConfig = (config, schemaType) => {
+  const shouldHaveNumberConfig = schemaType === 'long';
+
+  if (!shouldHaveNumberConfig) {
+    // A field might have an obsolete numberConfig that no longer
+    // matches the field's schema type. If that is the case, return
+    // a valid result and remove the obsolete number config
+    return [true, {}];
+  }
+
   const { minimum, maximum } = config;
   const integerConfig = { minimum, maximum, step: 1 };
 
@@ -847,7 +856,7 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
             : name === 'numberConfig'
-            ? validNumberConfig(value)
+            ? validNumberConfig(value, schemaType)
             : name === 'includeForListingTypes'
             ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
             : name === 'listingTypeConfig'
@@ -908,7 +917,7 @@ const validTransactionFields = transactionFields => {
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'protected')
             : name === 'numberConfig'
-            ? validNumberConfig(value)
+            ? validNumberConfig(value, schemaType)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
             : name === 'enumOptions'
@@ -975,7 +984,7 @@ const validUserFields = (userFields, userTypesInUse) => {
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
             : name === 'numberConfig'
-            ? validNumberConfig(value)
+            ? validNumberConfig(value, schemaType)
             : name === 'showConfig'
             ? validUserShowConfig(value)
             : name === 'userTypeConfig'
