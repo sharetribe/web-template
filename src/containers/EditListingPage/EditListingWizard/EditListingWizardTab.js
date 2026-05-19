@@ -13,6 +13,7 @@ import { createResourceLocatorString } from '../../../util/routes';
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
 import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
+import EditListingFilesPanel from './EditListingFilesPanel/EditListingFilesPanel';
 import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
@@ -25,6 +26,7 @@ export const DETAILS = 'details';
 export const PRICING = 'pricing';
 export const PRICING_AND_STOCK = 'pricing-and-stock';
 export const DELIVERY = 'delivery';
+export const FILES = 'files';
 export const LOCATION = 'location';
 export const AVAILABILITY = 'availability';
 export const PHOTOS = 'photos';
@@ -36,6 +38,7 @@ export const SUPPORTED_TABS = [
   PRICING,
   PRICING_AND_STOCK,
   DELIVERY,
+  FILES,
   LOCATION,
   AVAILABILITY,
   PHOTOS,
@@ -226,6 +229,9 @@ const EditListingWizardTab = props => {
       return (
         <EditListingDeliveryPanel {...panelProps(DELIVERY)} marketplaceCurrency={config.currency} />
       );
+    }
+    case FILES: {
+      return <EditListingFilesPanel {...panelProps(FILES)} />;
     }
     case LOCATION: {
       return <EditListingLocationPanel {...panelProps(LOCATION)} />;
