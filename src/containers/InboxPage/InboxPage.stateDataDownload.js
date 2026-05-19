@@ -25,10 +25,13 @@ export const getStateDataForDownloadProcess = (txInfo, processInfo) => {
       return { processName, processState, isFinal: true };
     })
     .cond([states.PURCHASED, PROVIDER], () => {
+      return { processName, processState }; // should we have isSaleNotification here?
+    })
+    .cond([states.PURCHASED, CUSTOMER], () => {
       return { processName, processState };
     })
     .cond([states.REPORTED, _], () => {
-      return { processName, processState };
+      return { processName, processState, actionNeeded: true }; // why action needed true?? neither customer or provider can act
     })
     .cond([states.CANCELED, _], () => {
       return { processName, processState, isFinal: true };

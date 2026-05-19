@@ -69,6 +69,7 @@ const ProcessHeadings = () => {
         isPendingPayment={states.PENDING_PAYMENT === formData.state}
         transactionRole={formData.transactionRole}
         customerName="Cecilia"
+        marketplaceName="Saunatribe"
         listingId="listing-id"
         listingTitle="My fancy listing"
         listingDeleted={formData.listingDeleted}

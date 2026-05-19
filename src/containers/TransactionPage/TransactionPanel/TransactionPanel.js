@@ -108,6 +108,7 @@ export class TransactionPanelComponent extends Component {
       transitions,
       processName,
       protectedData,
+      marketplaceName,
       messages,
       savePaymentMethodFailed = false,
       fetchMessagesError,
@@ -211,6 +212,7 @@ export class TransactionPanelComponent extends Component {
               transactionRole={transactionRole}
               providerName={authorDisplayName}
               customerName={customerDisplayName}
+              marketplaceName={marketplaceName}
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}

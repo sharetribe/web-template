@@ -56,6 +56,12 @@ export const getStateDataForDownloadProcess = (txInfo, processInfo) => {
         showExtraInfo: true,
       };
     })
+    .cond([states.REPORTED, CUSTOMER], () => {
+      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
+    })
+    .cond([states.REPORTED, PROVIDER], () => {
+      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
+    })
     .default(() => {
       return { processName, processState };
     })
