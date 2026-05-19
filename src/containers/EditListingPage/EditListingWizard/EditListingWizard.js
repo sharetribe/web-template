@@ -13,6 +13,7 @@ import {
   displayPrice,
   requirePayoutDetails,
   requireListingImage,
+  requireListingFiles,
 } from '../../../util/configHelpers';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -54,6 +55,7 @@ import EditListingWizardTab, {
   PRICING,
   PRICING_AND_STOCK,
   DELIVERY,
+  FILES,
   LOCATION,
   AVAILABILITY,
   PHOTOS,
@@ -102,6 +104,7 @@ const tabsForListingType = (processName, listingTypeConfig) => {
     ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
     ['default-negotiation']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
     ['default-inquiry']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
+    ['default-download']: [DETAILS, ...locationMaybe, FILES, ...pricingMaybe, ...styleOrPhotosTab],
   };
 
   return tabs[processName] || tabs['default-inquiry'];
@@ -133,6 +136,9 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === DELIVERY) {
     labelKey = 'EditListingWizard.tabLabelDelivery';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
+  } else if (tab === FILES) {
+    labelKey = 'EditListingWizard.tabLabelFiles';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveFiles`;
   } else if (tab === LOCATION) {
     labelKey = 'EditListingWizard.tabLabelLocation';
     submitButtonKey =
@@ -246,6 +252,10 @@ const tabCompleted = (tab, listing, config) => {
 
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
+  // TODO: Check that at least one file is uploaded successfully
+  const filesRequired = requireListingFiles(listingTypeConfig);
+  const filesUploaded = true;
+
   switch (tab) {
     case DETAILS:
       return !!(
@@ -262,6 +272,8 @@ const tabCompleted = (tab, listing, config) => {
       return !!price;
     case DELIVERY:
       return !!deliveryOptionPicked;
+    case FILES:
+      return filesRequired && filesUploaded;
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
@@ -380,7 +392,7 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
  * @param {string} props.params.id - The id of the listing
  * @param {string} props.params.slug - The slug of the listing
  * @param {'new'|'draft'|'edit'} props.params.type - The type of the listing
- * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | LOCATION | AVAILABILITY | PHOTOS} props.params.tab - The name of the tab
+ * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | FILES | LOCATION | AVAILABILITY | PHOTOS} props.params.tab - The name of the tab
  * @param {propTypes.ownListing} props.listing - The listing object
  * @param {propTypes.error} [props.errors.createListingDraftError] - The error object for createListingDraft
  * @param {propTypes.error} [props.errors.publishListingError] - The error object for publishListing
@@ -458,6 +470,8 @@ class EditListingWizard extends Component {
       (hasRequirements(stripeAccountData, 'past_due') ||
         hasRequirements(stripeAccountData, 'currently_due'));
 
+    // TODO: before publishing, check that all required files have been uploaded AND
+    // passed the security check (verificationStatus === 'available').
     if (
       isInquiryProcess ||
       !isPayoutDetailsRequired ||
