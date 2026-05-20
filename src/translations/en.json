@@ -15,7 +15,7 @@
   "AuthenticationPage.resendFailed": "Resending verification email failed. Please try again.",
   "AuthenticationPage.resendFailedTooManyRequests": "The maximum of 5 verification emails has been reached. Please try again tomorrow.",
   "AuthenticationPage.schemaDescriptionLogin": "Log in to {marketplaceName}",
-  "AuthenticationPage.schemaDescriptionSignup": "Create an account to {marketplaceName}",
+  "AuthenticationPage.schemaDescriptionSignup": "Book furnished stays for 30+ days — curated furnished homes across Nairobi and the Kenyan coast.",
   "AuthenticationPage.schemaTitleLogin": "Log in | {marketplaceName}",
   "AuthenticationPage.schemaTitleSignup": "Sign up | {marketplaceName}",
   "AuthenticationPage.sendingEmail": "Sending verification email…",

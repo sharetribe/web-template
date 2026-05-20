@@ -464,6 +464,7 @@ const BlankPage = props => {
   return (
     <Page
       title={schemaTitle}
+      description={schemaDescription}
       scrollingDisabled={scrollingDisabled}
       schema={{
         '@context': 'http://schema.org',
@@ -641,6 +642,7 @@ export const AuthenticationPageComponent = props => {
   return (
     <Page
       title={schemaTitle}
+      description={schemaDescription}
       scrollingDisabled={scrollingDisabled}
       schema={{
         '@context': 'http://schema.org',
