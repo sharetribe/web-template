@@ -292,15 +292,15 @@ export const listingTypes = [
       alias: 'default-download/release-1',
       unitType: 'digital-item',
     },
-      "transactionFields": [
-    {
-      "label": "Arbitrary field",
-      "key": "arbitrary",
-      "schemaType": "shortText",
-      "showTo": "customer",
-      "helpText": "A text field with a 70 char limit"
-    }
-  ],
+    transactionFields: [
+      {
+        label: 'Arbitrary field',
+        key: 'arbitrary',
+        schemaType: 'shortText',
+        showTo: 'customer',
+        helpText: 'A text field with a 70 char limit',
+      },
+    ],
     defaultListingFields: {
       description: true,
       availability: false,

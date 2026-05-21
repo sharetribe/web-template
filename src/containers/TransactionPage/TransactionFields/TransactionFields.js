@@ -235,7 +235,10 @@ const TransactionFields = props => {
     (isNegotiationProcess && isOfferOrRequest) || (!isNegotiationProcess && !isOfferOrRequest);
 
   const isCustomerDefaultMessage =
-    isBookingProcess || isPurchaseProcess || isDownloadProcess || (isNegotiationProcess && role === 'customer');
+    isBookingProcess ||
+    isPurchaseProcess ||
+    isDownloadProcess ||
+    (isNegotiationProcess && role === 'customer');
   const isProviderDefaultMessage = isNegotiationProcess && role === 'provider';
 
   const defaultMessageContent = isInquiryProcess
