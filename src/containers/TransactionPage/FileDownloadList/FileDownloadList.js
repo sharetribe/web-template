@@ -1,9 +1,20 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { Heading } from '../../../components';
+import { Heading, FileName } from '../../../components';
+
+import { IconDownload } from '../Message/IconDownload';
 
 import css from './FileDownloadList.module.css';
+
+const FileDownloadItem = ({ file }) => (
+  <li className={css.item}>
+    <span className={css.fileAttachmentIcon}>
+      <IconDownload />
+    </span>
+    <FileName className={css.link} name={file}></FileName>
+  </li>
+);
 
 const FileDownloadList = props => {
   const {
@@ -19,9 +30,9 @@ const FileDownloadList = props => {
     return null;
   }
 
-  // TODO: REVEAL FILE AND HIDE ON INQUIRY PROCESS
-
   const classes = classNames(rootClassName || css.container, className);
+
+  const listOfFiles = ['Photo_of_a_rare_bird.jpg', 'Photo_of_a_rare_dog.jpg', 'rare_dogbird.jpg'];
 
   return (
     <div className={classes}>
@@ -29,11 +40,9 @@ const FileDownloadList = props => {
         File(s)
       </Heading>
       <ul className={css.list}>
-        <li className={css.item}>
-          <a href="" className={css.link}>
-            Photo_of_a_rare_bird.jpg
-          </a>
-        </li>
+        {listOfFiles.map(file => (
+          <FileDownloadItem key={file} file={file} />
+        ))}
       </ul>
     </div>
   );

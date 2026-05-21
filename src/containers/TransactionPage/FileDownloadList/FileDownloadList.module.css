@@ -27,6 +27,15 @@
 
 .item {
   margin: 4px 0;
+  display: flex;
+}
+
+.fileAttachmentIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  composes: a from global;
+  margin-right: 5px;
 }
 
 .link {
