@@ -1,0 +1,34 @@
+@import '../../../styles/customMediaQueries.css';
+
+.container {
+  margin: 32px 24px 0 24px;
+
+  @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
+    margin: 24px 24px 0 24px;
+  }
+  @media (--viewportLarge) {
+    margin: 24px 0 0 0;
+  }
+}
+
+.sectionHeading {
+  composes: p from global;
+  margin: 16px 0 0 0;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 8px 0 0 0;
+  padding: 0;
+}
+
+.item {
+  margin: 4px 0;
+}
+
+.link {
+  composes: a from global;
+}

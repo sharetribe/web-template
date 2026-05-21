@@ -34,6 +34,7 @@ import {
   PURCHASE_PROCESS_NAME,
   isInquiryProcess,
   DOWNLOAD_PROCESS_NAME,
+  isDownloadProcess,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -65,6 +66,7 @@ import RequestQuote from './RequestQuote/RequestQuote';
 import Offer from './Offer/Offer';
 import TransactionFields from './TransactionFields/TransactionFields.js';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
+import FileDownloadList from './FileDownloadList/FileDownloadList';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReportModal from './ReportModal/ReportModal';
 import ReviewModal from './ReviewModal/ReviewModal';
@@ -520,8 +522,16 @@ export const TransactionPageComponent = props => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
     const { states, transitions } = process;
+
+    // The download process only supports a single customer-side review transition.
+    // Bidirectional review transitions (REVIEW_1/REVIEW_2) don't exist in that process.
     const transitionOptions =
-      transactionRole === CUSTOMER
+      processName === DOWNLOAD_PROCESS_NAME
+        ? {
+            reviewAsFirst: transitions.REVIEW,
+            hasOtherPartyReviewedFirst: false,
+          }
+        : transactionRole === CUSTOMER
         ? {
             reviewAsFirst: transitions.REVIEW_1_BY_CUSTOMER,
             reviewAsSecond: transitions.REVIEW_2_BY_CUSTOMER,
@@ -888,6 +898,13 @@ export const TransactionPageComponent = props => {
           isCounterpartyInactive={isCounterpartyInactive}
         />
       )}
+      fileDownloadList={
+        <FileDownloadList
+          isDownloadProcess={isDownloadProcess(processName)}
+          isProblemReported={stateData.processState == 'reported'}
+          isCustomerRole={isCustomerRole}
+        />
+      }
       activityFeed={
         <ActivityFeed
           messages={messages}

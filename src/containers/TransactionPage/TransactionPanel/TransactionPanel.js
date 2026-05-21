@@ -120,6 +120,7 @@ export class TransactionPanelComponent extends Component {
       showBookingLocation = false,
       requestQuote,
       offer,
+      fileDownloadList,
       activityFeed,
       actionButtons,
       isInquiryProcess,
@@ -218,6 +219,7 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
+            {fileDownloadList}
             {requestQuote}
             {offer}
             {transactionFieldsComponent}

@@ -55,12 +55,13 @@ const getOfferQuantityAndLineItems = orderData => {
 };
 
 /**
- * Get quantity for digital items. The quantity is always 1, you can't have mutliples of digital files.
+ * Get quantity for digital items. The quantity is always 1, you can't have multiples of digital files.
  * @param {Object} orderData
  */
 const getDigitalItemQuantityAndLineItems = orderData => {
   return { quantity: 1, extraLineItems: [] };
 };
+
 /**
  * Get quantity for fixed bookings with seats.
  * @param {Object} orderData
