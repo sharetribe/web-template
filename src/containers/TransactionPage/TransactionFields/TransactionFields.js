@@ -11,7 +11,6 @@ import CustomExtendedDataSection from '../../../components/CustomExtendedDataSec
 import SectionText from '../../../components/CustomExtendedDataSection/SectionText';
 
 import css from './TransactionFields.module.css';
-
 /**
  * Split transaction field configs to role based arrays
  * @param {Array} configs Transaction field configs
@@ -224,6 +223,7 @@ const TransactionFields = props => {
     isOfferOrRequest,
     isProviderBanned,
     isPurchaseProcess,
+    isDownloadProcess,
     role,
     protectedData,
     transactionFieldConfigs = [],
@@ -235,7 +235,7 @@ const TransactionFields = props => {
     (isNegotiationProcess && isOfferOrRequest) || (!isNegotiationProcess && !isOfferOrRequest);
 
   const isCustomerDefaultMessage =
-    isBookingProcess || isPurchaseProcess || (isNegotiationProcess && role === 'customer');
+    isBookingProcess || isPurchaseProcess || isDownloadProcess || (isNegotiationProcess && role === 'customer');
   const isProviderDefaultMessage = isNegotiationProcess && role === 'provider';
 
   const defaultMessageContent = isInquiryProcess

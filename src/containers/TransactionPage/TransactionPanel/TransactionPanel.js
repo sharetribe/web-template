@@ -219,10 +219,10 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            {fileDownloadList}
             {requestQuote}
             {offer}
             {transactionFieldsComponent}
+            {fileDownloadList}
 
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>
