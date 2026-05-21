@@ -29,9 +29,6 @@ const CheckoutPageAccessWrapper = ({ PageComponent, currentUser, initiateOrderEr
   const history = useHistory();
   const location = useLocation();
 
-  // Checkout requires an active user regardless of marketplace mode, so we redirect
-  // all non-active users (e.g. pending-approval) without a private-marketplace guard.
-  // This differs from SearchPageAccessWrapper/ListingPageAccessWrapper intentionally.
   if (currentUser && !isUserAuthorized(currentUser)) {
     return (
       <NamedRedirect

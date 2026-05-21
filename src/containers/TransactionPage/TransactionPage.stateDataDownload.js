@@ -26,61 +26,64 @@ export const getStateDataForDownloadProcess = (txInfo, processInfo) => {
     leaveReviewProps,
   } = processInfo;
 
-  return new ConditionalResolver([processState, transactionRole])
-    .cond([states.INQUIRY, CUSTOMER], () => {
-      const transitionNames = Array.isArray(nextTransitions)
-        ? nextTransitions.map(t => t.attributes.name)
-        : [];
-      const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
-      const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
-      const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel, showDetailCardHeadings: true };
-    })
-    .cond([states.INQUIRY, PROVIDER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
-    })
-    .cond([states.PURCHASED, PROVIDER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showExtraInfo: true,
-      };
-    })
-    .cond([states.PURCHASED, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReport: true,
-        showExtraInfo: true,
-      };
-    })
-    .cond([states.REPORTED, CUSTOMER], () => {
-      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
-    })
-    .cond([states.REPORTED, PROVIDER], () => {
-      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
-    })
-    .cond([states.COMPLETED, PROVIDER], () => {
-      return { processName, processState, showDetailCardHeadings: true };
-    })
-    .cond([states.COMPLETED, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showExtraInfo: true,
-        showReviewAsFirstLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: true, showReviews: true };
-    })
-    .default(() => {
-      return { processName, processState, showDetailCardHeadings: true };
-    })
-    .resolve();
+  return (
+    new ConditionalResolver([processState, transactionRole])
+      .cond([states.INQUIRY, CUSTOMER], () => {
+        const transitionNames = Array.isArray(nextTransitions)
+          ? nextTransitions.map(t => t.attributes.name)
+          : [];
+        const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
+        const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
+        const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
+        return { processName, processState, showOrderPanel, showDetailCardHeadings: true };
+      })
+      .cond([states.INQUIRY, PROVIDER], () => {
+        return { processName, processState, showDetailCardHeadings: true };
+      })
+      .cond([states.PURCHASED, PROVIDER], () => {
+        return {
+          processName,
+          processState,
+          showDetailCardHeadings: true,
+          showExtraInfo: true,
+        };
+      })
+      .cond([states.PURCHASED, CUSTOMER], () => {
+        return {
+          processName,
+          processState,
+          showDetailCardHeadings: true,
+          showReport: true,
+          showExtraInfo: true,
+        };
+      })
+      .cond([states.REPORTED, CUSTOMER], () => {
+        return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
+      })
+      .cond([states.REPORTED, PROVIDER], () => {
+        return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
+      })
+      .cond([states.COMPLETED, PROVIDER], () => {
+        return { processName, processState, showDetailCardHeadings: true };
+      })
+      .cond([states.COMPLETED, CUSTOMER], () => {
+        return {
+          processName,
+          processState,
+          showDetailCardHeadings: true,
+          showExtraInfo: true,
+          showReviewAsFirstLink: true,
+          showActionButtons: true,
+          primaryButtonProps: leaveReviewProps,
+        };
+      })
+      .cond([states.REVIEWED, _], () => {
+        return { processName, processState, showDetailCardHeadings: true, showReviews: true };
+      })
+      // CANCELED, PENDING_PAYMENT and PENDING_EXPIRED are handled by default
+      .default(() => {
+        return { processName, processState, showDetailCardHeadings: true };
+      })
+      .resolve()
+  );
 };

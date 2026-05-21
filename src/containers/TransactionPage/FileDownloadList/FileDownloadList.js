@@ -17,14 +17,7 @@ const FileDownloadItem = ({ file }) => (
 );
 
 const FileDownloadList = props => {
-  const {
-    className,
-    rootClassName,
-    isDownloadProcess,
-    isProblemReported,
-    isCustomerRole,
-    stateData,
-  } = props;
+  const { className, rootClassName, isDownloadProcess, isProblemReported, isCustomerRole } = props;
 
   if (!isDownloadProcess || (isProblemReported && isCustomerRole)) {
     return null;

@@ -41,8 +41,8 @@ const ReportForm = props => (
           <FieldTextInput
             className={css.reportMessage}
             type="textarea"
-            id={formId ? `${formId}.disputeReason` : 'disputeReason'} //
-            name="disputeReason"
+            id={formId ? `${formId}.reportReason` : 'reportReason'} //
+            name="reportReason"
             label={intl.formatMessage({ id: 'ReportModal.label' })}
             placeholder={intl.formatMessage({ id: 'ReportModal.reportPlaceholder' })}
             validate={required(intl.formatMessage({ id: 'ReportModal.reportReasonRequired' }))}

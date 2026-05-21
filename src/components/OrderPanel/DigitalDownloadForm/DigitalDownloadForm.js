@@ -54,8 +54,7 @@ const renderForm = formRenderProps => {
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
-  const submitInProgress = fetchLineItemsInProgress;
-  const submitDisabled = !!fetchLineItemsError; // TODO: ask vesa if the button should be disabled on error
+  const submitDisabled = !!fetchLineItemsError;
 
   useEffect(() => {
     handleFetchLineItems({
@@ -87,7 +86,11 @@ const renderForm = formRenderProps => {
       <FetchLineItemsError error={fetchLineItemsError} />
 
       <div className={css.submitButton}>
-        <PrimaryButton inProgress={submitInProgress} disabled={submitDisabled} type="submit">
+        <PrimaryButton
+          inProgress={fetchLineItemsInProgress}
+          disabled={submitDisabled}
+          type="submit"
+        >
           <FormattedMessage id="DigitalDownloadForm.ctaButton" />
         </PrimaryButton>
         <FinePrint payoutDetailsWarning={payoutDetailsWarning} isOwnListing={isOwnListing} />

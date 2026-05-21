@@ -902,7 +902,7 @@ export const TransactionPageComponent = props => {
       fileDownloadList={
         <FileDownloadList
           isDownloadProcess={isDownloadProcess(processName)}
-          isProblemReported={stateData.processState == 'reported'}
+          isProblemReported={stateData.processState === 'reported'}
           isCustomerRole={isCustomerRole}
         />
       }
