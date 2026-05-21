@@ -11,42 +11,44 @@ export const getStateDataForDownloadProcess = (txInfo, processInfo) => {
   const { processName, processState, states } = processInfo;
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
-  return new ConditionalResolver([processState, transactionRole])
-    .cond([states.INQUIRY, _], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.PENDING_PAYMENT, PROVIDER], () => {
-      return { processName, processState };
-    })
-    .cond([states.PAYMENT_EXPIRED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .cond([states.PURCHASED, PROVIDER], () => {
-      return { processName, processState, isSaleNotification: true }; 
-    })
-    .cond([states.PURCHASED, CUSTOMER], () => {
-      return { processName, processState };
-    })
-    // .cond([states.REPORTED, _], () => {
-    //   return { processName, processState }; 
-    // })
-    .cond([states.CANCELED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .cond([states.COMPLETED, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.COMPLETED, PROVIDER], () => {
-      return { processName, processState  };
-    })
-    .cond([states.REVIEWED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .default(() => {
-      return { processName, processState };
-    })
-    .resolve();
+  return (
+    new ConditionalResolver([processState, transactionRole])
+      .cond([states.INQUIRY, _], () => {
+        return { processName, processState, actionNeeded: true };
+      })
+      .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
+        return { processName, processState, actionNeeded: true };
+      })
+      .cond([states.PENDING_PAYMENT, PROVIDER], () => {
+        return { processName, processState };
+      })
+      .cond([states.PAYMENT_EXPIRED, _], () => {
+        return { processName, processState, isFinal: true };
+      })
+      .cond([states.PURCHASED, PROVIDER], () => {
+        return { processName, processState, isSaleNotification: true };
+      })
+      .cond([states.PURCHASED, CUSTOMER], () => {
+        return { processName, processState };
+      })
+      // .cond([states.REPORTED, _], () => {
+      //   return { processName, processState };
+      // })
+      .cond([states.CANCELED, _], () => {
+        return { processName, processState, isFinal: true };
+      })
+      .cond([states.COMPLETED, CUSTOMER], () => {
+        return { processName, processState, actionNeeded: true };
+      })
+      .cond([states.COMPLETED, PROVIDER], () => {
+        return { processName, processState };
+      })
+      .cond([states.REVIEWED, _], () => {
+        return { processName, processState, isFinal: true };
+      })
+      .default(() => {
+        return { processName, processState };
+      })
+      .resolve()
+  );
 };
