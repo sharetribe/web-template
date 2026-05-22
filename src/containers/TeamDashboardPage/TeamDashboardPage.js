@@ -113,6 +113,52 @@ export const TeamDashboardPageComponent = props => {
                 <StatCard labelId="TeamDashboardPage.revenue" value={stats.totalRevenue} pending />
               </section>
 
+              <section className={css.block}>
+                <H4 as="h2" className={css.blockTitle}>
+                  <FormattedMessage id="TeamDashboardPage.membersTitle" />
+                </H4>
+                {stats.members?.length > 0 ? (
+                  <ul className={css.list}>
+                    {stats.members.map(m => (
+                      <li key={m.id} className={css.listItem}>
+                        {m.name || <FormattedMessage id="TeamDashboardPage.unnamedMember" />}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={css.empty}>
+                    <FormattedMessage id="TeamDashboardPage.noMembers" />
+                  </p>
+                )}
+              </section>
+
+              <section className={css.block}>
+                <H4 as="h2" className={css.blockTitle}>
+                  <FormattedMessage id="TeamDashboardPage.gearTitle" />
+                </H4>
+                {stats.listings?.length > 0 ? (
+                  <ul className={css.list}>
+                    {stats.listings.map(l => (
+                      <li key={l.id} className={css.listItem}>
+                        <span className={css.listTitle}>{l.title}</span>
+                        {l.author ? (
+                          <span className={css.listMeta}>
+                            <FormattedMessage
+                              id="TeamDashboardPage.postedBy"
+                              values={{ author: l.author }}
+                            />
+                          </span>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={css.empty}>
+                    <FormattedMessage id="TeamDashboardPage.noGear" />
+                  </p>
+                )}
+              </section>
+
               <p className={css.note}>
                 <FormattedMessage id="TeamDashboardPage.salesNote" />
               </p>

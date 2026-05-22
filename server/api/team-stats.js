@@ -1,21 +1,30 @@
 /**
- * Team Admin dashboard metrics. The caller must be authenticated as a Team account; the team is
- * derived from the authenticated user (so an admin can only see their own team's stats).
+ * Team Admin dashboard data. The caller must be authenticated as a Team account; the team is
+ * derived from the authenticated user (so an admin can only see their own team's data).
  *
- * Public metrics (# members, # items listed) are computed via the Integration API, which can read
- * across users/listings the browser Marketplace API cannot. Private metrics (items sold, revenue)
- * are placeholders until transaction aggregation is added.
+ * Returns the team's "virtual warehouse" view via the Integration API (which can read across
+ * users/listings the browser Marketplace API cannot): the member roster and the team's gear
+ * (team-posted and member-posted). Items sold / revenue are placeholders until transaction
+ * aggregation is added.
  *
- * Response: { teamName, teamCode, memberCount, listedCount, soldCount, totalRevenue,
- *             integrationConfigured }
+ * Response: { teamName, teamCode, memberCount, members: [{id,name}], listedCount,
+ *             listings: [{id,title,author}], soldCount, totalRevenue, integrationConfigured }
  */
 const { getSdk, handleError } = require('../api-util/sdk');
 const { getIntegrationSdk, integrationSdkConfigured } = require('../api-util/integrationSdk');
 
 const TEAM_USER_TYPE = 'teamname';
 const INDIVIDUAL_USER_TYPE = 'individual';
+const PER_PAGE = 100;
 
 const totalItems = response => response?.data?.meta?.totalItems ?? 0;
+
+// Index an `included` array by `type:id` for relationship resolution.
+const indexIncluded = included =>
+  (included || []).reduce((acc, r) => {
+    acc[`${r.type}:${r.id.uuid}`] = r;
+    return acc;
+  }, {});
 
 module.exports = (req, res) => {
   const sdk = getSdk(req, res);
@@ -40,20 +49,50 @@ module.exports = (req, res) => {
         return res.status(200).json({
           ...base,
           memberCount: null,
+          members: [],
           listedCount: null,
+          listings: [],
           integrationConfigured: integrationSdkConfigured(),
         });
       }
 
       const isdk = getIntegrationSdk();
       return Promise.all([
-        isdk.users.query({ pub_teamCodes: teamCode, pub_userType: INDIVIDUAL_USER_TYPE, perPage: 1 }),
-        isdk.listings.query({ pub_teamCodes: teamCode, states: ['published'], perPage: 1 }),
-      ]).then(([members, listings]) => {
+        isdk.users.query({
+          pub_teamCodes: teamCode,
+          pub_userType: INDIVIDUAL_USER_TYPE,
+          perPage: PER_PAGE,
+        }),
+        isdk.listings.query({
+          pub_teamCodes: teamCode,
+          states: ['published'],
+          perPage: PER_PAGE,
+          include: ['author'],
+          'fields.user': ['profile.displayName'],
+        }),
+      ]).then(([membersResp, listingsResp]) => {
+        const members = (membersResp.data.data || []).map(u => ({
+          id: u.id.uuid,
+          name: u.attributes.profile.displayName || null,
+        }));
+
+        const authorsById = indexIncluded(listingsResp.data.included);
+        const listings = (listingsResp.data.data || []).map(l => {
+          const authorId = l.relationships?.author?.data?.id?.uuid;
+          const author = authorId ? authorsById[`user:${authorId}`] : null;
+          return {
+            id: l.id.uuid,
+            title: l.attributes.title,
+            author: author?.attributes?.profile?.displayName || null,
+          };
+        });
+
         res.status(200).json({
           ...base,
-          memberCount: totalItems(members),
-          listedCount: totalItems(listings),
+          memberCount: totalItems(membersResp),
+          members,
+          listedCount: totalItems(listingsResp),
+          listings,
           integrationConfigured: true,
         });
       });

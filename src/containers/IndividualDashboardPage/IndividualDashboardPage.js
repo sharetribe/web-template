@@ -62,6 +62,7 @@ export const IndividualDashboardPageComponent = props => {
     scrollingDisabled,
     currentUser,
     listedCount,
+    listings,
     queryInProgress,
     teamNames,
     onLoadTeamNames,
@@ -116,6 +117,25 @@ export const IndividualDashboardPageComponent = props => {
 
           <section className={css.block}>
             <H4 as="h2" className={css.blockTitle}>
+              <FormattedMessage id="IndividualDashboardPage.gearTitle" />
+            </H4>
+            {listings.length > 0 ? (
+              <ul className={css.list}>
+                {listings.map(l => (
+                  <li key={l.id} className={css.listItem}>
+                    {l.title}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={css.empty}>
+                <FormattedMessage id="IndividualDashboardPage.noGear" />
+              </p>
+            )}
+          </section>
+
+          <section className={css.block}>
+            <H4 as="h2" className={css.blockTitle}>
               <FormattedMessage id="IndividualDashboardPage.teamsTitle" />
             </H4>
             <Chips items={teams} emptyId="IndividualDashboardPage.noTeams" />
@@ -142,11 +162,12 @@ export const IndividualDashboardPageComponent = props => {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
-  const { listedCount, queryInProgress } = state.IndividualDashboardPage;
+  const { listedCount, listings, queryInProgress } = state.IndividualDashboardPage;
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     listedCount,
+    listings,
     queryInProgress,
     teamNames: state.team.teamNames,
   };

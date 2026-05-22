@@ -89,6 +89,47 @@
   color: var(--colorGrey600);
 }
 
+.block {
+  margin-top: 32px;
+}
+
+.blockTitle {
+  margin: 0 0 12px 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.listItem {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  margin-bottom: 8px;
+}
+
+.listTitle {
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey900);
+}
+
+.listMeta {
+  color: var(--colorGrey600);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.empty {
+  color: var(--colorGrey500);
+  margin: 0;
+}
+
 .note {
   margin-top: 24px;
   color: var(--colorGrey500);

@@ -8,6 +8,7 @@ describe('IndividualDashboardPage duck reducer', () => {
   it('has sensible defaults', () => {
     expect(reducer(undefined, { type: '@@INIT' })).toEqual({
       listedCount: null,
+      listings: [],
       queryInProgress: false,
       queryError: null,
     });
@@ -19,10 +20,12 @@ describe('IndividualDashboardPage duck reducer', () => {
     expect(state.queryError).toBeNull();
   });
 
-  it('stores the listed count on success', () => {
-    const state = reducer(reducer(undefined, queryListedRequest()), queryListedSuccess(3));
+  it('stores the listed count and listings on success', () => {
+    const payload = { count: 2, listings: [{ id: 'a', title: 'Glove' }, { id: 'b', title: 'Bat' }] };
+    const state = reducer(reducer(undefined, queryListedRequest()), queryListedSuccess(payload));
     expect(state.queryInProgress).toBe(false);
-    expect(state.listedCount).toBe(3);
+    expect(state.listedCount).toBe(2);
+    expect(state.listings).toEqual(payload.listings);
   });
 
   it('stores the error on failure', () => {

@@ -5,6 +5,7 @@ import { storableError } from '../../util/errors';
 
 const initialState = {
   listedCount: null,
+  listings: [],
   queryInProgress: false,
   queryError: null,
 };
@@ -19,7 +20,8 @@ const individualDashboardPageSlice = createSlice({
     },
     queryListedSuccess: (state, action) => {
       state.queryInProgress = false;
-      state.listedCount = action.payload;
+      state.listedCount = action.payload.count;
+      state.listings = action.payload.listings;
     },
     queryListedError: (state, action) => {
       state.queryInProgress = false;
@@ -43,7 +45,13 @@ export default individualDashboardPageSlice.reducer;
 export const loadData = () => (dispatch, getState, sdk) => {
   dispatch(queryListedRequest());
   return sdk.ownListings
-    .query({ page: 1, perPage: 1 })
-    .then(response => dispatch(queryListedSuccess(response.data.meta.totalItems)))
+    .query({ page: 1, perPage: 100 })
+    .then(response => {
+      const listings = (response.data.data || []).map(l => ({
+        id: l.id.uuid,
+        title: l.attributes.title,
+      }));
+      dispatch(queryListedSuccess({ count: response.data.meta.totalItems, listings }));
+    })
     .catch(e => dispatch(queryListedError(storableError(e))));
 };
