@@ -555,7 +555,7 @@ describe('validateRows', () => {
 
   // --- Row numbering ---
 
-  it('assigns rowNum starting from 2 (accounting for header)', () => {
+  it('assigns rowNum starting from 1 (1-indexed data rows)', () => {
     const result = validateRows(
       [
         validRow({
@@ -571,8 +571,8 @@ describe('validateRows', () => {
       ],
       imageMap
     );
-    expect(result.rows[0].rowNum).toBe(2);
-    expect(result.rows[1].rowNum).toBe(3);
+    expect(result.rows[0].rowNum).toBe(1);
+    expect(result.rows[1].rowNum).toBe(2);
   });
 
   // --- Spanish column alias (Google Sheets format) ---

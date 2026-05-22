@@ -149,7 +149,7 @@ describe('BulkImportPage', () => {
         ok: false,
         json: async () => ({
           error: 'CSV validation failed.',
-          details: ['Row 2: "image_back" is required.'],
+          details: ['Row 1: "image_back" is required.'],
         }),
       });
 
@@ -204,7 +204,7 @@ describe('BulkImportPage', () => {
           succeeded: 1,
           failed: 0,
           errors: [],
-          results: [{ row: 2, title: 'First listing', status: 'published' }],
+          results: [{ row: 1, title: 'First listing', status: 'published' }],
         }),
       })
       .mockResolvedValueOnce({
@@ -218,8 +218,8 @@ describe('BulkImportPage', () => {
           failed: 0,
           errors: [],
           results: [
-            { row: 2, title: 'First listing', status: 'published' },
-            { row: 3, title: 'Second listing', status: 'published' },
+            { row: 1, title: 'First listing', status: 'published' },
+            { row: 2, title: 'Second listing', status: 'published' },
           ],
         }),
       });
@@ -283,7 +283,7 @@ describe('BulkImportPage', () => {
           succeeded: 1,
           failed: 0,
           errors: [],
-          results: [{ row: 2, title: 'Imported listing', status: 'published' }],
+          results: [{ row: 1, title: 'Imported listing', status: 'published' }],
         }),
       });
 

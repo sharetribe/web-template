@@ -96,7 +96,7 @@ function validateRows(rows, imageMap) {
 
   // Validate each row
   const processedRows = rows.map((row, i) => {
-    const rowNum = i + 2; // 1-indexed + header row
+    const rowNum = i + 1; // 1-indexed data rows
     const rowErrors = [];
 
     // Required fields
