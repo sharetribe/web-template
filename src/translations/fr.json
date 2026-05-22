@@ -924,7 +924,7 @@
   "TeamDashboardPage.itemsListed": "Items listed",
   "TeamDashboardPage.itemsSold": "Items sold",
   "TeamDashboardPage.revenue": "Revenue",
-  "TeamDashboardPage.salesNote": "Items sold and revenue will appear here once sales aggregation is enabled.",
+  "TeamDashboardPage.salesNote": "Items sold counts paid orders for your team's gear; revenue is for team-posted gear only.",
   "TeamDashboardPage.membersTitle": "Members",
   "TeamDashboardPage.noMembers": "No members have joined yet.",
   "TeamDashboardPage.unnamedMember": "Member",

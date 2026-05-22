@@ -3,9 +3,13 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { types as sdkTypes } from '../../util/sdkLoader';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { createSlug } from '../../util/urlHelpers';
+import { formatMoney } from '../../util/currency';
 import { formatTeamCode } from '../../util/teams';
+
+const { Money } = sdkTypes;
 
 import {
   H3,
@@ -141,8 +145,20 @@ export const TeamDashboardPageComponent = props => {
                   value={stats.listedCount}
                   pending={stats.listedCount == null}
                 />
-                <StatCard labelId="TeamDashboardPage.itemsSold" value={stats.soldCount} pending />
-                <StatCard labelId="TeamDashboardPage.revenue" value={stats.totalRevenue} pending />
+                <StatCard
+                  labelId="TeamDashboardPage.itemsSold"
+                  value={stats.soldCount ?? 0}
+                  pending={stats.soldCount == null}
+                />
+                <StatCard
+                  labelId="TeamDashboardPage.revenue"
+                  value={
+                    stats.currency && typeof stats.totalRevenue === 'number'
+                      ? formatMoney(intl, new Money(stats.totalRevenue, stats.currency))
+                      : '—'
+                  }
+                  pending={false}
+                />
               </section>
 
               <section className={css.block}>

@@ -12,6 +12,7 @@
  */
 const { getSdk, handleError } = require('../api-util/sdk');
 const { getIntegrationSdk, integrationSdkConfigured } = require('../api-util/integrationSdk');
+const { summarizeTeamSales } = require('../api-util/teamSales');
 
 const TEAM_USER_TYPE = 'teamname';
 const INDIVIDUAL_USER_TYPE = 'individual';
@@ -42,8 +43,9 @@ module.exports = (req, res) => {
       }
 
       const teamCode = publicData.teamCode || null;
+      const teamUserId = me.id?.uuid || null;
       const teamName = publicData.teamnamecustom || profile.displayName || null;
-      const base = { teamName, teamCode, soldCount: 0, totalRevenue: 0 };
+      const base = { teamName, teamCode, soldCount: 0, totalRevenue: 0, currency: null };
 
       if (!teamCode || !integrationSdkConfigured()) {
         return res.status(200).json({
@@ -70,7 +72,19 @@ module.exports = (req, res) => {
           include: ['author'],
           'fields.user': ['profile.displayName'],
         }),
-      ]).then(([membersResp, listingsResp]) => {
+        // Transactions for sold/revenue. NOTE: not yet filtered to the team server-side (the
+        // Integration API can't filter transactions by listing extended data), so we fetch a page
+        // and aggregate in summarizeTeamSales. Revisit with pagination/scoping for production scale.
+        isdk.transactions.query({
+          include: ['listing'],
+          'fields.listing': ['publicData'],
+          perPage: PER_PAGE,
+        }),
+      ]).then(([membersResp, listingsResp, txResp]) => {
+        const sales = summarizeTeamSales(txResp.data.data, txResp.data.included, {
+          teamCode,
+          teamUserId,
+        });
         const members = (membersResp.data.data || []).map(u => ({
           id: u.id.uuid,
           name: u.attributes.profile.displayName || null,
@@ -89,6 +103,9 @@ module.exports = (req, res) => {
 
         res.status(200).json({
           ...base,
+          soldCount: sales.soldCount,
+          totalRevenue: sales.totalRevenue,
+          currency: sales.currency,
           memberCount: totalItems(membersResp),
           members,
           listedCount: totalItems(listingsResp),
