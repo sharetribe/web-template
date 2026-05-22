@@ -42,7 +42,14 @@ const StatCard = ({ labelId, value, pending }) => (
  */
 export const TeamDashboardPageComponent = props => {
   const intl = useIntl();
-  const { scrollingDisabled, stats, fetchInProgress, fetchError, onLoadTeamStats } = props;
+  const {
+    scrollingDisabled,
+    currentUser,
+    stats,
+    fetchInProgress,
+    fetchError,
+    onLoadTeamStats,
+  } = props;
 
   useEffect(() => {
     onLoadTeamStats();
@@ -106,6 +113,22 @@ export const TeamDashboardPageComponent = props => {
                   </div>
                 ) : null}
               </section>
+
+              {!currentUser?.stripeAccount && stats.listedCount > 0 ? (
+                <div className={css.payoutNotice}>
+                  <div className={css.payoutCopy}>
+                    <p className={css.payoutTitle}>
+                      <FormattedMessage id="Dashboard.connectStripeTitle" />
+                    </p>
+                    <p className={css.payoutText}>
+                      <FormattedMessage id="Dashboard.connectStripeText" />
+                    </p>
+                  </div>
+                  <NamedLink className={css.payoutButton} name="StripePayoutPage">
+                    <FormattedMessage id="Dashboard.connectStripeButton" />
+                  </NamedLink>
+                </div>
+              ) : null}
 
               <section className={css.statsGrid}>
                 <StatCard
@@ -196,6 +219,7 @@ const mapStateToProps = state => {
   const { stats, fetchInProgress, fetchError } = state.TeamDashboardPage;
   return {
     scrollingDisabled: isScrollingDisabled(state),
+    currentUser: state.user.currentUser,
     stats,
     fetchInProgress,
     fetchError,

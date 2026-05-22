@@ -16,6 +16,50 @@
   margin-bottom: 24px;
 }
 
+.payoutNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 18px 22px;
+  margin-bottom: 28px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--colorGrey50);
+}
+
+.payoutCopy {
+  flex: 1 1 280px;
+}
+
+.payoutTitle {
+  margin: 0 0 4px 0;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorGrey900);
+}
+
+.payoutText {
+  margin: 0;
+  color: var(--colorGrey700);
+  font-size: 14px;
+}
+
+.payoutButton {
+  flex: 0 0 auto;
+  padding: 10px 20px;
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.payoutButton:hover {
+  text-decoration: none;
+  background-color: var(--marketplaceColorDark);
+  color: var(--colorWhite);
+}
+
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

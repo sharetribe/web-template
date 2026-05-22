@@ -105,6 +105,22 @@ export const IndividualDashboardPageComponent = props => {
             <FormattedMessage id="IndividualDashboardPage.heading" />
           </H3>
 
+          {!user.stripeAccount && listedCount > 0 ? (
+            <div className={css.payoutNotice}>
+              <div className={css.payoutCopy}>
+                <p className={css.payoutTitle}>
+                  <FormattedMessage id="Dashboard.connectStripeTitle" />
+                </p>
+                <p className={css.payoutText}>
+                  <FormattedMessage id="Dashboard.connectStripeText" />
+                </p>
+              </div>
+              <NamedLink className={css.payoutButton} name="StripePayoutPage">
+                <FormattedMessage id="Dashboard.connectStripeButton" />
+              </NamedLink>
+            </div>
+          ) : null}
+
           <section className={css.statsGrid}>
             <StatCard
               labelId="IndividualDashboardPage.itemsListed"
