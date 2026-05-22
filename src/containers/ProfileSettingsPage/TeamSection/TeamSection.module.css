@@ -1,0 +1,101 @@
+.root {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--colorGrey100);
+}
+
+.sectionTitle {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.description {
+  color: var(--colorGrey700);
+  margin: 0 0 18px 0;
+}
+
+/* Team account: code panel */
+.codeRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 18px 20px;
+  background-color: var(--colorGrey50);
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+}
+
+.code {
+  font-size: 22px;
+  font-weight: var(--fontWeightSemiBold);
+  letter-spacing: 2px;
+  color: var(--colorGrey900);
+}
+
+.copyButton {
+  font-weight: var(--fontWeightMedium);
+  color: var(--marketplaceColor);
+}
+
+.generating {
+  color: var(--colorGrey500);
+  font-style: italic;
+}
+
+/* Individual account: join panel */
+.joinForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.joinInput {
+  margin: 0;
+}
+
+.joinButton {
+  align-self: flex-start;
+  min-height: 48px;
+  width: auto;
+  padding: 0 24px;
+}
+
+.error {
+  color: var(--colorFail);
+  margin: 0;
+}
+
+.joinedList {
+  list-style: none;
+  margin: 24px 0 0 0;
+  padding: 0;
+}
+
+.joinedItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  margin-bottom: 10px;
+}
+
+.joinedCode {
+  font-weight: var(--fontWeightMedium);
+  letter-spacing: 1px;
+  color: var(--colorGrey900);
+}
+
+.leaveButton {
+  color: var(--colorGrey600);
+  width: auto;
+}
+
+.empty {
+  color: var(--colorGrey500);
+  margin: 24px 0 0 0;
+}

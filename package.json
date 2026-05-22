@@ -54,6 +54,7 @@
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.1.0",
     "seedrandom": "^3.0.5",
+    "sharetribe-flex-integration-sdk": "^1.12.0",
     "sharetribe-flex-sdk": "^1.23.0",
     "sitemap": "^9.0.1",
     "smoothscroll-polyfill": "^0.4.0",

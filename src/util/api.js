@@ -151,3 +151,12 @@ export const createUserWithIdp = body => {
 export const deleteUserAccount = body => {
   return post('/api/delete-account', body);
 };
+
+// Resolve a NextRep team code to a team via the Integration API (server-side).
+// Used to verify that a join code belongs to a real team before storing it.
+//
+// See `server/api/team-lookup.js`. Body: { teamCode }.
+// Returns { verified, found, teamName }.
+export const lookupTeam = body => {
+  return post('/api/team/lookup', body);
+};

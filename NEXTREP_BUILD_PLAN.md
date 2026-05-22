@@ -11,6 +11,29 @@ days), and risks. Resolve the gating decisions below before starting the phases 
 
 ---
 
+## Current state (verified 2026-05-22 via flex-cli + asset API)
+
+Three environments exist: `nextrep1` (live), `nextrep1-test`, `nextrep1-dev`. **Console is partly
+built; the codebase is still 100% stock Sharetribe — no NextRep custom code yet.**
+
+Already in Console (app's env):
+- **User types:** `teamname` (Team account) + `individual`. ✅ (Phase 1 config done)
+- **User fields:** `sport` (multi-enum), `teamnamecustom` (text).
+- **Listing type:** `sell_gear` (unit `item`). Listing **fields:** `sport_listing`, `condition_listing`
+  (new/likenew/good/fair/lessthanfair), `size`, `givebackgear` (yes/part — donation feature), and
+  `teamname` (multi-enum, **placeholder options `team_1_listing`/`team_2_listing`**). ✅ (most of Phase 2)
+- **Categories:** equipment, apparel (+ categoryLevel1/2/3 search schemas).
+- Env drift: `teamname` listing field is in test/dev but **not** live.
+
+**Biggest gap — the team model.** The spec's core mechanic (unique team code → email → join by code →
+virtual-warehouse dashboard) is **not modeled at all**. Console instead stubs teams as a free-text
+`teamnamecustom` on the team user + a static placeholder `teamname` enum on listings, which can't scale
+to dynamic team signup. This must be reconciled (decision D1) before Phases 3–5. Also missing vs spec:
+location, bio, website, team contact, free/premium plan. Note: `flex-cli` **cannot** edit these
+Console-defined fields — they're Console-UI only.
+
+---
+
 ## Guiding principles
 
 1. **Console-first for anything Console supports** (listing types/fields, user types/fields,
