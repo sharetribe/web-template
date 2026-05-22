@@ -6,9 +6,13 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { formatMoney } from '../../util/currency';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { loadTeamNames } from '../../ducks/team.duck';
 import { getJoinedTeamCodes, formatTeamCode } from '../../util/teams';
+
+const { Money } = sdkTypes;
 
 import { H3, H4, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
 
@@ -64,10 +68,19 @@ export const IndividualDashboardPageComponent = props => {
     currentUser,
     listedCount,
     listings,
+    soldCount,
+    purchasedCount,
+    totalRevenue,
+    currency,
     queryInProgress,
     teamNames,
     onLoadTeamNames,
   } = props;
+
+  const revenueValue =
+    currency && typeof totalRevenue === 'number'
+      ? formatMoney(intl, new Money(totalRevenue, currency))
+      : '—';
 
   const user = ensureCurrentUser(currentUser);
   const publicData = user.attributes.profile.publicData || {};
@@ -127,9 +140,17 @@ export const IndividualDashboardPageComponent = props => {
               value={listedCount}
               pending={queryInProgress || listedCount == null}
             />
-            <StatCard labelId="IndividualDashboardPage.itemsSold" value={0} pending />
-            <StatCard labelId="IndividualDashboardPage.itemsPurchased" value={0} pending />
-            <StatCard labelId="IndividualDashboardPage.revenue" value={0} pending />
+            <StatCard
+              labelId="IndividualDashboardPage.itemsSold"
+              value={soldCount ?? 0}
+              pending={soldCount == null}
+            />
+            <StatCard
+              labelId="IndividualDashboardPage.itemsPurchased"
+              value={purchasedCount ?? 0}
+              pending={purchasedCount == null}
+            />
+            <StatCard labelId="IndividualDashboardPage.revenue" value={revenueValue} pending={false} />
           </section>
 
           <section className={css.block}>
@@ -185,12 +206,24 @@ export const IndividualDashboardPageComponent = props => {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
-  const { listedCount, listings, queryInProgress } = state.IndividualDashboardPage;
+  const {
+    listedCount,
+    listings,
+    soldCount,
+    purchasedCount,
+    totalRevenue,
+    currency,
+    queryInProgress,
+  } = state.IndividualDashboardPage;
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     listedCount,
     listings,
+    soldCount,
+    purchasedCount,
+    totalRevenue,
+    currency,
     queryInProgress,
     teamNames: state.team.teamNames,
   };

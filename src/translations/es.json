@@ -911,7 +911,7 @@
   "IndividualDashboardPage.manageTeams": "Manage teams",
   "IndividualDashboardPage.sportsTitle": "Your sports",
   "IndividualDashboardPage.noSports": "No sports added yet.",
-  "IndividualDashboardPage.salesNote": "Items sold, purchased, and revenue will appear here once sales aggregation is enabled.",
+  "IndividualDashboardPage.salesNote": "Items sold, purchased, and revenue reflect your paid orders.",
   "TeamDashboardPage.title": "Team dashboard",
   "TeamDashboardPage.heading": "Team dashboard",
   "TeamDashboardPage.loading": "Loading your team dashboard…",
