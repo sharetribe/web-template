@@ -6,6 +6,7 @@ import {
   isIndividualAccount,
   getTeamCode,
   getJoinedTeamCodes,
+  getSellerTeamCodes,
   normalizeTeamCode,
   isValidTeamCodeFormat,
   formatTeamCode,
@@ -51,6 +52,24 @@ describe('teams util', () => {
       expect(getJoinedTeamCodes(userWith({}))).toEqual([]);
       expect(getJoinedTeamCodes(userWith({ teamCodes: 'not-an-array' }))).toEqual([]);
       expect(getJoinedTeamCodes(undefined)).toEqual([]);
+    });
+  });
+
+  describe('getSellerTeamCodes', () => {
+    it('uses the team\'s own code for a team account', () => {
+      const teamUser = userWith({ userType: TEAM_USER_TYPE, teamCode: 'NRK7MQ9P2' });
+      expect(getSellerTeamCodes(teamUser)).toEqual(['NRK7MQ9P2']);
+    });
+
+    it('uses joined codes for an individual', () => {
+      const ind = userWith({ userType: INDIVIDUAL_USER_TYPE, teamCodes: ['NRAAAAAA2', 'NRBBBBBB3'] });
+      expect(getSellerTeamCodes(ind)).toEqual(['NRAAAAAA2', 'NRBBBBBB3']);
+    });
+
+    it('returns an empty array when there is nothing to stamp', () => {
+      expect(getSellerTeamCodes(userWith({ userType: TEAM_USER_TYPE }))).toEqual([]);
+      expect(getSellerTeamCodes(userWith({ userType: INDIVIDUAL_USER_TYPE }))).toEqual([]);
+      expect(getSellerTeamCodes(undefined)).toEqual([]);
     });
   });
 

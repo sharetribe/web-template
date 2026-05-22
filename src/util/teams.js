@@ -59,6 +59,21 @@ export const getJoinedTeamCodes = user => {
 };
 
 /**
+ * The team code(s) a seller's new/edited listing should be stamped with, so team dashboards
+ * can find it via `pub_teamCodes`. A Team account stamps its own code; an Individual stamps
+ * every team they belong to.
+ * @param {Object} user the seller (current user) API entity
+ * @returns {String[]} canonical team codes (possibly empty)
+ */
+export const getSellerTeamCodes = user => {
+  if (isTeamAccount(user)) {
+    const code = getTeamCode(user);
+    return code ? [code] : [];
+  }
+  return getJoinedTeamCodes(user);
+};
+
+/**
  * Normalize user-entered code to its canonical form: uppercase, alphanumeric only.
  * Lets "nr-k7m q9p2", "NRK7MQ9P2" etc. all compare equal.
  * @param {String} input raw user input

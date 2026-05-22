@@ -16,6 +16,7 @@ import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 import { parse } from '../../util/urlHelpers';
 import { isUserAuthorized } from '../../util/userHelpers';
+import { getSellerTeamCodes } from '../../util/teams';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -27,6 +28,13 @@ import {
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
+
+// Stamp the seller's team code(s) into the listing's public data so team dashboards can find
+// member- and team-posted gear via a `pub_teamCodes` query. See src/util/teams.js.
+const withSellerTeamCodes = (values, currentUser) => ({
+  ...values,
+  publicData: { ...(values.publicData || {}), teamCodes: getSellerTeamCodes(currentUser) },
+});
 
 // Create array of N items where indexing starts from 1
 const getArrayOfNItems = n =>
@@ -164,12 +172,15 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // create, set stock, show listing (to get updated currentStock entity)
 export const createListingDraftThunk = createAsyncThunk(
   'EditListingPage/createListingDraft',
-  ({ data, config }, { dispatch, rejectWithValue, extra: sdk }) => {
+  ({ data, config }, { dispatch, getState, rejectWithValue, extra: sdk }) => {
     const { stockUpdate, images, ...rest } = data;
 
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
-    const ownListingValues = { ...imageProperty, ...rest };
+    const ownListingValues = withSellerTeamCodes(
+      { ...imageProperty, ...rest },
+      getState().user.currentUser
+    );
 
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
@@ -213,7 +224,12 @@ export const updateListingThunk = createAsyncThunk(
 
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
-    const ownListingUpdateValues = { id, ...imageProperty, ...rest };
+    const baseUpdateValues = { id, ...imageProperty, ...rest };
+    // Re-stamp team codes only when the update already carries public data (the details tab),
+    // so other tabs (photos, stock, availability) don't touch publicData.
+    const ownListingUpdateValues = rest.publicData
+      ? withSellerTeamCodes(baseUpdateValues, getState().user.currentUser)
+      : baseUpdateValues;
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       expand: true,
