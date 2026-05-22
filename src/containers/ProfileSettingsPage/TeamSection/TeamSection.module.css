@@ -43,6 +43,13 @@
   font-style: italic;
 }
 
+.dashboardLink {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--marketplaceColor);
+  font-weight: var(--fontWeightMedium);
+}
+
 /* Individual account: join panel */
 .joinForm {
   display: flex;

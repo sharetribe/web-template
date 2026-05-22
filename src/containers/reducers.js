@@ -20,6 +20,7 @@ import ProfileSettingsPage from './ProfileSettingsPage/ProfileSettingsPage.duck'
 import RequestQuotePage from './RequestQuotePage/RequestQuotePage.duck';
 import SearchPage from './SearchPage/SearchPage.duck';
 import StripePayoutPage from './StripePayoutPage/StripePayoutPage.duck';
+import TeamDashboardPage from './TeamDashboardPage/TeamDashboardPage.duck';
 import TransactionPage from './TransactionPage/TransactionPage.duck';
 
 export {
@@ -40,5 +41,6 @@ export {
   RequestQuotePage,
   SearchPage,
   StripePayoutPage,
+  TeamDashboardPage,
   TransactionPage,
 };

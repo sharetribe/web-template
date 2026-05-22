@@ -1,0 +1,96 @@
+.root {
+}
+
+.content {
+  max-width: 1056px;
+  margin: 0 auto;
+  padding: 24px 24px 64px 24px;
+
+  @media (--viewportMedium) {
+    padding: 48px 36px 96px 36px;
+  }
+}
+
+.heading {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.message {
+  color: var(--colorGrey700);
+}
+
+.error {
+  color: var(--colorFail);
+}
+
+.identity {
+  padding: 20px 24px;
+  background-color: var(--colorGrey50);
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  margin-bottom: 28px;
+}
+
+.teamName {
+  margin: 0 0 12px 0;
+}
+
+.codeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.codeLabel {
+  color: var(--colorGrey600);
+}
+
+.code {
+  font-weight: var(--fontWeightSemiBold);
+  letter-spacing: 2px;
+  color: var(--colorGrey900);
+}
+
+.copyButton {
+  width: auto;
+  color: var(--marketplaceColor);
+  font-weight: var(--fontWeightMedium);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorGrey900);
+  line-height: 1;
+}
+
+.statLabel {
+  color: var(--colorGrey600);
+}
+
+.note {
+  margin-top: 24px;
+  color: var(--colorGrey500);
+  font-size: 14px;
+}

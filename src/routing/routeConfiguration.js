@@ -36,6 +36,7 @@ const RequestQuotePage = loadable(() => import(/* webpackChunkName: "RequestQuot
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
+const TeamDashboardPage = loadable(() => import(/* webpackChunkName: "TeamDashboardPage" */ '../containers/TeamDashboardPage/TeamDashboardPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
@@ -211,6 +212,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: ProfileSettingsPage,
+    },
+    {
+      path: '/team-dashboard',
+      name: 'TeamDashboardPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: TeamDashboardPage,
     },
 
     // Note: authenticating with IdP (e.g. Facebook) expects that /login path exists

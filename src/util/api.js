@@ -160,3 +160,11 @@ export const deleteUserAccount = body => {
 export const lookupTeam = body => {
   return post('/api/team/lookup', body);
 };
+
+// Fetch Team Admin dashboard metrics for the authenticated team account.
+//
+// See `server/api/team-stats.js`. Returns
+// { teamName, teamCode, memberCount, listedCount, soldCount, totalRevenue, integrationConfigured }.
+export const fetchTeamStats = () => {
+  return post('/api/team/stats', {});
+};

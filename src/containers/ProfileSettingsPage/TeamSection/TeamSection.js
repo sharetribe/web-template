@@ -11,7 +11,7 @@ import {
 } from '../../../util/teams';
 
 // Import shared components
-import { H4, InlineTextButton } from '../../../components';
+import { H4, InlineTextButton, NamedLink } from '../../../components';
 
 // Import modules from this directory
 import JoinTeamForm from './JoinTeamForm';
@@ -61,6 +61,9 @@ const TeamCodePanel = ({ teamCode }) => {
           <FormattedMessage id="ProfileSettingsPage.TeamSection.generating" />
         </p>
       )}
+      <NamedLink className={css.dashboardLink} name="TeamDashboardPage">
+        <FormattedMessage id="ProfileSettingsPage.TeamSection.viewDashboard" />
+      </NamedLink>
     </div>
   );
 };
