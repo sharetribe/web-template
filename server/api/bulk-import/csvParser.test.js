@@ -671,6 +671,7 @@ describe('validateRows', () => {
         'pd_genero',
         'pd_estado',
         'pd_estilo',
+        'author_id',
       ];
       const aliasValues = Object.values(COLUMN_ALIASES);
       for (const target of expectedTargets) {

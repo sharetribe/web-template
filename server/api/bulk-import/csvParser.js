@@ -23,6 +23,7 @@ const COLUMN_ALIASES = {
   Genero: 'pd_genero',
   Estado: 'pd_estado',
   Estilo: 'pd_estilo',
+  'ID Vendedor': 'author_id',
 };
 
 const REQUIRED_COLUMNS = ['title', 'price', 'description'];
