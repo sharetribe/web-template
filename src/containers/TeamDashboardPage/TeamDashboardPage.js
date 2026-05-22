@@ -4,9 +4,18 @@ import { connect } from 'react-redux';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { createSlug } from '../../util/urlHelpers';
 import { formatTeamCode } from '../../util/teams';
 
-import { H3, H4, Page, UserNav, InlineTextButton, LayoutSingleColumn } from '../../components';
+import {
+  H3,
+  H4,
+  Page,
+  UserNav,
+  InlineTextButton,
+  NamedLink,
+  LayoutSingleColumn,
+} from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
@@ -121,7 +130,9 @@ export const TeamDashboardPageComponent = props => {
                   <ul className={css.list}>
                     {stats.members.map(m => (
                       <li key={m.id} className={css.listItem}>
-                        {m.name || <FormattedMessage id="TeamDashboardPage.unnamedMember" />}
+                        <NamedLink className={css.listLink} name="ProfilePage" params={{ id: m.id }}>
+                          {m.name || <FormattedMessage id="TeamDashboardPage.unnamedMember" />}
+                        </NamedLink>
                       </li>
                     ))}
                   </ul>
@@ -140,7 +151,13 @@ export const TeamDashboardPageComponent = props => {
                   <ul className={css.list}>
                     {stats.listings.map(l => (
                       <li key={l.id} className={css.listItem}>
-                        <span className={css.listTitle}>{l.title}</span>
+                        <NamedLink
+                          className={css.listLink}
+                          name="ListingPage"
+                          params={{ id: l.id, slug: createSlug(l.title || '') }}
+                        >
+                          <span className={css.listTitle}>{l.title}</span>
+                        </NamedLink>
                         {l.author ? (
                           <span className={css.listMeta}>
                             <FormattedMessage

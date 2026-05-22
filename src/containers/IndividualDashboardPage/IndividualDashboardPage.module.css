@@ -85,7 +85,15 @@
   border-radius: var(--borderRadiusMedium);
   margin-bottom: 8px;
   font-weight: var(--fontWeightMedium);
+}
+
+.listLink {
   color: var(--colorGrey900);
+}
+
+.listLink:hover {
+  text-decoration: none;
+  color: var(--marketplaceColor);
 }
 
 .empty {

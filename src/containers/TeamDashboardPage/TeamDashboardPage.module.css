@@ -114,9 +114,18 @@
   margin-bottom: 8px;
 }
 
+.listLink {
+  color: var(--colorGrey900);
+}
+
+.listLink:hover {
+  text-decoration: none;
+  color: var(--marketplaceColor);
+}
+
 .listTitle {
   font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey900);
+  color: inherit;
 }
 
 .listMeta {

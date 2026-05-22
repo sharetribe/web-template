@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
+import { createSlug } from '../../util/urlHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { loadTeamNames } from '../../ducks/team.duck';
 import { getJoinedTeamCodes, formatTeamCode } from '../../util/teams';
@@ -123,7 +124,13 @@ export const IndividualDashboardPageComponent = props => {
               <ul className={css.list}>
                 {listings.map(l => (
                   <li key={l.id} className={css.listItem}>
-                    {l.title}
+                    <NamedLink
+                      className={css.listLink}
+                      name="ListingPage"
+                      params={{ id: l.id, slug: createSlug(l.title || '') }}
+                    >
+                      {l.title}
+                    </NamedLink>
                   </li>
                 ))}
               </ul>
