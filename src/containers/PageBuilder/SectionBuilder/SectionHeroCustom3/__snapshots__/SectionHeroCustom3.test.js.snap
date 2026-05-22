@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionHeroCustom3 matches snapshot 1`] = `
+<section
+  class="root"
+  id="av-hero3-main"
+>
+  <a
+    class="half halfLinked"
+    href="AVHero3.main.bgLink"
+  >
+    <div
+      class="content alignLeft"
+    >
+      <h2
+        class="h2"
+      >
+        Colección Primavera
+      </h2>
+    </div>
+  </a>
+</section>
+`;

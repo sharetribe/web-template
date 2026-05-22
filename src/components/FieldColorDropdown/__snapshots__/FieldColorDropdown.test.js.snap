@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldColorDropdown matches snapshot (closed state) 1`] = `
+<form>
+  <div
+    class="root"
+  >
+    <label
+      class="label"
+      for="color"
+    >
+      Color
+    </label>
+    <div
+      aria-expanded="false"
+      aria-haspopup="true"
+      class="control  "
+      id="color"
+      role="button"
+      tabindex="0"
+    >
+      <div
+        class="selectedCircles"
+      >
+        <span
+          class="placeholder"
+        >
+          FieldColorDropdown.placeholder
+        </span>
+      </div>
+      <span
+        class="toggleIcon"
+      >
+        ▼
+      </span>
+    </div>
+  </div>
+  <button
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

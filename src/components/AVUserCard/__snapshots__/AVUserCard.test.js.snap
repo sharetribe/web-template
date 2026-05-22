@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AVUserCard matches snapshot 1`] = `
+<a
+  class="root"
+  href="/u/user-1"
+>
+  <div
+    class="imageWrapper"
+  >
+    <img
+      alt="Mi Tienda"
+      class="image"
+      src="https://example.com/avatar.jpg"
+    />
+    <div
+      class="nameWrapper"
+    >
+      <span
+        class="name"
+      >
+        Mi Tienda
+      </span>
+    </div>
+  </div>
+</a>
+`;

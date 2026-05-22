@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AVSectionContainer matches snapshot 1`] = `
+<section
+  class="root"
+  id="test-section"
+>
+  <div
+    class="sectionContent"
+  >
+    content
+  </div>
+</section>
+`;

@@ -235,3 +235,7 @@ textarea {
     align-self: unset;
   }
 }
+
+.buttonPrimary {
+  letter-spacing: 1.5px;
+}

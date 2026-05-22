@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PayoutItem matches snapshot 1`] = `
+<div
+  class="root"
+>
+  <div
+    class="infoSection"
+  >
+    <div
+      class="titleRow"
+    >
+      <a
+        class="listingLink"
+        href="/sale/tx-abc-123"
+      >
+        Vestido Vintage
+      </a>
+      <span
+        class="badgeCompleted"
+      >
+        Completed
+      </span>
+    </div>
+    <div
+      class="details"
+    >
+      <span
+        class="buyer"
+      >
+        Ana García
+      </span>
+      <span
+        class="date"
+      >
+        Mar 15, 2024 4:00 AM
+      </span>
+    </div>
+  </div>
+  <div
+    class="amountSection"
+  >
+    <div
+      class="amountRow"
+    >
+      <span
+        class="amountLabel"
+      >
+        Gross
+      </span>
+      <span
+        class="amountGross"
+      >
+        MX$450.00
+      </span>
+    </div>
+    <div
+      class="amountRow"
+    >
+      <span
+        class="amountLabel"
+      >
+        Net
+      </span>
+      <span
+        class="amountNet"
+      >
+        MX$405.00
+      </span>
+    </div>
+  </div>
+</div>
+`;

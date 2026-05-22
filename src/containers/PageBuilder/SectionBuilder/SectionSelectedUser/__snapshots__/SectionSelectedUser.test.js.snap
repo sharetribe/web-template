@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionSelectedUser matches snapshot with empty users 1`] = `
+<section
+  class="root"
+  id="av-selected-users-home"
+>
+  <div
+    class="sectionContent"
+  />
+</section>
+`;

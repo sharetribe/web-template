@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BalanceSummary matches snapshot 1`] = `
+<div
+  class="wrapper"
+>
+  <div
+    class="tabs"
+  >
+    <button
+      class="tabActive"
+    >
+      All Time
+    </button>
+    <button
+      class="tab"
+    >
+      This Month
+    </button>
+  </div>
+  <div
+    class="root"
+  >
+    <div
+      class="cardEarnings"
+    >
+      <div
+        class="cardLabel"
+      >
+        Total Earnings
+      </div>
+      <div
+        class="cardValue"
+      >
+        MX$1,000.00
+      </div>
+    </div>
+    <div
+      class="cardPending"
+    >
+      <div
+        class="cardLabel"
+      >
+        Pending
+      </div>
+      <div
+        class="cardValue"
+      >
+        MX$200.00
+      </div>
+    </div>
+    <div
+      class="cardCancelled"
+    >
+      <div
+        class="cardLabel"
+      >
+        Cancelled
+      </div>
+      <div
+        class="cardValue"
+      >
+        3
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionHeroCustom2 matches snapshot 1`] = `
+<section
+  class="root undefined"
+  id="av-hero2-home"
+>
+  <a
+    aria-hidden="true"
+    class="bgClickArea"
+    href="AVHero2.home.bgLink"
+    tabindex="-1"
+  />
+  <div
+    class="sectionContent"
+  />
+</section>
+`;

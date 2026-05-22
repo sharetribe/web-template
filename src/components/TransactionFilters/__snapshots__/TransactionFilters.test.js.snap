@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionFilters matches snapshot 1`] = `
+<div
+  class="root"
+>
+  <div
+    class="filters"
+  >
+    <div
+      class="filterGroup"
+    >
+      <label
+        class="label"
+        for="status-filter"
+      >
+        Status
+      </label>
+      <select
+        class="select"
+        id="status-filter"
+      >
+        <option
+          value=""
+        >
+          All
+        </option>
+        <option
+          value="completed"
+        >
+          Completed
+        </option>
+        <option
+          value="pending"
+        >
+          Pending
+        </option>
+        <option
+          value="cancelled"
+        >
+          Cancelled
+        </option>
+      </select>
+    </div>
+    <div
+      class="filterGroup"
+    >
+      <label
+        class="label"
+        for="date-from"
+      >
+        From
+      </label>
+      <input
+        class="dateInput"
+        id="date-from"
+        type="date"
+        value=""
+      />
+    </div>
+    <div
+      class="filterGroup"
+    >
+      <label
+        class="label"
+        for="date-to"
+      >
+        To
+      </label>
+      <input
+        class="dateInput"
+        id="date-to"
+        type="date"
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;

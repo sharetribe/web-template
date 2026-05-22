@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionVideoSection matches snapshot 1`] = `
+<section
+  class="root"
+  id="av-video-home"
+/>
+`;

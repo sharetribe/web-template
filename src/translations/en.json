@@ -617,7 +617,7 @@
   "MakeOfferPage.tooManyRequestsError": "Making the offer failed due to too many requests made in a short amount of time. If the error persists, try refreshing the page or contact support.",
   "ManageAccountPage.heading": "Manage account",
   "ManageAccountPage.deleteAccountSubtitle": "Delete your account",
-  "ManageAccountPage.title": "Manage account",
+  "ManageAccountPage.title": "Manage account",  
   "ManageListingCard.actionFailed": "Oops, something went wrong. Please refresh the page and try again.",
   "ManageListingCard.closeListing": "Close listing",
   "ManageListingCard.closeListingText": "Close listing",
