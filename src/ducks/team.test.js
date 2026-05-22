@@ -1,11 +1,11 @@
 import { createCurrentUser } from '../util/testData';
 import { createFakeDispatch, dispatchedActions } from '../util/testHelpers';
 import { isValidTeamCodeFormat } from '../util/teams';
-import { lookupTeam } from '../util/api';
-import reducer, { ensureTeamCode, joinTeam, leaveTeam } from './team.duck';
+import { lookupTeam, fetchTeamNames } from '../util/api';
+import reducer, { ensureTeamCode, joinTeam, leaveTeam, loadTeamNames } from './team.duck';
 
-// joinTeam verifies codes via the server lookup; mock it.
-jest.mock('../util/api', () => ({ lookupTeam: jest.fn() }));
+// joinTeam verifies codes via the server lookup; loadTeamNames resolves names. Mock both.
+jest.mock('../util/api', () => ({ lookupTeam: jest.fn(), fetchTeamNames: jest.fn() }));
 
 const TEAM = 'teamname';
 const INDIVIDUAL = 'individual';
@@ -43,6 +43,7 @@ describe('team duck', () => {
         ensureCodeError: null,
         joinInProgress: false,
         joinError: null,
+        teamNames: {},
       });
     });
   });
@@ -125,6 +126,24 @@ describe('team duck', () => {
       const result = await dispatch(joinTeam('NRZZZZZZ9'));
       expect(result).toEqual(['NRZZZZZZ9']);
       expect(sdk.currentUser.updateProfile).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('loadTeamNames', () => {
+    it('resolves names and caches them in state', async () => {
+      fetchTeamNames.mockResolvedValueOnce({ names: { NRDEMOAB2: 'Seattle Little League' } });
+      const dispatch = createFakeDispatch(stateWithUser(individualUser()), makeSdk());
+      const result = await dispatch(loadTeamNames(['NRDEMOAB2']));
+      expect(result).toEqual({ NRDEMOAB2: 'Seattle Little League' });
+      const setAction = dispatchedActions(dispatch).find(a => a.type === 'team/setTeamNames');
+      expect(setAction.payload).toEqual({ NRDEMOAB2: 'Seattle Little League' });
+    });
+
+    it('is a no-op for an empty list', async () => {
+      const dispatch = createFakeDispatch(stateWithUser(individualUser()), makeSdk());
+      const result = await dispatch(loadTeamNames([]));
+      expect(result).toEqual({});
+      expect(fetchTeamNames).not.toHaveBeenCalled();
     });
   });
 

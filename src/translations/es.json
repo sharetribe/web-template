@@ -890,6 +890,8 @@
   "ProfileSettingsPage.TeamSection.viewMyDashboard": "View your dashboard",
   "IndividualDashboardPage.title": "Your dashboard",
   "IndividualDashboardPage.heading": "Your dashboard",
+  "TopbarDesktop.dashboardLink": "Dashboard",
+  "TopbarMobileMenu.dashboardLink": "Dashboard",
   "IndividualDashboardPage.itemsListed": "Items listed",
   "IndividualDashboardPage.itemsSold": "Items sold",
   "IndividualDashboardPage.itemsPurchased": "Items purchased",

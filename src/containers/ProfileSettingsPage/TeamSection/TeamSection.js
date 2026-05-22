@@ -69,7 +69,14 @@ const TeamCodePanel = ({ teamCode }) => {
 };
 
 // Panel shown to an Individual: join teams by code, and manage joined teams.
-const JoinTeamPanel = ({ joinedCodes, onJoinTeam, onLeaveTeam, joinInProgress, joinError }) => (
+const JoinTeamPanel = ({
+  joinedCodes,
+  teamNames,
+  onJoinTeam,
+  onLeaveTeam,
+  joinInProgress,
+  joinError,
+}) => (
   <div className={css.joinPanel}>
     <p className={css.description}>
       <FormattedMessage id="ProfileSettingsPage.TeamSection.individualDescription" />
@@ -85,7 +92,7 @@ const JoinTeamPanel = ({ joinedCodes, onJoinTeam, onLeaveTeam, joinInProgress, j
       <ul className={css.joinedList}>
         {joinedCodes.map(code => (
           <li key={code} className={css.joinedItem}>
-            <span className={css.joinedCode}>{formatTeamCode(code)}</span>
+            <span className={css.joinedCode}>{teamNames[code] || formatTeamCode(code)}</span>
             <InlineTextButton
               type="button"
               className={css.leaveButton}
@@ -123,7 +130,7 @@ const JoinTeamPanel = ({ joinedCodes, onJoinTeam, onLeaveTeam, joinInProgress, j
  * @returns {JSX.Element|null}
  */
 const TeamSection = props => {
-  const { currentUser, onJoinTeam, onLeaveTeam, joinInProgress, joinError } = props;
+  const { currentUser, onJoinTeam, onLeaveTeam, joinInProgress, joinError, teamNames = {} } = props;
 
   const isTeam = isTeamAccount(currentUser);
   const isIndividual = isIndividualAccount(currentUser);
@@ -142,6 +149,7 @@ const TeamSection = props => {
       ) : (
         <JoinTeamPanel
           joinedCodes={getJoinedTeamCodes(currentUser)}
+          teamNames={teamNames}
           onJoinTeam={onJoinTeam}
           onLeaveTeam={onLeaveTeam}
           joinInProgress={joinInProgress}

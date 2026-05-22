@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { isTeamAccount, isIndividualAccount } from '../../../../util/teams';
 import {
   Avatar,
   InlineTextButton,
@@ -63,6 +64,13 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
 
+  // NextRep: route to the dashboard matching the user's account type.
+  const dashboardRoute = isTeamAccount(currentUser)
+    ? 'TeamDashboardPage'
+    : isIndividualAccount(currentUser)
+    ? 'IndividualDashboardPage'
+    : null;
+
   return (
     <Menu skipFocusOnNavigation={true}>
       <MenuLabel
@@ -74,6 +82,17 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
+        {dashboardRoute ? (
+          <MenuItem key="DashboardPage">
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass(dashboardRoute))}
+              name={dashboardRoute}
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.dashboardLink" />
+            </NamedLink>
+          </MenuItem>
+        ) : null}
         {showManageListingsLink ? (
           <MenuItem key="ManageListingsPage">
             <NamedLink

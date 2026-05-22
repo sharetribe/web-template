@@ -14,7 +14,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { denormalisedResponseEntities, ensureCurrentUser } from '../util/data';
 import { storableError } from '../util/errors';
-import { lookupTeam } from '../util/api';
+import { lookupTeam, fetchTeamNames } from '../util/api';
 import {
   isTeamAccount,
   getTeamCode,
@@ -40,6 +40,8 @@ const initialState = {
   ensureCodeError: null,
   joinInProgress: false,
   joinError: null,
+  // Map of canonical team code -> team name, populated lazily for display.
+  teamNames: {},
 };
 
 const teamSlice = createSlice({
@@ -68,6 +70,9 @@ const teamSlice = createSlice({
       state.joinInProgress = false;
       state.joinError = action.payload;
     },
+    setTeamNames: (state, action) => {
+      state.teamNames = { ...state.teamNames, ...action.payload };
+    },
   },
 });
 
@@ -78,6 +83,7 @@ export const {
   joinRequest,
   joinSuccess,
   joinError,
+  setTeamNames,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;
@@ -163,6 +169,26 @@ export const joinTeam = rawCode => (dispatch, getState, sdk) => {
       dispatch(joinError(storableError(e)));
       throw e;
     });
+};
+
+/**
+ * Resolve a list of team codes to names (for display) and cache them in state.team.teamNames.
+ * Best-effort: failures are swallowed so the UI just falls back to showing the code.
+ * @param {String[]} codes canonical team codes
+ * @returns {Function} thunk resolving to the names map
+ */
+export const loadTeamNames = codes => dispatch => {
+  const list = Array.isArray(codes) ? codes : [];
+  if (list.length === 0) {
+    return Promise.resolve({});
+  }
+  return fetchTeamNames(list)
+    .then(({ names }) => {
+      const resolved = names || {};
+      dispatch(setTeamNames(resolved));
+      return resolved;
+    })
+    .catch(() => ({}));
 };
 
 /**

@@ -168,3 +168,11 @@ export const lookupTeam = body => {
 export const fetchTeamStats = () => {
   return post('/api/team/stats', {});
 };
+
+// Resolve a batch of team codes to team names via the Integration API (server-side).
+//
+// See `server/api/team-names.js`. Body: { teamCodes }.
+// Returns { names: { [canonicalCode]: teamName } }.
+export const fetchTeamNames = teamCodes => {
+  return post('/api/team/names', { teamCodes });
+};

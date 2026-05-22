@@ -13,9 +13,14 @@ import {
   pickUserFieldsData,
   showCreateListingLinkForUser,
 } from '../../util/userHelpers';
-import { isTeamAccount, getTeamCode } from '../../util/teams';
+import {
+  isTeamAccount,
+  isIndividualAccount,
+  getTeamCode,
+  getJoinedTeamCodes,
+} from '../../util/teams';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { ensureTeamCode, joinTeam, leaveTeam } from '../../ducks/team.duck';
+import { ensureTeamCode, joinTeam, leaveTeam, loadTeamNames } from '../../ducks/team.duck';
 
 import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
 
@@ -83,8 +88,10 @@ export const ProfileSettingsPageComponent = props => {
     onEnsureTeamCode,
     onJoinTeam,
     onLeaveTeam,
+    onLoadTeamNames,
     joinInProgress,
     joinError,
+    teamNames,
     scrollingDisabled,
     updateInProgress,
     updateProfileError,
@@ -101,6 +108,15 @@ export const ProfileSettingsPageComponent = props => {
       onEnsureTeamCode();
     }
   }, [currentUser, onEnsureTeamCode]);
+
+  // Resolve names for the teams an individual has joined, so the list can show names not codes.
+  const joinedCodesKey = getJoinedTeamCodes(currentUser).join(',');
+  useEffect(() => {
+    if (isIndividualAccount(currentUser)) {
+      onLoadTeamNames(getJoinedTeamCodes(currentUser));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onLoadTeamNames, joinedCodesKey]);
 
   const { userFields, userTypes = [] } = config.user;
   const publicUserFields = userFields.filter(uf => uf.scope === 'public');
@@ -207,6 +223,7 @@ export const ProfileSettingsPageComponent = props => {
             onLeaveTeam={onLeaveTeam}
             joinInProgress={joinInProgress}
             joinError={joinError}
+            teamNames={teamNames}
           />
         </div>
       </LayoutSingleColumn>
@@ -223,7 +240,7 @@ const mapStateToProps = state => {
     updateInProgress,
     updateProfileError,
   } = state.ProfileSettingsPage;
-  const { joinInProgress, joinError } = state.team;
+  const { joinInProgress, joinError, teamNames } = state.team;
   return {
     currentUser,
     image,
@@ -234,6 +251,7 @@ const mapStateToProps = state => {
     uploadInProgress,
     joinInProgress,
     joinError,
+    teamNames,
   };
 };
 
@@ -243,6 +261,7 @@ const mapDispatchToProps = dispatch => ({
   onEnsureTeamCode: () => dispatch(ensureTeamCode()),
   onJoinTeam: code => dispatch(joinTeam(code)),
   onLeaveTeam: code => dispatch(leaveTeam(code)),
+  onLoadTeamNames: codes => dispatch(loadTeamNames(codes)),
 });
 
 const ProfileSettingsPage = compose(

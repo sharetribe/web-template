@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -6,6 +6,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { loadTeamNames } from '../../ducks/team.duck';
 import { getJoinedTeamCodes, formatTeamCode } from '../../util/teams';
 
 import { H3, H4, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
@@ -57,13 +58,30 @@ const Chips = ({ items, emptyId }) =>
 export const IndividualDashboardPageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
-  const { scrollingDisabled, currentUser, listedCount, queryInProgress } = props;
+  const {
+    scrollingDisabled,
+    currentUser,
+    listedCount,
+    queryInProgress,
+    teamNames,
+    onLoadTeamNames,
+  } = props;
 
   const user = ensureCurrentUser(currentUser);
   const publicData = user.attributes.profile.publicData || {};
   const userFields = config.user?.userFields || [];
 
-  const teams = getJoinedTeamCodes(user).map(code => ({ key: code, label: formatTeamCode(code) }));
+  const joinedCodes = getJoinedTeamCodes(user);
+  const joinedKey = joinedCodes.join(',');
+  useEffect(() => {
+    onLoadTeamNames(joinedCodes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onLoadTeamNames, joinedKey]);
+
+  const teams = joinedCodes.map(code => ({
+    key: code,
+    label: teamNames[code] || formatTeamCode(code),
+  }));
   const sportValues = Array.isArray(publicData.sport) ? publicData.sport : [];
   const sports = sportValues.map(v => ({ key: v, label: labelForSport(userFields, v) }));
 
@@ -130,9 +148,19 @@ const mapStateToProps = state => {
     currentUser,
     listedCount,
     queryInProgress,
+    teamNames: state.team.teamNames,
   };
 };
 
-const IndividualDashboardPage = compose(connect(mapStateToProps))(IndividualDashboardPageComponent);
+const mapDispatchToProps = dispatch => ({
+  onLoadTeamNames: codes => dispatch(loadTeamNames(codes)),
+});
+
+const IndividualDashboardPage = compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(IndividualDashboardPageComponent);
 
 export default IndividualDashboardPage;

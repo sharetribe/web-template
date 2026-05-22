@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../../util/data';
+import { isTeamAccount, isIndividualAccount } from '../../../../util/teams';
 
 import {
   AvatarLarge,
@@ -162,6 +163,20 @@ const TopbarMobileMenu = props => {
     </li>
   ) : null;
 
+  // NextRep: link to the dashboard matching the user's account type.
+  const dashboardRoute = isTeamAccount(currentUser)
+    ? 'TeamDashboardPage'
+    : isIndividualAccount(currentUser)
+    ? 'IndividualDashboardPage'
+    : null;
+  const dashboardLinkMaybe = dashboardRoute ? (
+    <li className={classNames(css.navigationLink, currentPageClass(dashboardRoute))}>
+      <NamedLink name={dashboardRoute}>
+        <FormattedMessage id="TopbarMobileMenu.dashboardLink" />
+      </NamedLink>
+    </li>
+  ) : null;
+
   return (
     <div className={css.root}>
       <AvatarLarge className={css.avatar} user={currentUser} />
@@ -180,6 +195,7 @@ const TopbarMobileMenu = props => {
               {notificationCountBadge}
             </NamedLink>
           </li>
+          {dashboardLinkMaybe}
           {manageListingsLinkMaybe}
           <li className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}>
             <NamedLink name="ProfileSettingsPage">

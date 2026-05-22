@@ -18,6 +18,7 @@ const transitionPrivileged = require('./api/transition-privileged');
 const deleteAccount = require('./api/delete-account');
 const teamLookup = require('./api/team-lookup');
 const teamStats = require('./api/team-stats');
+const teamNames = require('./api/team-names');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
@@ -60,6 +61,7 @@ router.post('/transition-privileged', transitionPrivileged);
 router.post('/delete-account', deleteAccount);
 router.post('/team/lookup', teamLookup);
 router.post('/team/stats', teamStats);
+router.post('/team/names', teamNames);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed
