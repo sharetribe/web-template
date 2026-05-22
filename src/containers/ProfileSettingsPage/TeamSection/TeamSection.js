@@ -101,6 +101,10 @@ const JoinTeamPanel = ({ joinedCodes, onJoinTeam, onLeaveTeam, joinInProgress, j
         <FormattedMessage id="ProfileSettingsPage.TeamSection.noTeams" />
       </p>
     )}
+
+    <NamedLink className={css.dashboardLink} name="IndividualDashboardPage">
+      <FormattedMessage id="ProfileSettingsPage.TeamSection.viewMyDashboard" />
+    </NamedLink>
   </div>
 );
 
