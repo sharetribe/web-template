@@ -47,6 +47,7 @@ import {
 } from './AuthenticationPage.helpers';
 
 import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
+import AccountTypeChooser from './AccountTypeChooser';
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
 import LoginForm from './LoginForm/LoginForm';
 import SignupForm from './SignupForm/SignupForm';
@@ -329,6 +330,10 @@ export const AuthenticationPageComponent = props => {
   const showConfirmFormForSSO = !showEmailVerification && isConfirm;
   const showAuthenticationForm = !showEmailVerification && !isConfirm;
   const showLoginForm = showAuthenticationForm && isLogin;
+  // On the signup tab with no preselected user type, prompt the user to choose an account type
+  // first (each card deep-links to /signup/:userType). Only when multiple user types exist.
+  const showAccountTypeChooser =
+    showAuthenticationForm && !isLogin && !preselectedUserType && userTypes.length > 1;
 
   return (
     <Page
@@ -380,6 +385,8 @@ export const AuthenticationPageComponent = props => {
                   onSubmit={submitLogin}
                   inProgress={authInProgress}
                 />
+              ) : showAccountTypeChooser ? (
+                <AccountTypeChooser userTypes={userTypes} fromState={fromState} />
               ) : (
                 <SignupForm
                   className={css.signupForm}
@@ -396,13 +403,15 @@ export const AuthenticationPageComponent = props => {
                 />
               )}
 
-              <SocialLoginButtons
-                isLogin={isLogin}
-                showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
-                showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                {...fromMaybe}
-                {...userTypeMaybe}
-              />
+              {showAccountTypeChooser ? null : (
+                <SocialLoginButtons
+                  isLogin={isLogin}
+                  showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
+                  showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                  {...fromMaybe}
+                  {...userTypeMaybe}
+                />
+              )}
             </div>
           ) : null}
 

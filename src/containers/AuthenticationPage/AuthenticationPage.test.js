@@ -6,7 +6,7 @@ import { fakeIntl } from '../../util/testData';
 
 import AuthenticationPage from './AuthenticationPage';
 
-const { screen, waitFor, userEvent } = testingLibrary;
+const { screen } = testingLibrary;
 
 const noop = () => null;
 
@@ -65,24 +65,23 @@ describe('AuthenticationPage', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('changes the login form to sign up form by clicking "Sign up" ', async () => {
-    // We want to make sure that during the test the env variables
-    // for social logins are as we expect them to be
+  it('shows the account-type chooser on the signup tab when no type is preselected', async () => {
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
     process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
-    const user = userEvent.setup();
 
-    render(<AuthenticationPage {...props} />);
+    await act(async () => {
+      render(<AuthenticationPage {...props} tab="signup" />);
+    });
 
-    // First we can check that login button is in the document
-    expect(screen.getByRole('button', { name: 'LoginForm.logIn' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('link', { name: 'AuthenticationPage.signupLinkText' }));
-
-    // Then we can check that login sign up button is in the document
-    waitFor(() =>
-      expect(screen.findByRole('button', { name: 'SignupForm.signUp' })).toBeInTheDocument()
-    );
+    // Instead of the signup form, the user first chooses an account type. Each configured user
+    // type (test config: Seller/Buyer/Guest/Host) is a link into the type-specific signup route.
+    expect(
+      screen.getByText('AuthenticationPage.chooseAccountTypeHeading')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Seller' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'SignupForm.signUp' })
+    ).not.toBeInTheDocument();
   });
 });
 

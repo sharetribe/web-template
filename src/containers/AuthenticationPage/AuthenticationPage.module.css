@@ -98,6 +98,48 @@
   }
 }
 
+.accountTypeChooser {
+  margin-top: 24px;
+}
+
+.accountTypeHeading {
+  margin: 0 0 20px 0;
+}
+
+.accountTypeCards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.accountTypeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--colorWhite);
+  transition: all 0.1s ease-in-out;
+}
+
+.accountTypeCard:hover {
+  text-decoration: none;
+  border-color: var(--marketplaceColor);
+  box-shadow: var(--boxShadowPopup);
+}
+
+.accountTypeName {
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 18px;
+  color: var(--colorGrey900);
+}
+
+.accountTypeDesc {
+  color: var(--colorGrey600);
+  font-size: 14px;
+}
+
 .signupForm {
   margin-top: 24px;
 
