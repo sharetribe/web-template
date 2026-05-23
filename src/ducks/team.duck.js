@@ -131,6 +131,36 @@ export const ensureTeamCode = () => (dispatch, getState, sdk) => {
 };
 
 /**
+ * After joining a team, link the member's existing listings to it by adding the team code to each
+ * listing's publicData.teamCodes. Without this, only gear posted *after* joining would appear on
+ * the team dashboard; this makes a retroactive join surface the member's existing gear too.
+ *
+ * Best-effort and self-contained (uses the member's own listings via the Marketplace SDK). Covers
+ * the first page of own listings; very large inventories would need pagination.
+ * @param {String} rawCode the joined team code
+ * @returns {Function} thunk resolving when the listing updates complete
+ */
+export const backfillListingsWithTeamCode = rawCode => (dispatch, getState, sdk) => {
+  const code = normalizeTeamCode(rawCode);
+  if (!code) {
+    return Promise.resolve([]);
+  }
+  return sdk.ownListings.query({ page: 1, perPage: 100 }).then(response => {
+    const listings = response.data.data || [];
+    const updates = listings.reduce((acc, listing) => {
+      const existing = listing.attributes?.publicData?.teamCodes;
+      const current = Array.isArray(existing) ? existing : [];
+      if (current.includes(code)) {
+        return acc; // already linked
+      }
+      const teamCodes = addTeamCode(current, code);
+      return [...acc, sdk.ownListings.update({ id: listing.id, publicData: { teamCodes } })];
+    }, []);
+    return Promise.all(updates);
+  });
+};
+
+/**
  * Individual joins a team by entering its code. Validates format client-side, then verifies the
  * code maps to a real team via the server (Integration API). If the server can't verify (no
  * Integration creds), the code is stored unverified rather than blocking the user.
@@ -161,6 +191,8 @@ export const joinTeam = rawCode => (dispatch, getState, sdk) => {
       }
       return updateCurrentUserProfile(sdk, dispatch, { publicData: { teamCodes } });
     })
+    // Link existing listings to the team too (best-effort — never fail the join over this).
+    .then(() => dispatch(backfillListingsWithTeamCode(code)).catch(() => {}))
     .then(() => {
       dispatch(joinSuccess());
       return teamCodes;

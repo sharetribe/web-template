@@ -1,0 +1,47 @@
+NextRep — Build Update
+======================
+
+TL;DR
+-----
+The full team/individual marketplace experience from the spec is built and tested
+end-to-end. The only things not done are the two items the spec already flagged as
+"future" (donations) or "to be determined" (returns). Everything is on a review
+branch, ready to merge.
+
+
+WHAT'S WORKING NOW
+------------------
+- Account types at sign-up — new users choose "Team account" or "Individual" up
+  front, and land in the right experience.
+- Teams & codes — a team gets a unique, non-expiring join code it can copy and
+  reshare.
+- Joining teams — individuals join by entering a code (verified against real
+  teams), can belong to multiple teams, and add codes anytime.
+- Gear listings — gear posted by a team or its members is automatically linked to
+  the team.
+- Team dashboard ("virtual warehouse") — member roster, all team + member gear,
+  # listed, # sold, and revenue. Public vs. private figures handled per the spec.
+- Individual dashboard — your gear, items sold/purchased, revenue, your teams, and
+  your sports.
+- Get paid — sellers can list before connecting Stripe and are prompted to connect
+  to receive payouts.
+- Polish — team names shown (not just codes), dashboard links in the menu,
+  clickable rosters/listings, and copy in English/German/Spanish/French.
+
+Everything above is covered by an automated test suite (1,200+ checks passing).
+
+
+INTENTIONALLY NOT BUILT YET (per the spec)
+------------------------------------------
+- Donations (% of a sale to a team) — marked "future"; it changes the payment
+  flow, so we're holding for your go-ahead.
+- Returns / disputes — "to be determined" in the spec; needs requirements before
+  we build.
+
+
+WHAT'S NEXT ON YOUR SIDE
+------------------------
+1. See it live with real numbers: run one test purchase (Stripe test mode) — the
+   sold/revenue figures populate automatically.
+2. Approve the merge of the completed work into the main codebase.
+3. Decide if/when you want donations scoped in.

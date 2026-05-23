@@ -20,6 +20,11 @@ const makeSdk = () => ({
       })
     ),
   },
+  // joinTeam backfills existing listings; default to none.
+  ownListings: {
+    query: jest.fn(() => Promise.resolve({ data: { data: [] } })),
+    update: jest.fn(() => Promise.resolve({ data: { data: {} } })),
+  },
 });
 
 const stateWithUser = currentUser => () => ({ user: { currentUser } });
@@ -117,6 +122,26 @@ describe('team duck', () => {
       expect(sdk.currentUser.updateProfile).not.toHaveBeenCalled();
       const actionTypes = dispatchedActions(dispatch).map(a => a.type);
       expect(actionTypes).toContain('team/joinError');
+    });
+
+    it('backfills the new code onto existing listings that lack it', async () => {
+      const sdk = makeSdk();
+      sdk.ownListings.query.mockResolvedValueOnce({
+        data: {
+          data: [
+            { id: { uuid: 'l1' }, attributes: { publicData: { teamCodes: [] } } },
+            { id: { uuid: 'l2' }, attributes: { publicData: { teamCodes: ['NRAAAAAA2'] } } },
+          ],
+        },
+      });
+      const dispatch = createFakeDispatch(stateWithUser(individualUser()), sdk);
+      await dispatch(joinTeam('nr-aaaaaa2'));
+      // l1 lacked the code -> updated; l2 already had it -> skipped.
+      expect(sdk.ownListings.update).toHaveBeenCalledTimes(1);
+      expect(sdk.ownListings.update.mock.calls[0][0]).toEqual({
+        id: { uuid: 'l1' },
+        publicData: { teamCodes: ['NRAAAAAA2'] },
+      });
     });
 
     it('stores the code unverified when the server cannot verify', async () => {
