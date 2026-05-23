@@ -7,6 +7,7 @@ import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import { INDIVIDUAL_USER_TYPE, isValidTeamCodeFormat } from '../../../util/teams';
 
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
 
@@ -212,6 +213,23 @@ const SignupFormComponent = props => (
               {userFieldProps.map(({ key, ...fieldProps }) => (
                 <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
               ))}
+            </div>
+          ) : null}
+
+          {userType === INDIVIDUAL_USER_TYPE ? (
+            <div className={css.customFields}>
+              <FieldTextInput
+                type="text"
+                id={formId ? `${formId}.teamCode` : 'teamCode'}
+                name="teamCode"
+                label={intl.formatMessage({ id: 'SignupForm.teamCodeLabel' })}
+                placeholder={intl.formatMessage({ id: 'SignupForm.teamCodePlaceholder' })}
+                validate={value =>
+                  value && !isValidTeamCodeFormat(value)
+                    ? intl.formatMessage({ id: 'SignupForm.teamCodeInvalid' })
+                    : undefined
+                }
+              />
             </div>
           ) : null}
 

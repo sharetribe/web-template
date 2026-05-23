@@ -16,6 +16,7 @@ import {
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
+import { joinTeam } from '../../ducks/team.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
@@ -229,6 +230,7 @@ export const AuthenticationPageComponent = props => {
     confirmError,
     submitLogin,
     submitSignup,
+    onJoinTeam,
     submitSingupWithIdp,
     tab = 'signup',
     sendVerificationEmailInProgress,
@@ -394,6 +396,7 @@ export const AuthenticationPageComponent = props => {
                     submitSignup,
                     userFields,
                     userTypes,
+                    onJoinTeam,
                   })}
                   inProgress={authInProgress}
                   termsAndConditions={termsAndConditions}
@@ -548,6 +551,7 @@ const AuthenticationPage = props => {
     dispatch,
   ]);
   const submitSignup = useCallback(params => dispatch(signup(params)), [dispatch]);
+  const onJoinTeam = useCallback(code => dispatch(joinTeam(code)), [dispatch]);
   const submitSingupWithIdp = useCallback(params => dispatch(signupWithIdp(params)), [dispatch]);
   const onResendVerificationEmail = useCallback(() => dispatch(sendVerificationEmail()), [
     dispatch,
@@ -575,6 +579,7 @@ const AuthenticationPage = props => {
       confirmError={confirmError}
       submitLogin={submitLogin}
       submitSignup={submitSignup}
+      onJoinTeam={onJoinTeam}
       submitSingupWithIdp={submitSingupWithIdp}
       sendVerificationEmailInProgress={sendVerificationEmailInProgress}
       sendVerificationEmailError={sendVerificationEmailError}

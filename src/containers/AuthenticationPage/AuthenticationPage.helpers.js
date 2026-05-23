@@ -80,8 +80,15 @@ export const getExtendedDataMaybe = (submitValues, userType, userFields, extraDa
  * @param {Array} params.userFields
  * @returns {(values: Object) => void}
  */
-export const getHandleSubmitSignup = ({ submitSignup, userFields, userTypes }) => values => {
-  const { userType, email, password, fname, lname, displayName, ...rest } = values;
+export const getHandleSubmitSignup = ({
+  submitSignup,
+  userFields,
+  userTypes,
+  onJoinTeam,
+}) => values => {
+  // teamCode is an optional NextRep onboarding field (not stored as a user field) — it's used to
+  // join a team right after the account is created.
+  const { userType, email, password, fname, lname, displayName, teamCode, ...rest } = values;
   const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
   // Set referral to user private data if it exists and is valid
@@ -99,7 +106,14 @@ export const getHandleSubmitSignup = ({ submitSignup, userFields, userTypes }) =
     }),
   };
 
-  submitSignup(submitParams);
+  const signupResult = submitSignup(submitParams);
+
+  // After a successful signup, join the entered team (best-effort; never blocks signup).
+  if (teamCode && onJoinTeam && signupResult && typeof signupResult.then === 'function') {
+    signupResult.then(() => onJoinTeam(teamCode)).catch(() => {});
+  }
+
+  return signupResult;
 };
 
 /**
