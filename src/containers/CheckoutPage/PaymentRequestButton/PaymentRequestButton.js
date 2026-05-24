@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { FormattedMessage } from '../../../util/reactIntl';
+
 import css from './PaymentRequestButton.module.css';
 
 /**
@@ -99,7 +101,9 @@ const PaymentRequestButton = props => {
     <div className={css.root}>
       <div ref={mountRef} className={css.button} />
       <div className={css.divider}>
-        <span className={css.dividerLabel}>or pay with card</span>
+        <span className={css.dividerLabel}>
+          <FormattedMessage id="PaymentRequestButton.orPayWithCard" />
+        </span>
       </div>
     </div>
   );

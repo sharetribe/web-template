@@ -1,5 +1,6 @@
 {
   "AddressLinkMaybe.viewOnGoogleMaps": "View on Google Maps",
+  "PaymentRequestButton.orPayWithCard": "or pay with card",
   "AuthenticationPage.confirmSignupInfoText": "Please check that your information is correct.",
   "AuthenticationPage.confirmSignupWithIdpTitle": "Sign up with {idp}",
   "AuthenticationPage.fixEmail": "Is there an error in your email? {fixEmailLink}.",
