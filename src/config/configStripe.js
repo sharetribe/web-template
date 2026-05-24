@@ -7,6 +7,18 @@ To make Stripe connection work, you also need to set Stripe's private key in the
 
 export const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
 
+/**
+ * Two-letter country code of the Stripe account that owns the
+ * marketplace's platform Stripe Connect setup. Stripe's Payment
+ * Request API needs it to surface the correct wallet (Apple Pay /
+ * Google Pay / Link) for the buyer. See
+ * https://stripe.com/docs/js/payment_request/create#stripe_payment_request-options-country
+ *
+ * Set to the country matching your platform Stripe account. Defaults
+ * to 'US' so the template renders out of the box without extra config.
+ */
+export const merchantCountry = process.env.REACT_APP_STRIPE_MERCHANT_COUNTRY || 'US';
+
 // A maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
 // moment they are charged. However, US accounts can hold funds up to 2 years.
