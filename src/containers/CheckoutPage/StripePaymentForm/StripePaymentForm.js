@@ -26,6 +26,7 @@ import {
 } from '../../../components';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
+import PaymentRequestButton from '../PaymentRequestButton/PaymentRequestButton';
 
 import css from './StripePaymentForm.module.css';
 
@@ -482,6 +483,13 @@ class StripePaymentForm extends Component {
       transactionFieldConfigs = [],
       showTransactionFields,
       values,
+      // Wallet (Apple Pay / Google Pay / Link) integration props —
+      // forwarded down to PaymentRequestButton when present.
+      walletAmount,
+      walletCurrency,
+      walletCountry,
+      walletLabel,
+      onWalletPaymentMethod,
     } = formRenderProps;
 
     this.finalFormAPI = formApi;
@@ -587,6 +595,17 @@ class StripePaymentForm extends Component {
           locale={locale}
           intl={intl}
         />
+
+        {billingDetailsNeeded && !loadingData && onWalletPaymentMethod ? (
+          <PaymentRequestButton
+            stripe={this.stripe}
+            amount={walletAmount}
+            currency={walletCurrency}
+            country={walletCountry}
+            label={walletLabel}
+            onPaymentMethod={onWalletPaymentMethod}
+          />
+        ) : null}
 
         {billingDetailsNeeded && !loadingData ? (
           <React.Fragment>
