@@ -1,0 +1,35 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 24px 0;
+}
+
+.button {
+  width: 100%;
+  min-height: 44px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0 4px 0;
+  color: var(--colorGrey500);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--colorGrey100);
+}
+
+.dividerLabel {
+  padding: 0 12px;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
