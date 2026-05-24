@@ -45,6 +45,11 @@ const PaymentRequestButton = props => {
     if (!stripe || !amount || !currency || !country || paymentRequestRef.current) {
       return undefined;
     }
+    // Some Stripe.js test mocks omit the paymentRequest API; bail out
+    // gracefully so the rest of the checkout still mounts.
+    if (typeof stripe.paymentRequest !== 'function') {
+      return undefined;
+    }
 
     const paymentRequest = stripe.paymentRequest({
       country,
