@@ -99,6 +99,8 @@ const tabsForListingType = (processName, listingTypeConfig) => {
   //         and listing publishing happens after last panel.
   // Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
   //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
+  // Note 4: Ensure that the last panel contains the messaging for not-yet-verified files so
+  //         that it is clear to the user why the 'publish' button is disabled during verification
   const tabs = {
     ['default-booking']: [DETAILS, ...locationMaybe, PRICING, AVAILABILITY, ...styleOrPhotosTab],
     ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
@@ -224,7 +226,7 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
  *
  * @return true if tab / step is completed.
  */
-const tabCompleted = (tab, listing, config) => {
+const tabCompleted = (tab, listing, config, options = {}) => {
   const {
     availabilityPlan,
     description,
@@ -243,6 +245,7 @@ const tabCompleted = (tab, listing, config) => {
     pickupEnabled,
     cardStyle,
   } = publicData || {};
+  const { hasPendingFileUploads, hasUploadedFiles } = options;
   const listingTypeConfig = config.listing.listingTypes.find(
     config => config.listingType === listingType
   );
@@ -252,9 +255,7 @@ const tabCompleted = (tab, listing, config) => {
 
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
-  // TODO: Check that at least one file is uploaded successfully
   const filesRequired = requireListingFiles(listingTypeConfig);
-  const filesUploaded = true;
 
   switch (tab) {
     case DETAILS:
@@ -273,7 +274,7 @@ const tabCompleted = (tab, listing, config) => {
     case DELIVERY:
       return !!deliveryOptionPicked;
     case FILES:
-      return filesRequired && filesUploaded;
+      return filesRequired && hasUploadedFiles && !hasPendingFileUploads;
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
@@ -297,12 +298,12 @@ const tabCompleted = (tab, listing, config) => {
  *
  * @return object containing activity / editability of different tabs of this wizard
  */
-const tabsActive = (isNew, listing, tabs, config) => {
+const tabsActive = (isNew, listing, tabs, config, options = {}) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const validTab = previousTabIndex >= 0;
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
-    const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
+    const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config, options);
     const isActive =
       validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
@@ -416,6 +417,13 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
  * @param {propTypes.error} [props.stripeAccountError] - The error object for stripeAccount (TODO: errors object contains this)
  * @param {propTypes.error} [props.stripeAccountLinkError] - The error object for stripeAccountLink
  * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {Array} props.fileUploads - Array of file upload state objects from redux
+ * @param {boolean} props.fileUploadsDisabled - Whether file uploads were disabled at runtime
+ * @param {boolean} props.hasPendingFileUploads - Whether any file is still uploading
+ * @param {boolean} props.allFilesUploadedAndVerified - Whether all files are fully uploaded and verified
+ * @param {Function} props.onUploadFile - Initiates a file upload and starts verification polling
+ * @param {Function} props.onClearUploadedFiles - Removes file entries from redux state by tempId
+ * @param {Function} props.onDownloadFile - Requests a temporary download URL and opens it
  * @param {intlShape} props.intl - The intl object
  * @returns {JSX.Element} EditListingWizard component
  */
@@ -453,7 +461,15 @@ class EditListingWizard extends Component {
   }
 
   handlePublishListing(id) {
-    const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
+    const {
+      onPublishListingDraft,
+      currentUser,
+      stripeAccount,
+      listing,
+      config,
+      fileUploadsDisabled,
+      allFilesUploadedAndVerified,
+    } = this.props;
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
@@ -462,6 +478,14 @@ class EditListingWizard extends Component {
     // it's possible to publish listing without payout details set by provider.
     // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
     const isPayoutDetailsRequired = requirePayoutDetails(listingTypeConfig);
+    const filesRequired = !fileUploadsDisabled && requireListingFiles(listingTypeConfig);
+
+    // Listing should not be published if files are required and they are not fully
+    // uploaded and verified. This is enforced by the submit on the last EditListingWizard
+    // tab, this is added protection
+    if (filesRequired && !allFilesUploadedAndVerified) {
+      return;
+    }
 
     const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
@@ -470,8 +494,6 @@ class EditListingWizard extends Component {
       (hasRequirements(stripeAccountData, 'past_due') ||
         hasRequirements(stripeAccountData, 'currently_due'));
 
-    // TODO: before publishing, check that all required files have been uploaded AND
-    // passed the security check (verificationStatus === 'available').
     if (
       isInquiryProcess ||
       !isPayoutDetailsRequired ||
@@ -517,6 +539,13 @@ class EditListingWizard extends Component {
       config,
       routeConfiguration,
       authScopes,
+      fileUploads,
+      fileUploadsDisabled,
+      hasPendingFileUploads,
+      allFilesUploadedAndVerified,
+      onUploadFile,
+      onClearUploadedFiles,
+      onDownloadFile,
       ...rest
     } = this.props;
 
@@ -545,6 +574,7 @@ class EditListingWizard extends Component {
     // TODO: displayPrice aka config.defaultListingFields?.price with false value is only available with inquiry process
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
     const isPriceDisabled = !displayPrice(listingTypeConfig);
+    const filesRequired = !fileUploadsDisabled && requireListingFiles(listingTypeConfig);
 
     // Transaction process alias is used here, because the process defineds whether the listing is supported
     // I.e. old listings might not be supported through listing types, but client app might still support those processes.
@@ -565,7 +595,14 @@ class EditListingWizard extends Component {
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
-    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
+    const hasListingFileAttachments =
+      currentListing?.protectedFileAttachments?.some(
+        fileAttachment => !fileAttachment.attributes?.deleted
+      ) ?? false;
+    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config, {
+      hasPendingFileUploads,
+      hasUploadedFiles: fileUploads.length > 0 || hasListingFileAttachments,
+    });
 
     // Redirect user to first tab when encoutering outdated draft listings.
     if (invalidExistingListingType && isNewListingFlow && selectedTab !== tabs[0]) {
@@ -710,6 +747,14 @@ class EditListingWizard extends Component {
                 config={config}
                 routeConfiguration={routeConfiguration}
                 intl={intl}
+                fileUploads={fileUploads}
+                fileUploadsDisabled={fileUploadsDisabled}
+                onUploadFile={onUploadFile}
+                onClearUploadedFiles={onClearUploadedFiles}
+                onDownloadFile={onDownloadFile}
+                hasPendingFileUploads={hasPendingFileUploads}
+                allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+                filesRequired={filesRequired}
               />
             );
           })}
