@@ -1,3 +1,5 @@
+@import '../../../../styles/customMediaQueries.css';
+
 .root {
   /* Dimensions */
   width: 100%;
@@ -25,4 +27,35 @@
     width: 241px;
     margin-top: 100px;
   }
+}
+
+.helpText {
+  max-width: 400px;
+  margin-top: -4px;
+  margin-bottom: 5px;
+  color: var(--colorGrey400);
+}
+
+.fileLink {
+  display: flex;
+  gap: 8px;
+  color: var(--marketplaceColor);
+  font-size: 16px;
+  font-weight: var(--fontWeightMedium);
+  cursor: pointer;
+
+  text-decoration: underline;
+
+  @media (--viewportMedium) {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.error {
+  color: var(--colorFail);
 }
