@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { omit } from '../../util/common';
-import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
+import { types as sdkTypes, file as sdkFile, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
 import {
   getDefaultTimeZoneOnBrowser,
@@ -25,8 +25,15 @@ import {
   fetchStripeAccount,
 } from '../../ducks/stripeConnectAccount.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
+import { MAX_FILE_SIZE } from '../../util/fileHelpers';
 
 const { UUID } = sdkTypes;
+
+const MINUTE_IN_MS = 1000 * 60;
+const POLL_MAX_ATTEMPTS = 30;
+const POLL_INTERVAL_MS = 1000;
+
+export const MAX_FILE_UPLOAD_COUNT = 10;
 
 // Create array of N items where indexing starts from 1
 const getArrayOfNItems = n =>
@@ -66,6 +73,56 @@ const updateUploadedImagesState = (state, payload) => {
       };
 };
 
+// After listing creation and update, refresh fileUploads to only what the listing has attached
+const updateUploadedFilesState = (existingFileUploads, payload) => {
+  const included = payload?.included || [];
+
+  const listingFileAttachmentRefs =
+    payload?.data?.relationships?.protectedFileAttachments?.data || [];
+  const listingFileAttachments = listingFileAttachmentRefs
+    .map(ref => included.find(item => item.id.uuid === ref.id.uuid))
+    .filter(item => item && !item.attributes?.deleted);
+  const listingFiles = included.filter(item => item.type === 'file');
+
+  const syncedFileUploads = {};
+
+  // Sync files in redux state with those attached to the listing
+  listingFileAttachments.forEach(fileAttachment => {
+    const id = fileAttachment.id.uuid;
+    const fileId = fileAttachment.relationships?.file?.data?.id?.uuid;
+
+    // State entries are keyed by a client-generated tempId at upload time,
+    // before the attachment UUID is known, so match via the file's own UUID instead
+    const existingEntry = Object.values(existingFileUploads).find(f => f.file?.id?.uuid === fileId);
+
+    if (existingEntry) {
+      syncedFileUploads[existingEntry.tempId] = existingEntry;
+    } else {
+      const file = listingFiles.find(f => f.id.uuid === fileId);
+      syncedFileUploads[id] = {
+        uploadInProgress: false,
+        verificationInProgress: false,
+        error: null,
+        file,
+        sourceFile: null,
+        progress: null,
+        verificationStatus: file?.attributes?.state,
+        tempId: id,
+      };
+    }
+  });
+
+  // Append entries that are in-progress or have errors, not yet attached to the listing
+  Object.entries(existingFileUploads).forEach(([key, entry]) => {
+    const inProgressEntries = entry.uploadInProgress || entry.verificationInProgress || entry.error;
+    if (inProgressEntries && !syncedFileUploads[key]) {
+      syncedFileUploads[key] = entry;
+    }
+  });
+
+  return syncedFileUploads;
+};
+
 const getImageVariantInfo = listingImageConfig => {
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
   const aspectRatio = aspectHeight / aspectWidth;
@@ -84,6 +141,12 @@ const sortExceptionsByStartTime = (a, b) => {
   return a.attributes.start.getTime() - b.attributes.start.getTime();
 };
 
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+
+const getNextPollingDelay = delayMs => {
+  return delayMs * 2 > MINUTE_IN_MS ? MINUTE_IN_MS : delayMs * 2;
+};
+
 // ================ Async Thunks ================ //
 
 //////////////////
@@ -94,7 +157,13 @@ export const showListingThunk = createAsyncThunk(
   ({ actionPayload, config }, { dispatch, rejectWithValue, extra: sdk }) => {
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
-      include: ['author', 'images', 'currentStock'],
+      include: [
+        'author',
+        'images',
+        'currentStock',
+        'protectedFileAttachments',
+        'protectedFileAttachments.file',
+      ],
       'fields.image': imageVariantInfo.fieldsImage,
       ...imageVariantInfo.imageVariants,
     };
@@ -217,7 +286,13 @@ export const updateListingThunk = createAsyncThunk(
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       expand: true,
-      include: ['author', 'images', 'currentStock'],
+      include: [
+        'author',
+        'images',
+        'currentStock',
+        'protectedFileAttachments',
+        'protectedFileAttachments.file',
+      ],
       'fields.image': imageVariantInfo.fieldsImage,
       ...imageVariantInfo.imageVariants,
     };
@@ -546,6 +621,225 @@ const fetchLoadDataExceptions = (dispatch, listing, search, firstDayOfWeek) => {
   return Promise.all([]);
 };
 
+////////////////////////////////
+// Poll For File Verification //
+////////////////////////////////
+
+const pollForFileVerificationPayloadCreator = (
+  { fileId, tempId },
+  { dispatch, rejectWithValue, extra: sdk, getState }
+) => {
+  const poll = (attempt, delayMs) => {
+    const fileExists = getState().EditListingPage.fileUploads[tempId];
+
+    if (!fileExists) {
+      return { tempId, sent: true };
+    }
+
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
+      const fileState = resp?.data?.data?.attributes?.state;
+      dispatch(setVerificationStatus({ tempId, verificationStatus: fileState }));
+
+      if (fileState === 'available') {
+        const [fileUpload] = denormalisedResponseEntities(resp);
+        return { fileUpload, tempId };
+      }
+
+      if (fileState === 'verificationFailed') {
+        const [fileUpload] = denormalisedResponseEntities(resp);
+        return rejectWithValue({ tempId, message: 'verificationFailed', fileUpload });
+      }
+
+      if (attempt >= POLL_MAX_ATTEMPTS - 1) {
+        return rejectWithValue({ tempId, message: 'timeout' });
+      }
+
+      return delay(delayMs).then(() => poll(attempt + 1, getNextPollingDelay(delayMs)));
+    });
+  };
+
+  return poll(0, POLL_INTERVAL_MS).catch(e => rejectWithValue({ tempId, error: storableError(e) }));
+};
+
+export const pollForFileVerificationThunk = createAsyncThunk(
+  'EditListingPage/pollForFileVerification',
+  pollForFileVerificationPayloadCreator
+);
+
+// Backward compatible wrappers for the thunks
+export const pollForFileVerification = (fileId, tempId) => dispatch => {
+  return dispatch(pollForFileVerificationThunk({ fileId, tempId }));
+};
+
+// TODO: extract this from here and TransactionPage.duck.js to make a re-usable helper
+
+////////////////////
+// Upload File    //
+////////////////////
+
+const uploadFilePayloadCreator = (
+  { file, tempId },
+  { dispatch, rejectWithValue, extra: sdk, getState }
+) => {
+  let fileId;
+
+  ///////////////////////////////////
+  /// Step 1. Check file metadata ///
+  ///////////////////////////////////
+  const checkMetadataFn = file => {
+    if (!file) {
+      throw new Error('Missing file, cannot initiate upload.');
+    }
+
+    if (Object.keys(getState().EditListingPage.fileUploads).length > MAX_FILE_UPLOAD_COUNT) {
+      throw new Error('Upload file count exceeded, cannot initiate upload.');
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error('File too large (max 1 GB).', file);
+    }
+
+    return sdkFile.metadata(file);
+  };
+
+  ////////////////////////////////////
+  /// Step 2. Create file resource ///
+  ////////////////////////////////////
+  const createFileResourceFn = metadataResp => {
+    return sdk.ownFiles.create({ ...metadataResp }).catch(e => {
+      const isMimeTypeError = e.data.errors.some(
+        e => e.status === 400 && e.source.path.some(p => p === 'mimeType')
+      );
+      if (isMimeTypeError) {
+        throw new Error('mimeTypeError');
+      } else {
+        throw e;
+      }
+    });
+  };
+
+  //////////////////////////////////////////
+  /// Step 3. Create URL for file upload ///
+  //////////////////////////////////////////
+  const createFileUploadUrlFn = ownFileResp => {
+    const createdFileId = ownFileResp?.data?.data?.id;
+    if (!createdFileId) {
+      throw new Error('Missing fileId, cannot get upload URL');
+    }
+
+    fileId = createdFileId;
+    return sdk.fileUploads.create({ fileId: createdFileId });
+  };
+
+  ///////////////////////////////////////////////
+  /// Step 4. Upload file directly to storage ///
+  ///////////////////////////////////////////////
+  const uploadFileToStorageFn = fileUploadResp => {
+    const { method = 'PUT', url, headers = {} } = fileUploadResp?.data?.data?.attributes;
+
+    if (!url) {
+      throw new Error('Missing upload URL, cannot upload file.');
+    }
+
+    const onUploadProgress = progressEvent => {
+      const loaded = progressEvent?.loaded || 0;
+      const total = progressEvent?.total || file.size;
+      const progress = total ? Math.min(100, Math.round((loaded / total) * 100)) : null;
+      dispatch(setUploadProgress({ tempId, progress }));
+    };
+
+    return sdkFile.upload({
+      method,
+      url,
+      headers,
+      file,
+      onUploadProgress,
+    });
+  };
+
+  //////////////////////////////////////////////
+  /// Step 5. Return ids for future handling ///
+  //////////////////////////////////////////////
+
+  const handleFileUploadSuccessFn = () => {
+    return sdk.ownFiles.show({ id: fileId }).then(resp => {
+      const denormalisedResponse = denormalisedResponseEntities(resp);
+      const fileUpload = denormalisedResponse[0];
+      return { fileUpload, tempId };
+    });
+  };
+
+  const applyAsync = (acc, val) => acc.then(val);
+  const composeAsync = (...funcs) => x => funcs.reduce(applyAsync, Promise.resolve(x));
+
+  const handleFileUpload = composeAsync(
+    checkMetadataFn,
+    createFileResourceFn,
+    createFileUploadUrlFn,
+    uploadFileToStorageFn,
+    handleFileUploadSuccessFn
+  );
+
+  return handleFileUpload(file)
+    .then(resp => {
+      dispatch(pollForFileVerificationThunk({ fileId, tempId }));
+      return resp;
+    })
+    .catch(e => {
+      return rejectWithValue({ tempId, error: storableError(e) });
+    });
+};
+
+export const uploadFileThunk = createAsyncThunk(
+  'EditListingPage/uploadFile',
+  uploadFilePayloadCreator
+);
+
+// Backward compatible wrappers for the thunks
+export const uploadFile = (file, tempId) => dispatch => {
+  return dispatch(uploadFileThunk({ file, tempId }));
+};
+
+////////////////////
+// downloadFile   //
+////////////////////
+const downloadFilePayloadCreator = (
+  { fileAttachmentId, isOwnFile },
+  { rejectWithValue, extra: sdk }
+) => {
+  if (!fileAttachmentId) {
+    throw new Error('Missing fileAttachmentId, cannot initiate download.');
+  }
+  // Request a temporary download URL from the SDK
+  const downLoadFn = isOwnFile
+    ? sdk.ownFileDownloads.create({ fileId: fileAttachmentId })
+    : sdk.fileDownloads.create({ fileAttachmentId });
+  return downLoadFn
+    .then(downloadResp => {
+      // Trigger a browser file download
+      const { url } = downloadResp?.data?.data?.attributes || {};
+      if (!url) {
+        throw new Error('Missing download URL, cannot trigger file download.');
+      }
+
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return fileAttachmentId;
+    })
+    .catch(e => {
+      return rejectWithValue({ fileAttachmentId, error: storableError(e) });
+    });
+};
+
+export const downloadFileThunk = createAsyncThunk(
+  'EditListingPage/downloadFile',
+  downloadFilePayloadCreator
+);
+
+// Backward compatible wrappers for the thunks
+export const downloadFile = (fileAttachmentId, isOwnFile = false) => dispatch => {
+  return dispatch(downloadFileThunk({ fileAttachmentId, isOwnFile })).unwrap();
+};
+
 // ================ Slice ================ //
 
 const initialState = {
@@ -586,6 +880,26 @@ const initialState = {
   updateInProgress: false,
   payoutDetailsSaveInProgress: false,
   payoutDetailsSaved: false,
+  fileUploads: {
+    // [tempId]: {
+    // uploadInProgress: bool,
+    // verificationInProgress: bool,
+    // error: null | storable-error,
+    // file: null | SKD file,
+    // sourceFile: null | File
+    // progress: null | number,
+    // verificationStatus: null | string,
+    // tempId,
+    // }
+  },
+  // This is configured by default in Access control. If a marketplace
+  // operator disables file uploads when a user is uploading a file,
+  // store the information in state and use it to view the necessary information
+  // if the configuration still has old access details.
+  fileUploadsDisabled: false,
+  fileDownloads: {
+    // [fileId.uuid]: { inProgress: bool, error: null | storable-error }
+  },
 };
 
 const editListingPageSlice = createSlice({
@@ -620,6 +934,29 @@ const editListingPageSlice = createSlice({
       state.uploadedImagesOrder = uploadedImagesOrder;
       state.removedImageIds = removedImageIds;
     },
+    clearUploadedFiles: (state, action) => {
+      action.payload.forEach(tempId => {
+        delete state.fileUploads[tempId];
+      });
+    },
+    setFileUploadsDisabled: state => {
+      state.fileUploadsDisabled = true;
+    },
+    setUploadProgress: (state, action) => {
+      const { tempId, progress } = action.payload;
+      if (state.fileUploads[tempId]) {
+        state.fileUploads[tempId].progress = progress;
+      }
+    },
+    setVerificationStatus: (state, action) => {
+      const { tempId, verificationStatus } = action.payload;
+      if (state.fileUploads[tempId]) {
+        state.fileUploads[tempId].verificationStatus = verificationStatus;
+        state.fileUploads[tempId].uploadInProgress = verificationStatus === 'pendingUpload';
+        state.fileUploads[tempId].verificationInProgress =
+          verificationStatus === 'pendingVerification';
+      }
+    },
   },
   extraReducers: builder => {
     builder
@@ -647,7 +984,7 @@ const editListingPageSlice = createSlice({
         state.listingId = action.meta.arg.listingId;
         state.publishListingError = null;
       })
-      .addCase(publishListingThunk.fulfilled, state => {
+      .addCase(publishListingThunk.fulfilled, (state, action) => {
         state.redirectToListing = true;
         state.createListingDraftError = null;
         state.updateListingError = null;
@@ -655,6 +992,8 @@ const editListingPageSlice = createSlice({
         state.uploadImageError = null;
         state.createListingDraftInProgress = false;
         state.updateInProgress = false;
+        const updatedFilesState = updateUploadedFilesState(state.fileUploads, action.payload.data);
+        state.fileUploads = updatedFilesState;
       })
       .addCase(publishListingThunk.rejected, (state, action) => {
         console.error(action.payload);
@@ -674,6 +1013,13 @@ const editListingPageSlice = createSlice({
         state.uploadedImagesOrder = updatedImagesState.uploadedImagesOrder;
         state.updateInProgress = false;
         state.updatedTab = action.payload.tab;
+        if (action.payload.tab === 'files') {
+          const updatedFilesState = updateUploadedFilesState(
+            state.fileUploads,
+            action.payload.response.data
+          );
+          state.fileUploads = updatedFilesState;
+        }
       })
       .addCase(updateListingThunk.rejected, (state, action) => {
         state.updateInProgress = false;
@@ -685,17 +1031,24 @@ const editListingPageSlice = createSlice({
       })
       .addCase(showListingThunk.fulfilled, (state, action) => {
         const listingIdFromPayload = action.payload.data.data.id;
-        const { listingId, allExceptions, weeklyExceptionQueries, monthlyExceptionQueries } = state;
-        // If listing stays the same, we trust previously fetched exception data.
+        const {
+          listingId,
+          allExceptions,
+          weeklyExceptionQueries,
+          monthlyExceptionQueries,
+          fileUploads,
+        } = state;
         if (listingIdFromPayload?.uuid === state.listingId?.uuid) {
           Object.assign(state, initialState);
           state.listingId = listingId;
           state.allExceptions = allExceptions;
           state.weeklyExceptionQueries = weeklyExceptionQueries;
           state.monthlyExceptionQueries = monthlyExceptionQueries;
+          state.fileUploads = updateUploadedFilesState(fileUploads, action.payload?.data);
         } else {
           Object.assign(state, initialState);
           state.listingId = listingIdFromPayload;
+          state.fileUploads = updateUploadedFilesState({}, action.payload?.data);
         }
       })
       .addCase(showListingThunk.rejected, (state, action) => {
@@ -843,6 +1196,90 @@ const editListingPageSlice = createSlice({
       })
       .addCase(savePayoutDetailsThunk.rejected, state => {
         state.payoutDetailsSaveInProgress = false;
+      })
+      // uploadFile cases
+      .addCase(uploadFileThunk.pending, (state, action) => {
+        const { tempId, file } = action.meta.arg;
+        state.fileUploads[tempId] = {
+          uploadInProgress: true,
+          error: null,
+          file: null,
+          sourceFile: file, // Set source file so that other components can get the file name
+          progress: null,
+          verificationStatus: null,
+          tempId,
+        };
+      })
+      .addCase(uploadFileThunk.fulfilled, (state, action) => {
+        const { fileUpload, tempId } = action.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].file = fileUpload;
+          state.fileUploads[tempId].sourceFile = null;
+        }
+      })
+      .addCase(uploadFileThunk.rejected, (state, action) => {
+        const { tempId, error } = action.payload;
+        const { file } = action.meta.arg;
+        const isFileUploadDisabledError =
+          error.status === 403 && error.apiErrors.some(ae => ae.code === 'file-upload-disabled');
+        if (isFileUploadDisabledError) {
+          state.fileUploadsDisabled = true;
+          state.fileUploads = {};
+        } else {
+          state.fileUploads[tempId] = {
+            uploadInProgress: false,
+            error,
+            file: null,
+            sourceFile: file,
+            tempId,
+          };
+        }
+      })
+      // pollForFileVerification cases
+      .addCase(pollForFileVerificationThunk.pending, (state, action) => {
+        const { tempId } = action.meta.arg;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = true;
+        }
+      })
+      .addCase(pollForFileVerificationThunk.fulfilled, (state, action) => {
+        const { tempId, fileUpload } = action?.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = false;
+          state.fileUploads[tempId].file = fileUpload;
+        }
+      })
+      .addCase(pollForFileVerificationThunk.rejected, (state, action) => {
+        const { tempId, message, fileUpload } = action.payload;
+        if (state.fileUploads[tempId]) {
+          state.fileUploads[tempId].verificationInProgress = false;
+          state.fileUploads[tempId].error = { message };
+          if (fileUpload) {
+            state.fileUploads[tempId].file = fileUpload;
+          }
+        }
+      })
+      // downloadFile cases
+      .addCase(downloadFileThunk.pending, (state, action) => {
+        const { fileAttachmentId } = action.meta.arg;
+        state.fileDownloads[fileAttachmentId.uuid] = {
+          inProgress: true,
+          error: null,
+        };
+      })
+      .addCase(downloadFileThunk.fulfilled, (state, action) => {
+        const fileAttachmentId = action.payload;
+        state.fileDownloads[fileAttachmentId.uuid] = {
+          inProgress: false,
+          error: null,
+        };
+      })
+      .addCase(downloadFileThunk.rejected, (state, action) => {
+        const { fileAttachmentId, error } = action.payload;
+        state.fileDownloads[fileAttachmentId.uuid] = {
+          inProgress: false,
+          error,
+        };
       });
   },
 });
@@ -852,8 +1289,39 @@ export const {
   clearUpdatedTab,
   clearPublishError,
   removeListingImage,
+  setUploadProgress,
+  setVerificationStatus,
+  clearUploadedFiles,
+  setFileUploadsDisabled,
 } = editListingPageSlice.actions;
 export default editListingPageSlice.reducer;
+
+// ================ Selectors ================ //
+
+// Returns the fileUploads entries as an array, one item per selected file.
+export const selectFileUploads = state => Object.values(state.EditListingPage.fileUploads);
+
+// Returns true if file uploads are disabled
+export const selectFileUploadsDisabled = state => state.EditListingPage.fileUploadsDisabled;
+
+// Returns true if any file is still uploading.
+export const selectHasPendingFileUploads = state =>
+  Object.values(state.EditListingPage.fileUploads).some(f => f.uploadInProgress);
+
+// Returns true if at least one file exists and all files are fully uploaded and verified.
+export const selectAllFilesUploadedAndVerified = state => {
+  const files = Object.values(state.EditListingPage.fileUploads);
+  return (
+    files.length > 0 &&
+    files.every(
+      f =>
+        f.verificationStatus === 'available' &&
+        f.file != null &&
+        !f.uploadInProgress &&
+        !f.verificationInProgress
+    )
+  );
+};
 
 // ================ Load data ================ //
 
@@ -867,10 +1335,21 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     updateNotifications: false,
   };
 
+  if (id !== getState().EditListingPage.listingId?.uuid) {
+    // Remove any uploaded files that may have been in state
+    const pendingTempIds = Object.keys(getState().EditListingPage.fileUploads);
+    if (pendingTempIds.length > 0) {
+      dispatch(clearUploadedFiles(pendingTempIds));
+    }
+  }
+
   if (type === 'new') {
     // No need to listing data when creating a new listing
     return Promise.all([dispatch(fetchCurrentUser(fetchCurrentUserOptions))])
       .then(response => {
+        if (config.accessControl?.marketplace?.fileUploadAndDownloadDisabled) {
+          dispatch(setFileUploadsDisabled());
+        }
         const currentUser = getState().user.currentUser;
         if (currentUser && currentUser.stripeAccount) {
           dispatch(fetchStripeAccount());
@@ -888,6 +1367,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
   ])
     .then(response => {
+      if (config.accessControl?.marketplace?.fileUploadAndDownloadDisabled) {
+        dispatch(setFileUploadsDisabled());
+      }
+
       const currentUser = getState().user.currentUser;
 
       // Do not fetch extra information if user is in pending-approval state.
