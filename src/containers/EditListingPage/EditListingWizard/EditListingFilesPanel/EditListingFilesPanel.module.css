@@ -11,3 +11,25 @@
 .form {
   flex-grow: 1;
 }
+
+.editListingFilesForm {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  margin-bottom: 24px;
+}
+
+.error {
+  color: var(--colorFail);
+}
