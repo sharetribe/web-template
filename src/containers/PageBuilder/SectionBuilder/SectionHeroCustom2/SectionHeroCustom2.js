@@ -52,6 +52,7 @@ const SectionHeroCustom2 = props => {
     options,
     classWrap,
     isLanding,
+    customOption,
   } = props;
 
   const intl = useIntl();
@@ -62,7 +63,10 @@ const SectionHeroCustom2 = props => {
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
 
-  const hasHeaderFields = hasDataInFields([title, description, callToAction, callToAction2], fieldOptions);
+  const hasHeaderFields = hasDataInFields(
+    [title, description, callToAction, callToAction2],
+    fieldOptions
+  );
   const styleClassMap = {
     primary: defaultClasses?.ctaButtonPrimary,
     secondary: defaultClasses?.ctaButtonSecondary,
@@ -82,8 +86,13 @@ const SectionHeroCustom2 = props => {
     accentFont: css.accentFont,
   };
   const resolveCtaClass = style =>
-    classNames((style || '').trim().split(/\s+/).map(t => styleClassMap[t]).filter(Boolean)) ||
-    defaultClasses?.ctaButtonPrimary;
+    classNames(
+      (style || '')
+        .trim()
+        .split(/\s+/)
+        .map(t => styleClassMap[t])
+        .filter(Boolean)
+    ) || defaultClasses?.ctaButtonPrimary;
   const cta1Class = resolveCtaClass(cta1Style);
   const cta2Class = resolveCtaClass(cta2Style) || defaultClasses?.ctaButtonSecondary;
 
@@ -94,8 +103,15 @@ const SectionHeroCustom2 = props => {
   return (
     <AVSectionContainer
       id={sectionId}
-      className={classNames(className, css[classWrap] ?? '', mobileBackgroundImageUrl ? css.hasMobileBg : '')}
-      rootClassName={classNames(rootClassName || css.root)}
+      className={classNames(
+        className,
+        css[classWrap] ?? '',
+        mobileBackgroundImageUrl ? css.hasMobileBg : ''
+      )}
+      rootClassName={classNames(
+        rootClassName || css.root,
+        customOption?.isShortHero ? css.shortHero : ''
+      )}
       appearance={appearance}
       options={fieldOptions}
       style={mobileStyle}
@@ -111,10 +127,14 @@ const SectionHeroCustom2 = props => {
         >
           <Field data={title} className={classNames(defaultClasses.title)} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          {(callToAction || callToAction2) ? (
+          {callToAction || callToAction2 ? (
             <div className={css.buttonWrap}>
-              {callToAction ? <Field data={callToAction} className={cta1Class} options={fieldOptions} /> : null}
-              {callToAction2 ? <Field data={callToAction2} className={cta2Class} options={fieldOptions} /> : null}
+              {callToAction ? (
+                <Field data={callToAction} className={cta1Class} options={fieldOptions} />
+              ) : null}
+              {callToAction2 ? (
+                <Field data={callToAction2} className={cta2Class} options={fieldOptions} />
+              ) : null}
             </div>
           ) : null}
         </header>

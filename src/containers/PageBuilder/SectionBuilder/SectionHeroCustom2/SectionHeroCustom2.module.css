@@ -111,6 +111,10 @@
   }
 }
 
+.shortHero {
+  min-height: 50vh;
+}
+
 .landingVersion {
   h1 {
     font-size: 40px;
