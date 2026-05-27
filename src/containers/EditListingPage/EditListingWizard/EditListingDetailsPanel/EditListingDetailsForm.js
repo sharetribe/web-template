@@ -17,13 +17,7 @@ import {
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
-import {
-  Form,
-  Button,
-  FieldSelect,
-  FieldTextInput,
-  Heading,
-} from '../../../../components';
+import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
 // Import modules from this directory
 import css from './EditListingDetailsForm.module.css';
 
@@ -388,11 +382,7 @@ const EditListingDetailsForm = props => (
       const submitInProgress = updateInProgress;
       const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
       const submitDisabled =
-        invalid ||
-        disabled ||
-        submitInProgress ||
-        !hasMandatoryListingTypeData ||
-        !isCompatibleCurrency;
+        disabled || submitInProgress || !hasMandatoryListingTypeData || !isCompatibleCurrency;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>

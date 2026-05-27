@@ -115,6 +115,7 @@ export const EditListingPricingForm = props => (
         updated,
         updateInProgress = false,
         fetchErrors,
+        showOriginalPrice,
         initialValues: formInitialValues,
         values: formValues,
       } = formRenderProps;

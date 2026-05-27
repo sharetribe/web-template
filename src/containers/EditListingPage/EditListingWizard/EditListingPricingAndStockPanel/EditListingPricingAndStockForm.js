@@ -141,6 +141,7 @@ export const EditListingPricingAndStockForm = props => (
         updated,
         updateInProgress,
         fetchErrors,
+        showOriginalPrice,
         values,
       } = formRenderProps;
 
@@ -182,16 +183,18 @@ export const EditListingPricingAndStockForm = props => (
               <FormattedMessage id="EditListingPricingAndStockForm.showListingFailed" />
             </p>
           ) : null}
-          <FieldCurrencyInput
-            id={`${formId}.originalPrice`}
-            name="originalPrice"
-            className={css.input}
-            label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.originalPrice' })}
-            placeholder={intl.formatMessage({
-              id: 'EditListingPricingAndStockForm.originalPricePlaceholder',
-            })}
-            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-          />
+          {showOriginalPrice ? (
+            <FieldCurrencyInput
+              id={`${formId}.originalPrice`}
+              name="originalPrice"
+              className={css.input}
+              label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.originalPrice' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingPricingAndStockForm.originalPricePlaceholder',
+              })}
+              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+            />
+          ) : null}
           <FieldCurrencyInput
             id={`${formId}.price`}
             name="price"
@@ -207,10 +210,7 @@ export const EditListingPricingAndStockForm = props => (
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
           />
-          <EarningsEstimator
-            price={values?.price}
-            marketplaceCurrency={marketplaceCurrency}
-          />
+          <EarningsEstimator price={values?.price} marketplaceCurrency={marketplaceCurrency} />
 
           <UpdateStockToInfinityCheckboxMaybe
             formId={formId}

@@ -536,10 +536,12 @@ export const CheckoutPageWithPayment = props => {
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
-  // If your marketplace works mostly in one country you can use initial values to select country automatically
-  // e.g. {country: 'FI'}
-
-  const initialValuesForStripePayment = { name: userName, recipientName: userName };
+  const initialValuesForStripePayment = {
+    name: userName,
+    recipientName: userName,
+    country: 'MX',
+    recipientCountry: 'MX',
+  };
   const askShippingDetails =
     orderData?.deliveryMethod === 'shipping' &&
     !hasTransactionPassedPendingPayment(existingTransaction, process);

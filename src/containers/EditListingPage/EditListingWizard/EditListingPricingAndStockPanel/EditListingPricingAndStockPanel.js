@@ -92,9 +92,13 @@ const EditListingPricingAndStockPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    currentUser,
     updatePageTitle: UpdatePageTitle,
     intl,
   } = props;
+
+  const userType = currentUser?.attributes?.profile?.publicData?.userType;
+  const showOriginalPrice = userType === 'vendedor-tienda';
 
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = state.initialValues;
@@ -150,7 +154,8 @@ const EditListingPricingAndStockPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, stock, stockTypeInfinity, originalPrice } = values;
+            const { price, stock, stockTypeInfinity, originalPrice: originalPriceValue } = values;
+            const originalPrice = showOriginalPrice ? originalPriceValue : null;
 
             // Update stock only if the value has changed, or stock is infinity in stockType,
             // but not current stock is a small number (might happen with old listings)
@@ -213,6 +218,7 @@ const EditListingPricingAndStockPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
+          showOriginalPrice={showOriginalPrice}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>

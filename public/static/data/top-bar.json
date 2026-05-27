@@ -14,13 +14,6 @@
       { "categoryPath": ["ropa", "ropa-jumpsuits"], "label": "Jumpsuits" },
       { "categoryPath": ["ropa", "ropa-trajes"], "label": "Sets" }
     ],
-    "menuLinksDropdown2": [
-      { "categoryPath": ["accesorios"], "label": "Ver Todo" },
-      { "categoryPath": ["bolsas"] },
-      { "categoryPath": ["zapatos"] },
-      { "categoryPath": ["accesorios", "accesorios-cinturones"] },
-      { "categoryPath": ["accesorios", "accesorios-gorras_gorros"], "label": "Gorras/Gorros" },
-      { "categoryPath": ["accesorios", "accesorios-joyerias"], "label": "Joyería" }
-    ]
+    "menuLinksDropdown2": []
   }
 }

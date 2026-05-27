@@ -220,6 +220,7 @@ export const StripePayoutPageComponent = props => {
               inProgress={payoutDetailsSaveInProgress}
               ready={payoutDetailsSaved}
               currentUser={ensuredCurrentUser}
+              initialValues={!stripeConnected ? { country: 'MX' } : undefined}
               stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
               savedCountry={savedCountry}
               savedAccountType={savedAccountType}
@@ -302,11 +303,8 @@ const mapDispatchToProps = dispatch => ({
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
 });
 
-const StripePayoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(StripePayoutPageComponent);
+const StripePayoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  StripePayoutPageComponent
+);
 
 export default StripePayoutPage;

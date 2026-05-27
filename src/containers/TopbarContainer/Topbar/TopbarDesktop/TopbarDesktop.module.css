@@ -92,7 +92,7 @@
   transition: var(--transitionStyleButton);
 
   font-weight: var(--fontWeightMedium);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 18px;
   letter-spacing: 0;
   color: var(--marketplaceColor);
@@ -112,16 +112,24 @@
     line-height: 16px;
     margin: 0;
   }
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 14px;
+  }
 }
 
 .topbarLinkLabel {
   font-weight: var(--fontWeightBold);
-  font-size: 17px;
+  font-size: 15px;
   letter-spacing: 1px;
   display: inline-block;
   margin: 27px 0;
   text-decoration: inherit;
   position: relative;
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 17px;
+  }
 }
 
 .notificationDot {
@@ -165,7 +173,7 @@
   transition: var(--transitionStyleButton);
 
   font-weight: var(--fontWeightMedium);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 18px;
   letter-spacing: 0;
   color: var(--colorGrey700);
@@ -185,6 +193,10 @@
 
   &:active {
     border-bottom: 0;
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 14px;
   }
 }
 
@@ -252,7 +264,7 @@
 
   /* Font is specific to this component */
   font-weight: var(--fontWeightMedium);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 18px;
   letter-spacing: 0;
 
@@ -292,6 +304,10 @@
     line-height: 16px;
     margin-top: 20px;
     margin-bottom: 0;
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 14px;
   }
 }
 

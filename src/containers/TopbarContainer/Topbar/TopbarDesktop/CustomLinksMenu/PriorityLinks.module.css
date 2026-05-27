@@ -12,14 +12,14 @@
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
   font-weight: var(--fontWeightMedium);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 18px;
   letter-spacing: 1px;
   color: var(--colorGrey700);
 
   flex-shrink: 0;
   height: 100%;
-  padding: 0 12px 0 12px;
+  padding: 0 8px 0 8px;
   margin: 0;
 
   &:hover {
@@ -32,6 +32,10 @@
   @media (--viewportMedium) {
     line-height: 16px;
     margin: 0;
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 14px;
   }
 }
 
@@ -74,10 +78,14 @@
 
 .priorityLinkLabel {
   font-weight: var(--fontWeightBold);
-  font-size: 17px;
+  font-size: 15px;
   letter-spacing: 1px;
   display: inline-block;
   margin: 28px 0;
   text-decoration: inherit;
   text-wrap: nowrap;
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 17px;
+  }
 }

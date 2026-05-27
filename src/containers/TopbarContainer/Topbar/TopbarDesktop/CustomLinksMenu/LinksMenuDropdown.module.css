@@ -33,7 +33,7 @@
   transition: var(--transitionStyleButton);
 
   font-weight: var(--fontWeightBold);
-  font-size: 17px;
+  font-size: 15px;
   line-height: 18px;
   letter-spacing: 1px;
   color: var(--colorGrey700);
@@ -41,7 +41,7 @@
   display: inline;
   height: 100%;
   margin: 0;
-  padding: 0 12px 0 12px;
+  padding: 0 8px 0 8px;
 
   &:hover {
     border-bottom: 4px solid var(--marketplaceColor);
@@ -51,14 +51,16 @@
   }
 
   &:active {
-   
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 17px;
   }
 }
 
 .linkMenuIsOpen {
   border-bottom: 4px solid var(--marketplaceColor);
   &:hover {
-    
   }
 }
 
@@ -101,7 +103,7 @@
   transition: var(--transitionStyleButton);
 
   font-weight: var(--fontWeightMedium);
-  font-size: 17px;
+  font-size: 15px;
   line-height: 18px;
 
   &:hover {
@@ -116,5 +118,9 @@
 
   @media (--viewportMedium) {
     margin: 0;
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    font-size: 17px;
   }
 }

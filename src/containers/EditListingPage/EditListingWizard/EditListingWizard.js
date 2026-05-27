@@ -730,6 +730,7 @@ class EditListingWizard extends Component {
                   inProgress={payoutDetailsSaveInProgress}
                   ready={payoutDetailsSaved}
                   currentUser={currentUser}
+                  initialValues={!stripeConnected ? { country: 'MX' } : undefined}
                   stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
                   savedCountry={savedCountry}
                   savedAccountType={savedAccountType}

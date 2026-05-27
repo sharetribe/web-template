@@ -50,7 +50,12 @@ const getInitialValues = props => {
     : {
         price: listing?.attributes?.price,
         ...(publicData?.originalPrice
-          ? { originalPrice: new Money(publicData.originalPrice.amount, publicData.originalPrice.currency) }
+          ? {
+              originalPrice: new Money(
+                publicData.originalPrice.amount,
+                publicData.originalPrice.currency
+              ),
+            }
           : {}),
       };
 };
@@ -110,9 +115,13 @@ const EditListingPricingPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    currentUser,
     updatePageTitle: UpdatePageTitle,
     intl,
   } = props;
+
+  const userType = currentUser?.attributes?.profile?.publicData?.userType;
+  const showOriginalPrice = userType === 'vendedor-tienda';
 
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = state.initialValues;
@@ -167,7 +176,8 @@ const EditListingPricingPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, originalPrice } = values;
+            const { price, originalPrice: originalPriceValue } = values;
+            const originalPrice = showOriginalPrice ? originalPriceValue : null;
 
             // New values for listing attributes
             let updateValues = {};
@@ -244,6 +254,7 @@ const EditListingPricingPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
+          showOriginalPrice={showOriginalPrice}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>

@@ -20,11 +20,23 @@
   margin: 0 0 16px 0;
 }
 
+.photosTip {
+  font-size: 14px;
+  color: var(--colorGrey600);
+  margin: -8px 0 16px 0;
+}
+
+.photosTipLink {
+  color: var(--marketplaceColor);
+  text-decoration: underline;
+}
+
 .imageGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 8px;
+  align-items: start;
 
   @media (--viewportMedium) {
     grid-template-columns: repeat(4, 1fr);
@@ -37,6 +49,16 @@
 
 .imageWrapper {
   position: relative;
+  min-width: 0;
+}
+
+.imageLabel {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--colorGrey700);
+  text-align: center;
 }
 
 .addImageWrapper {
@@ -46,6 +68,7 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
+  min-width: 0;
   cursor: pointer;
 
   &:hover {

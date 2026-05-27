@@ -6,7 +6,7 @@ import ListingImage from '../EditListingPhotosPanel/ListingImage';
 
 import css from './PhotoGallerySection.module.css';
 
-const MAX_IMAGES = 100;
+const MAX_IMAGES = 10;
 
 /**
  * Free-form photo gallery section for the Details panel.
@@ -37,11 +37,8 @@ const PhotoGallerySection = props => {
   const dragCounterRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  const {
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
-  } = listingImageConfig || {};
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } =
+    listingImageConfig || {};
 
   const isMaxReached = images.length >= MAX_IMAGES;
 
@@ -93,9 +90,7 @@ const PhotoGallerySection = props => {
     id: 'EditListingPhotosForm.savedImageAltText',
   });
 
-  const rootClass = isDragging && !isMaxReached
-    ? `${css.root} ${css.rootDragActive}`
-    : css.root;
+  const rootClass = isDragging && !isMaxReached ? `${css.root} ${css.rootDragActive}` : css.root;
 
   return (
     <div
@@ -109,19 +104,45 @@ const PhotoGallerySection = props => {
         <FormattedMessage id="EditListingDetailsPanel.photosTitle" />
       </h3>
 
+      <p className={css.photosTip}>
+        <FormattedMessage
+          id="EditListingDetailsPanel.photosTipText"
+          values={{
+            link: (
+              <a
+                href="/static/files/ArchivoVintach-how-to-photos.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={css.photosTipLink}
+              >
+                <FormattedMessage id="EditListingDetailsPanel.photosTipLinkText" />
+              </a>
+            ),
+          }}
+        />
+      </p>
+
       <div className={css.imageGrid}>
-        {images.map(image => (
-          <div key={image.id?.uuid || image.id} className={css.imageWrapper}>
-            <ListingImage
-              image={image}
-              savedImageAltText={savedImageAltText}
-              onRemoveImage={onRemoveImage}
-              aspectWidth={aspectWidth}
-              aspectHeight={aspectHeight}
-              variantPrefix={variantPrefix}
-            />
-          </div>
-        ))}
+        {images.map((image, index) => {
+          const labelKey = index < 4 ? `EditListingDetailsPanel.photoLabel${index + 1}` : null;
+          return (
+            <div key={image.id?.uuid || image.id} className={css.imageWrapper}>
+              <ListingImage
+                image={image}
+                savedImageAltText={savedImageAltText}
+                onRemoveImage={onRemoveImage}
+                aspectWidth={aspectWidth}
+                aspectHeight={aspectHeight}
+                variantPrefix={variantPrefix}
+              />
+              {labelKey && (
+                <span className={css.imageLabel}>
+                  <FormattedMessage id={labelKey} />
+                </span>
+              )}
+            </div>
+          );
+        })}
 
         {!isMaxReached && (
           <div className={css.addImageWrapper}>
