@@ -6,7 +6,6 @@
   inset: 0;
   z-index: 1;
   display: block;
-  pointer-events: none;
 }
 
 /* ── Width / height modifiers ── */
