@@ -4,10 +4,11 @@
   display: flex;
   flex-direction: row;
   overflow-x: auto;
+  border-bottom: 1px solid var(--colorGrey100);
 }
 
 .darkSkin {
-  background-color: var(--colorGrey700);
+  background-color: var(--colorWhite);
 }
 
 .tab {
@@ -76,20 +77,25 @@
 
 /* Dark skin */
 .tabContentDarkSkin {
-  color: var(--colorGrey200);
+  color: var(--colorGrey700);
+  font-weight: 600;
+  border-bottom-color: transparent;
 
   &:hover,
   &:focus {
+    background-color: var(--avBlue);
     color: var(--colorWhite);
+    border-bottom-color: transparent;
   }
 }
 
 .selectedTabContentDarkSkin {
-  border-bottom-color: var(--colorWhite);
+  background-color: var(--avBlue);
   color: var(--colorWhite);
+  border-bottom-color: transparent;
 }
 
 .disabledDarkSkin {
-  color: var(--colorBlack);
-  opacity: 0.3;
+  color: var(--colorGrey300);
+  opacity: 0.5;
 }

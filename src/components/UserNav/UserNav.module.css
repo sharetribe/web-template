@@ -5,7 +5,7 @@
 
   @media (--viewportMedium) {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     height: 57px;
     align-items: flex-end;
     padding: 13px 24px 0 24px;

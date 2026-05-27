@@ -166,6 +166,7 @@ export const listingFields = [
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
+      { option: 'other', label: 'Otra...' },
       { option: 'other-stories', label: '& Other Stories' },
       { option: '1-state', label: '1.STATE' },
       { option: '1-8-takamura', label: '1/8 Takamura' },
