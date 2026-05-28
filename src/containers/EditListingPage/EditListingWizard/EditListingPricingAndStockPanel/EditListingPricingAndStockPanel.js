@@ -98,7 +98,7 @@ const EditListingPricingAndStockPanel = props => {
   } = props;
 
   const userType = currentUser?.attributes?.profile?.publicData?.userType;
-  const showOriginalPrice = userType === 'vendedor-tienda';
+  const showOriginalPrice = ['vendedor', 'vendedor-stock'].includes(userType);
 
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = state.initialValues;
