@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Stripe.js: load conditionally and defer loading.
+  [#847](https://github.com/sharetribe/web-template/pull/847)
 - [fix] configHelpers.js: Only validate numberConfig for schemaType long
   [#852](https://github.com/sharetribe/web-template/pull/852)
 

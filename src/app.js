@@ -316,6 +316,7 @@ export const ServerApp = props => {
       />
     );
   }
+  const initialPathname = new URL(url, 'http://example.com')?.pathname;
 
   return (
     <Configurations appConfig={appConfig}>
@@ -326,7 +327,7 @@ export const ServerApp = props => {
       >
         <Provider store={store}>
           <HelmetProvider context={helmetContext}>
-            <IncludeScripts config={appConfig} initialPathname={url} />
+            <IncludeScripts config={appConfig} initialPathname={initialPathname} />
             <StaticRouter location={url} context={context}>
               <Routes />
             </StaticRouter>
