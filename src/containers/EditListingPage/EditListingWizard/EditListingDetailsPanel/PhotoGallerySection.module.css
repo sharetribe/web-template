@@ -52,6 +52,15 @@
   min-width: 0;
 }
 
+.sortableItem {
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 .imageLabel {
   display: block;
   margin-top: 6px;

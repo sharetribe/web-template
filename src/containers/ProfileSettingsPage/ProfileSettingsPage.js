@@ -164,6 +164,7 @@ export const ProfileSettingsPageComponent = props => {
     currentPage: 'ProfileSettingsPage',
     showPaymentMethods,
     showPayoutDetails,
+    userType,
   };
 
   return (
@@ -190,7 +191,13 @@ export const ProfileSettingsPageComponent = props => {
         <div className={css.content}>
           <div className={css.headingContainer}>
             <H3 as="h1" className={css.heading}>
-              <FormattedMessage id="ProfileSettingsPage.heading" />
+              <FormattedMessage
+                id={
+                  userType === 'vendedor-tienda'
+                    ? 'ProfileSettingsPage.headingTienda'
+                    : 'ProfileSettingsPage.heading'
+                }
+              />
             </H3>
 
             <ViewProfileLink userUUID={user?.id?.uuid} isUnauthorizedUser={isUnauthorizedUser} />
@@ -227,11 +234,8 @@ const mapDispatchToProps = dispatch => ({
   onUpdateProfile: data => dispatch(updateProfile(data)),
 });
 
-const ProfileSettingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ProfileSettingsPageComponent);
+const ProfileSettingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ProfileSettingsPageComponent
+);
 
 export default ProfileSettingsPage;

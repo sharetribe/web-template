@@ -43,12 +43,17 @@ const Heading = props => {
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
 
   return hasResults ? (
-    <H3 as="h1" className={css.heading}>
-      <FormattedMessage
-        id="ManageListingsPage.youHaveListings"
-        values={{ count: pagination.totalItems }}
-      />
-    </H3>
+    <div className={css.headingRow}>
+      <H3 as="h1" className={css.heading}>
+        <FormattedMessage
+          id="ManageListingsPage.youHaveListings"
+          values={{ count: pagination.totalItems }}
+        />
+      </H3>
+      <NamedLink className={css.newListingButton} name="NewListingPage">
+        <FormattedMessage id="ManageListingsPage.createListing" />
+      </NamedLink>
+    </div>
   ) : hasNoResults ? (
     <div className={css.noResultsContainer}>
       <H3 as="h1" className={css.headingNoListings}>
@@ -309,11 +314,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });
 
-const ManageListingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageListingsPageComponent);
+const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageListingsPageComponent
+);
 
 export default ManageListingsPage;

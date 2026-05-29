@@ -49,10 +49,18 @@ const DisplayNameMaybe = props => {
       }
     : {};
 
+  const isTienda = userTypeConfig?.userType === 'vendedor-tienda';
+
   return (
     <div className={css.sectionContainer}>
       <H4 as="h2" className={css.sectionTitle}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameHeading" />
+        <FormattedMessage
+          id={
+            isTienda
+              ? 'ProfileSettingsForm.displayNameHeadingTienda'
+              : 'ProfileSettingsForm.displayNameHeading'
+          }
+        />
       </H4>
       <FieldTextInput
         className={css.row}
@@ -177,11 +185,11 @@ class ProfileSettingsFormComponent extends Component {
           const lastNameRequired = validators.required(lastNameRequiredMessage);
 
           // Bio
-          const bioLabel = intl.formatMessage({
-            id: 'ProfileSettingsForm.bioLabel',
-          });
+          const isTienda = userTypeConfig?.userType === 'vendedor-tienda';
           const bioPlaceholder = intl.formatMessage({
-            id: 'ProfileSettingsForm.bioPlaceholder',
+            id: isTienda
+              ? 'ProfileSettingsForm.bioPlaceholderTienda'
+              : 'ProfileSettingsForm.bioPlaceholder',
           });
 
           const uploadingOverlay =
@@ -264,7 +272,8 @@ class ProfileSettingsFormComponent extends Component {
           // which would cause isEqual to always return false after a save.
           const { profileImage: _pi1, ...comparableValues } = values;
           const { profileImage: _pi2, ...comparableSubmittedValues } = this.submittedValues;
-          const pristineSinceLastSubmit = submittedOnce && isEqual(comparableValues, comparableSubmittedValues);
+          const pristineSinceLastSubmit =
+            submittedOnce && isEqual(comparableValues, comparableSubmittedValues);
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
@@ -284,7 +293,13 @@ class ProfileSettingsFormComponent extends Component {
             >
               <div className={css.sectionContainer}>
                 <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.yourProfilePicture" />
+                  <FormattedMessage
+                    id={
+                      isTienda
+                        ? 'ProfileSettingsForm.yourProfilePictureTienda'
+                        : 'ProfileSettingsForm.yourProfilePicture'
+                    }
+                  />
                 </H4>
                 <Field
                   accept={ACCEPT_IMAGES}
@@ -381,15 +396,15 @@ class ProfileSettingsFormComponent extends Component {
 
               <div className={classNames(css.sectionContainer)}>
                 <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.bioHeading" />
+                  <FormattedMessage
+                    id={
+                      isTienda
+                        ? 'ProfileSettingsForm.bioHeadingTienda'
+                        : 'ProfileSettingsForm.bioHeadingVendedor'
+                    }
+                  />
                 </H4>
-                <FieldTextInput
-                  type="textarea"
-                  id="bio"
-                  name="bio"
-                  label={bioLabel}
-                  placeholder={bioPlaceholder}
-                />
+                <FieldTextInput type="textarea" id="bio" name="bio" placeholder={bioPlaceholder} />
                 <p className={css.extraInfo}>
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>

@@ -10,7 +10,16 @@ import { FormattedMessage } from '../../util/reactIntl';
  * @param {boolean} params.showPayoutDetails
  * @returns {Array} Tab config objects for TabNav
  */
-export const getAccountSettingsTabs = ({ currentPage, showPaymentMethods, showPayoutDetails }) => {
+export const getAccountSettingsTabs = ({
+  currentPage,
+  showPaymentMethods,
+  showPayoutDetails,
+  userType,
+}) => {
+  const profileTabLabelId =
+    userType === 'vendedor-tienda'
+      ? 'LayoutWrapperAccountSettingsSideNav.profileTabTitleTienda'
+      : 'LayoutWrapperAccountSettingsSideNav.profileTabTitle';
   const payoutDetailsMaybe = showPayoutDetails
     ? [
         {
@@ -37,7 +46,7 @@ export const getAccountSettingsTabs = ({ currentPage, showPaymentMethods, showPa
 
   return [
     {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.profileTabTitle" />,
+      text: <FormattedMessage id={profileTabLabelId} />,
       selected: currentPage === 'ProfileSettingsPage',
       id: 'ProfileSettingsPageTab',
       linkProps: { name: 'ProfileSettingsPage' },

@@ -363,6 +363,21 @@ const EditListingDetailsPanel = props => {
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
 
   const [photoError, setPhotoError] = useState(null);
+  const [orderedImages, setOrderedImages] = useState(images);
+
+  useEffect(() => {
+    setOrderedImages(prev => {
+      const imageMap = new Map(images.map(img => [img.id?.uuid || img.id, img]));
+      // Preserve user's order; refresh objects (upload may have resolved imageId); drop removed
+      const preserved = prev
+        .filter(img => imageMap.has(img.id?.uuid || img.id))
+        .map(img => imageMap.get(img.id?.uuid || img.id));
+      // Append images added since last sync
+      const prevIds = new Set(preserved.map(img => img.id?.uuid || img.id));
+      const added = images.filter(img => !prevIds.has(img.id?.uuid || img.id));
+      return [...preserved, ...added];
+    });
+  }, [images]);
 
   const listingTypeConfig = listingTypes.find(
     conf => conf.listingType === existingListingTypeInfo.listingType
@@ -397,9 +412,10 @@ const EditListingDetailsPanel = props => {
         <>
           {requiresImages && (
             <PhotoGallerySection
-              images={images}
+              images={orderedImages}
               onImageUpload={onImageUpload}
               onRemoveImage={onRemoveImage}
+              onReorderImages={setOrderedImages}
               uploadImageError={errors?.uploadImageError}
               listingImageConfig={listingImageConfig}
               photoError={photoError}
@@ -453,18 +469,18 @@ const EditListingDetailsPanel = props => {
               };
 
               if (requiresImages) {
-                const uploadInProgress = images.some(img => img.file && !img.imageId);
+                const uploadInProgress = orderedImages.some(img => img.file && !img.imageId);
                 if (uploadInProgress) {
                   setPhotoError('EditListingDetailsPanel.photosUploadInProgress');
                   return;
                 }
-                if (images.length < 3) {
+                if (orderedImages.length < 3) {
                   setPhotoError('EditListingDetailsPanel.photosMinRequired');
                   return;
                 }
               }
               setPhotoError(null);
-              onSubmit({ ...updateValues, images });
+              onSubmit({ ...updateValues, images: orderedImages });
             }}
             selectableListingTypes={listingTypes.map(conf =>
               getTransactionInfo({
