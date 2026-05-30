@@ -91,6 +91,13 @@ const FieldSearchableSelect = props => {
           type="text"
           role="combobox"
           className={css.input}
+          style={{
+            border: 'none',
+            borderRadius: 0,
+            boxShadow: 'none',
+            outline: 'none',
+            backgroundColor: 'transparent',
+          }}
           value={searchText}
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}

@@ -24,6 +24,7 @@ exports[`FieldSearchableSelect matches snapshot (empty state) 1`] = `
         id="brand"
         placeholder="Search brand…"
         role="combobox"
+        style="border-radius: 0; box-shadow: none; outline: none; background-color: transparent;"
         type="text"
         value=""
       />

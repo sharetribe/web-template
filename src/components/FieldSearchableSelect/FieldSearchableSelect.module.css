@@ -15,7 +15,7 @@
 .control {
   display: flex;
   align-items: center;
-  min-height: 48px;
+  min-height: 46px;
   padding: 0 12px;
   border: 1px solid var(--colorGrey300);
   border-radius: 4px;
@@ -35,19 +35,10 @@
 }
 
 .input {
-  /* Override global `input { border; border-radius; background-color; width: 100% }` rules
-     from marketplaceDefaults.css — those element-selector rules have lower specificity
-     than this class, except for input:hover / input:focus which we override below. */
   flex: 1;
   width: auto;
   min-width: 0;
-  border: none;
-  border-radius: 0;
-  outline: none;
-  box-shadow: none;
-  background: transparent;
-  background-color: transparent;
-  padding: 12px 0;
+  padding: 7px 0;
   font-size: 16px;
   color: var(--colorGrey900);
 }
