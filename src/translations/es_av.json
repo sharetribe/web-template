@@ -12,6 +12,8 @@
   "FieldColorDropdown.title": "Seleccionar Color",
   "FieldColorDropdown.close": "Cerrar",
   "FieldColorDropdown.placeholder": "Selecciona colores…",
+  "FieldSearchableSelect.placeholder": "Buscar marca…",
+  "FieldSearchableSelect.clear": "Borrar",
   "AVCarousel.previous": "Anterior",
   "AVCarousel.next": "Siguiente",
   "SectionInstaGrid.dialogLabel": "Publicación de Instagram",

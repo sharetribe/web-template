@@ -59,4 +59,9 @@ export const listingFieldDisplayOverrides = {
       inputType: 'colorGridPicker',
     },
   },
+  brand: {
+    saveConfig: {
+      inputType: 'searchableSelect',
+    },
+  },
 };

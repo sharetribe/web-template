@@ -6,6 +6,7 @@ import { useIntl } from '../../util/reactIntl';
 import { CustomExtendedDataField } from '../../components';
 import FieldColorDropdown from '../FieldColorDropdown/FieldColorDropdown';
 import FieldGroupedMultiSelect from '../FieldGroupedMultiSelect/FieldGroupedMultiSelect';
+import FieldSearchableSelect from '../FieldSearchableSelect/FieldSearchableSelect';
 
 import css from './DisplayOverrideField.module.css';
 
@@ -54,9 +55,23 @@ const colorGridPickerInput = props => {
   );
 };
 
+const searchableSelectInput = props => {
+  const { name, id, label, options, validate } = props;
+  return (
+    <FieldSearchableSelect
+      name={name}
+      id={id}
+      label={label}
+      options={options}
+      validate={validate}
+    />
+  );
+};
+
 const AV_INPUT_COMPONENTS = {
   groupedMultiSelect: groupedMultiSelectInput,
   colorGridPicker: colorGridPickerInput,
+  searchableSelect: searchableSelectInput,
 };
 
 /**

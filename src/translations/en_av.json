@@ -12,6 +12,8 @@
   "FieldColorDropdown.title": "Select Color",
   "FieldColorDropdown.close": "Close",
   "FieldColorDropdown.placeholder": "Select colors…",
+  "FieldSearchableSelect.placeholder": "Search brand…",
+  "FieldSearchableSelect.clear": "Clear",
   "AVCarousel.previous": "Previous",
   "AVCarousel.next": "Next",
   "SectionInstaGrid.dialogLabel": "Instagram post",
