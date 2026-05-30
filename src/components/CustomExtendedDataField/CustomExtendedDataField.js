@@ -27,9 +27,9 @@ const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, l
 const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl, inputComponents } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
-  const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
+  const { placeholderMessage, isRequired, requiredMessage, inputType } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -39,6 +39,19 @@ const CustomFieldEnum = props => {
   const filterOptions = createFilterOptions(enumOptions);
 
   const label = getLabel(fieldConfig);
+
+  const CustomInput = inputComponents?.[inputType];
+  if (CustomInput) {
+    return (
+      <CustomInput
+        name={name}
+        id={formId ? `${formId}.${name}` : name}
+        label={label}
+        options={filterOptions}
+        {...validateMaybe}
+      />
+    );
+  }
 
   return filterOptions ? (
     <FieldSelect
