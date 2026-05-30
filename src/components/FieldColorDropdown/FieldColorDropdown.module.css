@@ -6,10 +6,10 @@
 .label {
   display: block;
   font-weight: var(--fontWeightSemiBold);
-  font-size: 14px;
-  line-height: 18px;
-  margin-bottom: 8px;
-  color: var(--colorGrey700);
+  font-size: 13px;
+  line-height: 16px;
+  margin-bottom: 0;
+  color: var(--colorGrey900);
 }
 
 .control {
