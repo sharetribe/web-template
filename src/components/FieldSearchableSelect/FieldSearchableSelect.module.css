@@ -35,14 +35,29 @@
 }
 
 .input {
+  /* Override global `input { border; border-radius; background-color; width: 100% }` rules
+     from marketplaceDefaults.css — those element-selector rules have lower specificity
+     than this class, except for input:hover / input:focus which we override below. */
   flex: 1;
+  width: auto;
+  min-width: 0;
   border: none;
+  border-radius: 0;
   outline: none;
+  box-shadow: none;
   background: transparent;
+  background-color: transparent;
+  padding: 12px 0;
   font-size: 16px;
   color: var(--colorGrey900);
-  padding: 12px 0;
-  min-width: 0;
+}
+
+.input:hover,
+.input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
 }
 
 .input::placeholder {
