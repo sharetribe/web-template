@@ -1,0 +1,120 @@
+.root {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.label {
+  display: block;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 8px;
+  color: var(--colorGrey700);
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 4px;
+  background: var(--colorWhite);
+  border-bottom: 3px solid var(--marketplaceColor);
+  transition: border-color 0.1s ease;
+}
+
+.control:focus-within,
+.controlOpen {
+  border-color: var(--marketplaceColor);
+}
+
+.controlError {
+  border-color: var(--colorFail);
+  border-bottom: 3px solid var(--colorFail);
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  color: var(--colorGrey900);
+  padding: 12px 0;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: var(--colorGrey400);
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--colorGrey500);
+  line-height: 1;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.clearBtn:hover {
+  color: var(--colorGrey700);
+}
+
+.toggleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  color: var(--colorGrey500);
+  font-size: 14px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--colorWhite);
+  border: 1px solid var(--colorGrey300);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  max-height: 260px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.option {
+  padding: 10px 14px;
+  font-size: 15px;
+  color: var(--colorGrey700);
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.option:hover {
+  background-color: var(--colorGrey50);
+}
+
+.optionSelected {
+  background-color: var(--avPurpleLight);
+  color: var(--avBlue);
+  font-weight: var(--fontWeightMedium);
+}
+
+.error {
+  color: var(--colorFail);
+  font-size: 13px;
+  margin-top: 4px;
+}
