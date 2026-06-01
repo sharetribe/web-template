@@ -310,8 +310,14 @@ const getSearchParams = config => {
       'publicData.priceVariants',
       'publicData.brand',
       'publicData.all_sizes',
+      'publicData.originalPrice',
     ],
-    'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+    'fields.user': [
+      'profile.displayName',
+      'profile.abbreviatedName',
+      'profile.publicData.userType',
+      'profile.publicData.tipoTienda',
+    ],
     'fields.image': [
       'variants.square-xsmall2x',
       'variants.scaled-small',
