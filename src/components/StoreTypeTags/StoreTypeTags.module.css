@@ -5,11 +5,12 @@
 }
 
 .tag {
+  font-family: var(--fontFamilyHeadings);
   display: inline-block;
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -17,18 +18,18 @@
 /* Rotating palette, matching the reference: forest green / periwinkle / pink / amber */
 /* PALETTE_SIZE in StoreTypeTags.js must match the number of .tagN classes below. */
 .tag0 {
-  background-color: #33503f;
-  color: #ffffff;
+  background-color: var(--avBlue);
+  color: var(--avYellowLight);
 }
 .tag1 {
-  background-color: #6f93c4;
-  color: #ffffff;
+  background-color: var(--avPurple);
+  color: var(--avYellowLight);
 }
 .tag2 {
-  background-color: #e87fb0;
-  color: #ffffff;
+  background-color: var(--avYellow);
+  color: var(--avPink);
 }
 .tag3 {
-  background-color: #f0c14b;
-  color: #2a2300;
+  background-color: var(--avPink);
+  color: var(--avYellowLight);
 }

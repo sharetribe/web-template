@@ -197,8 +197,8 @@
 
 .storeTags {
   position: absolute;
-  bottom: 8px;
+  bottom: -6px;
   left: 8px;
   z-index: 1;
-  max-width: calc(100% - 16px);
+  max-width: calc(85% - 16px);
 }
