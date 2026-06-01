@@ -4,27 +4,65 @@
 .root {
   /* Size */
   width: 100%;
-  height: var(--topbarHeightDesktop);
 
-  /* Layout for child components */
+  /* Stack the two rows vertically */
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 0 12px 0 0;
+  flex-direction: column;
 
   /* fill */
   background-color: var(--colorWhite);
 
   /* shadows */
   box-shadow: var(--boxShadowLight);
+}
+
+/* Row 1: logo (left) + search (center, fills space) + account/new-listing (right) */
+.topRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: var(--topbarHeightDesktop);
+  padding: 0 12px 0 0;
 
   @media (--viewportMedium) {
     padding: 0 24px 0 0;
   }
 
   @media (--viewportLarge) {
-    padding: 0 60px 0 0;
+    padding: 0 60px;
+  }
+}
+
+/* Right-aligned cluster of account links + create-listing button in row 1 */
+.rightGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+/* Row 2: CustomLinksMenu aligned under the logo.
+   Both side paddings match .topRow so the links line up with the logo.
+   CustomLinksMenu's width math (calculateContainerWidth) subtracts this
+   parent's padding-left AND padding-right, so left padding is safe here. */
+.bottomRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  min-height: var(--topbarHeightDesktop);
+  padding: 0 12px 0 0;
+  border-top: 1px solid var(--colorGrey100);
+
+  @media (--viewportMedium) {
+    padding: 0 24px 0 0;
+  }
+
+  @media (--viewportLarge) {
+    padding: 0 60px;
   }
 }
 
@@ -40,15 +78,17 @@
 
 /* Search */
 .searchLink {
-  max-width: 340px;
+  flex-grow: 1;
+  max-width: none;
   height: 100%;
-  margin-right: auto;
+  margin: 0 24px;
 }
 
 .spacer {
+  flex-grow: 1;
   min-width: 220px;
   height: 100%;
-  margin-right: auto;
+  margin: 0 24px;
 }
 
 .search {

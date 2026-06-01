@@ -39,7 +39,7 @@ const CartLink = () => {
     <a href="/cart" className={css.topbarLink}>
       <span className={css.topbarLinkLabel}>
         <IconRegisterDesktop />
-      </span>  
+      </span>
     </a>
   );
 };
@@ -225,30 +225,35 @@ const TopbarDesktop = props => {
       className={classes}
       aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.topbarNavigation' })}
     >
-      <LinkedLogo
-        id="logo-topbar-desktop"
-        className={css.logoLink}
-        layout="desktop"
-        alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-        linkToExternalSite={config?.topbar?.logoLink}
-      />
+      <div className={css.topRow}>
+        <LinkedLogo
+          id="logo-topbar-desktop"
+          className={css.logoLink}
+          layout="desktop"
+          alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
+          linkToExternalSite={config?.topbar?.logoLink}
+        />
 
-      <CustomLinksMenu
-        currentPage={currentPage}
-        customLinks={customLinks}
-        intl={intl}
-        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-        showCreateListingsLink={showCreateListingsLink}
-      />
+        {searchFormMaybe}
 
-      {searchFormMaybe}
+        <div className={css.rightGroup}>
+          {createListingMaybe}
+          {inboxLinkMaybe}
+          {profileMenuMaybe}
+          {signupLinkMaybe}
+          {loginLinkMaybe}
+        </div>
+      </div>
 
-      {createListingMaybe}
-
-      {inboxLinkMaybe}
-      {profileMenuMaybe}
-      {signupLinkMaybe}
-      {loginLinkMaybe}
+      <div className={css.bottomRow}>
+        <CustomLinksMenu
+          currentPage={currentPage}
+          customLinks={customLinks}
+          intl={intl}
+          hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+          showCreateListingsLink={showCreateListingsLink}
+        />
+      </div>
     </nav>
   );
 };

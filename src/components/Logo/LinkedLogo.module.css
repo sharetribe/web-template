@@ -10,12 +10,4 @@
   &:hover {
     text-decoration: none;
   }
-
-  @media (--viewportMedium) {
-    padding: 0 0 0 48px;
-  }
-
-  @media (--viewportLarge) {
-    padding: 0 0 0 72px;
-  }
 }

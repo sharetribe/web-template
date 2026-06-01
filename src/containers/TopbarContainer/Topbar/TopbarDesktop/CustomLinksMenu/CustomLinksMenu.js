@@ -66,13 +66,19 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
     : [];
   const siblingWidthsCombined = siblingArray.reduce((acc, node) => acc + node.offsetWidth, 0);
 
-  // .root class of the TopbarDesktop has 24px padding on the right
-  // Firefox doesn't support computedStyleMap()
-  const parentStyleMap = containerRefTarget?.parentElement?.computedStyleMap
-    ? containerRefTarget.parentElement.computedStyleMap()
-    : null;
-  const topbarPaddingRight = parentStyleMap?.get('padding-right')?.value;
-  const padding = topbarPaddingRight != null ? topbarPaddingRight : 78;
+  // Subtract the parent's horizontal padding. The AV two-row topbar gives the
+  // CustomLinksMenu's parent (`.bottomRow`) padding on BOTH sides so the links
+  // align under the logo, so we must account for padding-left as well as
+  // padding-right — otherwise the container is computed too wide and over-fills
+  // with non-shrinking priority links, causing horizontal scroll.
+  // `getComputedStyle` is used over `computedStyleMap()` because the latter is
+  // unsupported in Firefox.
+  const parentEl = containerRefTarget?.parentElement;
+  const parentStyle =
+    parentEl && typeof window !== 'undefined' ? window.getComputedStyle(parentEl) : null;
+  const paddingLeft = parentStyle ? parseFloat(parentStyle.paddingLeft) || 0 : 0;
+  const paddingRight = parentStyle ? parseFloat(parentStyle.paddingRight) || 0 : 78;
+  const padding = paddingLeft + paddingRight;
 
   // We figure out available width from parent (TopbarDesktop/<nav>) and siblings
   const availableContainerWidth = parentWidth - siblingWidthsCombined - padding;
@@ -214,8 +220,12 @@ const CustomLinksMenu = ({
 
   const { priorityLinks, menuLinks, containerWidth } = layoutData;
   const categoryDropdowns = getCategoryDropdownsConfig(localTopbarData);
-  const fallbackDropdown1 = localTopbarData ? [] : defaultTopbarCategoryDropdowns.menuLinksDropdown1;
-  const fallbackDropdown2 = localTopbarData ? [] : defaultTopbarCategoryDropdowns.menuLinksDropdown2;
+  const fallbackDropdown1 = localTopbarData
+    ? []
+    : defaultTopbarCategoryDropdowns.menuLinksDropdown1;
+  const fallbackDropdown2 = localTopbarData
+    ? []
+    : defaultTopbarCategoryDropdowns.menuLinksDropdown2;
   const menuLinksDropdown1 = resolveDropdownMenuItems(
     categoryDropdowns.menuLinksDropdown1,
     config?.categoryConfiguration,
