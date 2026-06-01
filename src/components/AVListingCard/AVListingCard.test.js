@@ -50,22 +50,35 @@ const renderCard = publicData => {
 };
 
 describe('AVListingCard', () => {
-  it('displays mapped all_sizes labels in stored order', () => {
+  it('displays mapped all_sizes labels in stored order without a label', () => {
     renderCard({ all_sizes: ['m', 's'] });
 
-    expect(screen.getByText('Size:')).toBeInTheDocument();
+    expect(screen.queryByText('Size:')).not.toBeInTheDocument();
     expect(screen.getByText('Medium, Small')).toBeInTheDocument();
   });
 
   it('hides size row when all_sizes is empty', () => {
     renderCard({ all_sizes: [] });
 
-    expect(screen.queryByText('Size:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Medium, Small')).not.toBeInTheDocument();
   });
 
   it('hides size row when all_sizes is missing', () => {
     renderCard({});
 
-    expect(screen.queryByText('Size:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Medium, Small')).not.toBeInTheDocument();
+  });
+
+  it('shows the original price struck through when higher than the price', () => {
+    renderCard({ originalPrice: { amount: 8000, currency: 'USD' } });
+
+    // Current price is $55.00 (5500); original is $80.00.
+    expect(screen.getByText('$80.00').tagName).toBe('S');
+  });
+
+  it('hides the original price when not higher than the price', () => {
+    renderCard({ originalPrice: { amount: 5000, currency: 'USD' } });
+
+    expect(screen.queryByText('$50.00')).not.toBeInTheDocument();
   });
 });

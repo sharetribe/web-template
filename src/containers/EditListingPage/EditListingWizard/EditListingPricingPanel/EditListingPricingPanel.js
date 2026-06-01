@@ -24,6 +24,9 @@ import {
 } from './StartTimeInverval';
 import css from './EditListingPricingPanel.module.css';
 
+// AV: gate the "original price" (strike-through) field by seller user type
+import { canShowOriginalPrice } from '../../../../config/configAV';
+
 const { Money } = sdkTypes;
 
 const getListingTypeConfig = (publicData, listingTypes) => {
@@ -120,8 +123,7 @@ const EditListingPricingPanel = props => {
     intl,
   } = props;
 
-  const userType = currentUser?.attributes?.profile?.publicData?.userType;
-  const showOriginalPrice = ['vendedor', 'vendedor-stock'].includes(userType);
+  const showOriginalPrice = canShowOriginalPrice(currentUser);
 
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = state.initialValues;

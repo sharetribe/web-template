@@ -57,17 +57,41 @@
   flex-shrink: 0;
 }
 
-.toggleIcon {
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.clearBtn,
+.toggleBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--colorGrey500);
+  font-size: 18px;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  color: var(--colorGrey500);
-  font-size: 18px;
-  line-height: 1;
-  margin-left: 8px;
-  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.clearBtn:hover,
+.toggleBtn:hover {
+  color: var(--colorGrey700);
+  background-color: var(--colorGrey100);
+}
+
+.clearBtn:focus-visible,
+.toggleBtn:focus-visible {
+  outline: 2px solid var(--marketplaceColor);
+  outline-offset: 2px;
 }
 
 .panel {
@@ -98,23 +122,6 @@
   color: var(--colorGrey700);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.closeBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color: var(--colorGrey500);
-  line-height: 1;
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.closeBtn:hover {
-  color: var(--colorGrey700);
 }
 
 .grid {

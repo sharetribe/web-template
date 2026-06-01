@@ -33,6 +33,7 @@ const AV_LISTING_PUBLIC_DATA_FIELDS = [
   'publicData.unitType',
   'publicData.brand',
   'publicData.all_sizes',
+  'publicData.originalPrice',
 ];
 
 const createListingsBaseQueryParams = (config = {}) => {

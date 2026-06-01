@@ -60,6 +60,9 @@ import EditListingWizardTab, {
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
+// AV: default Stripe Connect payout country
+import { defaultCountry } from '../../../config/configAV';
+
 // This is the initial tab on editlisting wizard.
 // When listing type is known, other tabs are checked from _tabsForListingType_ function.
 const TABS_DETAILS_ONLY = [DETAILS];
@@ -731,7 +734,7 @@ class EditListingWizard extends Component {
                   inProgress={payoutDetailsSaveInProgress}
                   ready={payoutDetailsSaved}
                   currentUser={currentUser}
-                  initialValues={!stripeConnected ? { country: 'MX' } : undefined}
+                  initialValues={!stripeConnected ? { country: defaultCountry } : undefined}
                   stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
                   savedCountry={savedCountry}
                   savedAccountType={savedAccountType}

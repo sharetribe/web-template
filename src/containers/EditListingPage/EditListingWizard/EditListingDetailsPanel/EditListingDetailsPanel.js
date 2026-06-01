@@ -26,6 +26,7 @@ import ErrorMessage from './ErrorMessage';
 import EditListingDetailsForm from './EditListingDetailsForm';
 import PhotoGallerySection from './PhotoGallerySection';
 import css from './EditListingDetailsPanel.module.css';
+import { reconcileOrderedImages } from './reconcileOrderedImages';
 
 /**
  * Get listing configuration. For existing listings, it is stored to publicData.
@@ -365,18 +366,12 @@ const EditListingDetailsPanel = props => {
   const [photoError, setPhotoError] = useState(null);
   const [orderedImages, setOrderedImages] = useState(images);
 
+  // Reconcile the user-reordered list with incoming `images` from Redux:
+  // keep the user's order, refresh objects (an upload may have resolved
+  // imageId from a temp id to a real one), drop removed images, and append
+  // anything new that arrived since the last sync.
   useEffect(() => {
-    setOrderedImages(prev => {
-      const imageMap = new Map(images.map(img => [img.id?.uuid || img.id, img]));
-      // Preserve user's order; refresh objects (upload may have resolved imageId); drop removed
-      const preserved = prev
-        .filter(img => imageMap.has(img.id?.uuid || img.id))
-        .map(img => imageMap.get(img.id?.uuid || img.id));
-      // Append images added since last sync
-      const prevIds = new Set(preserved.map(img => img.id?.uuid || img.id));
-      const added = images.filter(img => !prevIds.has(img.id?.uuid || img.id));
-      return [...preserved, ...added];
-    });
+    setOrderedImages(prev => reconcileOrderedImages(prev, images));
   }, [images]);
 
   const listingTypeConfig = listingTypes.find(
@@ -480,7 +475,7 @@ const EditListingDetailsPanel = props => {
                 }
               }
               setPhotoError(null);
-              onSubmit({ ...updateValues, images: orderedImages });
+              onSubmit({ ...updateValues, ...(requiresImages ? { images: orderedImages } : {}) });
             }}
             selectableListingTypes={listingTypes.map(conf =>
               getTransactionInfo({

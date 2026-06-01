@@ -274,7 +274,7 @@ export const formatCurrencyMajorUnit = (intl, currency, valueWithoutSubunits) =>
   const numberFormatOptions = {
     style: 'currency',
     currency,
-    currencyDisplay: 'symbol',
+    currencyDisplay: 'narrowSymbol',
     useGrouping: true,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,

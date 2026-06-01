@@ -28,11 +28,17 @@ exports[`FieldColorDropdown matches snapshot (closed state) 1`] = `
           FieldColorDropdown.placeholder
         </span>
       </div>
-      <span
-        class="toggleIcon"
+      <div
+        class="controls"
       >
-        ▼
-      </span>
+        <button
+          aria-label="FieldColorDropdown.expand"
+          class="toggleBtn"
+          type="button"
+        >
+          ▼
+        </button>
+      </div>
     </div>
   </div>
   <button

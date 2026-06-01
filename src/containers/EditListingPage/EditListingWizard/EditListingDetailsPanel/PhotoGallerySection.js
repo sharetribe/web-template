@@ -24,6 +24,7 @@ import ListingImage from '../EditListingPhotosPanel/ListingImage';
 import css from './PhotoGallerySection.module.css';
 
 const MAX_IMAGES = 10;
+const MIN_SLOTS = 4;
 
 const imageKey = img => img.id?.uuid || img.id;
 
@@ -74,6 +75,32 @@ const SortableImageItem = props => {
           <FormattedMessage id={labelKey} />
         </span>
       )}
+    </div>
+  );
+};
+
+const PlaceholderSlot = ({ index, onTriggerUpload }) => {
+  const labelKey = `EditListingDetailsPanel.photoLabel${index + 1}`;
+  const handleKeyDown = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onTriggerUpload();
+    }
+  };
+  return (
+    <div
+      className={css.placeholderWrapper}
+      role="button"
+      tabIndex={0}
+      onClick={onTriggerUpload}
+      onKeyDown={handleKeyDown}
+    >
+      <div className={css.placeholderInner}>
+        <span className={css.placeholderIcon}>+</span>
+      </div>
+      <span className={css.imageLabel}>
+        <FormattedMessage id={labelKey} />
+      </span>
     </div>
   );
 };
@@ -210,11 +237,33 @@ const PhotoGallerySection = props => {
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSortEnd}>
         <SortableContext items={imageIds} strategy={rectSortingStrategy}>
           <div className={css.imageGrid}>
-            {images.map((image, index) => (
+            {Array.from({ length: MIN_SLOTS }, (_, i) => {
+              const image = images[i];
+              return image ? (
+                <SortableImageItem
+                  key={imageKey(image)}
+                  image={image}
+                  index={i}
+                  savedImageAltText={savedImageAltText}
+                  onRemoveImage={onRemoveImage}
+                  aspectWidth={aspectWidth}
+                  aspectHeight={aspectHeight}
+                  variantPrefix={variantPrefix}
+                />
+              ) : (
+                <PlaceholderSlot
+                  key={`placeholder-${i}`}
+                  index={i}
+                  onTriggerUpload={() => fileInputRef.current?.click()}
+                />
+              );
+            })}
+
+            {images.slice(MIN_SLOTS).map((image, idx) => (
               <SortableImageItem
                 key={imageKey(image)}
                 image={image}
-                index={index}
+                index={MIN_SLOTS + idx}
                 savedImageAltText={savedImageAltText}
                 onRemoveImage={onRemoveImage}
                 aspectWidth={aspectWidth}
@@ -223,22 +272,23 @@ const PhotoGallerySection = props => {
               />
             ))}
 
-            {!isMaxReached && (
+            {images.length >= MIN_SLOTS && !isMaxReached && (
               <div className={css.addImageWrapper}>
                 <label className={css.addImageLabel} htmlFor="gallery-add-image">
                   <span className={css.addImageIcon}>+</span>
                 </label>
-                <input
-                  ref={fileInputRef}
-                  id="gallery-add-image"
-                  className={css.fileInput}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleFileChange}
-                />
               </div>
             )}
+
+            <input
+              ref={fileInputRef}
+              id="gallery-add-image"
+              className={css.fileInput}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+            />
           </div>
         </SortableContext>
       </DndContext>

@@ -57,6 +57,16 @@ const FieldColorDropdown = props => {
     input.onChange(next);
   };
 
+  const clearAll = e => {
+    e.stopPropagation();
+    input.onChange([]);
+  };
+
+  const toggleDropdown = e => {
+    e.stopPropagation();
+    setIsOpen(o => !o);
+  };
+
   useEffect(() => {
     const handleOutsideClick = e => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -72,7 +82,9 @@ const FieldColorDropdown = props => {
   const hasError = meta.touched && meta.error;
   const placeholder = intl.formatMessage({ id: 'FieldColorDropdown.placeholder' });
   const panelTitle = intl.formatMessage({ id: 'FieldColorDropdown.title' });
-  const closeLabel = intl.formatMessage({ id: 'FieldColorDropdown.close' });
+  const clearAllLabel = intl.formatMessage({ id: 'FieldColorDropdown.clearAll' });
+  const expandLabel = intl.formatMessage({ id: 'FieldColorDropdown.expand' });
+  const collapseLabel = intl.formatMessage({ id: 'FieldColorDropdown.collapse' });
 
   // Build label map for displaying selected colors' labels
   const optionLabelMap = {};
@@ -90,7 +102,9 @@ const FieldColorDropdown = props => {
 
       <div
         id={id}
-        className={`${css.control} ${isOpen ? css.controlOpen : ''} ${hasError ? css.controlError : ''}`}
+        className={`${css.control} ${isOpen ? css.controlOpen : ''} ${
+          hasError ? css.controlError : ''
+        }`}
         onClick={() => setIsOpen(o => !o)}
         role="button"
         tabIndex={0}
@@ -117,21 +131,33 @@ const FieldColorDropdown = props => {
             ))
           )}
         </div>
-        <span className={css.toggleIcon}>{isOpen ? '▲' : '▼'}</span>
+        <div className={css.controls}>
+          {value.length > 0 && (
+            <button
+              type="button"
+              className={css.clearBtn}
+              onClick={clearAll}
+              aria-label={clearAllLabel}
+              title={clearAllLabel}
+            >
+              ×
+            </button>
+          )}
+          <button
+            type="button"
+            className={css.toggleBtn}
+            onClick={toggleDropdown}
+            aria-label={isOpen ? collapseLabel : expandLabel}
+          >
+            {isOpen ? '▲' : '▼'}
+          </button>
+        </div>
       </div>
 
       {isOpen && (
         <div className={css.panel}>
           <div className={css.panelHeader}>
             <span className={css.panelTitle}>{panelTitle}</span>
-            <button
-              type="button"
-              className={css.closeBtn}
-              onClick={() => setIsOpen(false)}
-              aria-label={closeLabel}
-            >
-              ×
-            </button>
           </div>
           <div className={css.grid}>
             {options.map(opt => {

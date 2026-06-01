@@ -70,6 +70,36 @@
   text-align: center;
 }
 
+.placeholderWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  min-width: 0;
+
+  &:hover .placeholderInner {
+    border-color: var(--colorGrey400);
+    background-color: var(--colorGrey50);
+  }
+}
+
+.placeholderInner {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px dashed var(--colorGrey200);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.placeholderIcon {
+  font-size: 36px;
+  line-height: 1;
+  color: var(--colorGrey400);
+}
+
 .addImageWrapper {
   border: 2px dashed var(--colorGrey200);
   border-radius: 4px;

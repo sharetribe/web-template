@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from '../../../../util/reactIntl';
 import classNames from 'classnames';
-import { ListingCard } from '../../../../components';
+import { AVListingCard } from '../../../../components';
 
 import Field, { hasDataInFields } from '../../Field';
 
@@ -19,6 +19,10 @@ const getIndex = numColumns => numColumns - 1;
 const getColumnCSS = numColumns => {
   const config = COLUMN_CONFIG[getIndex(numColumns)];
   return config ? config.css : COLUMN_CONFIG[0].css;
+};
+const getResponsiveImageSizes = numColumns => {
+  const config = COLUMN_CONFIG[getIndex(numColumns)];
+  return config ? config.responsiveImageSizes : COLUMN_CONFIG[0].responsiveImageSizes;
 };
 
 // Section component that's able to show blocks in multiple different columns (defined by "numColumns" prop)
@@ -47,6 +51,7 @@ const SectionRecommendedListings = props => {
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasListings = listings.length > 0;
+  const renderSizes = getResponsiveImageSizes(numColumns);
 
   return (
     <AVSectionContainer
@@ -71,7 +76,7 @@ const SectionRecommendedListings = props => {
           })}
         >
           {listings.map(l => (
-            <ListingCard key={l.id.uuid} listing={l} intl={intl} />
+            <AVListingCard key={l.id.uuid} listing={l} intl={intl} renderSizes={renderSizes} />
           ))}
         </div>
       ) : null}

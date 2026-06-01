@@ -20,9 +20,12 @@ import {
   FEATURE_DELIMITER,
 } from './constants';
 
-// React-Intl returns the id itself when a key is missing — treat that as empty.
+// Avoids calling formatMessage for missing/empty keys — react-intl fires a
+// MISSING_TRANSLATION console error even when defaultMessage is provided.
 const fmt = (intl, id, def = '') => {
-  const result = intl?.formatMessage?.({ id, defaultMessage: def })?.trim?.() ?? '';
+  const val = intl?.messages?.[id];
+  if (!val) return def;
+  const result = intl.formatMessage({ id, defaultMessage: def }).trim();
   return result === id ? def : result;
 };
 

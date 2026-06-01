@@ -12,6 +12,7 @@ import {
   truncateToSubUnitPrecision,
   formatMoney,
 } from './currency';
+import { currencyFormatting } from '../config/settingsCurrency';
 
 const { Money } = sdkTypes;
 
@@ -243,8 +244,35 @@ describe('currency utils', () => {
       expect(() => formatMoney(intl, value)).toThrow('Value must be a Money type');
     });
 
+    it('formats MXN without MX prefix — uses narrow symbol ($)', () => {
+      const { Money } = sdkTypes;
+      const value = new Money(123456, 'MXN');
+      const result = formatMoney(null, value);
+      expect(result).not.toContain('MX');
+      expect(result).toMatch(/^\$/);
+    });
+
     // No test for that actual formatting for now. It depends on the
     // locale, and it doesn't really make sense to test the fake intl
     // implementation in the tests.
+  });
+
+  describe('currencyFormatting', () => {
+    it('uses narrowSymbol for standard currencies (MXN)', () => {
+      const opts = currencyFormatting('MXN');
+      expect(opts.currencyDisplay).toBe('narrowSymbol');
+    });
+
+    it('uses narrowSymbol for zero-decimal currencies (JPY)', () => {
+      const opts = currencyFormatting('JPY');
+      expect(opts.currencyDisplay).toBe('narrowSymbol');
+    });
+
+    it('MXN with narrowSymbol renders $ not MX$', () => {
+      const opts = currencyFormatting('MXN');
+      const formatted = new Intl.NumberFormat('en-US', opts).format(1234.56);
+      expect(formatted).not.toContain('MX');
+      expect(formatted).toContain('$');
+    });
   });
 });

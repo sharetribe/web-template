@@ -7,6 +7,13 @@
 
 import classNames from 'classnames';
 
+// Avoids MISSING_TRANSLATION console errors for empty/absent keys.
+const fmt = (intl, id, def = '') => {
+  const val = intl?.messages?.[id];
+  if (!val) return def;
+  return intl.formatMessage({ id, defaultMessage: def }) || def;
+};
+
 // ---- Block components ----
 
 let cachedBlockComponents;
@@ -14,7 +21,8 @@ let cachedBlockComponents;
 export const getAvBlockComponents = () => {
   if (cachedBlockComponents) return cachedBlockComponents;
 
-  const BlockWithCols = require('../../../containers/PageBuilder/BlockBuilder/BlockWithCols').default;
+  const BlockWithCols = require('../../../containers/PageBuilder/BlockBuilder/BlockWithCols')
+    .default;
   const BlockPriceSelector = require('../../../containers/PageBuilder/BlockBuilder/BlockPriceSelector')
     .default;
   const BlockInstagramFeed = require('../../../containers/PageBuilder/BlockBuilder/BlockInstagramFeed/BlockInstagramFeed')
@@ -138,58 +146,55 @@ export const createBlockCustomProps = (block, intl, css) => {
   blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
 
   if (block.blockName?.includes('contact buttons ::')) {
+    const cb = 'ContactButtons.' + block.blockId;
     blockCustomProps.contactButtons = {
       ctaButtonPrimaryClass: DEFAULT_CLASSES.ctaButtonPrimary,
       ctaButtonSecondaryClass: DEFAULT_CLASSES.ctaButtonSecondary,
       callToAction1: {
         fieldType: 'internalButtonLink',
-        href: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta1Link', defaultMessage: 'Hello' }),
-        content: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta1Text', defaultMessage: 'Hello' }),
+        href: fmt(intl, cb + '.cta1Link', 'Hello'),
+        content: fmt(intl, cb + '.cta1Text', 'Hello'),
       },
       callToAction2: {
         fieldType: 'internalButtonLink',
-        href: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta2Link', defaultMessage: 'Hello' }),
-        content: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.cta2Text', defaultMessage: 'Hello' }),
+        href: fmt(intl, cb + '.cta2Link', 'Hello'),
+        content: fmt(intl, cb + '.cta2Text', 'Hello'),
       },
       social: {
         fieldType: 'socialMediaLink',
-        href: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.socialLink', defaultMessage: 'Hello' }),
-        content: intl.formatMessage({ id: 'ContactButtons.' + block.blockId + '.socialText', defaultMessage: 'Hello' }),
+        href: fmt(intl, cb + '.socialLink', 'Hello'),
+        content: fmt(intl, cb + '.socialText', 'Hello'),
       },
     };
   }
 
   if (block.blockName?.includes('2 cols ::')) {
+    const bc = 'BlueCols.' + block.blockId;
     blockCustomProps.blueCols = {
-      col1Title: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col1Title', defaultMessage: ' ' }),
-      col1Text: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col1Text', defaultMessage: ' ' }),
-      col2Title: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col2Title', defaultMessage: ' ' }),
-      col2Text: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col2Text', defaultMessage: ' ' }),
-      col3Title: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col3Title', defaultMessage: ' ' }),
-      col3Text: intl.formatMessage({ id: 'BlueCols.' + block.blockId + '.col3Text', defaultMessage: ' ' }),
+      col1Title: fmt(intl, bc + '.col1Title', ' '),
+      col1Text: fmt(intl, bc + '.col1Text', ' '),
+      col2Title: fmt(intl, bc + '.col2Title', ' '),
+      col2Text: fmt(intl, bc + '.col2Text', ' '),
+      col3Title: fmt(intl, bc + '.col3Title', ' '),
+      col3Text: fmt(intl, bc + '.col3Text', ' '),
     };
   }
 
   if (block.blockName?.includes('2 buttons ::')) {
-    const cta1ClassName = parseCtaStyleString(
-      intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Style', defaultMessage: '' }),
-      css
-    );
-    const cta2ClassName = parseCtaStyleString(
-      intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta2Style', defaultMessage: '' }),
-      css
-    );
+    const tb = 'TwoButtons.' + block.blockId;
+    const cta1ClassName = parseCtaStyleString(fmt(intl, tb + '.cta1Style'), css);
+    const cta2ClassName = parseCtaStyleString(fmt(intl, tb + '.cta2Style'), css);
     blockCustomProps.twoButtons = {
-      titleEyebrow: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.titleEyebrow', defaultMessage: '' }),
+      titleEyebrow: fmt(intl, tb + '.titleEyebrow'),
       callToAction1: {
         fieldType: 'internalButtonLink',
-        href: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Link', defaultMessage: 'Hello' }),
-        content: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta1Text', defaultMessage: 'Hello' }),
+        href: fmt(intl, tb + '.cta1Link', 'Hello'),
+        content: fmt(intl, tb + '.cta1Text', 'Hello'),
       },
       callToAction2: {
         fieldType: 'internalButtonLink',
-        href: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta2Link', defaultMessage: 'Hello' }),
-        content: intl.formatMessage({ id: 'TwoButtons.' + block.blockId + '.cta2Text', defaultMessage: 'Hello' }),
+        href: fmt(intl, tb + '.cta2Link', 'Hello'),
+        content: fmt(intl, tb + '.cta2Text', 'Hello'),
       },
       ...(cta1ClassName ? { cta1ClassName } : {}),
       ...(cta2ClassName ? { cta2ClassName } : {}),
@@ -199,32 +204,34 @@ export const createBlockCustomProps = (block, intl, css) => {
   if (block.blockName?.includes('full height media ::')) blockCustomProps.hasFullHeightMedia = true;
 
   if (block.blockName?.includes('buyer list ::')) {
+    const cl = 'CustomList.' + block.blockId;
     blockCustomProps.showBuyerList = true;
     blockCustomProps.buyerListButton = {
       fieldType: 'internalButtonLink',
-      href: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonLink', defaultMessage: ' ' }),
-      content: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonText', defaultMessage: ' ' }),
+      href: fmt(intl, cl + '.buttonLink', ' '),
+      content: fmt(intl, cl + '.buttonText', ' '),
     };
     blockCustomProps.buyerListData = [];
     for (let r = 1; r <= 5; r++) {
       blockCustomProps.buyerListData.push({
-        title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage: ' ' }),
-        text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage: ' ' }),
+        title: fmt(intl, cl + '.title' + r, ' '),
+        text: fmt(intl, cl + '.text' + r, ' '),
       });
     }
   }
   if (block.blockName?.includes('seller list ::')) {
+    const cl = 'CustomList.' + block.blockId;
     blockCustomProps.showSellerList = true;
     blockCustomProps.sellerListButton = {
       fieldType: 'internalButtonLink',
-      href: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonLink', defaultMessage: ' ' }),
-      content: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.buttonText', defaultMessage: ' ' }),
+      href: fmt(intl, cl + '.buttonLink', ' '),
+      content: fmt(intl, cl + '.buttonText', ' '),
     };
     blockCustomProps.sellerListData = [];
     for (let r = 1; r <= 5; r++) {
       blockCustomProps.sellerListData.push({
-        title: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.title' + r, defaultMessage: ' ' }),
-        text: intl.formatMessage({ id: 'CustomList.' + block.blockId + '.text' + r, defaultMessage: ' ' }),
+        title: fmt(intl, cl + '.title' + r, ' '),
+        text: fmt(intl, cl + '.text' + r, ' '),
       });
     }
   }
@@ -239,9 +246,9 @@ export const createBlockCustomProps = (block, intl, css) => {
   if (block.blockName?.includes('large list :: ')) blockCustomProps.hasLargeList = true;
   if (block.blockName?.includes('newsletter form ::')) {
     blockCustomProps.hasNewsletterForm = true;
-    blockCustomProps.disclaimerText = intl.formatMessage({ id: 'NewsletterForm.disclaimerText' });
-    blockCustomProps.okMsg = intl.formatMessage({ id: 'NewsletterForm.successMessage' });
-    blockCustomProps.errorMsg = intl.formatMessage({ id: 'NewsletterForm.errorMessage' });
+    blockCustomProps.disclaimerText = fmt(intl, 'NewsletterForm.disclaimerText');
+    blockCustomProps.okMsg = fmt(intl, 'NewsletterForm.successMessage');
+    blockCustomProps.errorMsg = fmt(intl, 'NewsletterForm.errorMessage');
   }
   if (block.blockName?.includes('icon img ::')) blockCustomProps.hasIconImg = true;
   if (block.blockName?.includes('social links ::')) blockCustomProps.hasSocialLinks = true;
@@ -251,29 +258,31 @@ export const createBlockCustomProps = (block, intl, css) => {
     blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
     blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
 
-    blockCustomProps.titleEyebrow = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.titleEyebrow', defaultMessage: '' });
-    blockCustomProps.col1Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Title', defaultMessage: 'Hello' });
-    blockCustomProps.col2Title = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col2Title', defaultMessage: 'Hello' });
-    blockCustomProps.col1Text = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col1Text', defaultMessage: 'Hello' });
-    blockCustomProps.col2Text = intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.col2Text', defaultMessage: 'Hello' });
+    const bwc = 'BlockWithCols.' + block.blockId;
+    blockCustomProps.titleEyebrow = fmt(intl, bwc + '.titleEyebrow');
+    blockCustomProps.col1Title = fmt(intl, bwc + '.col1Title', 'Hello');
+    blockCustomProps.col2Title = fmt(intl, bwc + '.col2Title', 'Hello');
+    blockCustomProps.col1Text = fmt(intl, bwc + '.col1Text', 'Hello');
+    blockCustomProps.col2Text = fmt(intl, bwc + '.col2Text', 'Hello');
     blockCustomProps.callToAction1 = {
       fieldType: 'internalButtonLink',
-      href: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta1Link', defaultMessage: 'Hello' }),
-      content: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta1Text', defaultMessage: 'Hello' }),
+      href: fmt(intl, bwc + '.cta1Link', 'Hello'),
+      content: fmt(intl, bwc + '.cta1Text', 'Hello'),
     };
     blockCustomProps.callToAction2 = {
       fieldType: 'internalButtonLink',
-      href: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Link', defaultMessage: 'Hello' }),
-      content: intl.formatMessage({ id: 'BlockWithCols.' + block.blockId + '.cta2Text', defaultMessage: 'Hello' }),
+      href: fmt(intl, bwc + '.cta2Link', 'Hello'),
+      content: fmt(intl, bwc + '.cta2Text', 'Hello'),
     };
   }
 
   if (block.blockName?.includes('photo slider ::')) {
+    const ps = 'PhotoSlider.' + block.blockId;
     blockCustomProps.sliderImages = [
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_1', defaultMessage: '' }),
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_2', defaultMessage: '' }),
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_3', defaultMessage: '' }),
-      intl.formatMessage({ id: 'PhotoSlider.' + block.blockId + '.image_4', defaultMessage: '' }),
+      fmt(intl, ps + '.image_1'),
+      fmt(intl, ps + '.image_2'),
+      fmt(intl, ps + '.image_3'),
+      fmt(intl, ps + '.image_4'),
     ];
   }
 

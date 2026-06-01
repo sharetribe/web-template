@@ -55,32 +55,40 @@
   color: var(--colorGrey400);
 }
 
-.clearBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: var(--colorGrey500);
-  line-height: 1;
-  padding: 0 4px;
+.controls {
   display: flex;
   align-items: center;
+  gap: 4px;
   flex-shrink: 0;
 }
 
-.clearBtn:hover {
-  color: var(--colorGrey700);
-}
-
-.toggleIcon {
+.clearBtn,
+.toggleBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--colorGrey500);
+  font-size: 18px;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  color: var(--colorGrey500);
-  font-size: 14px;
-  flex-shrink: 0;
-  pointer-events: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.clearBtn:hover,
+.toggleBtn:hover {
+  color: var(--colorGrey700);
+  background-color: var(--colorGrey100);
+}
+
+.clearBtn:focus-visible,
+.toggleBtn:focus-visible {
+  outline: 2px solid var(--marketplaceColor);
+  outline-offset: 2px;
 }
 
 .dropdown {
@@ -114,8 +122,8 @@
 }
 
 .optionSelected {
-  background-color: var(--avPurpleLight);
-  color: var(--avBlue);
+  background-color: var(--avYellow);
+  color: var(--avSecondary);
   font-weight: var(--fontWeightMedium);
 }
 

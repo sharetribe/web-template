@@ -58,6 +58,20 @@
   text-align: left;
 }
 
+/* Invisible trigger rendered alongside chips — no visual space needed */
+.triggerCollapsed {
+  flex: 0 0 0;
+  min-width: 0;
+  min-height: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
 .trigger:focus-visible {
   outline: 2px solid var(--marketplaceColor);
   outline-offset: 2px;

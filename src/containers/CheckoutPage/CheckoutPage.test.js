@@ -286,7 +286,7 @@ describe('CheckoutPage', () => {
     const inquiryMessageLabel = 'CheckoutPageWithInquiryProcess.messageLabel';
     expect(screen.getByRole('heading', { name: inquiryMessageLabel })).toBeInTheDocument();
     // price
-    expect(screen.getAllByText('55')).toHaveLength(2);
+    expect(screen.getAllByText('$55.00')).toHaveLength(2);
     const submitBtnText = 'CheckoutPageWithInquiryProcess.submitButtonText';
     expect(screen.getByRole('button', { name: submitBtnText })).toBeInTheDocument();
 
@@ -364,7 +364,7 @@ describe('CheckoutPage', () => {
     const inquiryMessageLabel = 'CheckoutPageWithInquiryProcess.messageLabel';
     expect(screen.getByRole('heading', { name: inquiryMessageLabel })).toBeInTheDocument();
     // price should not exists
-    expect(screen.queryAllByText('55')).toHaveLength(0);
+    expect(screen.queryAllByText('$55.00')).toHaveLength(0);
     const submitBtnText = 'CheckoutPageWithInquiryProcess.submitButtonText';
     expect(screen.getByRole('button', { name: submitBtnText })).toBeInTheDocument();
   });

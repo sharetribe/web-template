@@ -16,9 +16,8 @@
   --avPurple: hsl(284, 40%, 66%); /* #b986cb */
   --avPurpleLight: hsl(284, 42%, 88%); /* #e8d8ef */
   --avYellow: hsl(59, 71%, 66%); /* #e6e469 */
-  --avYellowLight: hsl(63, 71%, 89%); /* #f5f7d0 */  
+  --avYellowLight: hsl(63, 71%, 89%); /* #f5f7d0 */
 
-  
   /* Accent: solid blue used for selected/active backgrounds (chips, option rows) */
   --avAccent: var(--avPink);
   /* Secondary: high-contrast foreground for text/icons on --avAccent backgrounds */
@@ -238,4 +237,17 @@ textarea {
 
 .buttonPrimary {
   letter-spacing: 1.5px;
+}
+
+/* All user avatars: white background with brand-blue initials.
+   Avatar uses CSS Modules, so its DOM class is the scoped `Avatar_avatarBase__<hash>`.
+   A plain `.avatarBase` selector can't reach it from this global file, so match the
+   stable scoped-class prefix and clear the default gradient instead. */
+/* :root prefix raises specificity to (0,2,0) so this reliably beats Avatar's own
+   scoped `.avatarBase` gradient (0,1,0) regardless of stylesheet injection order. */
+:root [class*='Avatar_avatarBase__'] {
+  background-image: none;
+  background-color: var(--colorWhite);
+  color: var(--avBlue);
+  border: 1px solid var(--avBlue);
 }

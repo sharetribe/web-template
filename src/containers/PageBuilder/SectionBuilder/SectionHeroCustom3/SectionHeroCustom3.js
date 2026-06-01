@@ -9,12 +9,14 @@ import css from './SectionHeroCustom3.module.css';
 const getImageUrl = media => {
   const variants = media?.image?.attributes?.variants || {};
   return (
-    variants['original2400'] ||
-    variants['original1200'] ||
-    variants['original800'] ||
-    variants['original400'] ||
-    Object.values(variants)[0]
-  )?.url || null;
+    (
+      variants['original2400'] ||
+      variants['original1200'] ||
+      variants['original800'] ||
+      variants['original400'] ||
+      Object.values(variants)[0]
+    )?.url || null
+  );
 };
 
 const alignmentClass = alignment => {
@@ -86,17 +88,19 @@ const SectionHeroCustom3 = props => {
     accentFont: css.accentFont,
   };
   const resolveCtaClass = style =>
-    classNames((style || '').trim().split(/\s+/).map(t => styleClassMap[t]).filter(Boolean)) ||
-    defaultClasses?.ctaButtonPrimary;
+    classNames(
+      (style || '')
+        .trim()
+        .split(/\s+/)
+        .map(t => styleClassMap[t])
+        .filter(Boolean)
+    ) || defaultClasses?.ctaButtonPrimary;
   const ctaStyles = [resolveCtaClass(cta1Style), resolveCtaClass(cta2Style)];
 
   const halves = blocks.slice(0, 2);
 
   return (
-    <section
-      id={sectionId}
-      className={classNames(rootClassName || css.root, className)}
-    >
+    <section id={sectionId} className={classNames(rootClassName || css.root, className)}>
       {halves.map((block, i) => {
         const imageUrl = getImageUrl(block.media);
         const bgLink = bgLinkKeys[i];
@@ -105,18 +109,18 @@ const SectionHeroCustom3 = props => {
           <HalfTag
             key={block.blockId || block.blockName || i}
             href={bgLink || undefined}
-            className={classNames(css.half, imageUrl ? css.hasBg : '', bgLink ? css.halfLinked : '')}
+            className={classNames(
+              css.half,
+              imageUrl ? css.hasBg : '',
+              bgLink ? css.halfLinked : ''
+            )}
             style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}
           >
             <div className={classNames(css.content, alignmentClass(block.alignment))}>
               <Field data={block.title} options={fieldOptions} />
               <Field data={block.text} options={fieldOptions} />
-              {block.callToAction ? (
-                <Field
-                  data={block.callToAction}
-                  className={ctaStyles[i]}
-                  options={fieldOptions}
-                />
+              {block.callToAction && !bgLink ? (
+                <Field data={block.callToAction} className={ctaStyles[i]} options={fieldOptions} />
               ) : null}
             </div>
           </HalfTag>

@@ -156,7 +156,11 @@ const FieldGroupedMultiSelect = props => {
           hasError ? css.controlError : ''
         }`}
       >
-        <div className={css.selectedArea}>
+        <div
+          className={css.selectedArea}
+          onClick={value.length > 0 ? () => openDropdown(0) : undefined}
+          style={value.length > 0 ? { cursor: 'pointer' } : undefined}
+        >
           {value.length === 0 ? (
             <button
               id={id}
@@ -195,7 +199,7 @@ const FieldGroupedMultiSelect = props => {
               <button
                 id={id}
                 type="button"
-                className={css.trigger}
+                className={css.triggerCollapsed}
                 role="combobox"
                 aria-label={triggerLabel}
                 aria-labelledby={labelId}

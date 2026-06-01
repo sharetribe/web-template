@@ -6,14 +6,16 @@ import AVCategoryCard from './AVCategoryCard';
 
 const { screen } = testingLibrary;
 
+// AVCategoryCard requests `original400/800/1200/2400` variants from ResponsiveImage,
+// which builds a `srcset` (not `src`) from whichever of those keys are present.
 const mockMedia = {
   fieldType: 'image',
   alt: 'Blazers category',
   image: {
     attributes: {
       variants: {
-        'scaled-medium': { url: 'https://example.com/blazers-medium.jpg', width: 750, height: 1000 },
-        original: { url: 'https://example.com/blazers.jpg', width: 1200, height: 1600 },
+        original400: { url: 'https://example.com/blazers-400.jpg', width: 400, height: 533 },
+        original800: { url: 'https://example.com/blazers-800.jpg', width: 800, height: 1066 },
       },
     },
   },
@@ -27,7 +29,7 @@ describe('AVCategoryCard', () => {
     expect(link).toHaveAttribute('href', expect.stringContaining('pub_categoryLevel1=blazers'));
 
     const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', 'https://example.com/blazers-medium.jpg');
+    expect(img).toHaveAttribute('srcset', expect.stringContaining('blazers-400.jpg 400w'));
     expect(img).toHaveAttribute('alt', 'Blazers category');
   });
 
@@ -37,35 +39,38 @@ describe('AVCategoryCard', () => {
   });
 
   it('formats categoryId as display name when no name or alt provided', () => {
+    // formatCategoryName follows Spanish convention: only first word capitalized
     render(<AVCategoryCard categoryId="dress-party" />);
-    expect(screen.getByText('Dress Party')).toBeInTheDocument();
+    expect(screen.getByText('Dress party')).toBeInTheDocument();
   });
 
   it('renders placeholder div when no media provided', () => {
     const { container } = render(<AVCategoryCard categoryId="blazers" />);
-    // no img element — placeholder div renders instead
     expect(container.querySelector('img')).toBeNull();
-    expect(container.querySelector('.imagePlaceholder')).not.toBeNull();
+    expect(container.querySelector('[class*="imagePlaceholder"]')).not.toBeNull();
   });
 
-  it('uses scaled-medium variant url in preference to original', () => {
+  it('builds srcset with multiple variants when available', () => {
     render(<AVCategoryCard categoryId="blazers" media={mockMedia} />);
-    expect(screen.getByRole('img')).toHaveAttribute('src', 'https://example.com/blazers-medium.jpg');
+    const srcset = screen.getByRole('img').getAttribute('srcset');
+    expect(srcset).toContain('blazers-400.jpg 400w');
+    expect(srcset).toContain('blazers-800.jpg 800w');
   });
 
-  it('falls back to original variant when scaled-medium is absent', () => {
-    const mediaWithoutMedium = {
+  it('omits missing variants from srcset rather than erroring', () => {
+    const partialMedia = {
       ...mockMedia,
       image: {
         attributes: {
           variants: {
-            original: { url: 'https://example.com/blazers.jpg' },
+            original400: { url: 'https://example.com/blazers-400.jpg', width: 400, height: 533 },
           },
         },
       },
     };
-    render(<AVCategoryCard categoryId="blazers" media={mediaWithoutMedium} />);
-    expect(screen.getByRole('img')).toHaveAttribute('src', 'https://example.com/blazers.jpg');
+    render(<AVCategoryCard categoryId="blazers" media={partialMedia} />);
+    const srcset = screen.getByRole('img').getAttribute('srcset');
+    expect(srcset).toBe('https://example.com/blazers-400.jpg 400w');
   });
 
   it('matches snapshot', () => {

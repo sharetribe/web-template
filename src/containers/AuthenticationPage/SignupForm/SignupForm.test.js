@@ -150,6 +150,47 @@ describe('SignupForm', () => {
     expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeEnabled();
   });
 
+  it('uses the store-type display name label for the vendedor-tienda user type', async () => {
+    const user = userEvent.setup();
+    const sellerTypes = [
+      {
+        userType: 'vendedor-particular',
+        label: 'Individual',
+        displayNameSettings: { displayInSignUp: true, required: false },
+      },
+      {
+        userType: 'vendedor-tienda',
+        label: 'Store',
+        displayNameSettings: { displayInSignUp: true, required: false },
+      },
+    ];
+    render(
+      <SignupForm
+        intl={fakeIntl}
+        termsAndConditions={termsAndConditions}
+        userTypes={sellerTypes}
+        userFields={[]}
+        onSubmit={noop}
+      />
+    );
+
+    // Default (individual) seller sees the regular display name label.
+    await user.selectOptions(
+      screen.getByRole('combobox'),
+      screen.getByRole('option', { name: 'Individual' })
+    );
+    expect(screen.getByText('SignupForm.displayNameLabel')).toBeInTheDocument();
+    expect(screen.queryByText('SignupForm.displayNameLabelTienda')).toBeNull();
+
+    // Store seller sees the per-userType "store name" label instead.
+    await user.selectOptions(
+      screen.getByRole('combobox'),
+      screen.getByRole('option', { name: 'Store' })
+    );
+    expect(screen.getByText('SignupForm.displayNameLabelTienda')).toBeInTheDocument();
+    expect(screen.queryByText('SignupForm.displayNameLabel')).toBeNull();
+  });
+
   it('shows custom user fields according to configuration', async () => {
     const user = userEvent.setup();
     render(

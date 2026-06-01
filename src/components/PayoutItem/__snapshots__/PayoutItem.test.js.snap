@@ -51,7 +51,7 @@ exports[`PayoutItem matches snapshot 1`] = `
       <span
         class="amountGross"
       >
-        MX$450.00
+        $450.00
       </span>
     </div>
     <div
@@ -65,7 +65,7 @@ exports[`PayoutItem matches snapshot 1`] = `
       <span
         class="amountNet"
       >
-        MX$405.00
+        $405.00
       </span>
     </div>
   </div>

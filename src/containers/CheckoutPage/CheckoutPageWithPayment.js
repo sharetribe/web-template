@@ -44,6 +44,9 @@ import MobileOrderBreakdown from './MobileOrderBreakdown';
 
 import css from './CheckoutPage.module.css';
 
+// AV: keep marketplace defaults out of upstream literals
+import { defaultCountry } from '../../config/configAV';
+
 // Stripe PaymentIntent statuses, where user actions are already completed
 // https://stripe.com/docs/payments/payment-intents/status
 const STRIPE_PI_USER_ACTIONS_DONE_STATUSES = ['processing', 'requires_capture', 'succeeded'];
@@ -539,8 +542,8 @@ export const CheckoutPageWithPayment = props => {
   const initialValuesForStripePayment = {
     name: userName,
     recipientName: userName,
-    country: 'MX',
-    recipientCountry: 'MX',
+    country: defaultCountry,
+    recipientCountry: defaultCountry,
   };
   const askShippingDetails =
     orderData?.deliveryMethod === 'shipping' &&

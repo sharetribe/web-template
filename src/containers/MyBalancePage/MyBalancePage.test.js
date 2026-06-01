@@ -193,6 +193,7 @@ describe('MyBalancePage reducer', () => {
       currentMonthPendingAmount: 0,
       currentMonthCancelledCount: 0,
       currency: null,
+      summaryLoaded: false,
     });
   });
 

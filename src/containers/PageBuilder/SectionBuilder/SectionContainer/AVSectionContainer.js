@@ -63,9 +63,8 @@ const AVSectionContainer = props => {
     customOption?.hasNoPaddingsY ? avCss.sectionContentNoPaddingsY : null,
     customOption?.hasTextGray ? avCss.sectionContentHasTextGray : null,
     customOption?.isAvFeature ? avCss.sectionContentAvFeature : null,
-    customOption?.hasStar ? avCss.starDeco : null,
-    customOption?.hasStar ? (avCss[`starDeco${customOption.starDeco}`] ?? null) : null,
-    as === 'footer' ? avCss.customFooter : null,
+    customOption?.isHeadingH ? avCss.sectionContentHeadingH : null,
+    as === 'footer' ? avCss.customFooter : null
   );
 
   return (

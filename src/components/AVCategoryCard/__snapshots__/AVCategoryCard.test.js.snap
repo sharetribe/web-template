@@ -12,7 +12,7 @@ exports[`AVCategoryCard matches snapshot 1`] = `
       alt="Blazers category"
       class="root image"
       sizes="(max-width: 767px) 50vw, 25vw"
-      srcset=""
+      srcset="https://example.com/blazers-400.jpg 400w, https://example.com/blazers-800.jpg 800w"
     />
     <div
       class="overlay"

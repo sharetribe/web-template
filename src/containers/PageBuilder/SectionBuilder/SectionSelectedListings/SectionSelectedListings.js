@@ -9,9 +9,6 @@ import Field, { hasDataInFields } from '../../Field';
 import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionSelectedListings.module.css';
 
-const KEY_CODE_ARROW_LEFT = 37;
-const KEY_CODE_ARROW_RIGHT = 39;
-
 // The number of columns (numColumns) affects styling and responsive images
 const COLUMN_CONFIG = [
   { css: css.oneColumn, responsiveImageSizes: '(max-width: 767px) 100vw, 1200px' },
@@ -136,10 +133,10 @@ const SectionSelectedListings = props => {
   };
 
   const onKeyDown = e => {
-    if (e.keyCode === KEY_CODE_ARROW_LEFT) {
+    if (e.key === 'ArrowLeft') {
       e.preventDefault();
       slide('left');
-    } else if (e.keyCode === KEY_CODE_ARROW_RIGHT) {
+    } else if (e.key === 'ArrowRight') {
       e.preventDefault();
       slide('right');
     }

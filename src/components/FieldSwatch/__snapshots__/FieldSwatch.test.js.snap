@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldSwatch matches snapshot 1`] = `
+<span
+  class="root"
+>
+  <input
+    class="input"
+    id="swatch-negro"
+    name="color"
+    type="checkbox"
+    value="negro"
+  />
+  <label
+    class="label"
+    for="swatch-negro"
+  >
+    <span
+      class="swatch"
+      style="background-color: black;"
+    >
+      <svg
+        height="14"
+        width="14"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          class="checked"
+          d="M5.636621 10.7824771L3.3573694 8.6447948c-.4764924-.4739011-.4764924-1.2418639 0-1.7181952.4777142-.473901 1.251098-.473901 1.7288122 0l1.260291 1.1254782 2.8256927-4.5462307c.3934117-.5431636 1.1545778-.6695372 1.7055985-.278265.5473554.3912721.6731983 1.150729.2797866 1.6951077l-3.6650524 5.709111c-.2199195.306213-.5803433.5067097-.9920816.5067097-.3225487 0-.6328797-.1263736-.8637952-.3560334z"
+          fill="#FFF"
+        />
+      </svg>
+    </span>
+    <span
+      class="text textRoot"
+    >
+      negro
+    </span>
+  </label>
+</span>
+`;

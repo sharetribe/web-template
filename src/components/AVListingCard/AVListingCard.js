@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import { useConfiguration } from '../../context/configurationContext';
 
@@ -15,6 +16,8 @@ import { isBookingProcessAlias } from '../../transactions/transaction';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage, AvatarSmall } from '../../components';
 
 import css from './AVListingCard.module.css';
+
+const { Money } = sdkTypes;
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
 const ASPECT_WIDTH_TALL = 3;
@@ -63,9 +66,20 @@ const PriceMaybe = props => {
     ''
   );
 
+  // Show the original ("was") price as a strike-through only when it is higher
+  // than the current price, mirroring OrderPanel's display rule.
+  const originalPriceRaw = publicData?.originalPrice;
+  const originalPriceMoney =
+    originalPriceRaw && originalPriceRaw.amount > price.amount
+      ? new Money(originalPriceRaw.amount, originalPriceRaw.currency)
+      : null;
+
   return (
     <div className={css.price} title={priceTitle}>
       <FormattedMessage id="ListingCard.price" values={{ priceValue, pricePerUnit }} />
+      {originalPriceMoney ? (
+        <s className={css.originalPrice}>{formatMoney(intl, originalPriceMoney)}</s>
+      ) : null}
     </div>
   );
 };
@@ -155,7 +169,11 @@ export const AVListingCard = props => {
           >
             {getEnumLabel(enumLookup, 'brand', publicData?.brand)}
           </NamedLink>
-        ) : null}
+        ) : (
+          // Reserve the brand line's height so cards without a brand stay the
+          // same height as those with one.
+          <div className={css.brandPlaceholder} aria-hidden="true" />
+        )}
 
         {showListingTitle && title ? (
           <div className={css.title}>
@@ -168,7 +186,6 @@ export const AVListingCard = props => {
 
         {sizes.length > 0 ? (
           <div className={css.sizes}>
-            <FormattedMessage id="AVListingCard.sizeLabel" />{' '}
             {sizes.map(size => getEnumLabel(enumLookup, 'all_sizes', size)).join(', ')}
           </div>
         ) : null}

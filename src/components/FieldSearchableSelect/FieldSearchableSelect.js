@@ -73,6 +73,8 @@ const FieldSearchableSelect = props => {
   const hasError = meta.touched && meta.error;
   const placeholder = intl.formatMessage({ id: 'FieldSearchableSelect.placeholder' });
   const clearLabel = intl.formatMessage({ id: 'FieldSearchableSelect.clear' });
+  const expandLabel = intl.formatMessage({ id: 'FieldSearchableSelect.expand' });
+  const collapseLabel = intl.formatMessage({ id: 'FieldSearchableSelect.collapse' });
 
   return (
     <div className={css.root} ref={containerRef}>
@@ -108,17 +110,27 @@ const FieldSearchableSelect = props => {
           aria-haspopup="listbox"
           aria-controls={`${id}-listbox`}
         />
-        {input.value && (
+        <div className={css.controls}>
+          {input.value && (
+            <button
+              type="button"
+              className={css.clearBtn}
+              onClick={handleClear}
+              aria-label={clearLabel}
+              title={clearLabel}
+            >
+              ×
+            </button>
+          )}
           <button
             type="button"
-            className={css.clearBtn}
-            onClick={handleClear}
-            aria-label={clearLabel}
+            className={css.toggleBtn}
+            onClick={() => setIsOpen(o => !o)}
+            aria-label={isOpen ? collapseLabel : expandLabel}
           >
-            ×
+            {isOpen ? '▲' : '▼'}
           </button>
-        )}
-        <span className={css.toggleIcon}>{isOpen ? '▲' : '▼'}</span>
+        </div>
       </div>
 
       {isOpen && filtered.length > 0 && (

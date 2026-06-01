@@ -6,13 +6,16 @@ import { Modal } from '../../components';
 
 import css from './AVWelcomePopup.module.css';
 
-// Returns null when the translation key is not found (message === id).
+// Returns null when the translation key is missing or has an empty value.
+// Checks intl.messages first to avoid triggering MISSING_TRANSLATION console errors
+// for intentionally empty keys (react-intl treats "" as missing when !message is true).
 const t = (intl, id) => {
-  const msg = intl.formatMessage({ id });
-  return msg === id ? null : msg;
+  const val = intl.messages?.[id];
+  if (!val) return null;
+  return intl.formatMessage({ id }) || null;
 };
 
-const AVWelcomePopup = ({ userType, isOpen, onClose, onManageDisableScrolling }) => {
+const AVWelcomePopup = ({ userType = null, isOpen, onClose, onManageDisableScrolling }) => {
   const intl = useIntl();
   if (!userType) return null;
   const ns = `AVWelcomePopup.${userType}`;
@@ -61,10 +64,6 @@ const AVWelcomePopup = ({ userType, isOpen, onClose, onManageDisableScrolling })
       </div>
     </Modal>
   );
-};
-
-AVWelcomePopup.defaultProps = {
-  userType: null,
 };
 
 AVWelcomePopup.propTypes = {

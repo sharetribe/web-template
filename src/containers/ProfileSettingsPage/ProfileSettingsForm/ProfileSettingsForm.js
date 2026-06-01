@@ -68,7 +68,9 @@ const DisplayNameMaybe = props => {
         id="displayName"
         name="displayName"
         label={intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNameLabel',
+          id: isTienda
+            ? 'ProfileSettingsForm.displayNameLabelTienda'
+            : 'ProfileSettingsForm.displayNameLabel',
         })}
         placeholder={intl.formatMessage({
           id: 'ProfileSettingsForm.displayNamePlaceholder',

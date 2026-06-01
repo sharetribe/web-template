@@ -42,6 +42,10 @@ const UserFieldDisplayName = props => {
       }
     : {};
 
+  // AV: store-type sellers see the same per-userType label as the profile/edit
+  // form (e.g. "Store name" / "Nombre de la tienda") instead of "Display name".
+  const isTienda = userTypeConfig?.userType === 'vendedor-tienda';
+
   return (
     <FieldTextInput
       className={classNames(className, { [rootClassName]: !!rootClassName })}
@@ -49,7 +53,7 @@ const UserFieldDisplayName = props => {
       id={formId ? `${formId}.displayName` : 'displayName'}
       name="displayName"
       label={intl.formatMessage({
-        id: `${formName}.displayNameLabel`,
+        id: isTienda ? `${formName}.displayNameLabelTienda` : `${formName}.displayNameLabel`,
       })}
       placeholder={intl.formatMessage({
         id: `${formName}.displayNamePlaceholder`,

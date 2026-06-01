@@ -5,6 +5,10 @@
   display: flex;
   flex-direction: column;
 
+  /* Allow the card to shrink to its grid/flex track instead of letting inner
+     text set a min-content width that would unbalance equal-width columns. */
+  min-width: 0;
+
   /* Remove link's hover effect */
   &:hover {
     text-decoration: none;
@@ -35,34 +39,69 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 14px 20px 2px;
+  padding: 14px 20px 20px;
 }
 
 .brand {
   font-family: var(--fontFamilyHeadings);
   font-size: 16px;
+  line-height: 22px;
   letter-spacing: 1px;
   font-weight: var(--fontWeightSemiBold);
   color: var(--avBlue);
+
+  /* Clamp to a single line so long brand names never grow the card height.
+     line-clamp (not nowrap) lets the text still wrap internally, so it does
+     not impose a wide min-content size that would unbalance the grid columns. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  max-width: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Empty stand-in rendered when a listing has no brand, so its card keeps the
+   same height as cards that do show a brand. Matches .brand's line box. */
+.brandPlaceholder {
+  height: 22px;
 }
 
 .sizes {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: var(--fontWeightSemiBold);
+
+  /* Clamp a long size list to a single line so it can't make some cards taller
+     than others in the same row. line-clamp keeps internal wrapping allowed, so
+     it does not force the grid column wider the way white-space: nowrap would. */
+  width: 100%;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 .price {
   /* Layout */
   display: flex;
   flex-direction: row;
+  align-items: baseline;
   justify-content: flex-start;
+  gap: 6px;
   flex-shrink: 0;
   margin-bottom: 4px;
 }
 
+.originalPrice {
+  font-size: 14px;
+  color: var(--colorGrey300);
+  text-decoration: line-through;
+}
+
 .priceValue {
   /* Font */
-  font-size: 20px;
+  font-size: 16px;
   font-weight: var(--fontWeightSemiBold);
 
   /* Remove default margins from font */
@@ -78,6 +117,7 @@
 .perUnit {
   /* Font */
   composes: textSmall from global;
+  font-size: 16px;
   font-weight: var(--fontWeightSemiBold);
 
   color: var(--marketplaceColor);
@@ -100,12 +140,18 @@
   flex-direction: column;
 }
 
+/* Title is kept in the DOM for screen readers / accessible card naming, but
+   hidden visually (standard sr-only technique). */
 .title {
-  /* Font */
-  font-size: 18px;
-  font-weight: var(--fontWeightBold);
-  color: var(--colorGrey700);
-  margin: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .authorInfo {
@@ -115,7 +161,7 @@
   align-items: center;
   /* Font */
   font-family: var(--fontFamily);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: var(--fontWeightMedium);
   color: var(--avBlue);
 

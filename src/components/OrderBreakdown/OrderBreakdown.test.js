@@ -77,19 +77,19 @@ describe('OrderBreakdown', () => {
     const unitPriceXQuantity = screen.getByText('OrderBreakdown.baseUnitQuantity');
     expect(unitPriceXQuantity).toBeInTheDocument();
     const lineItemBasePrice = within(unitPriceXQuantity.parentNode.parentNode);
-    expect(lineItemBasePrice.getByText('20')).toBeInTheDocument();
+    expect(lineItemBasePrice.getByText('$20.00')).toBeInTheDocument();
 
     // Shipping fee
     const shippingFee = screen.getByText('OrderBreakdown.shippingFee');
     expect(shippingFee).toBeInTheDocument();
     const lineItemShippingFee = within(shippingFee.parentNode.parentNode);
-    expect(lineItemShippingFee.getByText('10')).toBeInTheDocument();
+    expect(lineItemShippingFee.getByText('$10.00')).toBeInTheDocument();
 
     // Total
     const total = screen.getByText('OrderBreakdown.total');
     expect(total).toBeInTheDocument();
     const totalPayIn = within(total.parentNode.parentNode);
-    expect(totalPayIn.getByText('30')).toBeInTheDocument();
+    expect(totalPayIn.getByText('$30.00')).toBeInTheDocument();
   });
 
   it('shows base price, booking dates, customer-commission and total to customer (booking)', () => {
@@ -146,19 +146,19 @@ describe('OrderBreakdown', () => {
     const unitPriceXQuantity = screen.getByText('OrderBreakdown.baseUnitNight');
     expect(unitPriceXQuantity).toBeInTheDocument();
     const lineItemBasePrice = within(unitPriceXQuantity.parentNode.parentNode);
-    expect(lineItemBasePrice.getByText('20')).toBeInTheDocument();
+    expect(lineItemBasePrice.getByText('$20.00')).toBeInTheDocument();
 
     // Commission
     const commission = screen.getByText('OrderBreakdown.commission');
     expect(commission).toBeInTheDocument();
     const lineItemCommission = within(commission.parentNode.parentNode);
-    expect(lineItemCommission.getByText('2')).toBeInTheDocument();
+    expect(lineItemCommission.getByText('$2.00')).toBeInTheDocument();
 
     // Total
     const total = screen.getByText('OrderBreakdown.total');
     expect(total).toBeInTheDocument();
     const totalPayIn = within(total.parentNode.parentNode);
-    expect(totalPayIn.getByText('22')).toBeInTheDocument();
+    expect(totalPayIn.getByText('$22.00')).toBeInTheDocument();
   });
 
   it('shows base price, provider-commission and total to provider (booking)', () => {
@@ -215,18 +215,18 @@ describe('OrderBreakdown', () => {
     const unitPriceXQuantity = screen.getByText('OrderBreakdown.baseUnitNight');
     expect(unitPriceXQuantity).toBeInTheDocument();
     const lineItemBasePrice = within(unitPriceXQuantity.parentNode.parentNode);
-    expect(lineItemBasePrice.getByText('20')).toBeInTheDocument();
+    expect(lineItemBasePrice.getByText('$20.00')).toBeInTheDocument();
 
     // Commission
     const commission = screen.getByText('OrderBreakdown.commission');
     expect(commission).toBeInTheDocument();
     const lineItemCommission = within(commission.parentNode.parentNode);
-    expect(lineItemCommission.getByText('-2')).toBeInTheDocument();
+    expect(lineItemCommission.getByText('-$2.00')).toBeInTheDocument();
 
     // Total
     const providerTotal = screen.getByText('OrderBreakdown.providerTotalDefault');
     expect(providerTotal).toBeInTheDocument();
     const totalPayIn = within(providerTotal.parentNode.parentNode);
-    expect(totalPayIn.getByText('18')).toBeInTheDocument();
+    expect(totalPayIn.getByText('$18.00')).toBeInTheDocument();
   });
 });

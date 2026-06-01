@@ -86,10 +86,14 @@ describe('parseSectionCustomOptions', () => {
     expect(parseSectionCustomOptions('Section - TextGray').hasTextGray).toBe(true);
   });
 
-  it('sets hasStar and reads starDeco digit', () => {
-    const result = parseSectionCustomOptions('Section - Star2');
-    expect(result.hasStar).toBe(true);
-    expect(result.starDeco).toBe(2);
+  it('sets isHeadingH for "- Heading2" token', () => {
+    expect(parseSectionCustomOptions('Section - Heading2').isHeadingH).toBe(true);
+  });
+
+  it('does not set isLarge when only "- LargeDesc" is present', () => {
+    const result = parseSectionCustomOptions('Section - LargeDesc');
+    expect(result.isLarge).toBe(false);
+    expect(result.isLargeDesc).toBe(true);
   });
 
   it('handles multiple tokens in one sectionName', () => {
@@ -104,7 +108,6 @@ describe('parseSectionCustomOptions', () => {
     const result = parseSectionCustomOptions('Plain Section');
     expect(result.isLarge).toBe(false);
     expect(result.isFullH).toBe(false);
-    expect(result.hasStar).toBe(false);
   });
 });
 

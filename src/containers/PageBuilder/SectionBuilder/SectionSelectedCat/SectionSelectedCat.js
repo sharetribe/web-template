@@ -8,9 +8,6 @@ import Field, { hasDataInFields } from '../../Field';
 import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionSelectedCat.module.css';
 
-const KEY_CODE_ARROW_LEFT = 37;
-const KEY_CODE_ARROW_RIGHT = 39;
-
 const COLUMN_CONFIG = [
   { css: css.oneColumn, responsiveImageSizes: '(max-width: 767px) 100vw, 1200px' },
   { css: css.twoColumns, responsiveImageSizes: '(max-width: 767px) 100vw, 600px' },
@@ -121,10 +118,10 @@ const SectionSelectedCat = props => {
     e.target.focus();
   };
   const onKeyDown = e => {
-    if (e.keyCode === KEY_CODE_ARROW_LEFT) {
+    if (e.key === 'ArrowLeft') {
       e.preventDefault();
       slide('left');
-    } else if (e.keyCode === KEY_CODE_ARROW_RIGHT) {
+    } else if (e.key === 'ArrowRight') {
       e.preventDefault();
       slide('right');
     }

@@ -28,11 +28,17 @@ exports[`FieldSearchableSelect matches snapshot (empty state) 1`] = `
         type="text"
         value=""
       />
-      <span
-        class="toggleIcon"
+      <div
+        class="controls"
       >
-        ▼
-      </span>
+        <button
+          aria-label="FieldSearchableSelect.expand"
+          class="toggleBtn"
+          type="button"
+        >
+          ▼
+        </button>
+      </div>
     </div>
   </div>
   <button

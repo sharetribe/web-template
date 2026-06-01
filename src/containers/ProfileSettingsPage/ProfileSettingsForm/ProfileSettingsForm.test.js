@@ -195,7 +195,11 @@ describe('ProfileSettingsForm', () => {
     expect(screen.getByDisplayValue(firstName)).toBeInTheDocument();
     expect(screen.getByText('ProfileSettingsForm.lastNameLabel')).toBeInTheDocument();
     expect(screen.getByDisplayValue(lastName)).toBeInTheDocument();
-    expect(screen.getByText('ProfileSettingsForm.bioLabel')).toBeInTheDocument();
+    // AV variant: bio uses a per-userType heading (vendedor / vendedor-tienda)
+    // and a placeholder instead of an explicit label.
+    expect(
+      screen.getByRole('heading', { name: 'ProfileSettingsForm.bioHeadingVendedor' })
+    ).toBeInTheDocument();
   });
 
   it('shows inputs and initial values for bio', () => {
@@ -216,10 +220,10 @@ describe('ProfileSettingsForm', () => {
         }}
       />
     );
+    // AV variant: bio uses a per-userType heading and a placeholder (no separate label).
     expect(
-      screen.getByRole('heading', { name: 'ProfileSettingsForm.bioHeading' })
+      screen.getByRole('heading', { name: 'ProfileSettingsForm.bioHeadingVendedor' })
     ).toBeInTheDocument();
-    expect(screen.getByText('ProfileSettingsForm.bioLabel')).toBeInTheDocument();
     expect(screen.getByDisplayValue(bio)).toBeInTheDocument();
   });
 

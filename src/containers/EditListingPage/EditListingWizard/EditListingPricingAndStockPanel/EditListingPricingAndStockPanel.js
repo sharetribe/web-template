@@ -14,6 +14,9 @@ import { H3, ListingLink } from '../../../../components';
 import EditListingPricingAndStockForm from './EditListingPricingAndStockForm';
 import css from './EditListingPricingAndStockPanel.module.css';
 
+// AV: gate the "original price" (strike-through) field by seller user type
+import { canShowOriginalPrice } from '../../../../config/configAV';
+
 const { Money } = sdkTypes;
 const BILLIARD = 1000000000000000;
 
@@ -97,8 +100,7 @@ const EditListingPricingAndStockPanel = props => {
     intl,
   } = props;
 
-  const userType = currentUser?.attributes?.profile?.publicData?.userType;
-  const showOriginalPrice = ['vendedor', 'vendedor-stock'].includes(userType);
+  const showOriginalPrice = canShowOriginalPrice(currentUser);
 
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = state.initialValues;
