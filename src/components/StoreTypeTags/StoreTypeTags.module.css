@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Rotating palette, matching the reference: forest green / periwinkle / pink / amber */
+.tag0 {
+  background-color: #33503f;
+  color: #ffffff;
+}
+.tag1 {
+  background-color: #6f93c4;
+  color: #ffffff;
+}
+.tag2 {
+  background-color: #e87fb0;
+  color: #ffffff;
+}
+.tag3 {
+  background-color: #f0c14b;
+  color: #2a2300;
+}

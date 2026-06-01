@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StoreTypeTags matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="root"
+  >
+    <span
+      class="tag tag0"
+    >
+      trending
+    </span>
+    <span
+      class="tag tag1"
+    >
+      holiday
+    </span>
+  </div>
+</DocumentFragment>
+`;
