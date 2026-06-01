@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { useIntl } from '../../util/reactIntl';
 import { useConfiguration } from '../../context/configurationContext';
 import { getStoreTypeTags } from '../../config/configAV';
 
@@ -24,6 +25,7 @@ const DEFAULT_MAX = 3;
  */
 const StoreTypeTags = props => {
   const { author, className, max = DEFAULT_MAX } = props;
+  const intl = useIntl();
   const config = useConfiguration();
   const tags = getStoreTypeTags(author, config);
 
@@ -34,7 +36,13 @@ const StoreTypeTags = props => {
   const visible = max > 0 ? tags.slice(0, max) : tags;
 
   return (
-    <div className={classNames(css.root, className)} aria-label="Store type tags">
+    <div
+      className={classNames(css.root, className)}
+      aria-label={intl.formatMessage({
+        id: 'StoreTypeTags.ariaLabel',
+        defaultMessage: 'Store type tags',
+      })}
+    >
       {visible.map((tag, index) => (
         <span key={tag.key} className={classNames(css.tag, css[`tag${index % PALETTE_SIZE}`])}>
           {tag.label}

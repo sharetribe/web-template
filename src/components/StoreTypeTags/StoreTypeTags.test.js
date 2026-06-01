@@ -66,7 +66,9 @@ describe('StoreTypeTags', () => {
   });
 
   it('matches snapshot', () => {
-    const { asFragment } = render(<StoreTypeTags author={author(['trending', 'holiday'])} />);
+    const { asFragment } = render(<StoreTypeTags author={author(['trending', 'holiday'])} />, {
+      messages: { 'StoreTypeTags.ariaLabel': 'Store type tags' },
+    });
     expect(asFragment()).toMatchSnapshot();
   });
 });
