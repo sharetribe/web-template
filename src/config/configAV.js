@@ -16,3 +16,31 @@ export const canShowOriginalPrice = currentUser => {
   const userType = currentUser?.attributes?.profile?.publicData?.userType;
   return sellerUserTypes.includes(userType);
 };
+
+// Store sellers (userType === storeSellerUserType) can tag listings with one or
+// more `tipoTienda` values, rendered as colored tags over the listing image.
+export const storeSellerUserType = 'vendedor-tienda';
+export const storeTypeFieldKey = 'tipoTienda';
+
+// Returns [{ key, label }] of store-type tags for the listing author, or [] when
+// the author is not a store seller or has no tipoTienda set. Labels resolve from
+// the hosted `tipoTienda` user-field enumOptions, falling back to the raw value.
+export const getStoreTypeTags = (author, config) => {
+  const publicData = author?.attributes?.profile?.publicData;
+  if (publicData?.userType !== storeSellerUserType) {
+    return [];
+  }
+
+  const raw = publicData?.[storeTypeFieldKey];
+  const values = Array.isArray(raw) ? raw : raw ? [raw] : [];
+  if (values.length === 0) {
+    return [];
+  }
+
+  const fieldConfig = (config?.user?.userFields || []).find(f => f.key === storeTypeFieldKey);
+  const options = fieldConfig?.enumOptions || [];
+  return values.map(value => {
+    const match = options.find(o => o.option === value);
+    return { key: value, label: match?.label || value };
+  });
+};
