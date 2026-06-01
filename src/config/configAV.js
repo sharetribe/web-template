@@ -17,6 +17,8 @@ export const canShowOriginalPrice = currentUser => {
   return sellerUserTypes.includes(userType);
 };
 
+// Note: this gate is intentionally separate from `sellerUserTypes` (the
+// originalPrice gate above) — store-type tags and originalPrice are unrelated.
 // Store sellers (userType === storeSellerUserType) can tag listings with one or
 // more `tipoTienda` values, rendered as colored tags over the listing image.
 export const storeSellerUserType = 'vendedor-tienda';
@@ -25,7 +27,7 @@ export const storeTypeFieldKey = 'tipoTienda';
 // Returns [{ key, label }] of store-type tags for the listing author, or [] when
 // the author is not a store seller or has no tipoTienda set. Labels resolve from
 // the hosted `tipoTienda` user-field enumOptions, falling back to the raw value.
-export const getStoreTypeTags = (author, config) => {
+export const getStoreTypeTags = (author, config = {}) => {
   const publicData = author?.attributes?.profile?.publicData;
   if (publicData?.userType !== storeSellerUserType) {
     return [];

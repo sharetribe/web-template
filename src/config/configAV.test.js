@@ -4,6 +4,7 @@ import {
   getStoreTypeTags,
   sellerUserTypes,
   storeSellerUserType,
+  storeTypeFieldKey,
 } from './configAV';
 
 const userWith = userType => ({
@@ -40,6 +41,14 @@ describe('configAV', () => {
 
     it('exposes the store seller userType', () => {
       expect(storeSellerUserType).toBe('vendedor-tienda');
+    });
+
+    it('exposes the store type field key', () => {
+      expect(storeTypeFieldKey).toBe('tipoTienda');
+    });
+
+    it('returns tags when called without a config argument', () => {
+      expect(getStoreTypeTags(storeAuthor(['x']))).toEqual([{ key: 'x', label: 'x' }]);
     });
 
     it('maps tipoTienda values to configured labels', () => {
