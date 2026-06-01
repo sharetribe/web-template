@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
-import { ResponsiveImage, Modal } from '../../components';
+import { ResponsiveImage, Modal, StoreTypeTags } from '../../components';
 
 import ImageCarousel from './ImageCarousel/ImageCarousel';
 
@@ -43,6 +43,7 @@ const SectionHero = props => {
   return (
     <section className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
+        <StoreTypeTags author={listing?.author} className={css.heroStoreTags} />
         {mounted && listing.id ? (
           <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
             {actionBar}
