@@ -34,7 +34,7 @@ const StoreTypeTags = props => {
   const visible = max > 0 ? tags.slice(0, max) : tags;
 
   return (
-    <div className={classNames(css.root, className)}>
+    <div className={classNames(css.root, className)} aria-label="Store type tags">
       {visible.map((tag, index) => (
         <span key={tag.key} className={classNames(css.tag, css[`tag${index % PALETTE_SIZE}`])}>
           {tag.label}

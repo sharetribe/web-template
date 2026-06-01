@@ -3,6 +3,7 @@
 exports[`StoreTypeTags matches snapshot 1`] = `
 <DocumentFragment>
   <div
+    aria-label="Store type tags"
     class="root"
   >
     <span

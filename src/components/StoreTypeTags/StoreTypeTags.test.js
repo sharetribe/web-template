@@ -1,7 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
+import {
+  getHostedConfiguration,
+  renderWithProviders as render,
+  testingLibrary,
+} from '../../util/testHelpers';
 import StoreTypeTags from './StoreTypeTags';
 
 const { screen } = testingLibrary;
@@ -29,6 +33,36 @@ describe('StoreTypeTags', () => {
     expect(screen.getByText('trending')).toBeInTheDocument();
     expect(screen.getByText('holiday')).toBeInTheDocument();
     expect(screen.queryByText('birthday')).not.toBeInTheDocument();
+  });
+
+  it('resolves labels from hosted tipoTienda user-field config', () => {
+    const config = {
+      ...getHostedConfiguration(),
+      userFields: {
+        userFields: [
+          {
+            key: 'tipoTienda',
+            scope: 'public',
+            schemaType: 'multi-enum',
+            enumOptions: [
+              { option: 'trending', label: 'Trending' },
+              { option: 'holiday', label: 'Holiday' },
+            ],
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+        ],
+      },
+    };
+
+    render(<StoreTypeTags author={author(['trending'])} />, { config });
+    expect(screen.getByText('Trending')).toBeInTheDocument();
+  });
+
+  it('renders all chips when max is 0', () => {
+    render(<StoreTypeTags author={author(['trending', 'holiday', 'birthday'])} max={0} />);
+    expect(screen.getByText('trending')).toBeInTheDocument();
+    expect(screen.getByText('holiday')).toBeInTheDocument();
+    expect(screen.getByText('birthday')).toBeInTheDocument();
   });
 
   it('matches snapshot', () => {
