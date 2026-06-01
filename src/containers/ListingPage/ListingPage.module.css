@@ -840,12 +840,23 @@
   height: 100%;
 }
 
-/* AV: store-type tags overlaid on the ListingPage gallery image */
+/* AV: store-type tags overlaid on the ListingPage gallery image.
+   Hero wrapper is just the image (bottom-left). The carousel's .productGallery
+   wraps the image + thumbnail strip, so its overlay anchors to the top of the
+   image instead. */
 .heroStoreTags,
 .galleryStoreTags {
   position: absolute;
-  bottom: 16px;
   left: 16px;
   z-index: 1;
   pointer-events: none;
+  max-width: calc(100% - 32px);
+}
+
+.heroStoreTags {
+  bottom: 16px;
+}
+
+.galleryStoreTags {
+  top: 16px;
 }
