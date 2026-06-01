@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { createListing } from '../../util/testData';
+import { createListing, createUser } from '../../util/testData';
 import {
   getHostedConfiguration,
   renderWithProviders as render,
@@ -80,5 +80,38 @@ describe('AVListingCard', () => {
     renderCard({ originalPrice: { amount: 5000, currency: 'USD' } });
 
     expect(screen.queryByText('$50.00')).not.toBeInTheDocument();
+  });
+
+  it('shows store-type tags for vendedor-tienda authors', () => {
+    const listing = createListing(
+      'av-store-card',
+      {
+        publicData: {
+          listingType: 'product-selling',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+        },
+      },
+      {
+        author: createUser('store-1', {
+          profile: {
+            displayName: 'Store One',
+            abbreviatedName: 'SO',
+            publicData: { userType: 'vendedor-tienda', tipoTienda: ['trending', 'holiday'] },
+          },
+        }),
+      }
+    );
+
+    render(<AVListingCard listing={listing} showAuthorInfo={false} />, {
+      config,
+      messages: {
+        'ListingCard.price': '{priceValue}{pricePerUnit}',
+        'ListingCard.perUnit': ' per {unitType}',
+      },
+    });
+
+    expect(screen.getByText('trending')).toBeInTheDocument();
+    expect(screen.getByText('holiday')).toBeInTheDocument();
   });
 });

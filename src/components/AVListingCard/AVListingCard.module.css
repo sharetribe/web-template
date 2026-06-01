@@ -194,3 +194,11 @@
     font-size: 12px;
   }
 }
+
+.storeTags {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 1;
+  max-width: calc(100% - 16px);
+}

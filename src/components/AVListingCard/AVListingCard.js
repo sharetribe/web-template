@@ -13,7 +13,13 @@ import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
-import { AspectRatioWrapper, NamedLink, ResponsiveImage, AvatarSmall } from '../../components';
+import {
+  AspectRatioWrapper,
+  NamedLink,
+  ResponsiveImage,
+  AvatarSmall,
+  StoreTypeTags,
+} from '../../components';
 
 import css from './AVListingCard.module.css';
 
@@ -158,6 +164,7 @@ export const AVListingCard = props => {
             variants={variants}
             sizes={renderSizes}
           />
+          <StoreTypeTags author={author} className={css.storeTags} />
         </AspectRatioWrapper>
       </NamedLink>
       <div className={css.info}>
