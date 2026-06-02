@@ -10,6 +10,14 @@ import CustomExtendedDataSection from '../../../components/CustomExtendedDataSec
 
 import SectionText from '../../../components/CustomExtendedDataSection/SectionText';
 
+import {
+  isBookingProcess as isBookingProcessFn,
+  isPurchaseProcess as isPurchaseProcessFn,
+  isDownloadProcess as isDownloadProcessFn,
+  isInquiryProcess as isInquiryProcessFn,
+  isNegotiationProcess as isNegotiationProcessFn,
+} from '../../../transactions/transaction';
+
 import css from './TransactionFields.module.css';
 /**
  * Split transaction field configs to role based arrays
@@ -216,18 +224,20 @@ const CustomTransactionFields = props => {
 const TransactionFields = props => {
   const {
     intl,
-    isBookingProcess,
+    processName,
     isCustomerBanned,
-    isInquiryProcess,
-    isNegotiationProcess,
     isOfferOrRequest,
     isProviderBanned,
-    isPurchaseProcess,
-    isDownloadProcess,
     role,
     protectedData,
     transactionFieldConfigs = [],
   } = props;
+
+  const isBookingProcess = isBookingProcessFn(processName);
+  const isPurchaseProcess = isPurchaseProcessFn(processName);
+  const isDownloadProcess = isDownloadProcessFn(processName);
+  const isInquiryProcess = isInquiryProcessFn(processName);
+  const isNegotiationProcess = isNegotiationProcessFn(processName);
 
   // For negotiation processes, transaction fields are shown in the separate Offer and RequestQuote
   // components, so we don't want to show them in the main transaction panel in that case.

@@ -181,6 +181,14 @@ export class TransactionPanelComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
+    const showDiminishedButton = stateData.showDispute || stateData.showReport;
+    const onOpenDiminishedModal = stateData.showReport ? onOpenReportModal : onOpenDisputeModal;
+    const diminishedButtonMessage = stateData.showReport ? (
+      <FormattedMessage id="TransactionPanel.reportOrder" />
+    ) : (
+      <FormattedMessage id="TransactionPanel.disputeOrder" />
+    );
+
     return (
       <div className={classes}>
         <div className={css.container}>
@@ -236,10 +244,9 @@ export class TransactionPanelComponent extends Component {
                   ) : null}
                   <DiminishedActionButtonMaybe
                     id="mobile_disputeOrderButton"
-                    showDispute={stateData.showDispute}
-                    onOpenDisputeModal={onOpenDisputeModal}
-                    showReport={stateData.showReport}
-                    onOpenReportModal={onOpenReportModal}
+                    showButton={showDiminishedButton}
+                    onOpenModal={onOpenDiminishedModal}
+                    buttonMessage={diminishedButtonMessage}
                   />
                 </div>
 
@@ -342,10 +349,9 @@ export class TransactionPanelComponent extends Component {
               </div>
               <DiminishedActionButtonMaybe
                 id="desktop_disputeOrderButton"
-                showDispute={stateData.showDispute}
-                onOpenDisputeModal={onOpenDisputeModal}
-                showReport={stateData.showReport}
-                onOpenReportModal={onOpenReportModal}
+                showButton={showDiminishedButton}
+                onOpenModal={onOpenDiminishedModal}
+                buttonMessage={diminishedButtonMessage}
               />
             </div>
           </div>

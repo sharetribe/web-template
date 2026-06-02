@@ -1244,7 +1244,7 @@
   "TransactionPage.ActivityFeed.default-download.completed": "{transactionRole, select, customer {Your purchase was completed. {reviewLink}} other {{otherUsersName}'s purchase was completed.}}",
   "TransactionPage.ActivityFeed.default-download.purchased": "{actor, select, you {You purchased {listingTitle}.} other {{otherUsersName} purchased {listingTitle}.}}",
   "TransactionPage.ActivityFeed.default-download.reported": "{actor, select, you {You reported a problem.} other {{otherUsersName} reported a problem.}}",
-  "TransactionPage.ActivityFeed.default-download.reviewed": "{actor, select, you {You left a review.} other {{actor} left a review.}}",
+  "TransactionPage.ActivityFeed.default-download.reviewed": "{actor, select, system {Review period ended.} you {You left a review.} other {{otherUsersName} left a review.}}",
   "TransactionPage.ActivityFeed.default-inquiry.free-inquiry": "{actor, select, you {You started a conversation.} other {{otherUsersName} started a conversation.}}",
   "TransactionPage.ActivityFeed.default-negotiation.canceled": "The order was canceled.",
   "TransactionPage.ActivityFeed.default-negotiation.changes-requested": "Changes were requested.",

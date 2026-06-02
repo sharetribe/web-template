@@ -41,7 +41,7 @@ const ReportForm = props => (
           <FieldTextInput
             className={css.reportMessage}
             type="textarea"
-            id={formId ? `${formId}.reportReason` : 'reportReason'} //
+            id={formId ? `${formId}.reportReason` : 'reportReason'}
             name="reportReason"
             label={intl.formatMessage({ id: 'ReportModal.label' })}
             placeholder={intl.formatMessage({ id: 'ReportModal.reportPlaceholder' })}

@@ -13,7 +13,7 @@ import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
 import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers';
 import { STRIPE_JS_LOADED_EVENT } from '../../../util/includeScripts';
-import { BOOKING_PROCESS_NAME, DOWNLOAD_PROCESS_NAME } from '../../../transactions/transaction';
+import { isDownloadProcess, isBookingProcess } from '../../../transactions/transaction';
 
 import {
   Heading,
@@ -587,8 +587,9 @@ class StripePaymentForm extends Component {
       const checked = event.target.checked;
       this.updateBillingDetailsToMatchShippingAddress(checked);
     };
-    const isBooking = processName === BOOKING_PROCESS_NAME;
-    const isDownload = processName === DOWNLOAD_PROCESS_NAME;
+
+    const isBooking = isBookingProcess(processName);
+    const isDownload = isDownloadProcess(processName);
     const isBookingYesNo = isBooking ? 'yes' : 'no';
 
     const showAdditionalInfoHeading =

@@ -161,6 +161,7 @@ export const isRelevantPastTransition = transition => {
     transitions.OPERATOR_COMPLETE,
     transitions.COMPLETE_FROM_REPORTED,
     transitions.REVIEW,
+    transitions.EXPIRE_REVIEW_PERIOD,
   ].includes(transition);
 };
 

@@ -525,27 +525,26 @@ export const TransactionPageComponent = props => {
 
     // The download process only supports a single customer-side review transition.
     // Bidirectional review transitions (REVIEW_1/REVIEW_2) don't exist in that process.
-    const transitionOptions =
-      processName === DOWNLOAD_PROCESS_NAME
-        ? {
-            reviewAsFirst: transitions.REVIEW,
-            hasOtherPartyReviewedFirst: false,
-          }
-        : transactionRole === CUSTOMER
-        ? {
-            reviewAsFirst: transitions.REVIEW_1_BY_CUSTOMER,
-            reviewAsSecond: transitions.REVIEW_2_BY_CUSTOMER,
-            hasOtherPartyReviewedFirst: process
-              .getTransitionsToStates([states.REVIEWED_BY_PROVIDER])
-              .includes(transaction.attributes.lastTransition),
-          }
-        : {
-            reviewAsFirst: transitions.REVIEW_1_BY_PROVIDER,
-            reviewAsSecond: transitions.REVIEW_2_BY_PROVIDER,
-            hasOtherPartyReviewedFirst: process
-              .getTransitionsToStates([states.REVIEWED_BY_CUSTOMER])
-              .includes(transaction.attributes.lastTransition),
-          };
+    const transitionOptions = isDownloadProcess(processName)
+      ? {
+          reviewAsFirst: transitions.REVIEW,
+          hasOtherPartyReviewedFirst: false,
+        }
+      : transactionRole === CUSTOMER
+      ? {
+          reviewAsFirst: transitions.REVIEW_1_BY_CUSTOMER,
+          reviewAsSecond: transitions.REVIEW_2_BY_CUSTOMER,
+          hasOtherPartyReviewedFirst: process
+            .getTransitionsToStates([states.REVIEWED_BY_PROVIDER])
+            .includes(transaction.attributes.lastTransition),
+        }
+      : {
+          reviewAsFirst: transitions.REVIEW_1_BY_PROVIDER,
+          reviewAsSecond: transitions.REVIEW_2_BY_PROVIDER,
+          hasOtherPartyReviewedFirst: process
+            .getTransitionsToStates([states.REVIEWED_BY_CUSTOMER])
+            .includes(transaction.attributes.lastTransition),
+        };
     const params = { reviewRating: rating, reviewContent };
 
     onSendReview(transaction, transitionOptions, params, config)
@@ -826,11 +825,12 @@ export const TransactionPageComponent = props => {
     isCustomerBanned,
     isProviderBanned,
     isOfferOrRequest,
-    isNegotiationProcess,
-    isBookingProcess: isBookingProcess(processName),
-    isPurchaseProcess: processName === PURCHASE_PROCESS_NAME,
-    isDownloadProcess: isDownloadProcess(processName),
-    isInquiryProcess: processName === INQUIRY_PROCESS_NAME,
+    processName,
+    // isNegotiationProcess,
+    // isBookingProcess: isBookingProcess(processName),
+    // isPurchaseProcess: processName === PURCHASE_PROCESS_NAME,
+    // isDownloadProcess: isDownloadProcess(processName),
+    // isInquiryProcess: processName === INQUIRY_PROCESS_NAME,
     isRegularNegotiation,
   });
 
@@ -980,7 +980,7 @@ export const TransactionPageComponent = props => {
           }
           author={listing.author}
           hideAuthorInfo={true}
-          hidePrice={processName === DOWNLOAD_PROCESS_NAME}
+          hidePrice={isDownloadProcess(processName)}
           onSubmit={isNegotiationProcess ? onMakeOffer : handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
           {...restOfProps}
