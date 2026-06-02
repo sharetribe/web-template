@@ -20,7 +20,8 @@
   justify-content: left;
 }
 .leftLink {
-  border-bottom: 0px solid;
+  /* Reserve the 4px hover underline so hovering doesn't shift layout. */
+  border-bottom: 4px solid transparent;
   transition: var(--transitionStyleButton);
   font-weight: var(--fontWeightMedium);
   font-size: 15px;

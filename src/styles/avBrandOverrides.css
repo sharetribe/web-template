@@ -38,6 +38,12 @@
   /* ================ Topbar related ================ */
   --TopbarMobileMenu_topMargin: 46px;
 
+  /* AV: the desktop TopbarDesktop is a two-row layout (logo/search row +
+   * custom-links row), so at --viewportLarge it is twice the single-row
+   * height plus the 1px row divider. Pages with a fixed Topbar (e.g.
+   * SearchPage) must offset content by this instead of --topbarHeightDesktop. */
+  --avTopbarHeightDesktopTwoRow: calc(var(--topbarHeightDesktop) * 2 + 1px);
+
   /* ================ Font Families ================ */
   --fontFamily: 'Non Bureau', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';

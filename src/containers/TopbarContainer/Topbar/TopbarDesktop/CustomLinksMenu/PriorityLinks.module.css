@@ -9,7 +9,8 @@
 }
 
 .priorityLink {
-  border-bottom: 0px solid;
+  /* Reserve the 4px hover underline so hovering doesn't shift layout. */
+  border-bottom: 4px solid transparent;
   transition: var(--transitionStyleButton);
   font-weight: var(--fontWeightMedium);
   font-size: 15px;
@@ -41,6 +42,9 @@
 
 .button {
   display: flex;
+  /* Create-listing CTA is a pill — never show or reserve the priorityLink
+   * underline (overrides the reserved transparent border on .priorityLink). */
+  border-bottom: 0;
 
   &:hover {
     border-bottom: 0;

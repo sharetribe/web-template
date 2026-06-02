@@ -34,6 +34,14 @@
     min-height: calc(100vh - var(--topbarHeightDesktop));
     scroll-margin-top: var(--topbarHeightDesktop);
   }
+
+  /* AV: the two-row TopbarDesktop renders only at --viewportLarge and is
+   * taller than --topbarHeightDesktop, so offset content by its real height. */
+  @media (--viewportLarge) {
+    padding-top: var(--avTopbarHeightDesktopTwoRow);
+    min-height: calc(100vh - var(--avTopbarHeightDesktopTwoRow));
+    scroll-margin-top: var(--avTopbarHeightDesktopTwoRow);
+  }
 }
 
 /* Container for side and content */
@@ -162,6 +170,9 @@
      * and left padding together with border should be 60px.
      */
     padding: 40px 36px 0 36px;
+
+    /* AV: match the taller two-row TopbarDesktop (see .container note). */
+    scroll-margin-top: var(--avTopbarHeightDesktopTwoRow);
   }
 
   @media (min-width: 1440px) {
@@ -316,6 +327,10 @@
 
   @media (--viewportLarge) {
     width: 37.5vw;
+
+    /* AV: clear the taller two-row TopbarDesktop (see .container note). */
+    top: var(--avTopbarHeightDesktopTwoRow);
+    height: calc(100vh - var(--avTopbarHeightDesktopTwoRow));
   }
 }
 

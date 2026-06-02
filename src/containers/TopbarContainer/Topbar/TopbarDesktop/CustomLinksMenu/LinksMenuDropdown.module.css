@@ -29,7 +29,8 @@
 .linkMenuLabel {
   flex-shrink: 0;
 
-  border-bottom: 0px solid;
+  /* Reserve the 4px hover/open underline so hovering doesn't shift layout. */
+  border-bottom: 4px solid transparent;
   transition: var(--transitionStyleButton);
 
   font-weight: var(--fontWeightBold);

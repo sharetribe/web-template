@@ -80,7 +80,7 @@
 
 /* Dark skin — AV reskin (see note on .darkSkin above) */
 .tabContentDarkSkin {
-  color: var(--colorGrey700);
+  color: var(--avBlue);
   font-weight: 600;
   border-bottom-color: transparent;
 

@@ -57,6 +57,9 @@
   padding: 0 12px 0 0;
   border-top: 1px solid var(--colorGrey100);
 
+  /* AV: yellow second row with blue contents */
+  background-color: var(--avYellowLight);
+
   @media (--viewportMedium) {
     padding: 0 24px 0 0;
   }
@@ -64,6 +67,17 @@
   @media (--viewportLarge) {
     padding: 0 60px;
   }
+}
+
+/* AV: color every link/button/label in the second row blue (overrides the
+   per-link greys defined in CustomLinksMenu.module.css via descendant
+   specificity). Element selectors cross the CSS-module boundary because
+   only .bottomRow is hashed. */
+.bottomRow :is(a, button, span) {
+  color: var(--avBlue);
+}
+.bottomRow :is(a, button):hover {
+  color: var(--avBlue);
 }
 
 /* logo */
@@ -226,13 +240,9 @@
   padding: 0 12px 0 12px;
 
   &:hover {
-    border-bottom: 4px solid var(--marketplaceColor);
+    /* No bottom-border underline on the profile menu (avoids layout shift). */
     border-radius: 0;
     text-decoration: none;
-  }
-
-  &:active {
-    border-bottom: 0;
   }
 
   @media (--viewportLargeWithPaddings) {
