@@ -34,17 +34,24 @@
   border-bottom: 3px solid var(--colorFail);
 }
 
-.input {
+/* `.control .input` (specificity 0,2,0) overrides the global `input` element
+ * styles (border/box-shadow/background) without needing inline styles. */
+.control .input {
   flex: 1;
   width: auto;
   min-width: 0;
   padding: 7px 0;
   font-size: 16px;
   color: var(--colorGrey900);
+  border: none;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
 }
 
-.input:hover,
-.input:focus {
+.control .input:hover,
+.control .input:focus {
   border: none;
   outline: none;
   box-shadow: none;

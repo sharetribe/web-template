@@ -10,9 +10,10 @@ import FieldSearchableSelect from '../FieldSearchableSelect/FieldSearchableSelec
 
 import css from './DisplayOverrideField.module.css';
 
-// AV custom multi-enum input renderers, dispatched by saveConfig.inputType
-// inside upstream CustomExtendedDataField. Each receives:
-//   { name, id, label, saveConfig, enumOptions, createFilterOptions, validate? }
+// AV custom input renderers, dispatched by saveConfig.inputType inside upstream
+// CustomExtendedDataField. Props differ by the field's schemaType:
+//   - enum:       { name, id, label, options, validate? }
+//   - multi-enum: { name, id, label, saveConfig, enumOptions, createFilterOptions, validate? }
 const groupedMultiSelectInput = props => {
   const { name, id, label, saveConfig, enumOptions, validate } = props;
   const intl = useIntl();
