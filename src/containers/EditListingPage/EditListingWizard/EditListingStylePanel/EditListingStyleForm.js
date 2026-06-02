@@ -91,6 +91,7 @@ export const EditListingStyleForm = props => {
           formId = 'EditListingStyleForm',
           form,
           className,
+          disabled,
           fetchErrors,
           handleSubmit,
           ready,
@@ -104,7 +105,7 @@ export const EditListingStyleForm = props => {
 
         const submitInProgress = updateInProgress;
         const submitReady = updated || ready;
-        const submitDisabled = submitInProgress;
+        const submitDisabled = disabled || submitInProgress;
 
         const fieldOptions = colorSchemes.map(colorScheme => {
           return (
