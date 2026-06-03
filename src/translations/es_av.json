@@ -161,6 +161,7 @@
   "EditListingDetailsPanel.photosUploadInProgress": "Espera a que terminen de subir todas las fotos.",
 
   "AVWelcomePopup.vendedor.imageUrl": "",
+  "AVWelcomePopup.vendedor.eyebrow": "",
   "AVWelcomePopup.vendedor.title": "",
   "AVWelcomePopup.vendedor.text": "",
   "AVWelcomePopup.vendedor.primaryButtonLabel": "",
@@ -168,6 +169,7 @@
   "AVWelcomePopup.vendedor.secondaryButtonLabel": "",
   "AVWelcomePopup.vendedor.secondaryButtonUrl": "",
   "AVWelcomePopup.vendedor-tienda.imageUrl": "",
+  "AVWelcomePopup.vendedor-tienda.eyebrow": "",
   "AVWelcomePopup.vendedor-tienda.title": "",
   "AVWelcomePopup.vendedor-tienda.text": "",
   "AVWelcomePopup.vendedor-tienda.primaryButtonLabel": "",

@@ -11,6 +11,7 @@ import {
 } from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
 import { manageDisableScrolling } from '../../ducks/ui.duck';
+import { canShowWelcomePopup, welcomePopupSuppressedPaths } from '../../config/configAV';
 import AVWelcomePopup from '../../components/AVWelcomePopup';
 
 const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/Topbar'));
@@ -33,6 +34,7 @@ export const TopbarContainerComponent = props => {
     notificationCount = 0,
     hasGenericError,
     currentUser,
+    location,
     onManageDisableScrolling,
     onMarkVendedorOnboarded,
     ...rest
@@ -41,14 +43,17 @@ export const TopbarContainerComponent = props => {
   const [popupDismissed, setPopupDismissed] = useState(false);
 
   const publicData = currentUser?.attributes?.profile?.publicData || {};
-  const showWelcomePopup =
-    !popupDismissed &&
-    ['vendedor', 'vendedor-tienda'].includes(publicData.userType) &&
-    !publicData.onboardingCompleted;
+  // Suppressed on the signup page, where it would cover the "check your email"
+  // confirmation message shown right after registration.
+  const onSuppressedPath = welcomePopupSuppressedPaths.includes(location?.pathname);
+  const showWelcomePopup = !popupDismissed && !onSuppressedPath && canShowWelcomePopup(currentUser);
 
+  // Returns the persistence promise so CTA clicks can wait for onboarding to be
+  // saved before navigating away (otherwise the request is cancelled by the
+  // navigation and the popup re-appears).
   const handlePopupClose = () => {
     setPopupDismissed(true);
-    onMarkVendedorOnboarded();
+    return onMarkVendedorOnboarded();
   };
 
   return (
@@ -57,6 +62,7 @@ export const TopbarContainerComponent = props => {
         notificationCount={notificationCount}
         showGenericError={hasGenericError}
         currentUser={currentUser}
+        location={location}
         onManageDisableScrolling={onManageDisableScrolling}
         {...rest}
       />

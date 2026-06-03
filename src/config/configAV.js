@@ -17,6 +17,27 @@ export const canShowOriginalPrice = currentUser => {
   return sellerUserTypes.includes(userType);
 };
 
+// User-type values that should see the AV onboarding "welcome" popup
+// (rendered by TopbarContainer). Intentionally separate from `sellerUserTypes`
+// (the originalPrice gate) — the popup audience and the price-field audience
+// are unrelated.
+export const welcomePopupUserTypes = ['vendedor', 'vendedor-tienda'];
+
+// Whether the welcome popup is eligible to show for this user: a matching
+// seller userType that has not yet completed onboarding. The caller still
+// combines this with any per-session dismissal state and route suppression
+// (e.g. it is hidden on the signup page, where it would otherwise cover the
+// "check your email" confirmation message).
+export const canShowWelcomePopup = currentUser => {
+  const publicData = currentUser?.attributes?.profile?.publicData;
+  return welcomePopupUserTypes.includes(publicData?.userType) && !publicData?.onboardingCompleted;
+};
+
+// Route pathnames where the welcome popup is suppressed even when the user is
+// otherwise eligible. The signup page shows a "check your email" confirmation
+// right after registration that the popup would cover.
+export const welcomePopupSuppressedPaths = ['/signup'];
+
 // Note: this gate is intentionally separate from `sellerUserTypes` (the
 // originalPrice gate above) — store-type tags and originalPrice are unrelated.
 // Store sellers (userType === storeSellerUserType) can tag listings with one or

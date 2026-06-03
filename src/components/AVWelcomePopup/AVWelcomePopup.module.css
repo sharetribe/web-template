@@ -1,13 +1,50 @@
 @import '../../styles/customMediaQueries.css';
 
-.root {
-  overflow: hidden;
-  border-radius: 12px;
+/* Modal overrides — center a self-contained card on a dimmed backdrop at every
+ * breakpoint, with room above the card so the close button sits outside it. */
+.scrollLayer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 56px 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: transparent;
+  /* Let the Modal close button (positioned at the container's top-right) sit
+   * above the card instead of being clipped by it. */
+  overflow: visible;
+}
+
+.content {
+  width: 100%;
+  padding: 0;
+  /* Push the card down so the close button lands in the gap above it. */
+  margin-top: 40px;
+}
+
+.root {
+  width: 100%;
+  background: var(--colorWhite);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+/* Full-bleed image: spans the card width, top corners rounded by .root's clip. */
 .imageWrapper {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 20 / 9;
   overflow: hidden;
 }
 
@@ -19,13 +56,24 @@
 }
 
 .body {
-  padding: 24px;
+  padding: 18px 22px 22px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--avBlue);
+  margin: 0 0 2px;
+  font-family: var(--fontFamilyHeadings);
 }
 
 .title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
-  margin: 0 0 12px;
+  line-height: 1.15;
+  margin: 0 0 10px;
   color: var(--colorBlack);
   font-family: var(--fontFamilyHeadings);
 }

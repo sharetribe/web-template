@@ -21,12 +21,26 @@ const AVWelcomePopup = ({ userType = null, isOpen, onClose, onManageDisableScrol
   const ns = `AVWelcomePopup.${userType}`;
 
   const imageUrl = t(intl, `${ns}.imageUrl`);
+  const eyebrow = t(intl, `${ns}.eyebrow`);
   const title = t(intl, `${ns}.title`);
   const text = t(intl, `${ns}.text`);
   const primaryLabel = t(intl, `${ns}.primaryButtonLabel`);
   const primaryUrl = t(intl, `${ns}.primaryButtonUrl`);
   const secondaryLabel = t(intl, `${ns}.secondaryButtonLabel`);
   const secondaryUrl = t(intl, `${ns}.secondaryButtonUrl`);
+
+  // The CTA links are full-page navigations. If we let the browser follow the
+  // href immediately, the async onClose() (which persists onboardingCompleted)
+  // gets cancelled by the navigation and the popup re-appears on the next page.
+  // So: prevent default, wait for the persist to settle (capped so a slow
+  // network can't block the user), then navigate.
+  const handleCtaClick = url => e => {
+    if (typeof window === 'undefined') return;
+    e.preventDefault();
+    const persisted = Promise.resolve(onClose());
+    const capped = new Promise(resolve => window.setTimeout(resolve, 1200));
+    Promise.race([persisted, capped]).finally(() => window.location.assign(url));
+  };
 
   return (
     <Modal
@@ -36,6 +50,9 @@ const AVWelcomePopup = ({ userType = null, isOpen, onClose, onManageDisableScrol
       onManageDisableScrolling={onManageDisableScrolling}
       usePortal
       lightCloseButton
+      scrollLayerClassName={css.scrollLayer}
+      containerClassName={css.container}
+      contentClassName={css.content}
     >
       <div className={css.root}>
         {imageUrl && (
@@ -44,17 +61,26 @@ const AVWelcomePopup = ({ userType = null, isOpen, onClose, onManageDisableScrol
           </div>
         )}
         <div className={css.body}>
+          {eyebrow && <p className={css.eyebrow}>{eyebrow}</p>}
           {title && <h2 className={css.title}>{title}</h2>}
           {text && <p className={css.text}>{text}</p>}
           {(primaryLabel || secondaryLabel) && (
             <div className={css.buttons}>
               {primaryLabel && primaryUrl && (
-                <a href={primaryUrl} className={css.primaryButton}>
+                <a
+                  href={primaryUrl}
+                  className={css.primaryButton}
+                  onClick={handleCtaClick(primaryUrl)}
+                >
                   {primaryLabel}
                 </a>
               )}
               {secondaryLabel && secondaryUrl && (
-                <a href={secondaryUrl} className={css.secondaryButton}>
+                <a
+                  href={secondaryUrl}
+                  className={css.secondaryButton}
+                  onClick={handleCtaClick(secondaryUrl)}
+                >
                   {secondaryLabel}
                 </a>
               )}

@@ -1,10 +1,12 @@
 import {
   canShowOriginalPrice,
+  canShowWelcomePopup,
   defaultCountry,
   getStoreTypeTags,
   sellerUserTypes,
   storeSellerUserType,
   storeTypeFieldKey,
+  welcomePopupUserTypes,
 } from './configAV';
 
 const userWith = userType => ({
@@ -94,6 +96,32 @@ describe('configAV', () => {
       expect(canShowOriginalPrice(null)).toBe(false);
       expect(canShowOriginalPrice({})).toBe(false);
       expect(canShowOriginalPrice(userWith(undefined))).toBe(false);
+    });
+  });
+
+  describe('canShowWelcomePopup', () => {
+    const seller = (userType, extra = {}) => ({
+      attributes: { profile: { publicData: { userType, ...extra } } },
+    });
+
+    it('lists the welcome popup user types', () => {
+      expect(welcomePopupUserTypes).toEqual(['vendedor', 'vendedor-tienda']);
+    });
+    it('returns true for a seller who has not completed onboarding', () => {
+      expect(canShowWelcomePopup(seller('vendedor'))).toBe(true);
+      expect(canShowWelcomePopup(seller('vendedor-tienda'))).toBe(true);
+    });
+    it('returns false once onboarding is completed', () => {
+      expect(canShowWelcomePopup(seller('vendedor', { onboardingCompleted: true }))).toBe(false);
+    });
+    it('returns false for non-popup user types', () => {
+      expect(canShowWelcomePopup(seller('vendedor-stock'))).toBe(false);
+      expect(canShowWelcomePopup(seller('comprador'))).toBe(false);
+    });
+    it('returns false when currentUser is null or has no userType', () => {
+      expect(canShowWelcomePopup(null)).toBe(false);
+      expect(canShowWelcomePopup({})).toBe(false);
+      expect(canShowWelcomePopup(seller(undefined))).toBe(false);
     });
   });
 });

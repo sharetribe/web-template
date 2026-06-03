@@ -393,7 +393,21 @@ export default userSlice.reducer;
 export const { clearCurrentUser, setCurrentUser, setCurrentUserHasOrders } = userSlice.actions;
 
 export const markVendedorOnboarded = () => (dispatch, getState, sdk) => {
-  return sdk.currentUser.updateProfile({ publicData: { onboardingCompleted: true } });
+  return sdk.currentUser
+    .updateProfile({ publicData: { onboardingCompleted: true } }, { expand: true })
+    .then(response => {
+      // Keep state.user.currentUser in sync so onboardingCompleted is not stale.
+      const entities = denormalisedResponseEntities(response);
+      if (entities.length === 1) {
+        dispatch(setCurrentUser(entities[0]));
+      }
+      return response;
+    })
+    .catch(e => {
+      // Non-fatal: the popup is already dismissed locally for this session.
+      // Persistence just failed, so it may re-appear on next load.
+      log.error(e, 'mark-vendedor-onboarded-failed');
+    });
 };
 
 // ================ Selectors ================ //
