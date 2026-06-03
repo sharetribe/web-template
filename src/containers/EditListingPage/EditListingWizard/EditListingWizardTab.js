@@ -309,6 +309,7 @@ const EditListingWizardTab = props => {
           images={images}
           allFilesUploadedAndVerified={allFilesUploadedAndVerified}
           filesTabParams={filesTabParams}
+          filesRequired={filesRequired}
         />
       );
     }
