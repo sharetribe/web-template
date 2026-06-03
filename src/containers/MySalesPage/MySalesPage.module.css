@@ -14,7 +14,9 @@
     height: var(--topbarHeightDesktop);
   }
 
-  @media (--viewportWide) {
+  /* Hide where the desktop topbar appears (--viewportLarge); otherwise both the
+   * mobile and desktop topbars render together on tablet widths (1024–1600px). */
+  @media (--viewportLarge) {
     display: none;
   }
 }

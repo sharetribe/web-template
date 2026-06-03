@@ -56,6 +56,9 @@
   min-height: var(--topbarHeightDesktop);
   padding: 0 12px 0 0;
   border-top: 1px solid var(--colorGrey100);
+  /* Match the divider above the row with one below it, separating the nav from
+   * the page content. */
+  border-bottom: 1px solid var(--colorGrey100);
 
   /* AV: yellow second row with blue contents */
   background-color: var(--avYellowLight);
