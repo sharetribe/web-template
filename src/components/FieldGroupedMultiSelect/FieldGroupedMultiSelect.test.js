@@ -32,17 +32,24 @@ const messages = {
   'FieldGroupedMultiSelect.expand': 'Expand',
   'FieldGroupedMultiSelect.collapse': 'Collapse',
   'FieldGroupedMultiSelect.removeOption': 'Remove {label}',
+  'FieldGroupedMultiSelect.maxHint': 'Select up to {max}',
 };
 
 const FormComponent = props => {
-  const { fieldGroups = groups, ...rest } = props;
+  const { fieldGroups = groups, max, ...rest } = props;
 
   return (
     <FinalForm
       {...rest}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          <FieldGroupedMultiSelect id="sizes" name="sizes" label="Sizes" groups={fieldGroups} />
+          <FieldGroupedMultiSelect
+            id="sizes"
+            name="sizes"
+            label="Sizes"
+            groups={fieldGroups}
+            max={max}
+          />
           <button type="submit">Submit</button>
         </form>
       )}
@@ -144,5 +151,45 @@ describe('FieldGroupedMultiSelect', () => {
 
     await user.keyboard('[ArrowDown][Enter][Escape]');
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  describe('with a max', () => {
+    it('shows the max hint and disables unselected options once the max is reached', async () => {
+      const user = userEvent.setup();
+      renderField({ max: 2, initialValues: { sizes: ['s', 'm'] } });
+
+      await user.click(screen.getByRole('combobox', { name: 'Sizes' }));
+
+      expect(screen.getByText('Select up to 2')).toBeInTheDocument();
+
+      const usOption = screen.getByRole('option', { name: 'US 4' });
+      expect(usOption).toBeDisabled();
+      expect(usOption).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('blocks selecting a third value', async () => {
+      const user = userEvent.setup();
+      renderField({ max: 2, initialValues: { sizes: ['s', 'm'] } });
+
+      await user.click(screen.getByRole('combobox', { name: 'Sizes' }));
+      await user.click(screen.getByRole('option', { name: 'US 4' }));
+
+      // Not added as a chip — still only the two original values.
+      expect(screen.queryByRole('button', { name: 'Remove US 4' })).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Small' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Medium' })).toBeInTheDocument();
+    });
+
+    it('still allows deselecting a value when at the max', async () => {
+      const user = userEvent.setup();
+      renderField({ max: 2, initialValues: { sizes: ['s', 'm'] } });
+
+      await user.click(screen.getByRole('combobox', { name: 'Sizes' }));
+      await user.click(screen.getByRole('option', { name: 'Medium' }));
+
+      expect(screen.queryByRole('button', { name: 'Remove Medium' })).not.toBeInTheDocument();
+      // US 4 is now selectable again (back under the max).
+      expect(screen.getByRole('option', { name: 'US 4' })).not.toBeDisabled();
+    });
   });
 });

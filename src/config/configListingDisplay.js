@@ -6,6 +6,8 @@ export const listingFieldDisplayOverrides = {
   all_sizes: {
     saveConfig: {
       inputType: 'groupedMultiSelect',
+      // Sellers may tag a listing with at most 2 sizes.
+      maxSelections: 2,
       groups: [
         {
           key: 'standard',

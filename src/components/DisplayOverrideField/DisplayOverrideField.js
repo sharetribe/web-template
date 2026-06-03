@@ -39,6 +39,7 @@ const groupedMultiSelectInput = props => {
       label={label}
       groups={groups}
       validate={validate}
+      max={saveConfig?.maxSelections}
     />
   );
 };

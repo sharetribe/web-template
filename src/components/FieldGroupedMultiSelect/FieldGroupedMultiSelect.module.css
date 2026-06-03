@@ -230,6 +230,24 @@
   font-weight: var(--fontWeightBold);
 }
 
+/* Unselected options once the max is reached: visible but not choosable. */
+.optionDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.optionDisabled:hover {
+  background-color: transparent;
+}
+
+.maxHint {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--colorGrey500);
+  background-color: var(--colorGrey50);
+  border-bottom: 1px solid var(--colorGrey100);
+}
+
 .error {
   color: var(--colorFail);
   font-size: 13px;

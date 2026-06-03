@@ -10,6 +10,7 @@
   "FieldGroupedMultiSelect.expand": "Expand",
   "FieldGroupedMultiSelect.collapse": "Collapse",
   "FieldGroupedMultiSelect.removeOption": "Remove {label}",
+  "FieldGroupedMultiSelect.maxHint": "Select up to {max}",
   "FieldColorDropdown.title": "Select Color",
   "FieldColorDropdown.close": "Close",
   "FieldColorDropdown.placeholder": "Select colors…",

@@ -17,14 +17,17 @@ import css from './FieldGroupedMultiSelect.module.css';
  * @param {Array} props.groups - Array of { key, label, options: [{option, label}] }
  * @param {Function} [props.validate] - Optional Final Form validation function
  * @param {string} [props.placeholder] - Placeholder text when nothing selected
+ * @param {number} [props.max] - Maximum number of selectable values (omit for unlimited)
  */
 const FieldGroupedMultiSelect = props => {
-  const { name, id, label, groups = [], validate, placeholder, className } = props;
+  const { name, id, label, groups = [], validate, placeholder, className, max } = props;
   const intl = useIntl();
   const optionGroups = Array.isArray(groups) ? groups : [];
 
   const { input, meta } = useField(name, { validate });
   const value = Array.isArray(input.value) ? input.value : [];
+  const hasMax = typeof max === 'number' && max > 0;
+  const atMax = hasMax && value.length >= max;
 
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -53,9 +56,12 @@ const FieldGroupedMultiSelect = props => {
   );
 
   const toggleOption = optionKey => {
-    const next = value.includes(optionKey)
-      ? value.filter(k => k !== optionKey)
-      : [...value, optionKey];
+    const isSelected = value.includes(optionKey);
+    // Block adding a new value once the max is reached (deselecting still works).
+    if (!isSelected && atMax) {
+      return;
+    }
+    const next = isSelected ? value.filter(k => k !== optionKey) : [...value, optionKey];
     input.onChange(next);
   };
 
@@ -240,12 +246,18 @@ const FieldGroupedMultiSelect = props => {
 
       {isOpen && (
         <div id={listboxId} className={css.dropdown} role="listbox" aria-multiselectable="true">
+          {hasMax && (
+            <div className={css.maxHint}>
+              {intl.formatMessage({ id: 'FieldGroupedMultiSelect.maxHint' }, { max })}
+            </div>
+          )}
           {optionGroups.map(group => (
             <div key={group.key}>
               <div className={css.groupHeader}>{group.label}</div>
               {(group.options || []).map(opt => {
                 const isSelected = value.includes(opt.option);
                 const isActive = activeOption?.option === opt.option;
+                const isDisabled = !isSelected && atMax;
                 return (
                   <button
                     key={opt.option}
@@ -253,9 +265,11 @@ const FieldGroupedMultiSelect = props => {
                     type="button"
                     role="option"
                     aria-selected={isSelected}
+                    aria-disabled={isDisabled}
+                    disabled={isDisabled}
                     className={`${css.option} ${isSelected ? css.optionSelected : ''} ${
                       isActive ? css.optionActive : ''
-                    }`}
+                    } ${isDisabled ? css.optionDisabled : ''}`}
                     onClick={() => toggleOption(opt.option)}
                   >
                     <span className={css.optionCheck} aria-hidden="true">
