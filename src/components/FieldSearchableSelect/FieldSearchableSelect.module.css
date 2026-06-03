@@ -34,9 +34,13 @@
   border-bottom: 3px solid var(--colorFail);
 }
 
-/* `.control .input` (specificity 0,2,0) overrides the global `input` element
- * styles (border/box-shadow/background) without needing inline styles. */
-.control .input {
+/* The AV brand restyles every input via a high-specificity global selector
+ * (`:root input:not([type='checkbox']):not([type='radio'])`, specificity 0-3-1,
+ * in avBrandOverrides.css). The combobox input sits inside the styled .control
+ * box, so this override must out-specify that to keep the inner input
+ * borderless (no box-in-box). The trailing `:not([type='radio'])` is a no-op on
+ * a text input — it only raises specificity above the global. */
+:root .control .input:not([type='radio']) {
   flex: 1;
   width: auto;
   min-width: 0;
@@ -50,8 +54,8 @@
   background-color: transparent;
 }
 
-.control .input:hover,
-.control .input:focus {
+:root .control .input:not([type='radio']):hover,
+:root .control .input:not([type='radio']):focus {
   border: none;
   outline: none;
   box-shadow: none;
