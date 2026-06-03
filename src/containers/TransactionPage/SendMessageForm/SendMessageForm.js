@@ -14,7 +14,7 @@ import css from './SendMessageForm.module.css';
 const BLUR_TIMEOUT_MS = 100;
 
 const FieldAddFile = props => {
-  const { formApi, onFileUpload, showFileLink, ...rest } = props;
+  const { formApi, onFileUpload, onRemoveFile, showFileLink, fileInputRef, ...rest } = props;
   if (!showFileLink) {
     return null;
   }
@@ -31,7 +31,7 @@ const FieldAddFile = props => {
         const inputProps = { id: name, name, onChange, type };
         return (
           <label className={className}>
-            <input {...inputProps} className={css.hiddenFileInput} />
+            <input {...inputProps} ref={fileInputRef} className={css.hiddenFileInput} />
             {label}
           </label>
         );
@@ -84,6 +84,7 @@ class SendMessageFormComponent extends Component {
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.blurTimeoutId = null;
+    this.fileInputRef = React.createRef();
   }
 
   handleFocus() {
@@ -131,6 +132,13 @@ class SendMessageFormComponent extends Component {
 
           const classes = classNames(rootClassName || css.root, className);
 
+          const onRemoveFileAndClearInput = tempId => {
+            if (this.fileInputRef.current) {
+              this.fileInputRef.current.value = '';
+            }
+            onRemoveFile(tempId);
+          };
+
           const formState = formApi.getState();
           const hasMessage = !!formState.values.message;
           const isAnyFileUploading = files?.some(f => f.uploadInProgress);
@@ -168,7 +176,7 @@ class SendMessageFormComponent extends Component {
                     <FileUpload
                       item={f}
                       key={f.tempId}
-                      onRemoveFile={onRemoveFile}
+                      onRemoveFile={onRemoveFileAndClearInput}
                       onDownloadFile={onDownloadFile}
                     />
                   ))}
@@ -197,9 +205,11 @@ class SendMessageFormComponent extends Component {
                     label={addFileLabel}
                     type="file"
                     onFileUpload={onFileUpload}
+                    onRemoveFile={onRemoveFileAndClearInput}
                     formApi={formApi}
                     className={css.fileLink}
                     showFileLink={showFileLink}
+                    fileInputRef={this.fileInputRef}
                   />
                   <Button
                     className={css.submitButton}
