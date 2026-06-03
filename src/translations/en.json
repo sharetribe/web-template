@@ -299,6 +299,8 @@
   "EditListingPage.titleEditListing": "Edit listing | {panelHeading}",
   "EditListingPhotosForm.addImagesTip": "Tip: Upload 2-3 good-quality photos from different angles.",
   "EditListingPhotosForm.chooseImage": "+ Add a photo…",
+  "EditListingPhotosForm.filesNotReady": "Before you can publish, the files you uploaded need to pass a security check. Check the status in the {filesTabLink}. Your listing has been saved as a draft.",
+  "EditListingPhotosForm.filesTabLinkText": "Files tab",
   "EditListingPhotosForm.imageRequired": "You need to add at least one photo.",
   "EditListingPhotosForm.imageTypes": ".JPG or .PNG. Max. 20 MB",
   "EditListingPhotosForm.imageUploadFailed.uploadFailed": "Failed to upload photo. Please check that the image file wasn't too big and try again.",

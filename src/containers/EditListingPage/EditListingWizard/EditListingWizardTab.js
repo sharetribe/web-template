@@ -297,6 +297,7 @@ const EditListingWizardTab = props => {
           onRemoveImage={onRemoveImage}
           allFilesUploadedAndVerified={allFilesUploadedAndVerified}
           filesTabParams={filesTabParams}
+          filesRequired={filesRequired}
         />
       );
     }
