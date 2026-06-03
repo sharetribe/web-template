@@ -13,7 +13,7 @@ import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
 
 // Import shared components
-import { Button, Form, AspectRatioWrapper } from '../../../../components';
+import { Button, Form, AspectRatioWrapper, NamedLink } from '../../../../components';
 
 // Import modules from this directory
 import ListingImage from './ListingImage';
@@ -176,6 +176,9 @@ export const EditListingPhotosForm = props => {
           errors,
           values,
           listingImageConfig,
+          allFilesUploadedAndVerified,
+          filesTabParams,
+          filesRequired,
         } = formRenderProps;
 
         const images = values.images || [];
@@ -280,6 +283,21 @@ export const EditListingPhotosForm = props => {
 
             <PublishListingError error={publishListingError} />
             <ShowListingsError error={showListingsError} />
+
+            {filesRequired && !allFilesUploadedAndVerified ? (
+              <p className={css.filesNotReady}>
+                <FormattedMessage
+                  id="EditListingPhotosForm.filesNotReady"
+                  values={{
+                    filesTabLink: (
+                      <NamedLink name="EditListingPage" params={filesTabParams}>
+                        <FormattedMessage id="EditListingPhotosForm.filesTabLinkText" />
+                      </NamedLink>
+                    ),
+                  }}
+                />
+              </p>
+            ) : null}
 
             <Button
               className={css.submitButton}

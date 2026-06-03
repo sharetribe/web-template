@@ -30,6 +30,7 @@ describe('EditListingDeliveryForm', () => {
         disabled={false}
         onRemoveImage={noop}
         listingImageConfig={{ aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }}
+        allFilesUploadedAndVerified={true}
       />
     );
     expect(tree.asFragment()).toMatchSnapshot();
