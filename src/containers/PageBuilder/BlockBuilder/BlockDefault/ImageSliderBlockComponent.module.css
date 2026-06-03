@@ -1,33 +1,33 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .sliderWrapper {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    min-height: 780px;
-    max-height: 80vh;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  min-height: 780px;
+  max-height: 80vh;
 
-    @media (--viewportMedium) {
-        flex: 0 0 50%;
-        width: 50%;
-        max-width: 50%;
-    }
+  @media (--viewportMedium) {
+    flex: 0 0 50%;
+    width: 50%;
+    max-width: 50%;
+  }
 }
 
 .sliderImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 1.2s ease-in-out;
-    z-index: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  z-index: 0;
 }
 
 .visible {
-    opacity: 1;
-    z-index: 1;
+  opacity: 1;
+  z-index: 1;
 }

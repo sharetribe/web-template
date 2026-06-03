@@ -70,7 +70,7 @@
 }
 
 .titleEyebrow {
-  color: var(--gray, #BCBCBC);
+  color: var(--gray, #bcbcbc);
   font-family: Roboto;
   font-size: 15px;
   font-style: normal;
@@ -125,7 +125,8 @@
     line-height: 140%; /* 28px */
   }
 
-  h3, p {
+  h3,
+  p {
     padding: 0;
   }
 
@@ -135,8 +136,8 @@
 }
 
 .iconImg {
-    width: 48px;
-    margin: auto;
+  width: 48px;
+  margin: auto;
 }
 
 .textGray {
@@ -149,7 +150,8 @@
 }
 
 .textDarkGray {
-  h3, h4 {
+  h3,
+  h4 {
     font-size: 18px;
     font-weight: 400;
     line-height: 140%; /* 25.2px */
@@ -206,7 +208,7 @@
       &:hover {
         &::marker {
           color: var(--colorGrey600);
-        } 
+        }
       }
 
       @media (--viewportLarge) {
@@ -215,7 +217,6 @@
         line-height: 120%; /* 36px */
       }
     }
-
   }
 }
 
@@ -249,12 +250,12 @@ ol.titleList {
     align-items: center; /* Vertically centers content along the cross-axis */
     /* Add padding/margin as needed for the list items */
 
-    >div {
+    > div {
       width: 100%;
     }
 
     div > * {
-      font-family:  var(--fontFamilyHeadings);
+      font-family: var(--fontFamilyHeadings);
       font-weight: var(--fontWeightRegular);
       font-style: normal;
       font-size: 15px;
@@ -263,7 +264,7 @@ ol.titleList {
       color: var(--colorGrey600);
     }
 
-    div >h3 {
+    div > h3 {
       font-family: var(--fontFamilyHeadings);
       font-weight: var(--fontWeightRegular);
       font-style: normal;
@@ -288,13 +289,15 @@ ol.titleList {
 }
 
 .slimContent {
-  h3, h4 {
+  h3,
+  h4 {
     font-family: var(--fontFamilyHeadings);
     font-size: 20px;
     font-weight: 700;
     line-height: 140%; /* 28px */
 
-    + h4, + h3 {
+    + h4,
+    + h3 {
       margin-top: 0;
       margin-bottom: 20px;
     }
@@ -317,7 +320,9 @@ ol.titleList {
 }
 
 .colsSecondary {
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     color: var(--ctaSecondaryBG);
     margin-top: 0;
   }

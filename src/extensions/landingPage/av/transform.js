@@ -28,7 +28,7 @@ const formatMessage = (intl, id, defaultMessage) => {
   // Check the messages map directly so a translation that happens to equal the
   // id is still returned (the previous round-trip heuristic discarded it).
   const has = !!intl.messages?.[id];
-  return has ? intl.formatMessage({ id }) : (defaultMessage ?? '');
+  return has ? intl.formatMessage({ id }) : defaultMessage ?? '';
 };
 
 export const transformCustomSections = ({ pageData, intl, extensionData }) => {
@@ -70,8 +70,10 @@ export const transformCustomSections = ({ pageData, intl, extensionData }) => {
 
       const cta1Text = formatMessage(intl, `AVHero2.${instanceId}.cta1Text`, '').trim();
       const cta2Text = formatMessage(intl, `AVHero2.${instanceId}.cta2Text`, '').trim();
-      const cta1Style = formatMessage(intl, `AVHero2.${instanceId}.cta1Style`, 'primary') || 'primary';
-      const cta2Style = formatMessage(intl, `AVHero2.${instanceId}.cta2Style`, 'secondary') || 'secondary';
+      const cta1Style =
+        formatMessage(intl, `AVHero2.${instanceId}.cta1Style`, 'primary') || 'primary';
+      const cta2Style =
+        formatMessage(intl, `AVHero2.${instanceId}.cta2Style`, 'secondary') || 'secondary';
       const mobileBackgroundImageUrl =
         formatMessage(intl, `AVHero2.${instanceId}.mobileBackgroundUrl`, '') || null;
 
@@ -100,8 +102,10 @@ export const transformCustomSections = ({ pageData, intl, extensionData }) => {
 
     if (isHero3SectionId(sectionId)) {
       const instanceId = sectionId.slice('av-hero3-'.length) || sectionId;
-      const cta1Style = formatMessage(intl, `AVHero3.${instanceId}.cta1Style`, 'primary') || 'primary';
-      const cta2Style = formatMessage(intl, `AVHero3.${instanceId}.cta2Style`, 'primary') || 'primary';
+      const cta1Style =
+        formatMessage(intl, `AVHero3.${instanceId}.cta1Style`, 'primary') || 'primary';
+      const cta2Style =
+        formatMessage(intl, `AVHero3.${instanceId}.cta2Style`, 'primary') || 'primary';
       return { ...section, sectionType: AV_HERO3_SECTION_TYPE, cta1Style, cta2Style };
     }
 

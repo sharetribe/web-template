@@ -43,9 +43,7 @@ function buildDropdownUsers(users) {
     .map(user => {
       const id = user?.id?.uuid;
       const displayName =
-        user?.attributes?.profile?.displayName ||
-        user?.attributes?.profile?.abbreviatedName ||
-        id;
+        user?.attributes?.profile?.displayName || user?.attributes?.profile?.abbreviatedName || id;
 
       return id
         ? {

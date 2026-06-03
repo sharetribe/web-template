@@ -214,11 +214,8 @@ const mapDispatchToProps = dispatch => ({
   onUpdateProfile: values => dispatch(updateProfile(values)),
 });
 
-const ManageAccountPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageAccountPageComponent);
+const ManageAccountPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageAccountPageComponent
+);
 
 export default ManageAccountPage;

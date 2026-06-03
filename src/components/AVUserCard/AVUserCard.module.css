@@ -55,10 +55,10 @@
   background: transparent;
   padding: 0 8px;
 
-  @media (--viewportSmall)  {
+  @media (--viewportSmall) {
     top: calc(50% + 25px);
   }
-  @media (--viewportMedium)  {
+  @media (--viewportMedium) {
     top: calc(50%);
   }
 }
@@ -74,13 +74,13 @@
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
   display: block;
 
-  @media (--viewportSmall)  {
+  @media (--viewportSmall) {
     font-size: 28px;
   }
-  @media (--viewportXMedium)  {
+  @media (--viewportXMedium) {
     font-size: 32px;
   }
-  @media (--viewportLargeWithPaddings)  {
+  @media (--viewportLargeWithPaddings) {
     font-size: 38px;
   }
 }

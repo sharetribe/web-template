@@ -35,13 +35,7 @@ import css from './BlockPriceSelector.module.css';
  * @returns {JSX.Element} component that renders block type: 'defaultBlock'
  */
 const BlockPriceSelector = props => {
-  const {
-    blockId,
-    className,
-    rootClassName,
-    toggles,
-    plans,
-  } = props;
+  const { blockId, className, rootClassName, toggles, plans } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   return (

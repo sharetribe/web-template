@@ -135,7 +135,9 @@ export const EditListingDeliveryForm = props => (
           <div className={css.fieldsGrid}>
             <FieldCheckbox
               id={formId ? `${formId}.pickup` : 'pickup'}
-              className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
+              className={classNames(css.deliveryCheckbox, {
+                [css.hidden]: !displayMultipleDelivery,
+              })}
               name="deliveryOptions"
               label={pickupLabel}
               value="pickup"
@@ -200,7 +202,9 @@ export const EditListingDeliveryForm = props => (
 
             <FieldCheckbox
               id={formId ? `${formId}.shipping` : 'shipping'}
-              className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
+              className={classNames(css.deliveryCheckbox, {
+                [css.hidden]: !displayMultipleDelivery,
+              })}
               name="deliveryOptions"
               label={shippingLabel}
               value="shipping"
@@ -263,7 +267,9 @@ export const EditListingDeliveryForm = props => (
                       : null
                   }
                   hideErrorMessage={!shippingEnabled}
-                  key={shippingEnabled ? 'additionalItemsValidation' : 'noAdditionalItemsValidation'}
+                  key={
+                    shippingEnabled ? 'additionalItemsValidation' : 'noAdditionalItemsValidation'
+                  }
                 />
               ) : null}
             </div>

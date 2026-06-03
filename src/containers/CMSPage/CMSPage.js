@@ -79,12 +79,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const CMSPage = compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(CMSPageComponent);
+const CMSPage = compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(CMSPageComponent);
 
 export default CMSPage;

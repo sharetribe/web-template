@@ -213,7 +213,7 @@ export const getDerivedRenderData = ({
   const authorNeedsPayoutDetails =
     ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected;
 
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={payoutDetailsWarningClassName}>

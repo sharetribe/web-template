@@ -99,6 +99,11 @@
   max-width: none;
   height: 100%;
   margin: 0 24px;
+
+  /* Center the pill-shaped search bar within the available space. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spacer {
@@ -131,14 +136,18 @@
   min-width: 280px;
 }
 
+/* Pill-shaped search bar: rounded outline, search icon on the left, borderless
+ * input. Centered within .searchLink. */
 .topbarSearchWithLeftPadding {
-  padding-left: 24px;
-  padding-right: 6;
-  height: var(--topbarHeightDesktop);
-
-  @media (--viewportLarge) {
-    padding-left: 34px;
-  }
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 520px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 999px;
+  background-color: var(--colorWhite);
 }
 
 /* These is used with Inbox, Sign up, and Log in */

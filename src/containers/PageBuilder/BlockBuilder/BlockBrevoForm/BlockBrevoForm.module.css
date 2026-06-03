@@ -24,7 +24,6 @@
   /* mobile — fields wrap and need extra vertical room */
   height: 900px;
 
-  
   @media (--viewportXSmall) {
     height: 850px;
   }

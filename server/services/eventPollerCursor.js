@@ -19,8 +19,7 @@ async function loadCursor() {
     const raw = await fs.promises.readFile(CURSOR_PATH, 'utf8');
     const parsed = JSON.parse(raw);
     return {
-      lastSequenceId:
-        typeof parsed.lastSequenceId === 'number' ? parsed.lastSequenceId : null,
+      lastSequenceId: typeof parsed.lastSequenceId === 'number' ? parsed.lastSequenceId : null,
       recentEventIds: Array.isArray(parsed.recentEventIds) ? parsed.recentEventIds : [],
     };
   } catch (err) {

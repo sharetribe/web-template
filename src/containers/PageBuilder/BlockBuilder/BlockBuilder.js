@@ -93,11 +93,15 @@ const BlockBuilder = props => {
     if (blockCtaOverride) {
       customProps.ctaButtonClass = blockCtaOverride;
       if (customProps.twoButtons) {
-        if (!customProps.twoButtons.cta1ClassName) customProps.ctaButtonPrimaryClass = blockCtaOverride;
-        if (!customProps.twoButtons.cta2ClassName) customProps.ctaButtonSecondaryClass = blockCtaOverride;
+        if (!customProps.twoButtons.cta1ClassName)
+          customProps.ctaButtonPrimaryClass = blockCtaOverride;
+        if (!customProps.twoButtons.cta2ClassName)
+          customProps.ctaButtonSecondaryClass = blockCtaOverride;
       }
     }
-    const tokens = block.blockName ? [...block.blockName.matchAll(/(\S+)\s*::/g)].map(m => m[1]) : [];
+    const tokens = block.blockName
+      ? [...block.blockName.matchAll(/(\S+)\s*::/g)].map(m => m[1])
+      : [];
     if (tokens.includes('ctaBtnCenter')) {
       customProps.ctaButtonWrapClass = sectionCss.ctaBtnCenterWrap;
     }

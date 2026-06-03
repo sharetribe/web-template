@@ -90,8 +90,7 @@ export const MyPurchasesPageComponent = props => {
   };
 
   const hasNoResults = !fetchInProgress && transactions.length === 0 && !fetchOrdersError;
-  const hasTransactions =
-    !fetchInProgress && currentUser?.id && transactions.length > 0;
+  const hasTransactions = !fetchInProgress && currentUser?.id && transactions.length > 0;
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -149,8 +148,7 @@ export const MyPurchasesPageComponent = props => {
 };
 
 const mapStateToProps = state => {
-  const { fetchInProgress, fetchOrdersError, pagination, transactionRefs } =
-    state.MyPurchasesPage;
+  const { fetchInProgress, fetchOrdersError, pagination, transactionRefs } = state.MyPurchasesPage;
   const { currentUser } = state.user;
   return {
     currentUser,

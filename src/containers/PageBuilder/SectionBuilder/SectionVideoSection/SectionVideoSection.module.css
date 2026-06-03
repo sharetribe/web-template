@@ -102,15 +102,27 @@
 }
 
 .titleSmall {
-  h1, h2, h3 { font-size: 22px; }
+  h1,
+  h2,
+  h3 {
+    font-size: 22px;
+  }
 
   @media (min-width: 768px) {
-    h1, h2, h3 { font-size: 28px; }
+    h1,
+    h2,
+    h3 {
+      font-size: 28px;
+    }
   }
 }
 
 .titleBlue {
-  h1, h2, h3 { color: var(--avBlue); }
+  h1,
+  h2,
+  h3 {
+    color: var(--avBlue);
+  }
 }
 
 .description {
@@ -131,5 +143,7 @@
 }
 
 .descriptionGray {
-  p { color: var(--colorGrey500); }
+  p {
+    color: var(--colorGrey500);
+  }
 }

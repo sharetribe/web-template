@@ -4,8 +4,12 @@ describe('landingPage AV transform', () => {
   it('returns original data when extension is inactive', () => {
     const pageData = { sections: [{ sectionId: 'plain' }] };
 
-    expect(transformCustomSections({ pageData, extensionData: { hasCustomSections: false } })).toBe(pageData);
-    expect(transformCustomSections({ pageData: null, extensionData: { hasCustomSections: true } })).toBeNull();
+    expect(transformCustomSections({ pageData, extensionData: { hasCustomSections: false } })).toBe(
+      pageData
+    );
+    expect(
+      transformCustomSections({ pageData: null, extensionData: { hasCustomSections: true } })
+    ).toBeNull();
   });
 
   it('maps custom section types and injects listing data', () => {
@@ -89,12 +93,15 @@ describe('landingPage AV transform', () => {
   it('maps avSelectedCats sections and preserves CMS blocks', () => {
     const mockBlocks = [
       { blockId: 'b1', blockName: 'blazers', media: { fieldType: 'image' } },
-      { blockId: 'b2', blockName: 'dresses', title: { content: 'Dresses' }, media: { fieldType: 'image' } },
+      {
+        blockId: 'b2',
+        blockName: 'dresses',
+        title: { content: 'Dresses' },
+        media: { fieldType: 'image' },
+      },
     ];
     const pageData = {
-      sections: [
-        { sectionId: 'av-selected-cats', blocks: mockBlocks },
-      ],
+      sections: [{ sectionId: 'av-selected-cats', blocks: mockBlocks }],
     };
     const extensionData = {
       hasCustomSections: true,

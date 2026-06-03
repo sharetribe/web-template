@@ -102,12 +102,9 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const TermsOfServicePage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(TermsOfServicePageComponent);
+const TermsOfServicePage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  TermsOfServicePageComponent
+);
 
 const TOS_ASSET_NAME = ASSET_NAME;
 export { TOS_ASSET_NAME, TermsOfServicePageComponent, TermsOfServiceContent };

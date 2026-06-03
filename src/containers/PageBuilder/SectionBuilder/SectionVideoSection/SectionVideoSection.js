@@ -50,25 +50,25 @@ const SectionVideoSection = props => {
   const rootClass = classNames(
     rootClassName || css.root,
     className,
-    customOption.isFullH ? css.rootFullH : null,
+    customOption.isFullH ? css.rootFullH : null
   );
 
   const titleClass = classNames(
     css.title,
     customOption.isSmallerT || customOption.isMediumT ? css.titleSmall : null,
-    customOption.isBlueTitle ? css.titleBlue : null,
+    customOption.isBlueTitle ? css.titleBlue : null
   );
 
   const descriptionClass = classNames(
     css.description,
-    customOption.hasTextGray ? css.descriptionGray : null,
+    customOption.hasTextGray ? css.descriptionGray : null
   );
 
   const contentPaneClass = classNames(
     css.contentPane,
     !videoUrl ? css.fullWidth : null,
     customOption.hasPaddings ? css.contentPanePadded : null,
-    customOption.isCenterTitleText ? css.contentPaneCentered : null,
+    customOption.isCenterTitleText ? css.contentPaneCentered : null
   );
 
   return (

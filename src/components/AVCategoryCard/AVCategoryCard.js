@@ -11,7 +11,10 @@ const IMAGE_VARIANTS = ['original400', 'original800', 'original1200', 'original2
 // only the first word is capitalized; everything else stays lowercase.
 // Callers should prefer passing the `name` prop to override this fallback.
 const formatCategoryName = id => {
-  const lower = (id || '').replace(/-/g, ' ').toLowerCase().trim();
+  const lower = (id || '')
+    .replace(/-/g, ' ')
+    .toLowerCase()
+    .trim();
   return lower ? lower.charAt(0).toUpperCase() + lower.slice(1) : '';
 };
 

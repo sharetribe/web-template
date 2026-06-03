@@ -67,28 +67,32 @@
 }
 
 .desktopIcon {
-  height: var(--topbarHeightDesktop);
+  height: auto;
   border: none;
-  padding-top: 2px;
 
   display: flex;
-  width: 24px;
+  align-items: center;
+  width: 20px;
   align-self: stretch;
-  background-color: var(--colorWhite);
+  background-color: transparent;
 }
 
 .desktopInput {
   composes: p from global;
   flex-grow: 1;
   /* Font */
-  height: var(--topbarHeightDesktop);
+  height: 100%;
+  font-size: 19px;
+  letter-spacing: 1px;
+  font-weight: var(--fontWeightSemiBold);
   line-height: unset;
-  
+
   /* Borders — reset AV global override */
   border: none !important;
   border-bottom: none !important;
   padding-top: 0;
   padding-bottom: 0;
+  background-color: transparent;
 
   /* Search text gets ellipsis if it's too wide */
   text-overflow: ellipsis;
@@ -113,8 +117,10 @@
 
   /* Placeholder text might be too wide */
   &::placeholder {
-    font-size: 17px;
-    letter-spacing: -1px;
+    font-size: 19px;
+    letter-spacing: 1px;
+    font-weight: var(--fontWeightSemiBold);
+    color: var(--colorGrey500);
     text-overflow: ellipsis;
     overflow-x: hidden;
     transition: var(--transitionStyleButton);
@@ -221,7 +227,7 @@
 }
 
 .iconSvgGroup {
-  stroke: var(--marketplaceColor);
+  stroke: var(--colorGrey700);
   stroke-width: 1px;
 
   @media (--viewportMedium) {

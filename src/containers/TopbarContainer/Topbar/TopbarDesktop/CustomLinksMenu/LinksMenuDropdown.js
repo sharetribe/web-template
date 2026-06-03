@@ -20,12 +20,7 @@ const DropdownLink = ({ item, currentPage }) => {
   const linkClass = classNames(css.menuLink, { [css.currentPage]: isActive });
 
   return type === 'internal' && route ? (
-    <NamedLink
-      name={route.name}
-      params={route.params}
-      to={route.to}
-      className={linkClass}
-    >
+    <NamedLink name={route.name} params={route.params} to={route.to} className={linkClass}>
       <span className={css.menuItemBorder} />
       {text}
     </NamedLink>
@@ -49,10 +44,7 @@ const LinksMenuDropdown = ({ id, label, items, currentPage }) => {
 
   return (
     <Menu id={id} isOpen={isOpen} onToggleActive={setIsOpen}>
-      <MenuLabel
-        className={css.linkMenuLabel}
-        isOpenClassName={css.linkMenuIsOpen}
-      >
+      <MenuLabel className={css.linkMenuLabel} isOpenClassName={css.linkMenuIsOpen}>
         <MenuLabelContent label={label} isOpen={isOpen} />
       </MenuLabel>
       <MenuContent className={css.linkMenuContent}>

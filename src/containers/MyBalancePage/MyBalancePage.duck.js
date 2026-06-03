@@ -169,7 +169,9 @@ const fetchSummaryPayloadCreator = async (_, { rejectWithValue }) => {
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      return rejectWithValue(storableError(new Error(body.error || `summary_failed_${res.status}`)));
+      return rejectWithValue(
+        storableError(new Error(body.error || `summary_failed_${res.status}`))
+      );
     }
     const body = await res.json();
     return body;

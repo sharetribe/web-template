@@ -18,7 +18,7 @@
   &:hover + label .swatch,
   &:focus + label .swatch,
   &:checked + label .swatch {
-    opacity: .8;
+    opacity: 0.8;
   }
 
   /* Display the "check" when checked */

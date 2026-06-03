@@ -266,11 +266,7 @@ describe('processImportJob', () => {
     getIntegrationSdk.mockReturnValue(mockSdk);
 
     const job = createJob(1);
-    await processImportJob(
-      job.id,
-      [makeRow({ locationAddress: 'CDMX, México' })],
-      new Map()
-    );
+    await processImportJob(job.id, [makeRow({ locationAddress: 'CDMX, México' })], new Map());
 
     const params = mockSdk.listings.create.mock.calls[0][0];
     expect(params.publicData.location).toEqual({ address: 'CDMX, México' });

@@ -87,12 +87,7 @@ const PhotosFormContent = props => {
   const submitReady = (updated && pristineSinceLastSubmit) || ready;
   const submitInProgress = updateInProgress;
   const submitDisabled =
-    invalid ||
-    disabled ||
-    submitInProgress ||
-    imageUploadRequested ||
-    ready ||
-    tooFewImages;
+    invalid || disabled || submitInProgress || imageUploadRequested || ready || tooFewImages;
 
   const classes = classNames(css.root, className);
 
@@ -145,10 +140,7 @@ const PhotosFormContent = props => {
         </div>
       ) : null}
 
-      <ImageUploadError
-        uploadOverLimit={uploadOverLimit}
-        uploadImageError={uploadImageError}
-      />
+      <ImageUploadError uploadOverLimit={uploadOverLimit} uploadImageError={uploadImageError} />
 
       <p className={css.tip}>
         <FormattedMessage id="EditListingPhotosForm.addImagesTip" />

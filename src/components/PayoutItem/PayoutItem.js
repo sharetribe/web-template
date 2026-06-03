@@ -33,8 +33,13 @@ const PayoutItem = props => {
   const { tx } = props;
   const intl = useIntl();
 
-  const { lastTransition, lastTransitionedAt, payinTotal, payoutTotal, processName } =
-    tx.attributes;
+  const {
+    lastTransition,
+    lastTransitionedAt,
+    payinTotal,
+    payoutTotal,
+    processName,
+  } = tx.attributes;
 
   const listing = tx.listing;
   const customer = tx.customer;
@@ -56,11 +61,7 @@ const PayoutItem = props => {
     <div className={css.root}>
       <div className={css.infoSection}>
         <div className={css.titleRow}>
-          <NamedLink
-            className={css.listingLink}
-            name="SaleDetailsPage"
-            params={{ id: txId }}
-          >
+          <NamedLink className={css.listingLink} name="SaleDetailsPage" params={{ id: txId }}>
             {listingTitle}
           </NamedLink>
           <StatusBadge status={status} intl={intl} />
@@ -72,15 +73,11 @@ const PayoutItem = props => {
       </div>
       <div className={css.amountSection}>
         <div className={css.amountRow}>
-          <span className={css.amountLabel}>
-            {intl.formatMessage({ id: 'PayoutItem.gross' })}
-          </span>
+          <span className={css.amountLabel}>{intl.formatMessage({ id: 'PayoutItem.gross' })}</span>
           <span className={css.amountGross}>{formattedPayin}</span>
         </div>
         <div className={css.amountRow}>
-          <span className={css.amountLabel}>
-            {intl.formatMessage({ id: 'PayoutItem.net' })}
-          </span>
+          <span className={css.amountLabel}>{intl.formatMessage({ id: 'PayoutItem.net' })}</span>
           <span className={css.amountNet}>{formattedPayout}</span>
         </div>
       </div>

@@ -22,11 +22,11 @@ const IconSwatch = props => {
   const { className } = props;
   return (
     <svg className={className} width="14" height="14" xmlns="http://www.w3.org/2000/svg">
-        <path
-          className={css.checked}
-          d="M5.636621 10.7824771L3.3573694 8.6447948c-.4764924-.4739011-.4764924-1.2418639 0-1.7181952.4777142-.473901 1.251098-.473901 1.7288122 0l1.260291 1.1254782 2.8256927-4.5462307c.3934117-.5431636 1.1545778-.6695372 1.7055985-.278265.5473554.3912721.6731983 1.150729.2797866 1.6951077l-3.6650524 5.709111c-.2199195.306213-.5803433.5067097-.9920816.5067097-.3225487 0-.6328797-.1263736-.8637952-.3560334z"
-          fill="#FFF"
-        />
+      <path
+        className={css.checked}
+        d="M5.636621 10.7824771L3.3573694 8.6447948c-.4764924-.4739011-.4764924-1.2418639 0-1.7181952.4777142-.473901 1.251098-.473901 1.7288122 0l1.260291 1.1254782 2.8256927-4.5462307c.3934117-.5431636 1.1545778-.6695372 1.7055985-.278265.5473554.3912721.6731983 1.150729.2797866 1.6951077l-3.6650524 5.709111c-.2199195.306213-.5803433.5067097-.9920816.5067097-.3225487 0-.6328797-.1263736-.8637952-.3560334z"
+        fill="#FFF"
+      />
     </svg>
   );
 };
@@ -47,15 +47,7 @@ const IconSwatch = props => {
  * @returns {JSX.Element} Final Form Field containing checkbox input
  */
 const FieldSwatch = props => {
-  const {
-    rootClassName,
-    className,
-    svgClassName,
-    textClassName,
-    id,
-    label,
-    ...rest
-  } = props;
+  const { rootClassName, className, svgClassName, textClassName, id, label, ...rest } = props;
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -74,14 +66,14 @@ const FieldSwatch = props => {
 
   const swatchColor = swatchColors[rest.value]
     ? {
-      backgroundColor: swatchColors[rest.value],
+        backgroundColor: swatchColors[rest.value],
       }
     : swatchBg[rest.value]
-        ? {
-          backgroundImage: 'url(' + swatchBg[rest.value] + ')',
-          backgroundSize: 'contain',
-        }
-      : {};
+    ? {
+        backgroundImage: 'url(' + swatchBg[rest.value] + ')',
+        backgroundSize: 'contain',
+      }
+    : {};
 
   const disabledColorMaybe = rest.disabled
     ? {
@@ -112,8 +104,6 @@ const FieldSwatch = props => {
         </span>
         <span className={classNames(css.text, textClassName || css.textRoot)}>{label}</span>
       </label>
-
-      
     </span>
   );
 };
@@ -139,6 +129,6 @@ export const swatchBg = {
   'animal-print': animalprintImg,
   'floral-print': floralprintImg,
   multicolor: multicolorImg,
-}
+};
 
 export default FieldSwatch;

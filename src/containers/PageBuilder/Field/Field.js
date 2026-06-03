@@ -139,7 +139,7 @@ const getFieldConfig = (data, defaultFieldComponents, options) => {
     ...defaultFieldComponents(options?.defaultClasses?.defaultLink),
     ...customFieldComponents,
   };
-  return fieldMapping[(data?.fieldType)];
+  return fieldMapping[data?.fieldType];
 };
 
 // This is also useful for fields that are not used as components on their own

@@ -1,92 +1,92 @@
 .group {
-    position: relative;
+  position: relative;
 }
 
 .label {
-    display: block;
+  display: block;
 }
 
 .labelText {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
 .disclaimerText {
-    color: var(--avGray1);
-    font-weight: var(--fontWeightMedium);
-    font-style: normal;
-    font-size: 12px;
-    line-height: 14px;
-    letter-spacing: 1px;
-    word-break: auto-phrase;
+  color: var(--avGray1);
+  font-weight: var(--fontWeightMedium);
+  font-style: normal;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 1px;
+  word-break: auto-phrase;
 }
 
 .input {
-    width: 100%;
-    padding: 10px 30px 0 2px;
-    /* !important needed to beat avBrandOverrides.css :root input:not(...) rule (specificity 0,3,1) */
+  width: 100%;
+  padding: 10px 30px 0 2px;
+  /* !important needed to beat avBrandOverrides.css :root input:not(...) rule (specificity 0,3,1) */
+  border: 0 !important;
+  border-bottom: 1px solid var(--colorGrey300) !important;
+  border-radius: 0 !important;
+  background-color: transparent;
+  color: var(--avGray1);
+  letter-spacing: 1px;
+
+  /* Separated from :hover/:focus — browsers discard the entire rule block
+       when any selector in a comma list is unrecognised (e.g. :-internal-autofill-selected) */
+  &:-webkit-autofill {
+    -webkit-text-fill-color: var(--avGray1);
+    -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:hover {
+    color: var(--avGray1);
+    background-color: transparent;
+    outline: none;
     border: 0 !important;
     border-bottom: 1px solid var(--colorGrey300) !important;
-    border-radius: 0 !important;
-    background-color: transparent;
+    box-shadow: none !important;
+  }
+
+  &:focus {
     color: var(--avGray1);
-    letter-spacing: 1px;
-
-    /* Separated from :hover/:focus — browsers discard the entire rule block
-       when any selector in a comma list is unrecognised (e.g. :-internal-autofill-selected) */
-    &:-webkit-autofill {
-        -webkit-text-fill-color: var(--avGray1);
-        -webkit-box-shadow: 0 0 0 1000px transparent inset;
-        transition: background-color 5000s ease-in-out 0s;
-    }
-
-    &:hover {
-        color: var(--avGray1);
-        background-color: transparent;
-        outline: none;
-        border: 0 !important;
-        border-bottom: 1px solid var(--colorGrey300) !important;
-        box-shadow: none !important;
-    }
-
-    &:focus {
-        color: var(--avGray1);
-        background-color: transparent;
-        outline: none;
-        border: 0 !important;
-        border-bottom: 1px solid var(--colorGrey300) !important;
-        box-shadow: none !important;
-    }
+    background-color: transparent;
+    outline: none;
+    border: 0 !important;
+    border-bottom: 1px solid var(--colorGrey300) !important;
+    box-shadow: none !important;
+  }
 }
 
 .button {
-    margin: 0;
-    padding: 0;
-    width: 18px;
-    height: 18px;
-    border: none;
-    outline: none;
-    position: absolute;
-    top: 18px;
-    right: 6px;
-    cursor: pointer;
+  margin: 0;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  border: none;
+  outline: none;
+  position: absolute;
+  top: 18px;
+  right: 6px;
+  cursor: pointer;
 
-    > svg {
-        display: block;
-    }
+  > svg {
+    display: block;
+  }
 }
 
 .msgOk {
-    font-weight: var(--fontWeightBold);
-    font-size: 14px;
-    color: #E6E56A;
-    margin-top: .5rem;
+  font-weight: var(--fontWeightBold);
+  font-size: 14px;
+  color: #e6e56a;
+  margin-top: 0.5rem;
 }
 
 .msgError {
-    font-weight: var(--fontWeightBold);
-    font-size: 14px;
-    color: var(--avPink);
-    margin-top: .5rem;
+  font-weight: var(--fontWeightBold);
+  font-size: 14px;
+  color: var(--avPink);
+  margin-top: 0.5rem;
 }

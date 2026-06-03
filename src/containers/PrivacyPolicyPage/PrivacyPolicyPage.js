@@ -101,12 +101,9 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const PrivacyPolicyPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(PrivacyPolicyPageComponent);
+const PrivacyPolicyPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  PrivacyPolicyPageComponent
+);
 
 const PRIVACY_POLICY_ASSET_NAME = ASSET_NAME;
 export { PRIVACY_POLICY_ASSET_NAME, PrivacyPolicyPageComponent, PrivacyPolicyContent };

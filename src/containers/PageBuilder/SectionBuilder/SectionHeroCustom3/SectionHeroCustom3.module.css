@@ -43,7 +43,12 @@
   justify-content: flex-end;
 
   /* Default heading + text color for overlay */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: var(--colorWhite);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     margin: 0 0 12px;

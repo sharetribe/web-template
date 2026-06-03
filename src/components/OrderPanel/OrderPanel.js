@@ -100,9 +100,9 @@ const priceData = (price, currency, intl) => {
 const customFormatPrice = (price, currency, intl) => {
   const amount = price.amount;
   if (currency === 'MXN') {
-    const decimal = ( amount / 100).toFixed(2); // Convert from cents.
+    const decimal = (amount / 100).toFixed(2); // Convert from cents.
     const formattedPrice = `$${decimal.replace(',', '.')}`;
-    return {formattedPrice, priceTitle: formattedPrice};   // Force dot.
+    return { formattedPrice, priceTitle: formattedPrice }; // Force dot.
   }
 
   const formattedPrice = formatMoney(intl, price);
@@ -185,10 +185,7 @@ const PriceMaybe = props => {
     ? customFormatPrice(originalPriceMoney, marketplaceCurrency, intl).formattedPrice
     : null;
 
-  
-  const priceValue = (
-    <span className={css.priceValue}>{formattedPrice}</span>
-  );
+  const priceValue = <span className={css.priceValue}>{formattedPrice}</span>;
   const pricePerUnit = (
     <span className={css.perUnit}>
       <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />

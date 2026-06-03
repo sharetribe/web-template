@@ -33,7 +33,9 @@ const API_URL = `https://graph.facebook.com/v20.0/${PHONE_NUMBER_ID}/messages`;
  */
 async function sendWhatsApp({ phone, templateName, params = [], languageCode = 'es_MX' }) {
   if (!ACCESS_TOKEN || !PHONE_NUMBER_ID) {
-    console.warn('[whatsappService] WHATSAPP_ACCESS_TOKEN or WHATSAPP_PHONE_NUMBER_ID not set — skipping');
+    console.warn(
+      '[whatsappService] WHATSAPP_ACCESS_TOKEN or WHATSAPP_PHONE_NUMBER_ID not set — skipping'
+    );
     return;
   }
 
@@ -74,7 +76,11 @@ async function sendWhatsApp({ phone, templateName, params = [], languageCode = '
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    console.error(`[whatsappService] Meta API error for template "${templateName}":`, response.status, body);
+    console.error(
+      `[whatsappService] Meta API error for template "${templateName}":`,
+      response.status,
+      body
+    );
     throw new Error(`WhatsApp API failed: ${response.status}`);
   }
 

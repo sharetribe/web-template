@@ -30,6 +30,9 @@ export const composePageBuilderExtensions = extensionHooks => {
         return mergePageBuilderOptions(collected, options);
       }, undefined),
     transformPageData: args =>
-      hooks.reduce((pageData, hook) => hook.transformPageData({ ...args, pageData }), args.pageData),
+      hooks.reduce(
+        (pageData, hook) => hook.transformPageData({ ...args, pageData }),
+        args.pageData
+      ),
   };
 };

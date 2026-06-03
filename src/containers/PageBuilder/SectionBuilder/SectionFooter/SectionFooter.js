@@ -88,7 +88,9 @@ const SectionFooter = props => {
 
   const intl = useIntl();
   const belowSloganText = intl.formatMessage({ id: 'Footer.belowSlogan' });
-  const belowSlogan = belowSloganText ? renderMarkdown(belowSloganText.replace(/\n/g, '  \n')) : null;
+  const belowSlogan = belowSloganText
+    ? renderMarkdown(belowSloganText.replace(/\n/g, '  \n'))
+    : null;
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
@@ -109,7 +111,9 @@ const SectionFooter = props => {
   const logoLayout = isMobileLayout ? 'mobile' : 'desktop';
 
   // use block builder instead of mapping blocks manually
-  const blocksHasSocial = blocks.some((obj, idx, list) => obj.blockName?.startsWith('social links ::') ?? false);
+  const blocksHasSocial = blocks.some(
+    (obj, idx, list) => obj.blockName?.startsWith('social links ::') ?? false
+  );
 
   return (
     <AVSectionContainer
@@ -149,7 +153,12 @@ const SectionFooter = props => {
             <Field data={copyright} className={css.copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} customProps={{socialLinks: linksWithBlockId}} />
+            <BlockBuilder
+              blocks={blocks}
+              sectionId={sectionId}
+              options={options}
+              customProps={{ socialLinks: linksWithBlockId }}
+            />
           </div>
         </div>
       </div>

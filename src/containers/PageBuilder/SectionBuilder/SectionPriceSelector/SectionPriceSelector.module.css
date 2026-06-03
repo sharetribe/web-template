@@ -41,9 +41,9 @@
   cursor: pointer;
 
   &:hover {
-      background-color: var(--ctaSecondaryBG);
-      color: var(--ctaSecondary);
-      border: 1px solid var(--ctaSecondaryBG);
+    background-color: var(--ctaSecondaryBG);
+    color: var(--ctaSecondary);
+    border: 1px solid var(--ctaSecondaryBG);
   }
 }
 

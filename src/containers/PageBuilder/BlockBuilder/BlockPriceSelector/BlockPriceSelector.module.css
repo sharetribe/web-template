@@ -67,7 +67,8 @@
     line-height: 138%; /* 24.84px */
   }
 
-  h3, p {
+  h3,
+  p {
     padding: 0;
   }
 }

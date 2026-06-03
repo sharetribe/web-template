@@ -80,7 +80,12 @@ describe('landingPage AV sections helpers', () => {
   });
 
   it('getTagListingsSections returns empty object when no tag sections', () => {
-    const pageData = { sections: [{ sectionId: 'av-hero' }, { sectionId: 'av-selections-1', blocks: [{ blockName: 'id' }] }] };
+    const pageData = {
+      sections: [
+        { sectionId: 'av-hero' },
+        { sectionId: 'av-selections-1', blocks: [{ blockName: 'id' }] },
+      ],
+    };
     expect(getTagListingsSections(pageData)).toEqual({});
   });
 

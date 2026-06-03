@@ -75,11 +75,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchFeaturedListings({ sectionId, parentPage, listingImageConfig, allSections })),
 });
 
-const LandingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(LandingPageComponent);
+const LandingPage = compose(connect(mapStateToProps, mapDispatchToProps))(LandingPageComponent);
 
 export default LandingPage;

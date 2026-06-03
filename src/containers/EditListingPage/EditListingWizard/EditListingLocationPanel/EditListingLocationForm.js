@@ -128,7 +128,10 @@ export const EditListingLocationForm = props => (
               type="text"
               name="building"
               id={`${formId}building`}
-              label={intl.formatMessage({ id: 'EditListingLocationForm.building' }, { optionalText })}
+              label={intl.formatMessage(
+                { id: 'EditListingLocationForm.building' },
+                { optionalText }
+              )}
               placeholder={intl.formatMessage({
                 id: 'EditListingLocationForm.buildingPlaceholder',
               })}

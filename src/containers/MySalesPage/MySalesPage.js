@@ -90,8 +90,7 @@ export const MySalesPageComponent = props => {
   };
 
   const hasNoResults = !fetchInProgress && transactions.length === 0 && !fetchSalesError;
-  const hasTransactions =
-    !fetchInProgress && currentUser?.id && transactions.length > 0;
+  const hasTransactions = !fetchInProgress && currentUser?.id && transactions.length > 0;
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -103,10 +102,7 @@ export const MySalesPageComponent = props => {
               mobileRootClassName={css.mobileTopbar}
               desktopClassName={css.desktopTopbar}
             />
-            <UserNav
-              currentPage="MySalesPage"
-              showManageListingsLink={showManageListingsLink}
-            />
+            <UserNav currentPage="MySalesPage" showManageListingsLink={showManageListingsLink} />
           </>
         }
         sideNav={
@@ -149,8 +145,7 @@ export const MySalesPageComponent = props => {
 };
 
 const mapStateToProps = state => {
-  const { fetchInProgress, fetchSalesError, pagination, transactionRefs } =
-    state.MySalesPage;
+  const { fetchInProgress, fetchSalesError, pagination, transactionRefs } = state.MySalesPage;
   const { currentUser } = state.user;
   return {
     currentUser,

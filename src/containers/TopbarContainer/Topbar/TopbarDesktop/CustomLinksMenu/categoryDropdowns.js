@@ -108,16 +108,10 @@ const resolveDropdownItem = (item, categoryConfiguration) => {
  * @param {Array} fallbackItems local fallback item definitions
  * @returns {Array} dropdown items supported by LinksMenuDropdown
  */
-export const resolveDropdownMenuItems = (
-  items = [],
-  categoryConfiguration,
-  fallbackItems = []
-) => {
+export const resolveDropdownMenuItems = (items = [], categoryConfiguration, fallbackItems = []) => {
   const sourceItems = Array.isArray(items) && items.length > 0 ? items : fallbackItems;
 
-  return sourceItems
-    .map(item => resolveDropdownItem(item, categoryConfiguration))
-    .filter(Boolean);
+  return sourceItems.map(item => resolveDropdownItem(item, categoryConfiguration)).filter(Boolean);
 };
 
 export const getCategoryDropdownsConfig = topbarData => topbarData?.categoryDropdowns || {};

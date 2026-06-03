@@ -42,15 +42,14 @@ const EarningsEstimator = props => {
   const earnings = gross - marketplaceCut - stripeCut;
 
   const fmt = amount => formatMoney(intl, new Money(amount, currency));
-  const fixedFeeFormatted = providerCommissionFixedAmountInSubunits > 0
-    ? fmt(providerCommissionFixedAmountInSubunits)
-    : null;
+  const fixedFeeFormatted =
+    providerCommissionFixedAmountInSubunits > 0
+      ? fmt(providerCommissionFixedAmountInSubunits)
+      : null;
 
   return (
     <div className={css.root}>
-      <div className={css.title}>
-        {intl.formatMessage({ id: 'EarningsEstimator.title' })}
-      </div>
+      <div className={css.title}>{intl.formatMessage({ id: 'EarningsEstimator.title' })}</div>
 
       <div className={css.lineItem}>
         <span>{intl.formatMessage({ id: 'EarningsEstimator.listingPrice' })}</span>
@@ -81,9 +80,7 @@ const EarningsEstimator = props => {
         <span>{fmt(Math.max(0, earnings))}</span>
       </div>
 
-      <p className={css.disclaimer}>
-        {intl.formatMessage({ id: 'EarningsEstimator.disclaimer' })}
-      </p>
+      <p className={css.disclaimer}>{intl.formatMessage({ id: 'EarningsEstimator.disclaimer' })}</p>
     </div>
   );
 };

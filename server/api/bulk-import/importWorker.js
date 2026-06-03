@@ -65,7 +65,9 @@ async function uploadImage(sdk, imageBuffer, filename) {
     const res = await sdk.images.upload({ image: tmpFile });
     return res.data.data.id.uuid;
   } finally {
-    try { fs.unlinkSync(tmpFile); } catch (_) {}
+    try {
+      fs.unlinkSync(tmpFile);
+    } catch (_) {}
   }
 }
 
@@ -235,9 +237,7 @@ async function processImportJob(jobId, rows, imageMap) {
 
   updateJob(jobId, { status: 'completed' });
 
-  console.log(
-    `[bulk-import] Job ${jobId} completed: ${succeeded} succeeded, ${failed} failed`
-  );
+  console.log(`[bulk-import] Job ${jobId} completed: ${succeeded} succeeded, ${failed} failed`);
 }
 
 module.exports = { processImportJob, serializeSdkError };

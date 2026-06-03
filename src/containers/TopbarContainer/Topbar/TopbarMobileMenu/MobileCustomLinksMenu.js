@@ -29,7 +29,10 @@ const AccordionSection = ({ labelId, children, open, onToggle }) => {
   return (
     <>
       <li
-        className={classNames(css.mobileNavSectionTitle, open ? css.mobileNavSectionTitleOpen : null)}
+        className={classNames(
+          css.mobileNavSectionTitle,
+          open ? css.mobileNavSectionTitleOpen : null
+        )}
         onClick={onToggle}
         role="button"
         aria-expanded={open}
@@ -82,8 +85,12 @@ const MobileCustomLinksMenu = ({ intl }) => {
   }, [mounted]);
 
   const categoryDropdowns = getCategoryDropdownsConfig(localTopbarData);
-  const fallbackDropdown1 = localTopbarData ? [] : defaultTopbarCategoryDropdowns.menuLinksDropdown1;
-  const fallbackDropdown2 = localTopbarData ? [] : defaultTopbarCategoryDropdowns.menuLinksDropdown2;
+  const fallbackDropdown1 = localTopbarData
+    ? []
+    : defaultTopbarCategoryDropdowns.menuLinksDropdown1;
+  const fallbackDropdown2 = localTopbarData
+    ? []
+    : defaultTopbarCategoryDropdowns.menuLinksDropdown2;
 
   const items1 = resolveDropdownMenuItems(
     categoryDropdowns.menuLinksDropdown1,

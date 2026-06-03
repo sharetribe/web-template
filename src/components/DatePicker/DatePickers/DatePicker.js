@@ -324,7 +324,7 @@ const DatePicker = props => {
     } else if (
       range &&
       isDateArray(value) &&
-      (value.length > 0 && isDateRangeChanged(value, currentValue))
+      value.length > 0 && isDateRangeChanged(value, currentValue)
     ) {
       if (isDate(value[0])) {
         setCurrentDate(value[0]);

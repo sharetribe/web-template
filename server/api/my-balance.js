@@ -122,7 +122,9 @@ router.get('/summary', async (req, res) => {
   }
 
   // Cache key incorporates the transition shape so deploy-time process changes invalidate.
-  const cacheKey = `${userId}|${completed.join(',')}|${refunded.join(',')}|${processNames.join(',')}`;
+  const cacheKey = `${userId}|${completed.join(',')}|${refunded.join(',')}|${processNames.join(
+    ','
+  )}`;
   const { data: cached } = summaryCache[cacheKey] || {};
   if (cached) {
     return res.json({ ok: true, ...cached });

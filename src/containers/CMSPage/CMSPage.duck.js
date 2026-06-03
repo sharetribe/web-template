@@ -33,18 +33,17 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
   const pageId = params.pageId;
 
   // Fetch the CMS page asset (required)
-  const pageFetch = dispatch(
-    fetchPageAssets({ [pageId]: `content/pages/${pageId}.json` }, false)
-  );
+  const pageFetch = dispatch(fetchPageAssets({ [pageId]: `content/pages/${pageId}.json` }, false));
 
   // Fetch the pricing plans asset (optional).
   // This uses the SDK directly to avoid the race condition in fetchPageAssets
   // when multiple dispatches run concurrently. The data is stored in the
   // CMSPage's own slice rather than hostedAssets.
   const version = getState()?.hostedAssets?.version;
-  const fetchAsset = version != null
-    ? path => sdk.assetByVersion({ path, version })
-    : path => sdk.assetByAlias({ path, alias: 'latest' });
+  const fetchAsset =
+    version != null
+      ? path => sdk.assetByVersion({ path, version })
+      : path => sdk.assetByAlias({ path, alias: 'latest' });
 
   const pricingFetch = fetchAsset(PRICING_PLANS_ASSET_PATH)
     .then(response => {

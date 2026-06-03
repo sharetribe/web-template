@@ -2,12 +2,7 @@ import { moveListingFieldToEnd } from './configHelpers';
 
 describe('moveListingFieldToEnd', () => {
   it('moves the requested field to the end while preserving other order', () => {
-    const fields = [
-      { key: 'color' },
-      { key: 'tags' },
-      { key: 'all_sizes' },
-      { key: 'brand' },
-    ];
+    const fields = [{ key: 'color' }, { key: 'tags' }, { key: 'all_sizes' }, { key: 'brand' }];
 
     const reordered = moveListingFieldToEnd(fields, 'tags');
 

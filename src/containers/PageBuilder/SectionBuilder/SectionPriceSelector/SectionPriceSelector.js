@@ -43,48 +43,48 @@ import AVSectionContainer from '../SectionContainer/AVSectionContainer';
  * @returns {JSX.Element} Section for article content
  */
 const SectionPriceSelector = props => {
-    const {
-        sectionId,
-        className,
-        rootClassName,
-        defaultClasses,
-        title,
-        description,
-        appearance,
-        callToAction,
-        options,
-        customOption,
-        toggles,
-        plans,
-    } = props;
+  const {
+    sectionId,
+    className,
+    rootClassName,
+    defaultClasses,
+    title,
+    description,
+    appearance,
+    callToAction,
+    options,
+    customOption,
+    toggles,
+    plans,
+  } = props;
 
-    // If external mapping has been included for fields
-    // E.g. { h1: { component: MyAwesomeHeader } }
-    const fieldComponents = options?.fieldComponents;
-    const fieldOptions = { fieldComponents };
+  // If external mapping has been included for fields
+  // E.g. { h1: { component: MyAwesomeHeader } }
+  const fieldComponents = options?.fieldComponents;
+  const fieldOptions = { fieldComponents };
 
-    const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
+  const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 
-    return (
-        <AVSectionContainer
-            id={sectionId}
-            className={className}
-            rootClassName={rootClassName}
-            appearance={appearance}
-            options={fieldOptions}
-            customOption={customOption}
-        >
-            {hasHeaderFields ? (
-                <header className={defaultClasses.sectionDetails}>
-                    <Field data={title} className={defaultClasses.title} options={fieldOptions} />
-                    <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-                    <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
-                </header>
-            ) : null}
+  return (
+    <AVSectionContainer
+      id={sectionId}
+      className={className}
+      rootClassName={rootClassName}
+      appearance={appearance}
+      options={fieldOptions}
+      customOption={customOption}
+    >
+      {hasHeaderFields ? (
+        <header className={defaultClasses.sectionDetails}>
+          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
+          <Field data={description} className={defaultClasses.description} options={fieldOptions} />
+          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+        </header>
+      ) : null}
 
-            <PricingToggle plans={plans} toggles={toggles} />
-        </AVSectionContainer>
-    );
+      <PricingToggle plans={plans} toggles={toggles} />
+    </AVSectionContainer>
+  );
 };
 
 export default SectionPriceSelector;

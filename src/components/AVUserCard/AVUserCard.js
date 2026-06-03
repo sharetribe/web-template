@@ -29,19 +29,18 @@ const AVUserCard = props => {
 
   // Image from CMS block media (same structure as AVCategoryCard)
   const mediaVariants = overrideMedia?.image?.attributes?.variants || {};
-  const mediaUrl = (
-    mediaVariants['original800'] ||
-    mediaVariants['original400'] ||
-    mediaVariants['original1200'] ||
-    Object.values(mediaVariants)[0]
-  )?.url || null;
+  const mediaUrl =
+    (
+      mediaVariants['original800'] ||
+      mediaVariants['original400'] ||
+      mediaVariants['original1200'] ||
+      Object.values(mediaVariants)[0]
+    )?.url || null;
 
   // Fallback: profile image from SDK
   const profileVariants = user?.profileImage?.attributes?.variants || {};
   const profileUrl =
-    profileVariants['square-small2x']?.url ||
-    profileVariants['square-small']?.url ||
-    null;
+    profileVariants['square-small2x']?.url || profileVariants['square-small']?.url || null;
 
   const imageUrl = mediaUrl || profileUrl;
 
@@ -58,9 +57,7 @@ const AVUserCard = props => {
           <img src={imageUrl} alt={resolvedName} className={css.image} />
         ) : (
           <div className={css.imagePlaceholder}>
-            <span className={css.initials}>
-              {resolvedName.charAt(0).toUpperCase()}
-            </span>
+            <span className={css.initials}>{resolvedName.charAt(0).toUpperCase()}</span>
           </div>
         )}
         <div className={css.nameWrapper}>

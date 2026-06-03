@@ -63,18 +63,31 @@ const SectionHeroCustom = props => {
     <AVSectionContainer
       id={sectionId}
       className={classNames(className, css[classWrap] ?? '')}
-      rootClassName={classNames(rootClassName || css.root, customOption?.isShortHero ? css.shortHero : '')}
+      rootClassName={classNames(
+        rootClassName || css.root,
+        customOption?.isShortHero ? css.shortHero : ''
+      )}
       appearance={appearance}
       options={fieldOptions}
       customOption={customOption}
     >
       {hasHeaderFields ? (
-        <header className={classNames(defaultClasses.sectionDetails, isLanding ? css.landingVersion : '')}>
+        <header
+          className={classNames(defaultClasses.sectionDetails, isLanding ? css.landingVersion : '')}
+        >
           <Field data={title} className={classNames(defaultClasses.title)} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <div className={css.buttonWrap}>
-            <Field data={callToAction} className={defaultClasses.ctaButtonPrimary} options={fieldOptions} />
-            <Field data={callToAction2} className={defaultClasses.ctaButtonSecondary} options={fieldOptions} />
+            <Field
+              data={callToAction}
+              className={defaultClasses.ctaButtonPrimary}
+              options={fieldOptions}
+            />
+            <Field
+              data={callToAction2}
+              className={defaultClasses.ctaButtonSecondary}
+              options={fieldOptions}
+            />
           </div>
         </header>
       ) : null}

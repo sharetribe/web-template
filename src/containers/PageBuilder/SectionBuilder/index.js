@@ -14,6 +14,15 @@ import SectionRecommendedListings from './SectionRecommendedListings';
 // Main component: SectionBuilder
 import SectionBuilder from './SectionBuilder';
 
-export { SectionContainer, SectionColumns, SectionArticle, SectionFeatures, SectionCarousel, SectionHeroCustom, SectionPriceSelector, SectionRecommendedListings };
+export {
+  SectionContainer,
+  SectionColumns,
+  SectionArticle,
+  SectionFeatures,
+  SectionCarousel,
+  SectionHeroCustom,
+  SectionPriceSelector,
+  SectionRecommendedListings,
+};
 
 export default SectionBuilder;

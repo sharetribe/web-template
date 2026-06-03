@@ -17,7 +17,7 @@
 }
 
 .titleEyebrow {
-  color: var(--gray, #BCBCBC);
+  color: var(--gray, #bcbcbc);
   font-family: Roboto;
   font-size: 15px;
   font-style: normal;
@@ -25,7 +25,6 @@
   line-height: 150%; /* 22.5px */
   margin-bottom: 10px;
 }
-
 
 .alignLeft {
   text-align: left;
@@ -86,7 +85,8 @@
     margin-top: 0;
   }
 
-  h3, p {
+  h3,
+  p {
     padding: 0;
   }
 }

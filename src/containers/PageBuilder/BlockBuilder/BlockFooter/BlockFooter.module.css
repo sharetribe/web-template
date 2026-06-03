@@ -72,7 +72,7 @@
     color: var(--colorWhite);
 
     @media (--viewportMedium) {
-      padding-left: 35px!important /* :( */;
+      padding-left: 35px !important /* :( */;
     }
 
     svg {
@@ -86,7 +86,7 @@
 }
 
 .newsletter {
-  pre + p, 
+  pre + p,
   pre + p + p {
     color: var(--avGray1);
     font-size: 12px;

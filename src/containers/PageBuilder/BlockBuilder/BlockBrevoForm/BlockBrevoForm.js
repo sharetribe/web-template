@@ -80,11 +80,7 @@ const BlockBrevoForm = ({ blockId, text }) => {
 
   return (
     <div id={blockId} className={css.root}>
-      <div
-        ref={wrapRef}
-        className={css.formWrap}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div ref={wrapRef} className={css.formWrap} dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   );
 };

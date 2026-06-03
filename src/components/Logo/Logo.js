@@ -54,11 +54,16 @@ export const LogoComponent = props => {
   const logoImageClasses = classNames(
     logoImageClassName || css.logo,
     getHeightClassName(logoSettings?.height),
-    version === 'white' ?css.logoWhite : ''
+    version === 'white' ? css.logoWhite : ''
   );
 
   // Logo from hosted asset
-  if (version !== 'white' && isImageAsset(logoImageDesktop) && hasValidLogoSettings && layout === 'desktop') {
+  if (
+    version !== 'white' &&
+    isImageAsset(logoImageDesktop) &&
+    hasValidLogoSettings &&
+    layout === 'desktop'
+  ) {
     const variants = logoImageDesktop.attributes.variants;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
@@ -67,7 +72,7 @@ export const LogoComponent = props => {
         <ResponsiveImage
           rootClassName={logoImageClasses}
           alt={marketplaceName}
-          image={(version === 'white' ? logoImageWhite : logoImageDesktop)}
+          image={version === 'white' ? logoImageWhite : logoImageDesktop}
           variants={variantNames}
           sizes={`${width}px`}
           width={width}
@@ -75,7 +80,12 @@ export const LogoComponent = props => {
         />
       </div>
     );
-  } else if (version !== 'white' && isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
+  } else if (
+    version !== 'white' &&
+    isImageAsset(logoImageMobile) &&
+    hasValidLogoSettings &&
+    layout === 'mobile'
+  ) {
     const variants = logoImageMobile.attributes.variants;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
@@ -99,9 +109,11 @@ export const LogoComponent = props => {
       </div>
     );
   } else if (version === 'white') {
-    return (<div>
-      <img className={logoImageClasses} src={logoImageWhite} alt={marketplaceName} {...rest} />
-    </div>);
+    return (
+      <div>
+        <img className={logoImageClasses} src={logoImageWhite} alt={marketplaceName} {...rest} />
+      </div>
+    );
   } else if (layout === 'desktop') {
     return (
       <div className={logoClasses}>

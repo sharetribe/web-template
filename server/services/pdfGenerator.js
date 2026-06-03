@@ -23,9 +23,7 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
     const CONTENT_WIDTH = PAGE_WIDTH - 100;
 
     // ─── Cover ────────────────────────────────────────────────────────────────
-    doc
-      .rect(0, 0, PAGE_WIDTH, 200)
-      .fill(BRAND);
+    doc.rect(0, 0, PAGE_WIDTH, 200).fill(BRAND);
 
     doc
       .fillColor('#ffffff')
@@ -42,7 +40,16 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
     doc
       .fontSize(11)
       .fillColor('#cccccc')
-      .text(`Guía de inicio · ${new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}`, 50, 145, { width: CONTENT_WIDTH, align: 'center' });
+      .text(
+        `Guía de inicio · ${new Date().toLocaleDateString('es-MX', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}`,
+        50,
+        145,
+        { width: CONTENT_WIDTH, align: 'center' }
+      );
 
     doc.moveDown(8);
 
@@ -61,8 +68,8 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
       .font('Helvetica')
       .text(
         'Gracias por unirte a Archivo Vintach, el mercado en línea de moda vintage de México. ' +
-        'Esta guía te ayudará a sacar el máximo provecho de la plataforma, ya seas comprador, ' +
-        'vendedor o ambos. ¡Estamos emocionados de tenerte aquí!',
+          'Esta guía te ayudará a sacar el máximo provecho de la plataforma, ya seas comprador, ' +
+          'vendedor o ambos. ¡Estamos emocionados de tenerte aquí!',
         { align: 'justify', lineGap: 3 }
       );
 
@@ -93,7 +100,7 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
         .font('Helvetica');
     };
 
-    const bullet = (text) => {
+    const bullet = text => {
       doc
         .fillColor(ACCENT)
         .text('▸  ', { continued: true })
@@ -105,12 +112,20 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
     // ─── For Buyers ───────────────────────────────────────────────────────────
     sectionTitle('Para Compradores');
 
-    bullet('Navega el catálogo desde la página principal o usa la búsqueda por categoría, talla, color y precio.');
+    bullet(
+      'Navega el catálogo desde la página principal o usa la búsqueda por categoría, talla, color y precio.'
+    );
     bullet('Guarda tus piezas favoritas con el botón de corazón para volver a ellas fácilmente.');
     bullet('Antes de comprar, revisa la descripción, las fotos y el perfil del vendedor.');
-    bullet('Los pagos se procesan de forma segura con Stripe. Nunca compartimos tus datos de tarjeta.');
-    bullet('¿Tienes dudas? Envía un mensaje al vendedor directamente desde el anuncio antes de comprar.');
-    bullet('Una vez recibido tu pedido, marca la entrega como completada para liberar el pago al vendedor.');
+    bullet(
+      'Los pagos se procesan de forma segura con Stripe. Nunca compartimos tus datos de tarjeta.'
+    );
+    bullet(
+      '¿Tienes dudas? Envía un mensaje al vendedor directamente desde el anuncio antes de comprar.'
+    );
+    bullet(
+      'Una vez recibido tu pedido, marca la entrega como completada para liberar el pago al vendedor.'
+    );
 
     doc.moveDown(0.5);
 
@@ -119,10 +134,16 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
 
     bullet('Crea tu primer anuncio desde el menú de usuario → "Tus anuncios" → "Nuevo anuncio".');
     bullet('Sube al menos 3 fotos con buena iluminación: frente, reverso y detalle de etiqueta.');
-    bullet('Especifica talla, condición (Excelente / Buena / Aceptable) y cualquier desgaste visible.');
+    bullet(
+      'Especifica talla, condición (Excelente / Buena / Aceptable) y cualquier desgaste visible.'
+    );
     bullet('Conecta tu cuenta de Stripe desde Configuración → Pagos para recibir tus ganancias.');
-    bullet('Los pagos se acreditan automáticamente 2–3 días hábiles después de que el comprador confirme la entrega.');
-    bullet('Responde mensajes rápido — los vendedores activos aparecen mejor posicionados en búsqueda.');
+    bullet(
+      'Los pagos se acreditan automáticamente 2–3 días hábiles después de que el comprador confirme la entrega.'
+    );
+    bullet(
+      'Responde mensajes rápido — los vendedores activos aparecen mejor posicionados en búsqueda.'
+    );
 
     doc.moveDown(0.5);
 
@@ -131,8 +152,8 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
 
     doc.text(
       'Archivo Vintach utiliza Stripe Connect para todos los pagos. Nunca transfieras dinero fuera ' +
-      'de la plataforma ni compartas tus credenciales bancarias. Reporta cualquier actividad sospechosa ' +
-      'al equipo de soporte.',
+        'de la plataforma ni compartas tus credenciales bancarias. Reporta cualquier actividad sospechosa ' +
+        'al equipo de soporte.',
       { align: 'justify', lineGap: 3 }
     );
 
@@ -144,15 +165,11 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
     doc.text('Estamos aquí para ti. Escríbenos:');
     doc.moveDown(0.4);
 
-    doc
-      .fillColor(ACCENT)
-      .text('hola@archivovintach.com', { underline: true });
+    doc.fillColor(ACCENT).text('hola@archivovintach.com', { underline: true });
 
     doc.moveDown(0.3);
 
-    doc
-      .fillColor(GRAY)
-      .text('O visítanos en: https://archivovintach.com');
+    doc.fillColor(GRAY).text('O visítanos en: https://archivovintach.com');
 
     doc.moveDown(2);
 
@@ -163,7 +180,9 @@ function generateGettingStartedPDF({ firstName = 'Nuevo usuario' } = {}) {
       .fontSize(9)
       .fillColor('#999999')
       .text(
-        '© ' + new Date().getFullYear() + ' Archivo Vintach · Este documento es de uso exclusivo del destinatario.',
+        '© ' +
+          new Date().getFullYear() +
+          ' Archivo Vintach · Este documento es de uso exclusivo del destinatario.',
         { align: 'center' }
       );
 

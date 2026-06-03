@@ -71,10 +71,7 @@ export const MyBalancePageComponent = props => {
               mobileRootClassName={css.mobileTopbar}
               desktopClassName={css.desktopTopbar}
             />
-            <UserNav
-              currentPage="MyBalancePage"
-              showManageListingsLink={showManageListingsLink}
-            />
+            <UserNav currentPage="MyBalancePage" showManageListingsLink={showManageListingsLink} />
           </>
         }
         sideNav={

@@ -312,7 +312,12 @@ export const MainContent = props => {
           <ul className={css.listings}>
             {listings.map(l => (
               <li className={css.listing} key={l.id.uuid}>
-                <AVListingCard listing={l} showAuthorInfo={false} showTallCards={false} showListingTitle={true} />
+                <AVListingCard
+                  listing={l}
+                  showAuthorInfo={false}
+                  showTallCards={false}
+                  showListingTitle={true}
+                />
               </li>
             ))}
           </ul>

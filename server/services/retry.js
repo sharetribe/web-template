@@ -24,7 +24,9 @@ async function withRetry(fn, opts = {}) {
       if (i === attempts) break;
       const jitter = Math.floor(Math.random() * 100);
       const delay = baseMs * Math.pow(2, i - 1) + jitter;
-      console.warn(`[retry] ${label} attempt ${i}/${attempts} failed: ${err.message}; retrying in ${delay}ms`);
+      console.warn(
+        `[retry] ${label} attempt ${i}/${attempts} failed: ${err.message}; retrying in ${delay}ms`
+      );
       await new Promise(r => setTimeout(r, delay));
     }
   }

@@ -36,7 +36,9 @@ const BlockMarkdownTable = ({ blockId, text }) => {
         <thead>
           <tr>
             {table.headers.map((h, i) => (
-              <th key={i} className={css.th}>{h}</th>
+              <th key={i} className={css.th}>
+                {h}
+              </th>
             ))}
           </tr>
         </thead>
@@ -44,7 +46,9 @@ const BlockMarkdownTable = ({ blockId, text }) => {
           {table.rows.map((row, ri) => (
             <tr key={ri} className={ri % 2 === 0 ? css.rowEven : css.rowOdd}>
               {row.map((cell, ci) => (
-                <td key={ci} className={css.td}>{cell}</td>
+                <td key={ci} className={css.td}>
+                  {cell}
+                </td>
               ))}
             </tr>
           ))}

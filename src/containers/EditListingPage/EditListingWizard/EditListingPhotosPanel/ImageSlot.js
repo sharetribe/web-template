@@ -38,9 +38,7 @@ const ImageSlot = props => {
         <ListingImage
           image={image}
           className={css.thumbnail}
-          savedImageAltText={intl.formatMessage(
-            { id: 'EditListingPhotosForm.savedImageAltText' }
-          )}
+          savedImageAltText={intl.formatMessage({ id: 'EditListingPhotosForm.savedImageAltText' })}
           onRemoveImage={() => onRemoveImage(slotKey)}
           aspectWidth={aspectWidth}
           aspectHeight={aspectHeight}
@@ -66,7 +64,12 @@ const ImageSlot = props => {
             />
           )}
           <label htmlFor={inputId} className={css.uploadArea}>
-            <svg className={css.cameraIcon} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              className={css.cameraIcon}
+              viewBox="0 0 64 64"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               {/* Camera body */}
               <path
                 d="M8 22h6l4-6h28l4 6h6a2 2 0 012 2v28a2 2 0 01-2 2H8a2 2 0 01-2-2V24a2 2 0 012-2z"
@@ -80,8 +83,24 @@ const ImageSlot = props => {
               <circle cx="32" cy="36" r="10" fill="white" stroke="currentColor" strokeWidth="2.5" />
               <circle cx="32" cy="36" r="6" stroke="currentColor" strokeWidth="2" />
               {/* Plus sign */}
-              <line x1="32" y1="8" x2="32" y2="16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-              <line x1="28" y1="12" x2="36" y2="12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line
+                x1="32"
+                y1="8"
+                x2="32"
+                y2="16"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <line
+                x1="28"
+                y1="12"
+                x2="36"
+                y2="12"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
             </svg>
             <span className={css.uploadLabel}>{label}</span>
           </label>

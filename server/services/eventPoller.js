@@ -189,8 +189,7 @@ async function handleMessageEvent(resource) {
       await runNotifications([
         {
           label: 'message WhatsApp',
-          fn: () =>
-            sendUserWhatsApp({ phone: recipientPhone, templateName: 'av_new_message' }),
+          fn: () => sendUserWhatsApp({ phone: recipientPhone, templateName: 'av_new_message' }),
         },
       ]);
     }
@@ -242,7 +241,8 @@ async function pollEvents() {
       // Events are still processed in sequenceId order; only per-event handlers run concurrently.
       const handlers = [];
       if (eventType === 'user/created') handlers.push(() => handleNewUser(resource));
-      else if (eventType === 'transaction/transitioned') handlers.push(() => handleTransactionEvent(resource));
+      else if (eventType === 'transaction/transitioned')
+        handlers.push(() => handleTransactionEvent(resource));
       else if (eventType === 'message/created') handlers.push(() => handleMessageEvent(resource));
 
       if (handlers.length > 0) {

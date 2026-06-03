@@ -9,12 +9,7 @@ const getQueryParamName = queryParamNames => {
 };
 
 const ColorFilterComponent = props => {
-  const {
-    options,
-    initialValues,
-    onSelect,
-    queryParamNames,
-  } = props;
+  const { options, initialValues, onSelect, queryParamNames } = props;
 
   const queryParamName = getQueryParamName(queryParamNames);
   const hasInitialValues = !!initialValues && !!initialValues[queryParamName];

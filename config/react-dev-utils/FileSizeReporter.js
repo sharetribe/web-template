@@ -53,7 +53,10 @@ function printFileSizesAfterBuild(
     )
     .reduce((single, all) => all.concat(single), []);
   assets.sort((a, b) => b.size - a.size);
-  var longestSizeLabelLength = Math.max.apply(null, assets.map(a => stripAnsi(a.sizeLabel).length));
+  var longestSizeLabelLength = Math.max.apply(
+    null,
+    assets.map(a => stripAnsi(a.sizeLabel).length)
+  );
   var suggestBundleSplitting = false;
   assets.forEach(asset => {
     var sizeLabel = asset.sizeLabel;

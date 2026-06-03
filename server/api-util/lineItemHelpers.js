@@ -10,7 +10,8 @@ const LINE_ITEM_DAY = 'line-item/day';
 
 // Fixed fee component of provider commission (in currency sub-units, e.g. centavos).
 // This is additive on top of the percentage-based commission.
-const PROVIDER_COMMISSION_FIXED_FEE = parseInt(process.env.REACT_APP_PROVIDER_COMMISSION_FIXED_FEE, 10) || 0;
+const PROVIDER_COMMISSION_FIXED_FEE =
+  parseInt(process.env.REACT_APP_PROVIDER_COMMISSION_FIXED_FEE, 10) || 0;
 
 /** Helper functions for constructing line items*/
 
@@ -403,9 +404,7 @@ exports.getProviderCommissionMaybe = (providerCommission, order, currency) => {
       ? providerCommission.minimum_amount
       : estimatedCommissionFromPercentage;
     if (percentageAmount + PROVIDER_COMMISSION_FIXED_FEE > totalMoneyIn.amount) {
-      throw new Error(
-        'Total provider commission (percentage + fixed fee) exceeds the order total'
-      );
+      throw new Error('Total provider commission (percentage + fixed fee) exceeds the order total');
     }
 
     lineItems.push({

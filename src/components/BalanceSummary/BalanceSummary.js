@@ -44,12 +44,8 @@ const BalanceSummary = props => {
   const shownPending = isMonth ? currentMonthPendingAmount : pendingTotalAmount;
   const shownCancelled = isMonth ? currentMonthCancelledCount : cancelledCount;
 
-  const completedMoney = currency
-    ? formatMoney(intl, new Money(shownCompleted, currency))
-    : '—';
-  const pendingMoney = currency
-    ? formatMoney(intl, new Money(shownPending, currency))
-    : '—';
+  const completedMoney = currency ? formatMoney(intl, new Money(shownCompleted, currency)) : '—';
+  const pendingMoney = currency ? formatMoney(intl, new Money(shownPending, currency)) : '—';
 
   return (
     <div className={css.wrapper}>
