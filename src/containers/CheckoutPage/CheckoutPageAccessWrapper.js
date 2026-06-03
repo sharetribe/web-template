@@ -1,20 +1,15 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-
-import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { useIntl } from '../../util/reactIntl';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
 } from '../../util/urlHelpers';
+import { REQUEST } from '../../transactions/transaction';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
 import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
 import { NamedRedirect } from '../../components';
 
 /**
- * Shared access gating for CheckoutPage: pending approval and no transaction initiation rights.
- * Injects router/context props into the page component.
+ * Handles access control on the CheckoutPage.
  *
  * @param {Object} props
  * @param {React.ComponentType} props.PageComponent - Checkout page component receiving injected props
@@ -22,12 +17,33 @@ import { NamedRedirect } from '../../components';
  * @param {Object} [props.initiateOrderError] - Error from initiating an order
  * @returns {JSX.Element}
  */
-const CheckoutPageAccessWrapper = ({ PageComponent, currentUser, initiateOrderError, ...rest }) => {
-  const config = useConfiguration();
-  const routeConfiguration = useRouteConfiguration();
-  const intl = useIntl();
-  const history = useHistory();
-  const location = useLocation();
+const CheckoutPageAccessWrapper = props => {
+  const {
+    PageComponent,
+    currentUser,
+    initiateOrderError,
+    history,
+    pageData,
+    isDataLoaded,
+    processName,
+    params,
+    ...rest
+  } = props;
+  const listing = pageData?.listing;
+  const unitType = listing?.attributes?.publicData?.unitType;
+  const isRequest = unitType === REQUEST;
+  const isOwnListing = currentUser?.id && listing?.author?.id?.uuid === currentUser?.id?.uuid;
+  const hasRequiredData = !!(listing?.id && listing?.author?.id && processName);
+  const shouldRedirect = isDataLoaded && !(hasRequiredData && (!isOwnListing || isRequest));
+
+  // Redirect back to ListingPage if data is missing.
+  // Redirection must happen before any data format error is thrown (e.g. wrong currency)
+  if (shouldRedirect) {
+    console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
+      listing,
+    });
+    return <NamedRedirect name="ListingPage" params={params} />;
+  }
 
   if (currentUser && !isUserAuthorized(currentUser)) {
     return (
@@ -53,13 +69,13 @@ const CheckoutPageAccessWrapper = ({ PageComponent, currentUser, initiateOrderEr
 
   return (
     <PageComponent
-      config={config}
-      routeConfiguration={routeConfiguration}
-      intl={intl}
       history={history}
-      location={location}
       currentUser={currentUser}
       initiateOrderError={initiateOrderError}
+      pageData={pageData}
+      isDataLoaded={isDataLoaded}
+      params={params}
+      processName={processName}
       {...rest}
     />
   );

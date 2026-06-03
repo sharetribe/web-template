@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 // Import util modules
+import { useConfiguration } from '../../context/configurationContext';
+import { useIntl } from '../../util/reactIntl';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { userDisplayNameAsString } from '../../util/data';
+
 import { isUserAuthorized } from '../../util/userHelpers';
 import {
   INQUIRY_PROCESS_NAME,
-  REQUEST,
   resolveLatestProcessName,
   isNegotiationProcess,
 } from '../../transactions/transaction';
@@ -57,44 +61,7 @@ const getProcessName = pageData => {
 };
 
 const CheckoutPageComponent = props => {
-  const [pageData, setPageData] = useState({});
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-
-  useEffect(() => {
-    const {
-      config,
-      history,
-      currentUser,
-      orderData,
-      listing,
-      transaction,
-      fetchSpeculatedTransaction,
-      fetchStripeCustomer,
-    } = props;
-    const initialData = { orderData, listing, transaction };
-    const data = handlePageData(initialData, STORAGE_KEY, history);
-    setPageData(data || {});
-    setIsDataLoaded(true);
-
-    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
-    if (isUserAuthorized(currentUser)) {
-      // This is for processes using payments with Stripe integration
-      if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
-        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
-        loadInitialDataForStripePayments({
-          pageData: data || {},
-          fetchSpeculatedTransaction,
-          fetchStripeCustomer,
-          config,
-        });
-      }
-    }
-  }, []);
-
   const {
-    config,
-    routeConfiguration,
-    intl,
     history,
     currentUser,
     params,
@@ -102,27 +69,19 @@ const CheckoutPageComponent = props => {
     speculateTransactionInProgress,
     onInquiryWithoutPayment,
     initiateOrderError,
+    pageData,
+    setPageData,
+    isDataLoaded,
+    config,
+    processName,
   } = props;
 
-  const processName = getProcessName(pageData);
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
   // Handle redirection to ListingPage if required data is not available
   const listing = pageData?.listing;
-  const unitType = listing?.attributes?.publicData?.unitType;
-  const isRequest = unitType === REQUEST;
-  const isOwnListing = currentUser?.id && listing?.author?.id?.uuid === currentUser?.id?.uuid;
-  const hasRequiredData = !!(listing?.id && listing?.author?.id && processName);
-  const shouldRedirect = isDataLoaded && !(hasRequiredData && (!isOwnListing || isRequest));
-
-  // Redirect back to ListingPage if data is missing.
-  // Redirection must happen before any data format error is thrown (e.g. wrong currency)
-  if (shouldRedirect) {
-    console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
-      listing,
-    });
-    return <NamedRedirect name="ListingPage" params={params} />;
-  }
 
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(
@@ -196,6 +155,13 @@ const CheckoutPageComponent = props => {
  */
 const CheckoutPage = props => {
   const dispatch = useDispatch();
+  const history = useHistory();
+  const config = useConfiguration();
+
+  const [pageData, setPageData] = useState({});
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  const processName = getProcessName(pageData);
 
   const {
     listing,
@@ -250,6 +216,27 @@ const CheckoutPage = props => {
     [dispatch]
   );
 
+  useEffect(() => {
+    const initialData = { orderData, listing, transaction };
+    const data = handlePageData(initialData, STORAGE_KEY, history);
+    setPageData(data || {});
+    setIsDataLoaded(true);
+
+    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
+    if (isUserAuthorized(currentUser)) {
+      // This is for processes using payments with Stripe integration
+      if (processName !== INQUIRY_PROCESS_NAME) {
+        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
+        loadInitialDataForStripePayments({
+          pageData: data || {},
+          fetchSpeculatedTransaction,
+          fetchStripeCustomer,
+          config,
+        });
+      }
+    }
+  }, []);
+
   return (
     <CheckoutPageAccessWrapper
       {...props}
@@ -279,6 +266,12 @@ const CheckoutPage = props => {
       onConfirmCardPayment={onConfirmCardPayment}
       onConfirmPayment={onConfirmPayment}
       onSavePaymentMethod={onSavePaymentMethod}
+      pageData={pageData}
+      setPageData={setPageData}
+      isDataLoaded={isDataLoaded}
+      history={history}
+      processName={processName}
+      config={config}
     />
   );
 };
