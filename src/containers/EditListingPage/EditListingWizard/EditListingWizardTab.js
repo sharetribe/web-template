@@ -193,7 +193,8 @@ const EditListingWizardTab = props => {
       // Files need to be uploaded and verified when publishing the listing
       // (if specified in the listing type config)
       disabled:
-        fetchInProgress || (isLastTab(tab) && filesRequired && !allFilesUploadedAndVerified),
+        fetchInProgress ||
+        (isLastTab(tab) && filesRequired && (fileUploadsDisabled || !allFilesUploadedAndVerified)),
       submitButtonText: tabSubmitButtonText,
       listingTypes: config.listing.listingTypes,
       onManageDisableScrolling,

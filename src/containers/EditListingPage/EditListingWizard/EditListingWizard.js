@@ -478,12 +478,12 @@ class EditListingWizard extends Component {
     // it's possible to publish listing without payout details set by provider.
     // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
     const isPayoutDetailsRequired = requirePayoutDetails(listingTypeConfig);
-    const filesRequired = !fileUploadsDisabled && requireListingFiles(listingTypeConfig);
+    const filesRequired = requireListingFiles(listingTypeConfig);
 
     // Listing should not be published if files are required and they are not fully
-    // uploaded and verified. This is enforced by the submit on the last EditListingWizard
-    // tab, this is added protection
-    if (filesRequired && !allFilesUploadedAndVerified) {
+    // uploaded and verified, or if file uploads have been disabled at the platform level.
+    // This is enforced by the submit on the last EditListingWizard tab; this is added protection.
+    if (filesRequired && (fileUploadsDisabled || !allFilesUploadedAndVerified)) {
       return;
     }
 
@@ -574,7 +574,7 @@ class EditListingWizard extends Component {
     // TODO: displayPrice aka config.defaultListingFields?.price with false value is only available with inquiry process
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
     const isPriceDisabled = !displayPrice(listingTypeConfig);
-    const filesRequired = !fileUploadsDisabled && requireListingFiles(listingTypeConfig);
+    const filesRequired = requireListingFiles(listingTypeConfig);
 
     // Transaction process alias is used here, because the process defineds whether the listing is supported
     // I.e. old listings might not be supported through listing types, but client app might still support those processes.
