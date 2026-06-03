@@ -178,6 +178,7 @@ const EditListingWizardTab = props => {
   };
 
   const isLastTab = tab => tab === marketplaceTabs[marketplaceTabs.length - 1];
+  const filesTabParams = { ...params, tab: FILES };
 
   const panelProps = tab => {
     return {
@@ -294,6 +295,8 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+          filesTabParams={filesTabParams}
         />
       );
     }
@@ -303,6 +306,8 @@ const EditListingWizardTab = props => {
           {...panelProps(STYLE)}
           listingImageConfig={config.layout.listingImage}
           images={images}
+          allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+          filesTabParams={filesTabParams}
         />
       );
     }
