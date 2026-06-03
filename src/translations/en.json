@@ -351,6 +351,8 @@
   "EditListingPricingPanel.createListingTitle": "Pricing",
   "EditListingPricingPanel.listingPriceCurrencyInvalid": "The listing currency is different from the marketplace currency ({marketplaceCurrency}). You cannot edit the price.",
   "EditListingPricingPanel.title": "Edit the pricing of {listingTitle}",
+  "EditListingStyleForm.filesNotReady": "Before you can publish, the files you uploaded need to pass a security check. Check the status in the {filesTabLink}. Your listing has been saved as a draft.",
+  "EditListingStyleForm.filesTabLinkText": "Files tab",
   "EditListingStyleForm.helpText": "Decide how your listing will look like in search results.",
   "EditListingStyleForm.preview": "Preview",
   "EditListingStyleForm.publishListingFailed": "Publishing a new listing failed.",

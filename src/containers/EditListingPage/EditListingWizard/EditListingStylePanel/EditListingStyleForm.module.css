@@ -79,3 +79,7 @@
   display: grid;
   grid-template-columns: 1fr;
 }
+
+.filesNotReady {
+  margin-top: auto;
+}

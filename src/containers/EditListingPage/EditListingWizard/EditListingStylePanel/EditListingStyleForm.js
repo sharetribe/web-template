@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 
 // Import shared components
-import { Button, Form, ListingCardThumbnail, H5 } from '../../../../components';
+import { Button, Form, ListingCardThumbnail, H5, NamedLink } from '../../../../components';
 
 import { colorSchemes } from '../../../../util/types';
 
@@ -99,6 +99,9 @@ export const EditListingStyleForm = props => {
           updated,
           updateInProgress,
           values,
+          allFilesUploadedAndVerified,
+          filesTabParams,
+          filesRequired,
         } = formRenderProps;
         const classes = classNames(css.root, className);
         const { publishListingError, updateListingError } = fetchErrors || {};
@@ -134,6 +137,21 @@ export const EditListingStyleForm = props => {
 
             <PublishListingError error={publishListingError} />
             <UpdateListingError error={updateListingError} />
+
+            {filesRequired && !allFilesUploadedAndVerified ? (
+              <p className={css.filesNotReady}>
+                <FormattedMessage
+                  id="EditListingStyleForm.filesNotReady"
+                  values={{
+                    filesTabLink: (
+                      <NamedLink name="EditListingPage" params={filesTabParams}>
+                        <FormattedMessage id="EditListingStyleForm.filesTabLinkText" />
+                      </NamedLink>
+                    ),
+                  }}
+                />
+              </p>
+            ) : null}
 
             <Button
               className={css.submitButton}
