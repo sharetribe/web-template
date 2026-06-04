@@ -77,6 +77,183 @@ export const WithCurrentUser = {
   group: 'page:TransactionPage',
 };
 
+export const WithFiles = {
+  component: ActivityFeed,
+  props: {
+    currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.INQUIRY,
+    },
+    messages: [
+      createMessage(
+        'msg-own-with-files',
+        { content: 'Hey, here are some files!' },
+        {
+          sender: createUser('user2'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-own-available' },
+              file: {
+                attributes: {
+                  state: 'available',
+                  deleted: false,
+                  name: 'photo.jpg',
+                  size: 320 * 1024,
+                },
+              },
+            },
+            {
+              id: { uuid: 'file-own-deleted' },
+              file: {
+                attributes: {
+                  state: null,
+                  deleted: true,
+                  name: 'old-document.pdf',
+                  size: 128 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+      // Note: other-party messages are hidden entirely while any attached file is still
+      // in 'pendingVerification' or 'verificationFailed' state — they only appear in the
+      // feed once all files have reached 'available'. Only 'available' and deleted files
+      // are shown here so this message is visible in the example.
+      createMessage(
+        'msg-other-with-files',
+        { content: "Here's a message with files in different states." },
+        {
+          sender: createUser('user1'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-other-available' },
+              file: {
+                attributes: {
+                  state: 'available',
+                  deleted: false,
+                  name: 'document.pdf',
+                  size: 1.2 * 1024 * 1024,
+                },
+              },
+            },
+            {
+              id: { uuid: 'file-other-deleted' },
+              file: {
+                attributes: {
+                  state: null,
+                  deleted: true,
+                  name: 'old-draft.docx',
+                  size: 95 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+    ],
+    hasOlderMessages: false,
+    onOpenReviewModal: noop,
+    onShowOlderMessages: noop,
+    allowFiles: true,
+    onDownloadFile: file => console.log('download file:', file),
+    fetchMessagesInProgress: false,
+  },
+  group: 'page:TransactionPage',
+};
+
+export const WithOwnMessagePendingFiles = {
+  component: ActivityFeed,
+  props: {
+    currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.INQUIRY,
+    },
+    messages: [
+      createMessage(
+        'msg-own-pending',
+        { content: 'Sending some files your way!' },
+        {
+          sender: createUser('user2'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-pending-1' },
+              file: {
+                attributes: {
+                  state: 'pendingVerification',
+                  deleted: false,
+                  name: 'contract.pdf',
+                  size: 210 * 1024,
+                },
+              },
+            },
+            {
+              id: { uuid: 'file-pending-2' },
+              file: {
+                attributes: {
+                  state: 'pendingVerification',
+                  deleted: false,
+                  name: 'schedule.xlsx',
+                  size: 88 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+    ],
+    hasOlderMessages: false,
+    onOpenReviewModal: noop,
+    onShowOlderMessages: noop,
+    allowFiles: true,
+    onDownloadFile: file => console.log('download file:', file),
+    fetchMessagesInProgress: false,
+  },
+  group: 'page:TransactionPage',
+};
+
+export const WithOwnMessageFailedFiles = {
+  component: ActivityFeed,
+  props: {
+    currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.INQUIRY,
+    },
+    messages: [
+      createMessage(
+        'msg-own-failed',
+        { content: 'Sending some files your way!' },
+        {
+          sender: createUser('user2'),
+          publicFiles: [
+            {
+              id: { uuid: 'file-failed-1' },
+              file: {
+                attributes: {
+                  state: 'verificationFailed',
+                  deleted: false,
+                  name: 'suspicious.zip',
+                  size: 450 * 1024,
+                },
+              },
+            },
+          ],
+        }
+      ),
+    ],
+    hasOlderMessages: false,
+    onOpenReviewModal: noop,
+    onShowOlderMessages: noop,
+    allowFiles: true,
+    onDownloadFile: file => console.log('download file:', file),
+    fetchMessagesInProgress: false,
+  },
+  group: 'page:TransactionPage',
+};
+
 export const WithTransitions = {
   component: ActivityFeed,
   props: {

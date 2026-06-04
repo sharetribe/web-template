@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 
 import appSettings from '../../config/settings.js';
@@ -18,6 +17,9 @@ import {
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { requireListingImage } from '../../util/configHelpers';
+import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
+import { userDisplayNameAsString } from '../../util/data';
+import { isMobileSafari } from '../../util/userAgent';
 
 import {
   INQUIRY_PROCESS_NAME,
@@ -66,6 +68,7 @@ import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import RequestChangesModal from './RequestChangesModal/RequestChangesModal';
 import MakeCounterOfferModal from './MakeCounterOfferModal/MakeCounterOfferModal';
+import SendMessageForm from './SendMessageForm/SendMessageForm';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
@@ -75,11 +78,15 @@ import {
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  uploadFile,
+  clearUploadedFiles,
+  selectFileUploads,
+  downloadFile,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
-import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1023;
+const SEND_MESSAGE_FORM_ID = 'TransactionPanel.SendMessageForm';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -215,6 +222,37 @@ const getDataValidationResult = (transaction, process) => {
 };
 
 /**
+ * Blocks React Router in-app navigation and browser-level navigation while `when` is true.
+ * Registers history.block() for React Router transitions and a beforeunload listener for
+ * browser-level events (refresh, tab close). Both are cleaned up when `when` becomes false.
+ *
+ * @param {boolean} isBlockNavigation - Whether to block navigation
+ * @param {Object} history - React Router history object (injected by withRouter)
+ * @param {string} message - Confirmation message shown in the React Router prompt dialog
+ */
+const useUploadNavigationBlock = (isBlockNavigation, history, message) => {
+  useEffect(() => {
+    if (!isBlockNavigation) {
+      return;
+    }
+
+    const unblock = history.block(message);
+
+    const handleBeforeUnload = e => {
+      e.preventDefault();
+      // Included for legacy support, e.g. Chrome/Edge < 119
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      unblock();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isBlockNavigation, history, message]);
+};
+
+/**
  * TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
  *
  * @component
@@ -275,6 +313,11 @@ export const TransactionPageComponent = props => {
     setMounted(true);
   }, []);
 
+  const isMobileSafariRef = useRef(false);
+  useEffect(() => {
+    isMobileSafariRef.current = isMobileSafari();
+  }, []);
+
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -306,6 +349,11 @@ export const TransactionPageComponent = props => {
     nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
+    onUploadFile,
+    fileUploads,
+    onClearUploadedFiles,
+    onDownloadFile,
+    fileUploadsDisabled,
     ...restOfProps
   } = props;
 
@@ -519,6 +567,83 @@ export const TransactionPageComponent = props => {
     conf => conf.listingType === listing?.attributes?.publicData?.listingType
   );
 
+  // - Access control determines whether file uploads and downloads are allowed
+  //   across the marketplace. If an operator disables files while the user is on the page,
+  //   an API call error might also set file uploads to disabled in state.
+  // - Listing type config determines whether file uploads are enabled for transactions
+  //   of the specified listing type.
+  const allowFiles =
+    !config.accessControl.marketplace.fileUploadAndDownloadDisabled && !fileUploadsDisabled;
+  const listingTypeHasFileAttachments = foundListingTypeConfig?.messagingOptions?.fileAttachments;
+
+  const hasUnsentUploads = fileUploads?.length > 0 && allowFiles;
+  const blockMessage = intl.formatMessage({
+    id: 'TransactionPage.navigationBlockedBeforeFilesSent',
+  });
+  useUploadNavigationBlock(hasUnsentUploads, history, blockMessage);
+
+  /**
+   * SendMessageForm related attributes
+   */
+
+  const showSendMessageForm =
+    !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
+  const showAttachFiles = showSendMessageForm && listingTypeHasFileAttachments && allowFiles;
+
+  const currentUserIsCustomer =
+    currentUser?.id && customer?.id && currentUser.id.uuid === customer?.id?.uuid;
+  const otherUserDisplayNameString = currentUserIsCustomer
+    ? userDisplayNameAsString(provider, '')
+    : userDisplayNameAsString(customer, '');
+
+  const onUploadFileToPanel = file => {
+    if (file) {
+      const tempId = `${Date.now()}-${Math.random()}`;
+      onUploadFile(file, tempId);
+    }
+  };
+
+  const onRemoveFileFromPanel = tempId => {
+    onClearUploadedFiles([tempId]);
+  };
+
+  const onSendMessageFormFocus = () => {
+    if (isMobileSafariRef.current) {
+      window.scroll({ top: document.body.scrollHeight, left: 0, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToMessage = messageId => {
+    const selector = `#msg-${messageId.uuid}`;
+    const el = document.querySelector(selector);
+    if (el) {
+      el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+  };
+
+  const onMessageSubmit = (values, form) => {
+    const message = values.message ? values.message.trim() : null;
+    if (!message) {
+      return;
+    }
+    // By default, the SendMessageForm submit button is disabled if
+    // any files are still uploading or have an error. If you make changes to that
+    // logic, adjust this logic to filter out pending or failed uploads.
+    const fileIds = allowFiles ? fileUploads.map(f => ({ fileId: f.file.id })) : null;
+    onSendMessage(transaction.id, message, config, fileIds)
+      .then(resp => {
+        const messageId = resp.payload.uuid;
+        if (messageId) {
+          // Only clear the form and files if message id exists i.e.
+          // message was successfully sent
+          form.reset();
+          onClearUploadedFiles(fileUploads.map(f => f.tempId));
+          scrollToMessage(messageId);
+        }
+      })
+      .catch(() => {});
+  };
+
   const showListingImage = requireListingImage(foundListingTypeConfig);
 
   if (isDataAvailable && isProviderRole && !isOwnSale) {
@@ -688,15 +813,35 @@ export const TransactionPageComponent = props => {
       messages={messages}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
-      sendMessageInProgress={sendMessageInProgress}
-      sendMessageError={sendMessageError}
-      onSendMessage={onSendMessage}
       onOpenDisputeModal={onOpenDisputeModal}
       stateData={stateData}
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
+      sendMessageForm={
+        showSendMessageForm ? (
+          <SendMessageForm
+            formId={SEND_MESSAGE_FORM_ID}
+            rootClassName={css.sendMessageForm}
+            messagePlaceholder={intl.formatMessage(
+              { id: 'TransactionPanel.sendMessagePlaceholder' },
+              { name: otherUserDisplayNameString }
+            )}
+            inProgress={sendMessageInProgress}
+            sendMessageError={sendMessageError}
+            onFocus={onSendMessageFormFocus}
+            onSubmit={onMessageSubmit}
+            showAttachFiles={showAttachFiles}
+            showDisabledFilesError={listingTypeHasFileAttachments && !allowFiles}
+            marketplaceName={config.marketplaceName}
+            files={fileUploads}
+            onFileUpload={onUploadFileToPanel}
+            onRemoveFile={onRemoveFileFromPanel}
+            onDownloadFile={onDownloadFile}
+          />
+        ) : null
+      }
       actionButtons={containerId => (
         <ActionButtons
           containerId={containerId}
@@ -727,6 +872,8 @@ export const TransactionPageComponent = props => {
           onOpenReviewModal={onOpenReviewModal}
           onShowOlderMessages={() => onShowMoreMessages(transaction.id, config)}
           fetchMessagesInProgress={fetchMessagesInProgress}
+          allowFiles={allowFiles}
+          onDownloadFile={onDownloadFile}
         />
       }
       transactionFieldsComponent={
@@ -918,7 +1065,19 @@ export const TransactionPageComponent = props => {
   );
 };
 
-const mapStateToProps = state => {
+/**
+ * The TransactionPage "container" component.
+ * Connects TransactionPageComponent to the Redux store and provides dispatch callbacks.
+ *
+ * @component
+ * @param {Object} props from the router (routeConfiguration.js and Routes.js).
+ * @returns {JSX.Element}
+ */
+const TransactionPage = props => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  // State selectors
   const {
     fetchTransactionError,
     transitionInProgress,
@@ -940,63 +1099,112 @@ const mapStateToProps = state => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
-  } = state.TransactionPage;
-  const { currentUser } = state.user;
+    fileUploadsDisabled,
+  } = useSelector(state => state.TransactionPage, shallowEqual);
 
-  const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
-  const transaction = transactions.length > 0 ? transactions[0] : null;
+  const currentUser = useSelector(state => state.user?.currentUser);
+  const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
 
-  return {
-    currentUser,
-    fetchTransactionError,
-    transitionInProgress,
-    transitionError,
-    scrollingDisabled: isScrollingDisabled(state),
-    transaction,
-    fetchMessagesInProgress,
-    fetchMessagesError,
-    totalMessagePages,
-    oldestMessagePageFetched,
-    messages,
-    savePaymentMethodFailed,
-    sendMessageInProgress,
-    sendMessageError,
-    sendReviewInProgress,
-    sendReviewError,
-    nextTransitions: processTransitions,
-    monthlyTimeSlots, // for OrderPanel
-    timeSlotsForDate, // for OrderPanel
-    lineItems, // for OrderPanel
-    fetchLineItemsInProgress, // for OrderPanel
-    fetchLineItemsError, // for OrderPanel
-  };
-};
+  const transaction = useSelector(state => {
+    const [tx] = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
+    return tx || null;
+  });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onTransition: (txId, transitionName, params) =>
-      dispatch(makeTransition(txId, transitionName, params)),
-    onShowMoreMessages: (txId, config) => dispatch(fetchMoreMessages(txId, config)),
-    onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
-    onManageDisableScrolling: (componentId, disableScrolling) =>
+  const fileUploads = useSelector(selectFileUploads, shallowEqual);
+
+  // Dispatch callbacks
+  const onTransition = useCallback(
+    (txId, transitionName, params) => dispatch(makeTransition(txId, transitionName, params)),
+    [dispatch]
+  );
+  const onShowMoreMessages = useCallback(
+    (txId, config) => dispatch(fetchMoreMessages(txId, config)),
+    [dispatch]
+  );
+  const onSendMessage = useCallback(
+    (txId, message, config, fileIds) => dispatch(sendMessage(txId, message, config, fileIds)),
+    [dispatch]
+  );
+  const onManageDisableScrolling = useCallback(
+    (componentId, disableScrolling) =>
       dispatch(manageDisableScrolling(componentId, disableScrolling)),
-    onSendReview: (tx, transitionOptions, params, config) =>
+    [dispatch]
+  );
+  const onSendReview = useCallback(
+    (tx, transitionOptions, params, config) =>
       dispatch(sendReview(tx, transitionOptions, params, config)),
-    callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
-    onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-    onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
-      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)), // for OrderPanel
-    onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
-      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
-  };
-};
+    [dispatch]
+  );
+  const callSetInitialValues = useCallback(
+    (setInitialValues, values) => dispatch(setInitialValues(values)),
+    [dispatch]
+  );
+  const onInitializeCardPaymentData = useCallback(() => dispatch(initializeCardPaymentData()), [
+    dispatch,
+  ]);
+  const onFetchTransactionLineItems = useCallback(
+    (orderData, listingId, isOwnListing) =>
+      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
+    [dispatch]
+  );
+  const onFetchTimeSlots = useCallback(
+    (listingId, start, end, timeZone, options) =>
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
+    [dispatch]
+  );
+  const onUploadFile = useCallback((file, tempId) => dispatch(uploadFile(file, tempId)), [
+    dispatch,
+  ]);
+  const onClearUploadedFiles = useCallback(tempIds => dispatch(clearUploadedFiles(tempIds)), [
+    dispatch,
+  ]);
+  const onDownloadFile = useCallback(
+    (fileAttachmentId, isOwnFile) => dispatch(downloadFile(fileAttachmentId, isOwnFile)),
+    [dispatch]
+  );
 
-const TransactionPage = compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(TransactionPageComponent);
+  return (
+    <TransactionPageComponent
+      {...props}
+      currentUser={currentUser}
+      fetchTransactionError={fetchTransactionError}
+      transitionInProgress={transitionInProgress}
+      transitionError={transitionError}
+      scrollingDisabled={scrollingDisabled}
+      transaction={transaction}
+      fetchMessagesInProgress={fetchMessagesInProgress}
+      fetchMessagesError={fetchMessagesError}
+      totalMessagePages={totalMessagePages}
+      oldestMessagePageFetched={oldestMessagePageFetched}
+      messages={messages}
+      savePaymentMethodFailed={savePaymentMethodFailed}
+      sendMessageInProgress={sendMessageInProgress}
+      sendMessageError={sendMessageError}
+      sendReviewInProgress={sendReviewInProgress}
+      sendReviewError={sendReviewError}
+      nextTransitions={processTransitions}
+      monthlyTimeSlots={monthlyTimeSlots}
+      timeSlotsForDate={timeSlotsForDate}
+      lineItems={lineItems}
+      fetchLineItemsInProgress={fetchLineItemsInProgress}
+      fetchLineItemsError={fetchLineItemsError}
+      fileUploads={fileUploads}
+      fileUploadsDisabled={fileUploadsDisabled}
+      onTransition={onTransition}
+      onShowMoreMessages={onShowMoreMessages}
+      onSendMessage={onSendMessage}
+      onManageDisableScrolling={onManageDisableScrolling}
+      onSendReview={onSendReview}
+      callSetInitialValues={callSetInitialValues}
+      onInitializeCardPaymentData={onInitializeCardPaymentData}
+      onFetchTransactionLineItems={onFetchTransactionLineItems}
+      onFetchTimeSlots={onFetchTimeSlots}
+      onUploadFile={onUploadFile}
+      onClearUploadedFiles={onClearUploadedFiles}
+      onDownloadFile={onDownloadFile}
+      history={history}
+    />
+  );
+};
 
 export default TransactionPage;
