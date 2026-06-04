@@ -120,7 +120,7 @@ export class TransactionPanelComponent extends Component {
       showBookingLocation = false,
       requestQuote,
       offer,
-      fileDownloadList,
+      fileAttachments,
       activityFeed,
       actionButtons,
       isInquiryProcess,
@@ -230,7 +230,7 @@ export class TransactionPanelComponent extends Component {
             {requestQuote}
             {offer}
             {transactionFieldsComponent}
-            {fileDownloadList}
+            {fileAttachments}
 
             {!isInquiryProcess ? (
               <div className={css.orderDetails}>

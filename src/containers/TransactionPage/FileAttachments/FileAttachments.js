@@ -5,7 +5,7 @@ import { Heading, FileName } from '../../../components';
 
 import { IconDownload } from '../Message/IconDownload';
 
-import css from './FileDownloadList.module.css';
+import css from './FileAttachments.module.css';
 
 const FileDownloadItem = ({ file }) => (
   <li className={css.item}>
@@ -16,7 +16,7 @@ const FileDownloadItem = ({ file }) => (
   </li>
 );
 
-const FileDownloadList = props => {
+const FileAttachments = props => {
   const { className, rootClassName, isDownloadProcess, isProblemReported, isCustomerRole } = props;
 
   if (!isDownloadProcess || (isProblemReported && isCustomerRole)) {
@@ -41,4 +41,4 @@ const FileDownloadList = props => {
   );
 };
 
-export default FileDownloadList;
+export default FileAttachments;

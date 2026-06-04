@@ -66,7 +66,7 @@ import RequestQuote from './RequestQuote/RequestQuote';
 import Offer from './Offer/Offer';
 import TransactionFields from './TransactionFields/TransactionFields.js';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
-import FileDownloadList from './FileDownloadList/FileDownloadList';
+import FileAttachments from './FileAttachments/FileAttachments';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReportModal from './ReportModal/ReportModal';
 import ReviewModal from './ReviewModal/ReviewModal';
@@ -899,8 +899,8 @@ export const TransactionPageComponent = props => {
           isCounterpartyInactive={isCounterpartyInactive}
         />
       )}
-      fileDownloadList={
-        <FileDownloadList
+      fileAttachments={
+        <FileAttachments
           isDownloadProcess={isDownloadProcess(processName)}
           isProblemReported={stateData.processState === 'reported'}
           isCustomerRole={isCustomerRole}
