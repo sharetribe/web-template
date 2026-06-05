@@ -16,7 +16,7 @@ export const FIXED = 'fixed';
 export const INQUIRY = 'inquiry';
 export const OFFER = 'offer'; // The unitType 'offer' means that provider created the listing on default-negotiation process
 export const REQUEST = 'request'; // The unitType 'request' means that customer created the listing on default-negotiation process
-export const DIGITAL_ITEM = 'digital-item';
+export const FILE = 'file';
 
 // Then names of supported processes
 export const PURCHASE_PROCESS_NAME = 'default-purchase';
@@ -67,7 +67,7 @@ const PROCESSES = [
     name: DOWNLOAD_PROCESS_NAME,
     alias: `${DOWNLOAD_PROCESS_NAME}/release-1`,
     process: downloadProcess,
-    unitTypes: [DIGITAL_ITEM],
+    unitTypes: [FILE],
   },
 ];
 
