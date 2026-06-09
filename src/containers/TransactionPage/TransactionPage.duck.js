@@ -24,7 +24,7 @@ import {
   isBookingProcess,
   isNegotiationProcess,
 } from '../../transactions/transaction';
-import { MAX_FILE_SIZE, messageHasPendingFiles } from '../../util/fileHelpers';
+import { messageHasPendingFiles, executeFileUpload } from '../../util/fileHelpers';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
@@ -36,8 +36,6 @@ const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
 const MINUTE_IN_MS = 1000 * 60;
 const POLL_MAX_ATTEMPTS = 30;
 const POLL_INTERVAL_MS = 1000;
-
-export const MAX_FILE_UPLOAD_COUNT = 10;
 
 // Day-based time slots queries are cached for 1 minute.
 const removeOutdatedDateData = timeSlotsForDate => {
@@ -547,117 +545,18 @@ const uploadFilePayloadCreator = (
   { file, tempId },
   { dispatch, rejectWithValue, extra: sdk, getState }
 ) => {
-  let fileId;
-
-  ///////////////////////////////////
-  /// Step 1. Check file metadata ///
-  ///////////////////////////////////
-  const checkMetadataFn = file => {
-    if (!file) {
-      throw new Error('Missing file, cannot initiate upload.');
-    }
-
-    if (Object.keys(getState().TransactionPage.fileUploads).length > MAX_FILE_UPLOAD_COUNT) {
-      throw new Error('Upload file count exceeded, cannot initiate upload.');
-    }
-
-    // Currently the MAX_FILE_SIZE value corresponds to the max file size permitted
-    // by the API. If you want to reduce the permitted file size further, you can modify
-    // the size parameter, and if you want to get the size validation from the
-    // sdk.ownFiles.create() endpoint, you can remove this condition completely.
-    if (file.size > MAX_FILE_SIZE) {
-      throw new Error('maxFileSizeExceeded', file);
-    }
-
-    return sdkFile.metadata(file);
-  };
-
-  ////////////////////////////////////
-  /// Step 2. Create file resource ///
-  ////////////////////////////////////
-  const createFileResourceFn = metadataResp => {
-    return sdk.ownFiles.create({ ...metadataResp }).catch(e => {
-      const isMimeTypeError = e.data.errors.some(
-        e => e.status === 400 && e.source.path.some(p => p === 'mimeType')
-      );
-      if (isMimeTypeError) {
-        throw new Error('mimeTypeError');
-      } else {
-        throw e;
-      }
-    });
-  };
-
-  //////////////////////////////////////////
-  /// Step 3. Create URL for file upload ///
-  //////////////////////////////////////////
-  const createFileUploadUrlFn = ownFileResp => {
-    const createdFileId = ownFileResp?.data?.data?.id;
-    if (!createdFileId) {
-      throw new Error('Missing fileId, cannot get upload URL');
-    }
-
-    fileId = createdFileId;
-    return sdk.fileUploads.create({ fileId: createdFileId });
-  };
-
-  ///////////////////////////////////////////////
-  /// Step 4. Upload file directly to storage ///
-  ///////////////////////////////////////////////
-  const uploadFileToStorageFn = fileUploadResp => {
-    const { method = 'PUT', url, headers = {} } = fileUploadResp?.data?.data?.attributes;
-
-    if (!url) {
-      throw new Error('Missing upload URL, cannot upload file.');
-    }
-
-    const onUploadProgress = progressEvent => {
-      const loaded = progressEvent?.loaded || 0;
-      const total = progressEvent?.total || file.size;
-      const progress = total ? Math.min(100, Math.round((loaded / total) * 100)) : null;
-      dispatch(setUploadProgress({ tempId, progress }));
-    };
-
-    return sdkFile.upload({
-      method,
-      url,
-      headers,
-      file,
-      onUploadProgress,
-    });
-  };
-
-  //////////////////////////////////////////////
-  /// Step 5. Return ids for future handling ///
-  //////////////////////////////////////////////
-
-  const handleFileUploadSuccessFn = () => {
-    return sdk.ownFiles.show({ id: fileId }).then(resp => {
-      const denormalisedResponse = denormalisedResponseEntities(resp);
-      const fileUpload = denormalisedResponse[0];
-      return { fileUpload, tempId };
-    });
-  };
-
-  const applyAsync = (acc, val) => acc.then(val);
-  const composeAsync = (...funcs) => x => funcs.reduce(applyAsync, Promise.resolve(x));
-
-  const handleFileUpload = composeAsync(
-    checkMetadataFn,
-    createFileResourceFn,
-    createFileUploadUrlFn,
-    uploadFileToStorageFn,
-    handleFileUploadSuccessFn
-  );
-
-  return handleFileUpload(file)
+  return executeFileUpload({
+    file,
+    tempId,
+    sdk,
+    fileUploadCount: Object.keys(getState().TransactionPage.fileUploads).length,
+    onProgress: progress => dispatch(setUploadProgress({ tempId, progress })),
+  })
     .then(resp => {
-      dispatch(pollForFileVerificationThunk({ fileId, tempId }));
+      dispatch(pollForFileVerificationThunk({ fileId: resp.fileId, tempId }));
       return resp;
     })
-    .catch(e => {
-      return rejectWithValue({ tempId, error: storableError(e) });
-    });
+    .catch(e => rejectWithValue({ tempId, error: storableError(e) }));
 };
 
 export const uploadFileThunk = createAsyncThunk(
