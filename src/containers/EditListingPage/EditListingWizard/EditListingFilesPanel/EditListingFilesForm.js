@@ -7,7 +7,7 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 
 import { Button, Form, H5 } from '../../../../components';
 
-import { MAX_FILE_UPLOAD_COUNT } from '../../EditListingPage.duck';
+import { MAX_FILE_UPLOAD_COUNT } from '../../../../util/fileHelpers';
 
 import css from './EditListingFilesForm.module.css';
 
