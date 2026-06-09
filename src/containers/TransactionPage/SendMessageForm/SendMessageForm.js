@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { propTypes } from '../../../util/types';
 
 import { Form, FieldTextInput, FileUpload, Button } from '../../../components';
-import { MAX_FILE_UPLOAD_COUNT } from '../TransactionPage.duck';
+import { MAX_FILE_UPLOAD_COUNT } from '../../../util/fileHelpers';
 
 import css from './SendMessageForm.module.css';
 
