@@ -633,21 +633,21 @@ export const pollForMessageFileVerification = (messageId, txId) => dispatch => {
 // downloadFile   //
 ////////////////////
 const downloadFilePayloadCreator = (
-  { fileAttachmentId, isOwnFile },
+  { fileAttachmentId: fileId, isOwnFile },
   { rejectWithValue, extra: sdk }
 ) => {
-  if (!fileAttachmentId) {
+  if (!fileId) {
     return Promise.resolve(
       rejectWithValue({
-        fileAttachmentId,
+        fileAttachmentId: fileId,
         error: storableError(new Error('Missing fileAttachmentId, cannot initiate download.')),
       })
     );
   }
   // Request a temporary download URL from the SDK
   const downLoadFn = isOwnFile
-    ? sdk.ownFileDownloads.create({ fileId: fileAttachmentId })
-    : sdk.fileDownloads.create({ fileAttachmentId });
+    ? sdk.ownFileDownloads.create({ fileId: fileId })
+    : sdk.fileDownloads.create({ fileAttachmentId: fileId });
   return downLoadFn
     .then(downloadResp => {
       // Trigger a browser file download
@@ -657,10 +657,10 @@ const downloadFilePayloadCreator = (
       }
 
       window.open(url, '_blank', 'noopener,noreferrer');
-      return fileAttachmentId;
+      return fileId;
     })
     .catch(e => {
-      return rejectWithValue({ fileAttachmentId, error: storableError(e) });
+      return rejectWithValue({ fileAttachmentId: fileId, error: storableError(e) });
     });
 };
 
