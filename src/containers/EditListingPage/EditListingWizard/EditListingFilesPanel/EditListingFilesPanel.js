@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -59,6 +59,8 @@ const EditListingFilesPanel = props => {
 
   const config = useConfiguration();
 
+  const fileInputRef = useRef(null);
+
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
   const isDraft = listing?.id && listing?.attributes?.state === LISTING_STATE_DRAFT;
@@ -106,6 +108,13 @@ const EditListingFilesPanel = props => {
     onClearUploadedFiles([tempId]);
   };
 
+  const onRemoveFileAndClearInput = tempId => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    onRemoveFileFromPanel(tempId);
+  };
+
   const showDisabledFilesError = listingTypeHasFileAttachments && !allowFiles;
   const showUploads = showAttachFiles && fileUploads?.length > 0;
 
@@ -135,7 +144,7 @@ const EditListingFilesPanel = props => {
                 <FileUpload
                   item={f}
                   key={f.tempId}
-                  onRemoveFile={onRemoveFileFromPanel}
+                  onRemoveFile={onRemoveFileAndClearInput}
                   onDownloadFile={onDownloadFile}
                 />
               ))}
@@ -155,6 +164,7 @@ const EditListingFilesPanel = props => {
             showAttachFiles={showAttachFiles}
             isDraft={isDraft}
             hasPendingFileUploads={hasPendingFileUploads}
+            fileInputRef={fileInputRef}
           />
         </>
       )}
