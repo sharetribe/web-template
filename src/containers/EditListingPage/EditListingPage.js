@@ -420,8 +420,7 @@ const mapDispatchToProps = dispatch => ({
   onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
   onUploadFile: (file, tempId) => dispatch(uploadFile(file, tempId)),
   onClearUploadedFiles: tempIds => dispatch(clearUploadedFiles(tempIds)),
-  onDownloadFile: (fileAttachmentId, isOwnFile) =>
-    dispatch(downloadFile(fileAttachmentId, isOwnFile)),
+  onDownloadFile: fileAttachmentId => dispatch(downloadFile(fileAttachmentId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
