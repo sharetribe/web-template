@@ -14,7 +14,7 @@ import css from './SendMessageForm.module.css';
 const BLUR_TIMEOUT_MS = 100;
 
 const FieldAddFile = props => {
-  const { formApi, onFileUpload, onRemoveFile, showFileLink, fileInputRef, ...rest } = props;
+  const { formApi, onFileUpload, showFileLink, fileInputRef, ...rest } = props;
   if (!showFileLink) {
     return null;
   }
