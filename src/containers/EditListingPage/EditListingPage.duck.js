@@ -705,16 +705,14 @@ export const uploadFile = (file, tempId) => dispatch => {
 // downloadFile   //
 ////////////////////
 const downloadFilePayloadCreator = (
-  { fileAttachmentId, isOwnFile },
+  { fileAttachmentId: fileId },
   { rejectWithValue, extra: sdk }
 ) => {
-  if (!fileAttachmentId) {
+  if (!fileId) {
     throw new Error('Missing fileAttachmentId, cannot initiate download.');
   }
   // Request a temporary download URL from the SDK
-  const downLoadFn = isOwnFile
-    ? sdk.ownFileDownloads.create({ fileId: fileAttachmentId })
-    : sdk.fileDownloads.create({ fileAttachmentId });
+  const downLoadFn = sdk.ownFileDownloads.create({ fileId: fileId });
   return downLoadFn
     .then(downloadResp => {
       // Trigger a browser file download
@@ -724,10 +722,10 @@ const downloadFilePayloadCreator = (
       }
 
       window.open(url, '_blank', 'noopener,noreferrer');
-      return fileAttachmentId;
+      return fileId;
     })
     .catch(e => {
-      return rejectWithValue({ fileAttachmentId, error: storableError(e) });
+      return rejectWithValue({ fileAttachmentId: fileId, error: storableError(e) });
     });
 };
 
@@ -737,8 +735,8 @@ export const downloadFileThunk = createAsyncThunk(
 );
 
 // Backward compatible wrappers for the thunks
-export const downloadFile = (fileAttachmentId, isOwnFile = false) => dispatch => {
-  return dispatch(downloadFileThunk({ fileAttachmentId, isOwnFile })).unwrap();
+export const downloadFile = fileAttachmentId => dispatch => {
+  return dispatch(downloadFileThunk({ fileAttachmentId })).unwrap();
 };
 
 // ================ Slice ================ //
