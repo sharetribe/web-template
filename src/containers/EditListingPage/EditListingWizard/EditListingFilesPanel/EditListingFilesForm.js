@@ -12,7 +12,7 @@ import { MAX_FILE_UPLOAD_COUNT } from '../../../../util/fileHelpers';
 import css from './EditListingFilesForm.module.css';
 
 export const FieldAddFile = props => {
-  const { onFileUpload, showFileLink, ...rest } = props;
+  const { onFileUpload, showFileLink, fileInputRef, ...rest } = props;
   if (!showFileLink) {
     return null;
   }
@@ -29,7 +29,7 @@ export const FieldAddFile = props => {
         const inputProps = { id: name, name, onChange, type };
         return (
           <label className={className}>
-            <input {...inputProps} className={css.hiddenFileInput} />
+            <input {...inputProps} ref={fileInputRef} className={css.hiddenFileInput} />
             {label}
           </label>
         );
@@ -96,6 +96,7 @@ export const EditListingFilesForm = props => {
           showAttachFiles,
           isDraft,
           hasPendingFileUploads,
+          fileInputRef,
         } = formRenderProps;
 
         const classes = classNames(rootClassName || css.root, className);
@@ -166,6 +167,7 @@ export const EditListingFilesForm = props => {
               onFileUpload={onFileUpload}
               className={css.fileLink}
               showFileLink={showFileLink}
+              fileInputRef={fileInputRef}
             />
             <H5 as="h2" className={css.helpText}>
               <FormattedMessage id="EditListingFilesForm.helpText" />
