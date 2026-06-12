@@ -1,6 +1,4 @@
 import {
-  AV_HERO_SECTION_ID,
-  AV_HERO_SECTION_TYPE,
   AV_HERO2_SECTION_TYPE,
   AV_HERO3_SECTION_TYPE,
   AV_VIDEO_SECTION_TYPE,
@@ -45,37 +43,22 @@ export const transformCustomSections = ({ pageData, intl, extensionData }) => {
   const customSections = sections.map(section => {
     const sectionId = section?.sectionId || '';
 
-    if (sectionId === AV_HERO_SECTION_ID) {
-      return {
-        ...section,
-        sectionType: AV_HERO_SECTION_TYPE,
-        classWrap: 'contentLeft',
-        callToAction: {
-          fieldType: 'internalButtonLink',
-          href: formatMessage(intl, 'AVHero.ctaFirstLink', '/s?pub_tags=hot-list'),
-          content: formatMessage(intl, 'AVHero.ctaFirstText', 'Explore now'),
-        },
-        callToAction2: {
-          fieldType: 'internalButtonLink',
-          href: formatMessage(intl, 'AVHero.ctaSecondLink', '/s'),
-          content: formatMessage(intl, 'AVHero.ctaSecondText', 'Browse all'),
-        },
-        isLanding: true,
-      };
-    }
-
     if (isHero2SectionId(sectionId)) {
       // "av-hero2-shop" → instanceId "shop"; falls back to full sectionId if no suffix
       const instanceId = sectionId.slice('av-hero2-'.length) || sectionId;
 
       const cta1Text = formatMessage(intl, `AVHero2.${instanceId}.cta1Text`, '').trim();
       const cta2Text = formatMessage(intl, `AVHero2.${instanceId}.cta2Text`, '').trim();
-      const cta1Style =
-        formatMessage(intl, `AVHero2.${instanceId}.cta1Style`, 'primary') || 'primary';
-      const cta2Style =
-        formatMessage(intl, `AVHero2.${instanceId}.cta2Style`, 'secondary') || 'secondary';
+      // Empty when unset, so SectionHeroCustom2 can fall back to Section Name CTA
+      // tokens (and then the primary/secondary defaults).
+      const cta1Style = formatMessage(intl, `AVHero2.${instanceId}.cta1Style`, '');
+      const cta2Style = formatMessage(intl, `AVHero2.${instanceId}.cta2Style`, '');
       const mobileBackgroundImageUrl =
         formatMessage(intl, `AVHero2.${instanceId}.mobileBackgroundUrl`, '') || null;
+      // Safe read: the helper returns '' for a missing key (no react-intl id
+      // fallback), so an unset bgLink yields null instead of a bogus link.
+      const rawBgLink = formatMessage(intl, `AVHero2.${instanceId}.bgLink`, '');
+      const bgLink = rawBgLink && rawBgLink !== '#' ? rawBgLink : null;
 
       return {
         ...section,
@@ -97,16 +80,14 @@ export const transformCustomSections = ({ pageData, intl, extensionData }) => {
         cta1Style,
         cta2Style,
         mobileBackgroundImageUrl,
+        bgLink,
       };
     }
 
     if (isHero3SectionId(sectionId)) {
-      const instanceId = sectionId.slice('av-hero3-'.length) || sectionId;
-      const cta1Style =
-        formatMessage(intl, `AVHero3.${instanceId}.cta1Style`, 'primary') || 'primary';
-      const cta2Style =
-        formatMessage(intl, `AVHero3.${instanceId}.cta2Style`, 'primary') || 'primary';
-      return { ...section, sectionType: AV_HERO3_SECTION_TYPE, cta1Style, cta2Style };
+      // Button styling comes from block/section name tokens (parsed at render
+      // time), not from translation strings.
+      return { ...section, sectionType: AV_HERO3_SECTION_TYPE };
     }
 
     if (isVideoSectionId(sectionId)) {

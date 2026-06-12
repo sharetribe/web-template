@@ -58,7 +58,8 @@
 }
 
 .price {
-  composes: h4 from global;
+  font-size: 22px;
+  line-height: 1.2;
   font-weight: var(--fontWeightBold);
   margin: 0 0 0 24px;
 
@@ -132,7 +133,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
   }
 }
 

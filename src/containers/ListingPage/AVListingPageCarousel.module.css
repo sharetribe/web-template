@@ -1,0 +1,245 @@
+@import '../../styles/customMediaQueries.css';
+
+/* Responsive product layout across three breakpoints (OrderPanel becomes a fixed
+   bottom-bar modal below --viewportLarge / 1024px, so the order column only exists
+   on desktop):
+   - mobile (<768): single column — gallery, info (title + details), reviews.
+   - tablet (768–1024): image (60%) to the left, info (40%) to the right, reviews
+     in a full-width row below.
+   - desktop (≥1024): gallery (sticky, left) + order panel (right) in row 1, info
+     hidden (its content lives in the order panel), reviews in a full-width row
+     below both columns. */
+.contentWrapper {
+  width: 100%;
+  margin: 0 auto;
+  /* Top padding keeps the gallery clear of the sticky topbar on mobile/tablet
+     (without it the gallery sits flush under the nav bar). */
+  padding: 24px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  /* The image gallery measures itself in px; without this the flex/grid ancestors
+     (min-width: auto) let that width push the whole page wide → horizontal scroll
+     on mobile. Clipping x makes the automatic min-size 0 so the gallery is
+     constrained to the column (and re-measures to fit). Reset on desktop where the
+     grid already constrains the gallery and the sticky gallery needs visible
+     overflow. */
+  overflow-x: hidden;
+
+  @media (--viewportMedium) {
+    padding: 24px;
+  }
+
+  @media (--viewportLarge) {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(360px, 2fr);
+    column-gap: 48px;
+    row-gap: 24px;
+    /* stretch (not start) so the gallery column fills the row height — that gives
+       the sticky gallery room to stay pinned while the taller order column scrolls. */
+    align-items: stretch;
+    overflow-x: visible;
+  }
+}
+
+.galleryColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+
+  /* Tablet: image to the left (60%), information to the right (40%). Reviews are
+     a separate full-width sibling below this grid (see .reviewsBlock). */
+  @media (--viewportMedium) {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-areas: 'gallery info';
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  /* Desktop: a single (left) column containing only the gallery. Its sticky
+     containing block is therefore sized by .contentWrapper's row-stretch
+     against .detailsColumn — not inflated by reviews below (see
+     .reviewsBlock), so the gallery can never end up stuck over reviews. */
+  @media (--viewportLarge) {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+.galleryBlock {
+  grid-area: gallery;
+  min-width: 0;
+
+  /* Sticky on the gallery block (its containing block is the stretched
+     .galleryColumn) so the image stays pinned while the taller order column
+     scrolls on desktop. `top` must clear LayoutSingleColumn's sticky topbar,
+     which at this breakpoint renders TopbarDesktop's two rows
+     (--avTopbarHeightDesktopTwoRow) — otherwise the gallery sticks underneath
+     the topbar's bottomRow. */
+  @media (--viewportLarge) {
+    position: sticky;
+    top: calc(var(--avTopbarHeightDesktopTwoRow) + 24px);
+    align-self: start;
+    width: 100%;
+  }
+}
+
+.infoBlock {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+
+  /* On desktop the title + details live in the order panel instead. */
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.infoTitle {
+  margin: 0 0 4px;
+}
+
+/* Full-width row below the gallery/order-panel grid on desktop (and below the
+   gallery+info grid on tablet) — kept out of .galleryColumn so the sticky
+   gallery's containing block never includes it (see .galleryColumn). */
+.reviewsBlock {
+  min-width: 0;
+
+  @media (--viewportLarge) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+.detailsColumn {
+  min-width: 0;
+
+  @media (--viewportLarge) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* Order panel reuses upstream OrderPanel; remove its sidebar framing here. */
+.orderPanel {
+  margin: 0;
+}
+
+/* Current price first, struck-through original price to its right. */
+.detailsColumn :global([class*='OrderPanel_priceContainer__']) {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.detailsColumn :global([class*='OrderPanel_price__']) {
+  order: 1;
+}
+.detailsColumn :global([class*='OrderPanel_originalPrice__']) {
+  order: 2;
+  color: var(--colorGrey500);
+}
+
+/* "Comprar" + "Chat" share a single row. */
+.detailsColumn :global([class*='ProductOrderForm_submitButton__']) {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 12px;
+}
+.detailsColumn :global([class*='ProductOrderForm_submitButton__']) > :first-child {
+  flex: 1 1 auto;
+}
+
+/* Chat button: AV ctaButtonYellow theming, icon to the left of the label. */
+.chatButton {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 0;
+  padding: 0 18px;
+  width: auto;
+
+  background-color: var(--avYellow);
+  color: var(--avBlueLight);
+  border-color: var(--avBlueLight);
+  border-radius: 26px;
+  font-weight: 700;
+}
+.chatButton:hover,
+.chatButton:focus {
+  background-color: #bfbd59;
+  color: var(--avBlueLight);
+  border-color: var(--avBlueLight);
+  box-shadow: none;
+}
+.chatIcon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Mobile/tablet (below --viewportLarge, where the order panel renders as the
+   fixed-bottom modal): chat button matches the submit button's size, with
+   more breathing room between the two. */
+@media (max-width: 1023px) {
+  .detailsColumn :global([class*='ProductOrderForm_submitButton__']) {
+    gap: 1.5rem;
+  }
+  .detailsColumn :global([class*='ProductOrderForm_submitButton__']) > :first-child,
+  .chatButton {
+    flex: 1 1 0;
+  }
+}
+
+/* Author + publication date below the CTA. */
+.authorLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 12px 0 0;
+}
+.authorLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--colorGrey900);
+}
+.authorAvatar {
+  flex-shrink: 0;
+}
+.authorLink:hover {
+  text-decoration: none;
+}
+.authorName {
+  font-weight: var(--fontWeightSemiBold);
+}
+.publishDate {
+  color: var(--colorGrey500);
+  font-size: 14px;
+  text-align: right;
+}
+
+/* Order form ModalInMobile popup (mobile/tablet, below the OrderPanel
+   MODAL_BREAKPOINT of 1023px): give AVListingDetails (and the rest of the
+   popup content) breathing room from the popup edges. The popup renders via
+   a portal, so it's not a DOM descendant of .detailsColumn — target
+   ModalInMobile's content wrapper via OrderPanel's modalContainer class
+   (a sibling within the portal tree) instead. */
+@media (max-width: 1023px) {
+  :global([class*='OrderPanel_modalContainer__']) :global([class*='ModalInMobile_modalContent__']) {
+    padding: 3rem;
+  }
+}

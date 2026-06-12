@@ -23,8 +23,8 @@
   --ig-white: #fff;
   --ig-black: #000;
   --ig-background-overlay: rgba(0, 0, 0, 0.4);
-  --ig-thumbnail-size: 96px;
-  --ig-thumbnail-size-small: 80px;
+  --ig-thumbnail-size: 102px;
+  --ig-thumbnail-size-small: 88px;
   --ig-thumbnail-border-width: 4px;
   --ig-thumbnail-border-width-small: 3px;
   --ig-bullet-size: 4px;
@@ -277,7 +277,7 @@
 @media (max-width: 768px) {
   .image-gallery-slide-wrapper.image-gallery-thumbnails-left,
   .image-gallery-slide-wrapper.image-gallery-thumbnails-right {
-    width: calc(100% - 88px);
+    width: calc(100% - 96px);
   }
 }
 

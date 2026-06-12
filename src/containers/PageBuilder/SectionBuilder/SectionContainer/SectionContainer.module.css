@@ -35,9 +35,14 @@
 
 /* AV: body text size for CMS section content */
 .sectionContent p {
-  font-size: 18px;
+  font-size: 15px;
 
   @media (--viewportMedium) {
-    font-size: 20px;
+    font-size: 16px;
   }
 }
+
+/* Heading sizes for CMS section content are governed centrally and responsively
+   by the AV override in src/styles/avBrandOverrides.css (single source of truth).
+   The previous fixed `.sectionContent h2..h5` rules were removed because, lacking
+   a media query, they pinned section headings to desktop sizes on mobile. */

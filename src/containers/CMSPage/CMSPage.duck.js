@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { fetchPageAssets } from '../../ducks/hostedAssets.duck';
 import { denormalizeAssetData } from '../../util/data';
 
-export const avHeroSecionId = 'av-hero';
 export const avPriceSelectorSecionId = 'av-price-selector';
 
 // Asset path for pricing plans JSON in Sharetribe hosted assets.

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
@@ -23,6 +23,30 @@ import css from './ListingImageGallery.module.css';
 const IMAGE_GALLERY_OPTIONS = {
   showPlayButton: false,
   disableThumbnailScroll: true,
+};
+
+// Vertical (left/right) thumbnails are used from --viewportMedium (768px) up; below
+// that (mobile) they fall back to bottom thumbnails. SSR-safe: defaults to the
+// small-screen layout, then upgrades on mount (no hydration mismatch).
+const VIEWPORT_MEDIUM_QUERY = '(min-width: 768px)';
+const useResponsiveThumbnailPosition = requested => {
+  const isVertical = requested === 'left' || requested === 'right';
+  const [isWide, setIsWide] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return undefined;
+    }
+    const mql = window.matchMedia(VIEWPORT_MEDIUM_QUERY);
+    const update = () => setIsWide(mql.matches);
+    update();
+    if (mql.addEventListener) {
+      mql.addEventListener('change', update);
+      return () => mql.removeEventListener('change', update);
+    }
+    mql.addListener(update);
+    return () => mql.removeListener(update);
+  }, []);
+  return isVertical && !isWide ? 'bottom' : requested;
 };
 const MAX_LANDSCAPE_ASPECT_RATIO = 2; // 2:1
 const MAX_PORTRAIT_ASPECT_RATIO = 4 / 3;
@@ -76,7 +100,19 @@ const getSlotLabelForImage = (image, imageSlots, intl) => {
 const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const intl = useIntl();
-  const { rootClassName, className, images, imageSlots, imageVariants, thumbnailVariants } = props;
+  const {
+    rootClassName,
+    className,
+    images,
+    imageSlots,
+    imageVariants,
+    thumbnailVariants,
+    // AV: 'top' | 'right' | 'bottom' | 'left' (react-image-gallery). Default keeps
+    // the upstream bottom thumbnails. Vertical positions fall back to bottom below
+    // --viewportMedium (see useResponsiveThumbnailPosition).
+    thumbnailPosition = 'bottom',
+  } = props;
+  const effectiveThumbnailPosition = useResponsiveThumbnailPosition(thumbnailPosition);
   const thumbVariants = thumbnailVariants || imageVariants;
   // imageVariants are scaled variants.
   const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
@@ -198,6 +234,7 @@ const ListingImageGallery = props => {
       renderRightNav={renderRightNav}
       renderFullscreenButton={renderFullscreenButton}
       {...IMAGE_GALLERY_OPTIONS}
+      thumbnailPosition={effectiveThumbnailPosition}
     />
   );
 };

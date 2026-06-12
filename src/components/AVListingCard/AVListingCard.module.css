@@ -86,8 +86,9 @@
   /* Layout */
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: baseline;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 6px;
   flex-shrink: 0;
   margin-bottom: 4px;
@@ -195,10 +196,14 @@
   }
 }
 
+/* No z-index here: SearchFiltersMobile's sticky root (z-index: 1, its own
+   stacking context) must stay above this overlay in the mobile search-results
+   grid. As position:absolute with z-index:auto, it still paints above the
+   in-flow listing image (CSS2.1 painting order) without competing for the
+   root stacking context's positive z-index layer. */
 .storeTags {
   position: absolute;
   bottom: -6px;
   left: 8px;
-  z-index: 1;
   max-width: calc(85% - 16px);
 }

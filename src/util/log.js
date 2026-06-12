@@ -11,8 +11,41 @@ import appSettings from '../config/settings';
 
 const ingoreErrorsMap = {
   ['ResizeObserver loop limit exceeded']: true, // Some exotic browsers seems to emit these.
+  // Newer Chromium wording for the same benign ResizeObserver notification.
+  ['ResizeObserver loop completed with undelivered notifications']: true,
   ['Error reading']: true, // Ignore file reader errors (ImageFromFile)
   ['AxiosError: Network Error']: true,
+};
+
+// Benign ResizeObserver notifications. These do not indicate a real failure:
+// the browser simply could not deliver all resize notifications within a single
+// animation frame and resolves them on the next one. They still trip the
+// webpack-dev-server error overlay (and Sentry), so we swallow them here.
+const RESIZE_OBSERVER_BENIGN_MESSAGES = [
+  'ResizeObserver loop limit exceeded',
+  'ResizeObserver loop completed with undelivered notifications',
+];
+
+export const isBenignResizeObserverError = message =>
+  typeof message === 'string' &&
+  RESIZE_OBSERVER_BENIGN_MESSAGES.some(benign => message.includes(benign));
+
+// Stop the benign ResizeObserver error from reaching the dev overlay / window handlers.
+// Runs in the capture phase so it executes before webpack-dev-server's overlay handler.
+const suppressBenignResizeObserverErrors = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  window.addEventListener(
+    'error',
+    event => {
+      if (isBenignResizeObserverError(event?.message)) {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+      }
+    },
+    true
+  );
 };
 
 const pickSelectedErrors = (ignored, entry) => {
@@ -25,6 +58,8 @@ const pickSelectedErrors = (ignored, entry) => {
  * provided a Sentry client will be installed.
  */
 export const setup = () => {
+  suppressBenignResizeObserverErrors();
+
   if (appSettings.sentryDsn) {
     const ignoreErrors = Object.entries(ingoreErrorsMap).reduce(pickSelectedErrors, []);
 

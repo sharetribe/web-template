@@ -147,7 +147,7 @@
   padding: 0 20px;
   border: 1px solid var(--colorGrey300);
   border-radius: 999px;
-  background-color: var(--colorWhite);
+  background-color: var(--colorGrey50);
 }
 
 /* These is used with Inbox, Sign up, and Log in */

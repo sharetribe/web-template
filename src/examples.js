@@ -38,6 +38,7 @@ import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconAlert from './components/IconAlert/IconAlert.example';
 import * as IconArrowHead from './components/IconArrowHead/IconArrowHead.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
+import * as IconChat from './components/IconChat/IconChat.example';
 import * as IconCheckmark from './components/IconCheckmark/IconCheckmark.example';
 import * as IconClose from './components/IconClose/IconClose.example';
 import * as IconDelete from './components/IconDelete/IconDelete.example';
@@ -182,6 +183,7 @@ export {
   IconAlert,
   IconArrowHead,
   IconBannedUser,
+  IconChat,
   IconCheckmark,
   IconClose,
   IconDelete,

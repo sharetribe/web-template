@@ -7,9 +7,7 @@
 // CMSPage.js or other render-path code.
 
 import {
-  avHeroSecionId,
   avPriceSelectorSecionId,
-  AV_HERO_SECTION_TYPE,
   AV_HERO2_SECTION_TYPE,
   AV_HERO3_SECTION_TYPE,
   AV_VIDEO_SECTION_TYPE,
@@ -29,34 +27,21 @@ const fmt = (intl, id, def = '') => {
   return result === id ? def : result;
 };
 
-// --- Hero (singleton) ---
-const buildHeroSection = (intl, baseSection) => ({
-  ...baseSection,
-  sectionId: avHeroSecionId,
-  sectionType: AV_HERO_SECTION_TYPE,
-  classWrap: 'contentLeft',
-  callToAction: {
-    fieldType: 'internalButtonLink',
-    href: fmt(intl, 'AVHero.ctaFirstLink', '/s?pub_tags=hot-list'),
-    content: fmt(intl, 'AVHero.ctaFirstText', 'Explore now'),
-  },
-  callToAction2: {
-    fieldType: 'internalButtonLink',
-    href: fmt(intl, 'AVHero.ctaSecondLink', '/s'),
-    content: fmt(intl, 'AVHero.ctaSecondText', 'Browse all'),
-  },
-});
-
 // --- avHero2 (instance per sectionId suffix, e.g. "av-hero2-shop") ---
 const buildHero2Section = (intl, section) => {
   const instanceId = section.sectionId.slice(AV_HERO2_PREFIX.length) || section.sectionId;
   const cta1Text = fmt(intl, `AVHero2.${instanceId}.cta1Text`).trim();
   const cta2Text = fmt(intl, `AVHero2.${instanceId}.cta2Text`).trim();
+  // Safe read: `fmt` returns '' for a missing key (no react-intl id fallback), so
+  // an unset bgLink yields null instead of a bogus full-section link.
+  const rawBgLink = fmt(intl, `AVHero2.${instanceId}.bgLink`);
   return {
     ...section,
     sectionType: AV_HERO2_SECTION_TYPE,
-    cta1Style: fmt(intl, `AVHero2.${instanceId}.cta1Style`, 'primary') || 'primary',
-    cta2Style: fmt(intl, `AVHero2.${instanceId}.cta2Style`, 'secondary') || 'secondary',
+    // Empty when unset, so SectionHeroCustom2 can fall back to Section Name CTA
+    // tokens (and then the primary/secondary defaults).
+    cta1Style: fmt(intl, `AVHero2.${instanceId}.cta1Style`),
+    cta2Style: fmt(intl, `AVHero2.${instanceId}.cta2Style`),
     callToAction: cta1Text
       ? {
           fieldType: 'internalButtonLink',
@@ -72,19 +57,17 @@ const buildHero2Section = (intl, section) => {
         }
       : section.callToAction2 || null,
     mobileBackgroundImageUrl: fmt(intl, `AVHero2.${instanceId}.mobileBackgroundUrl`) || null,
+    bgLink: rawBgLink && rawBgLink !== '#' ? rawBgLink : null,
   };
 };
 
 // --- avHero3 ---
-const buildHero3Section = (intl, section) => {
-  const instanceId = section.sectionId.slice(AV_HERO3_PREFIX.length) || section.sectionId;
-  return {
-    ...section,
-    sectionType: AV_HERO3_SECTION_TYPE,
-    cta1Style: fmt(intl, `AVHero3.${instanceId}.cta1Style`, 'primary') || 'primary',
-    cta2Style: fmt(intl, `AVHero3.${instanceId}.cta2Style`, 'primary') || 'primary',
-  };
-};
+// Button styling comes from block/section name tokens (parsed at render time),
+// not from translation strings.
+const buildHero3Section = (intl, section) => ({
+  ...section,
+  sectionType: AV_HERO3_SECTION_TYPE,
+});
 
 // --- avVideo ---
 const buildVideoSection = (intl, section) => {
@@ -140,7 +123,6 @@ export const transformAvSections = ({ pageData, intl, extensionData }) => {
   const pricingAssetData = extensionData?.pricingPlansData;
 
   const sections = pageData.sections.map(s => {
-    if (s.sectionId === avHeroSecionId) return buildHeroSection(intl, s);
     if (s.sectionId === avPriceSelectorSecionId) {
       return pricingAssetData
         ? buildPricingFromAsset(pricingAssetData, s)

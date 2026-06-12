@@ -1,0 +1,14 @@
+.root {
+}
+
+.bubbleBg {
+  fill: var(--avBlueLight);
+}
+
+.bubbleFg {
+  fill: #ffffff;
+}
+
+.dot {
+  fill: var(--avBlueLight);
+}

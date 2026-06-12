@@ -134,6 +134,8 @@ const renderForm = formRenderProps => {
     payoutDetailsWarning,
     marketplaceName,
     values,
+    // AV: optional node rendered next to the submit button (e.g. a "Chat" CTA).
+    secondaryCtaButton,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
@@ -278,13 +280,19 @@ const renderForm = formRenderProps => {
       <FetchLineItemsError error={fetchLineItemsError} />
 
       <div className={css.submitButton}>
-        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+        <PrimaryButton
+          type="submit"
+          className={css.submitButtonCta}
+          inProgress={submitInProgress}
+          disabled={submitDisabled}
+        >
           {hasStock ? (
             <FormattedMessage id="ProductOrderForm.ctaButton" />
           ) : (
             <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
           )}
         </PrimaryButton>
+        {secondaryCtaButton}
       </div>
       <p className={css.finePrint}>
         {payoutDetailsWarning ? (

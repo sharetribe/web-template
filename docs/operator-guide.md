@@ -29,18 +29,20 @@ in bulk, and understanding the application settings. No technical background is 
    - [Block-Based Hero](#49-block-based-hero-avhero3)
    - [Video + Text Split](#410-video--text-split-avvideo)
    - [Pricing Plans](#411-pricing-plans-price-columns)
-   - [Section Display Options](#412-section-display-options)
-5. [Navigation Bar](#5-navigation-bar)
-6. [The Hot List](#6-the-hot-list)
-7. [Bulk Import Tool](#7-bulk-import-tool)
-   - [Overview](#71-overview)
-   - [How to Use It](#72-how-to-use-it)
-   - [ZIP File Structure](#73-zip-file-structure)
-   - [CSV Column Reference](#74-csv-column-reference)
-   - [Field Values Quick Reference](#75-field-values-quick-reference)
-   - [Troubleshooting](#76-troubleshooting)
-8. [Application Settings](#8-application-settings)
-9. [Custom Translation Strings](#9-custom-translation-strings)
+5. [Display Options](#5-display-options)
+   - [Section Display Options](#51-section-display-options)
+   - [Block Name Tokens](#52-block-name-tokens)
+6. [Navigation Bar](#6-navigation-bar)
+7. [The Hot List](#7-the-hot-list)
+8. [Bulk Import Tool](#8-bulk-import-tool)
+   - [Overview](#81-overview)
+   - [How to Use It](#82-how-to-use-it)
+   - [ZIP File Structure](#83-zip-file-structure)
+   - [CSV Column Reference](#84-csv-column-reference)
+   - [Field Values Quick Reference](#85-field-values-quick-reference)
+   - [Troubleshooting](#86-troubleshooting)
+9. [Application Settings](#9-application-settings)
+10. [Custom Translation Strings](#10-custom-translation-strings)
 
 ---
 
@@ -376,9 +378,10 @@ Every section has:
 - **Section Type** — determines what the section does (the "template")
 - **Section ID** — a unique name for this specific section
 - **Section Name** — optional display name; also used to apply visual style tokens (see
-  [Section Display Options](#412-section-display-options))
+  [Section 5 — Display Options](#5-display-options))
 - **Blocks** — individual items inside the section (listings, categories, images, etc.)
-- **Block Name** — used by custom sections to pass data (not a display label)
+- **Block Name** — used by custom sections to pass data; also carries display tokens for
+  block-level styling (see [Block Name Tokens](#52-block-name-tokens))
 
 ---
 
@@ -502,52 +505,124 @@ galleries or mood boards. No listing data is loaded.
 
 ---
 
-### 4.7 Hero Banner (Standard) (`avHero`)
+### 4.7 Hero Banner (Multi-Instance) (`avHero2`)
 
-The main gradient hero banner at the top of the landing page. Only one per page.
+A flexible hero banner: a background image with a title, description, and up to two CTA buttons. It
+supports an optional mobile-only background, an optional whole-section link, and per-instance button
+styling. You can place several independent `avHero2` instances on the same page — each is keyed by its Section ID.
 
-**Setup:**
+**How it renders:**
 
-1. Set **Section Type** to `avHero`.
-2. Set **Section ID** to `av-hero`.
-3. Fill in Title, Description, and Call to Action in the section fields.
-4. Set a background image via the section's appearance settings.
+- One hero panel: background image (full-bleed) with the title, description, and buttons overlaid.
+- The **instance name** is the part of the Section ID after `av-hero2-` (e.g. `av-hero2-summer` →
+  `summer`). All translation keys below use that name: `AVHero2.summer.cta1Text`, etc.
 
----
-
-### 4.8 Hero Banner (Multi-Instance) (`avHero2`)
-
-A flexible hero banner that supports two CTA buttons and an optional different image on mobile.
-Unlike the standard hero, multiple independent instances can exist on the same page.
-
-**Setup:**
+**Setup (Console → Content → Pages → [page] → Add section):**
 
 1. Set **Section Type** to `avHero2`.
 2. Set **Section ID** to `av-hero2-[unique-name]` (e.g. `av-hero2-summer`).
-3. Fill in Title, Description, and up to two Call to Action buttons.
-4. Set the background image in the section's appearance settings.
+3. Set the **desktop background image** in the section's **appearance** settings.
+4. Fill in the **Title** and **Description** in the section fields.
+5. Add the buttons and any options via the translation keys in the table below (Console → Content →
+   Translations).
 
-**Optional — different image on mobile:** Go to Console → Content → Translations and add a key:
+**Buttons (CTAs):** Each button appears only when its **text** key is set.
 
-> `AVHero2.[your-section-id].mobileBackgroundUrl` = (image URL)
+- A button uses `AVHero2.<name>.cta1Text` / `cta2Text` for its label and
+  `AVHero2.<name>.cta1Link` / `cta2Link` for its destination (default `/s`).
+- On **CMS pages** (`/p/...`) you may instead fill the section's built-in **Call to Action** fields;
+  the translation keys, when set, take precedence. On the **Landing page**, buttons come **only** from
+  the translation keys.
 
-**Optional — make the entire section a clickable link:** Add:
+**Translation strings** (Console → Content → Translations; replace `<name>` with the Section ID
+suffix):
 
-> `AVHero2.[your-section-id].bgLink` = (the URL path, e.g. `/s?pub_categoryLevel1=ropa`)
+| Key                                     | Default | Effect                                                                                  |
+| --------------------------------------- | ------- | --------------------------------------------------------------------------------------- |
+| `AVHero2.<name>.cta1Text`               | empty   | First button label. The button only shows when this is set.                             |
+| `AVHero2.<name>.cta1Link`               | `/s`    | First button destination (used when `cta1Text` is set).                                 |
+| `AVHero2.<name>.cta1Style`              | empty   | First button style tokens (see below). Empty → Section Name CTA tokens, then `primary`.  |
+| `AVHero2.<name>.cta2Text`               | empty   | Second button label. The button only shows when this is set.                            |
+| `AVHero2.<name>.cta2Link`               | `/s`    | Second button destination.                                                              |
+| `AVHero2.<name>.cta2Style`              | empty   | Second button style tokens. Empty → Section Name CTA tokens, then `secondary`.           |
+| `AVHero2.<name>.mobileBackgroundUrl`    | empty   | Background image shown only on mobile (≤767 px), layered above the desktop background.   |
+| `AVHero2.<name>.bgLink`                 | empty   | Makes the whole section a link to this URL. Leave unset or set to `#` for no link.       |
+
+**Button styling — two ways:**
+
+1. **Per button (translation):** `cta1Style` / `cta2Style` take space-separated **short** tokens.
+   Combine a colour with shape/font tokens, e.g. `blue rounded` or `purple solid`.
+   - Colour: `primary`, `secondary`, `blue`, `lightBlue`, `purple`, `pink`, `yellow`
+   - Shape / border: `roundedFull`, `rounded`, `square`, `dashed`, `solid`, `noOutline`
+   - Font: `headingFont`, `bodyFont`, `accentFont`
+2. **Both buttons (Section Name):** If you leave `cta1Style` / `cta2Style` empty, any CTA tokens on the
+   **Section Name** style **both** buttons — e.g. Section Name `Summer Hero - SectionCtaBtnBlue -
+   Rounded`. See [Section display options](#51-section-display-options) for the full token list.
+   When neither is set, buttons fall back to the default `primary` / `secondary` styles.
+
+**Section Name display tokens:** Beyond the CTA tokens above, this section honours the standard
+Section Name tokens (title colour/alignment, paddings, etc. — see
+[Section display options](#51-section-display-options)). The hero-specific one is **`- ShortHero`**,
+which reduces the hero's height.
 
 ---
 
 ### 4.9 Block-Based Hero (`avHero3`)
 
-A hero where each block defines an image strip with an optional text overlay. Best for multi-panel
-hero layouts.
+A two-panel hero. Each panel is a full-bleed background image with a text overlay and an optional
+button. Best for split layouts such as "Women / Men" or "New In / Sale".
 
-**Setup:**
+**How it renders:**
+
+- The section uses its **first two blocks** as the two panels. A single block renders one full-width
+  panel; any blocks beyond the first two are ignored.
+- Panels sit **side by side on desktop** (≥768 px) and **stack vertically on mobile** (<768 px).
+- Each panel's title and description are overlaid in white at the **bottom-left** of the image.
+  (Per-block text alignment is not operator-configurable.)
+
+**Setup (Console → Content → Pages → [page] → Add section):**
 
 1. Set **Section Type** to `avHero3`.
-2. Set **Section ID** to `av-hero3-[name]`.
-3. Add one or more blocks. Each block provides a **Media** (background image) and optional **Title**
-   / **Description** as a text overlay.
+2. Set **Section ID** to `av-hero3-[name]` (e.g. `av-hero3-shop`). The part after `av-hero3-` (here,
+   `shop`) is the instance name used by the optional style keys below.
+3. Add up to two blocks. For each block:
+   - **Block image (Media):** upload the panel's background image. Required for the panel to show an
+     image.
+   - **Block title / Block text:** optional overlay text.
+   - **Block image link** (optional): set the block image's **Link** to make the **whole panel**
+     clickable — an internal path (e.g. `/s?pub_categoryLevel1=ropa`) or an external URL.
+   - **Call to action** (optional): add a **button** with its own text and Internal/External link
+     address. This link is **independent** of the Block image link.
+
+**Two clickable areas, two destinations:** The Block image link makes the entire panel a link; the
+Call to action button has its own separate link. They may point to different places. The button is
+layered above the panel link, so both work and there are no invalid nested links.
+
+**Behavior matrix (per panel):**
+
+| Block image link | Call to action | Result                                                                          |
+| ---------------- | -------------- | ------------------------------------------------------------------------------- |
+| set              | set            | Whole panel links to the image-link address; the button shows with its own link |
+| set              | empty          | Whole panel links to the image-link address; no button                          |
+| empty            | set            | Panel is not clickable; only the button (with its own link) shows               |
+| empty            | empty          | Static panel — image + text, nothing clickable                                  |
+
+**Optional — button styling:** Button appearance is controlled by **name tokens**, not translation
+strings. If you set none, buttons use the default `primary` style.
+
+- **Both panels at once** — add CTA tokens to the section's **Section Name** (e.g.
+  `- SectionCtaBtnBlue - Rounded`). See [Section display options](#51-section-display-options) for
+  the full token list.
+- **A single panel** — add tokens to that block's **Block Name** using the `token ::` syntax (each
+  token ends with a space + `::`). This overrides the section-level style for just that panel.
+  See [Block Name Tokens](#52-block-name-tokens) for the full list.
+  - Colour (pick one): `blockCtaBtnBlue`, `blockCtaBtnLightBlue`, `blockCtaBtnPurple`,
+    `blockCtaBtnPink`, `blockCtaBtnYellow`
+  - Shape / style: `roundedFull`, `rounded`, `square`, `dashed`, `solid`, `noOutline`, `ctaBtnCenter`
+  - Example Block Name: `blockCtaBtnBlue :: rounded ::`
+
+**Translation strings:** None are used by this section. The background image, the panel link, the
+button text and link, and the button styling all come from the block (and Section/Block Name tokens).
 
 ---
 
@@ -585,7 +660,22 @@ Displays the interactive pricing plan selector with monthly/annual toggle.
 
 ---
 
-### 4.12 Section Display Options
+## 5. Display Options
+
+Both sections and individual blocks accept name-based style tokens that change their visual
+appearance without any code changes. These tokens are set directly in the **Section Name** or
+**Block Name** fields in the Sharetribe Console — no developer involvement needed.
+
+- **Section Name tokens** (prefix `- Token`) — apply to the whole section: layout width, title
+  colour, padding, button colour, and more. See [Section Display Options](#51-section-display-options).
+- **Block Name tokens** (suffix `token ::`) — apply to a single block: text size, button style,
+  embedded components, and more. See [Block Name Tokens](#52-block-name-tokens).
+
+Multiple tokens of either kind can be combined freely.
+
+---
+
+### 5.1 Section Display Options
 
 Any section's **Section Name** field can carry extra style tokens that change how that section
 looks, without any code changes. Tokens are added after the section's main name, separated by
@@ -600,11 +690,14 @@ spaces, each starting with a dash.
 | `- Large`        | Wider content area                                |
 | `- Medium`       | Medium-width content area                         |
 | `- FullW`        | Full screen width, edge to edge                   |
+| `- FullWHeader`  | Header children (title, description) span full width (removes their max-width) |
 | `- FullH`        | Full viewport height                              |
 | `- ShortHero`    | Reduces hero banner height to roughly half screen |
-| `- ShortContent` | Reduced content block height                      |
-| `- 2/3 cols`     | Two-thirds column layout                          |
-| `- Heading2`     | Title displayed as a larger heading style         |
+| `- ShortContent`    | Reduced content block height                         |
+| `- 2/3 cols`        | Two-thirds column layout                             |
+| `- Heading2`        | Title displayed as a larger heading style            |
+| `- AvFeature`       | Feature-block layout (image and text side by side); includes full-width and no-padding behaviour — no need to add `- FullW` or `- FullH` separately |
+| `- ReverseFeature`  | Same as AvFeature but with the image on the right    |
 
 **Text style options:**
 
@@ -617,6 +710,7 @@ spaces, each starting with a dash.
 | `- SmallerTitle`    | Smaller title font        |
 | `- SmallTitle`      | Medium title font         |
 | `- SmallSubTitles`  | Smaller subtitle text     |
+| `- SmallerTitles`   | All headings shift down one size level (H2→20 px, H3→18 px, H4→16 px, H5→14 px) |
 | `- LargeDesc`       | Larger description text   |
 | `- TextGray`        | All text in gray          |
 
@@ -633,27 +727,103 @@ spaces, each starting with a dash.
 
 | Token                      | Effect                |
 | -------------------------- | --------------------- |
-| `- sectionCtaBtnBlue`      | Blue CTA button       |
-| `- sectionCtaBtnLightBlue` | Light blue CTA button |
-| `- sectionCtaBtnPurple`    | Purple CTA button     |
-| `- sectionCtaBtnPink`      | Pink CTA button       |
-| `- sectionCtaBtnYellow`    | Yellow CTA button     |
+| `- SectionCtaBtnBlue`      | Blue CTA button       |
+| `- SectionCtaBtnLightBlue` | Light blue CTA button |
+| `- SectionCtaBtnPurple`    | Purple CTA button     |
+| `- SectionCtaBtnPink`      | Pink CTA button       |
+| `- SectionCtaBtnYellow`    | Yellow CTA button     |
 
 **Button shape and style options:**
 
 | Token            | Effect                          |
 | ---------------- | ------------------------------- |
-| `- roundedFull`  | Fully rounded (pill) button     |
-| `- rounded`      | Slightly rounded button corners |
-| `- square`       | Straight-cornered button        |
-| `- dashed`       | Dashed border button            |
-| `- solid`        | Solid border button             |
-| `- noOutline`    | No border or outline            |
-| `- ctaBtnCenter` | Center the button horizontally  |
+| `- RoundedFull`  | Fully rounded (pill) button     |
+| `- Rounded`      | Slightly rounded button corners |
+| `- Square`       | Straight-cornered button        |
+| `- Dashed`       | Dashed border button            |
+| `- Solid`        | Solid border button             |
+| `- NoOutline`    | No border or outline            |
+| `- HeadingFont`  | Heading font on the button label |
+| `- BodyFont`     | Body font on the button label    |
+| `- AccentFont`   | Accent font on the button label  |
+| `- CtaBtnCenter` | Center the button horizontally  |
 
 ---
 
-## 5. Navigation Bar
+### 5.2 Block Name Tokens
+
+Block-level behaviour is controlled by tokens placed inside the **Block Name** field in Console.
+Each token ends with ` ::` (space + double colon). Multiple tokens can be combined in any order.
+
+**Example:** `2Buttons :: text gray :: button secondary ::`
+
+#### Layout and structure
+
+| Token                | Effect                                                                         |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `2 cols ::`          | Renders two text columns side by side (text from intl keys `BlueCols.<blockId>.*`) |
+| `2Buttons ::`        | Adds a two-button row below the block content (buttons from intl keys `TwoButtons.<blockId>.*`) |
+| `2 cols buttons ::`  | Two-column layout with two buttons below (renders `BlockWithCols`; content from intl keys `BlockWithCols.<blockId>.*`) |
+| `contact buttons ::` | Replaces default buttons with two CTA links + a social link (from intl keys `ContactButtons.<blockId>.*`) |
+| `photoSlider ::`     | Adds a 4-image photo carousel (URLs from intl keys `PhotoSlider.<blockId>.image_1` … `.image_4`) |
+| `full height media ::` | Stretches block media to fill the full block height                          |
+| `icon img ::`        | Displays block media as a small icon instead of a full image                   |
+| `content short ::`   | Compact content area (reduced height)                                          |
+| `social links ::`    | Shows social media icon links                                                  |
+
+#### Content blocks
+
+| Token              | Effect                                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------------------- |
+| `buyer list ::`    | Feature list (5 rows) styled for buyers; button and rows from intl keys `CustomList.<blockId>.*` |
+| `seller list ::`   | Feature list (5 rows) styled for sellers; button and rows from intl keys `CustomList.<blockId>.*` |
+| `newsletter form ::` | Embeds a Brevo email signup form; disclaimer/success/error text from intl keys `NewsletterForm.*` |
+
+#### Text style
+
+| Token              | Effect                                |
+| ------------------ | ------------------------------------- |
+| `smaller ::`       | Smaller body text                     |
+| `text larger ::`   | Larger body text                      |
+| `text gray ::`     | Gray text                             |
+| `text darkgray ::` | Dark gray text                        |
+| `text nogap ::`    | Removes the gap between text elements |
+| `large list ::`    | Larger list item style                |
+
+#### Button style
+
+| Token                 | Effect                                      |
+| --------------------- | ------------------------------------------- |
+| `button secondary ::`  | Secondary button style for the block's CTA |
+| `button tertiary ::`   | Tertiary button style for the block's CTA  |
+
+#### Block CTA button colour (primarily used in `avHero3` panels)
+
+These tokens control the button colour for a single block when you need to override the section-level style.
+
+| Token                   | Effect            |
+| ----------------------- | ----------------- |
+| `blockCtaBtnBlue ::`    | Blue button       |
+| `blockCtaBtnLightBlue ::` | Light blue button |
+| `blockCtaBtnPurple ::`  | Purple button     |
+| `blockCtaBtnPink ::`    | Pink button       |
+| `blockCtaBtnYellow ::`  | Yellow button     |
+
+The same shape/font modifiers available for section-level buttons also work here with the `::` syntax: `roundedFull ::`, `rounded ::`, `square ::`, `dashed ::`, `solid ::`, `noOutline ::`, `headingFont ::`, `bodyFont ::`, `accentFont ::`, `ctaBtnCenter ::`.
+
+#### Block ID shorthands
+
+These special **Block ID** values activate a specific block component automatically — you do not need to set the Block Type field.
+
+| Block ID            | Block component rendered                                    |
+| ------------------- | ----------------------------------------------------------- |
+| `av-insta-feed`     | Instagram feed widget                                       |
+| `av-table-*`        | Markdown table (e.g. `av-table-fees`); content from block text |
+| `av-contact-form`   | Brevo contact form                                          |
+
+---
+
+## 6. Navigation Bar
 
 The top navigation bar has three dropdown menus on desktop:
 
@@ -678,7 +848,7 @@ do not need to configure it — it always reflects the current brand list.
 
 ---
 
-## 6. The Hot List
+## 7. The Hot List
 
 The Hot List is a curated carousel of featured listings. Any published listing tagged with
 `hot-list` automatically appears in it.
@@ -711,9 +881,9 @@ carousel:
 
 ---
 
-## 7. Bulk Import Tool
+## 8. Bulk Import Tool
 
-### 7.1 Overview
+### 8.1 Overview
 
 The bulk import tool lets you create many listings at once by uploading a single ZIP file that
 contains a CSV spreadsheet and all the listing images. It is available at `/admin/bulk-import` on
@@ -730,7 +900,7 @@ the marketplace.
 
 ---
 
-### 7.2 How to Use It
+### 8.2 How to Use It
 
 1. **Open the tool** — go to `[your marketplace URL]/admin/bulk-import`.
 2. **Confirm you are signed in as an allowlisted operator** — there is no import key to enter or
@@ -738,7 +908,7 @@ the marketplace.
 3. **Download the CSV template** — click "Download CSV Template" to get a blank spreadsheet with all
    the correct column headers.
 4. **Fill in the CSV** — one row per listing. See the
-   [CSV Column Reference](#74-csv-column-reference) below.
+   [CSV Column Reference](#84-csv-column-reference) below.
 5. **Prepare your images** — name each image file clearly. Image filenames in the CSV must exactly
    match the filename (including extension) of the image files in your ZIP.
 6. **Create the ZIP** — pack your completed CSV and all image files into a single `.zip` archive.
@@ -749,7 +919,7 @@ the marketplace.
 
 ---
 
-### 7.3 ZIP File Structure
+### 8.3 ZIP File Structure
 
 Your ZIP must contain exactly one CSV file (at any level inside the archive) and all the images
 referenced by that CSV.
@@ -776,7 +946,7 @@ my-listings.zip
 
 ---
 
-### 7.4 CSV Column Reference
+### 8.4 CSV Column Reference
 
 #### Required columns
 
@@ -838,7 +1008,7 @@ is stripped when saving — so `pd_brand` becomes the `brand` attribute on the l
 
 ---
 
-### 7.5 Field Values Quick Reference
+### 8.5 Field Values Quick Reference
 
 Use these exact option keys (the second column) in your CSV — not the display names.
 
@@ -1088,7 +1258,7 @@ see `docs/data/brand.csv`.
 
 ---
 
-### 7.6 Troubleshooting
+### 8.6 Troubleshooting
 
 | Problem                                  | Likely cause                                            | What to do                                                         |
 | ---------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -1106,7 +1276,7 @@ see `docs/data/brand.csv`.
 
 ---
 
-## 8. Application Settings
+## 9. Application Settings
 
 These settings are configured in the server environment, not in the Console. They are set once by
 the development team when deploying the application. This section explains what each setting does in
@@ -1174,7 +1344,7 @@ The actual fees charged are configured separately in Console → Build → Trans
 
 ---
 
-## 9. Custom Translation Strings
+## 10. Custom Translation Strings
 
 Custom translation strings control operator-editable text throughout the app. They live in two
 places:
@@ -1337,10 +1507,6 @@ either button — or closing the popup — marks onboarding as complete, so the 
 | Multi-instance hero | `AVHero2.<sectionId>.cta2Style`           | `secondary`                   | `secondary`                            | Optional second CTA style tokens.                                    |
 | Multi-instance hero | `AVHero2.<sectionId>.mobileBackgroundUrl` | Empty                         | Empty                                  | Optional mobile-specific background image URL.                       |
 | Clickable hero      | `AVHero2.<sectionId>.bgLink`              | Empty                         | Empty                                  | Makes the entire hero section a link.                                |
-| Block hero          | `AVHero3.<sectionId>.cta1Style`           | `primary`                     | `primary`                              | Style tokens for first CTA.                                          |
-| Block hero          | `AVHero3.<sectionId>.cta2Style`           | `primary`                     | `primary`                              | Style tokens for second CTA.                                         |
-| Block hero          | `AVHero3.<sectionId>.bgLink`              | Empty                         | Empty                                  | Link for the first background panel.                                 |
-| Block hero          | `AVHero3.<sectionId>.bgLink2`             | Empty                         | Empty                                  | Link for the second background panel.                                |
 | Video section       | `AVVideo.<sectionId>.videoUrl`            | Empty                         | Empty                                  | Direct video file URL (MP4) for `avVideo` sections.                  |
 | Instagram grid      | `SectionInstaGrid.dialogLabel`            | `Instagram post`              | `Publicación de Instagram`             | Modal dialog accessible label.                                       |
 | Instagram grid      | `SectionInstaGrid.closePost`              | `Close post`                  | `Cerrar publicación`                   | Modal close button label.                                            |
@@ -1391,7 +1557,7 @@ either button — or closing the popup — marks onboarding as complete, so the 
 | Two-column CTA block    | `BlockWithCols.<blockId>.cta1Link`          | —               | —               | First CTA link.                                                           |
 | Two-column CTA block    | `BlockWithCols.<blockId>.cta2Text`          | —               | —               | Second CTA text.                                                          |
 | Two-column CTA block    | `BlockWithCols.<blockId>.cta2Link`          | —               | —               | Second CTA link.                                                          |
-| Photo slider block      | `PhotoSlider.<blockId>.image_1` … `image_4` | Empty           | Empty           | Image URLs for `photo slider ::` blocks.                                  |
+| Photo slider block      | `PhotoSlider.<blockId>.image_1` … `image_4` | Empty           | Empty           | Image URLs for `photoSlider ::` blocks.                                   |
 
 ### Newsletter form
 

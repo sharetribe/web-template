@@ -89,7 +89,7 @@ Each page container has:
 - Section appearance encoded in `sectionName` string via `- Token` flags (e.g., `- Large`, `- ShortHero`, `- CenterTitleText`); parsed by `parseSectionCustomOptions()` in `sectionStyles.js`
 
 **PageBuilder extensions** (`src/extensions/pageBuilder/`):
-- `av/index.js` — registers AV section components for CMSPage: `avHero`, `avHero2`, `avHero3`, `avVideo`, `price-columns`
+- `av/index.js` — registers AV section components for CMSPage: `avHero2`, `avHero3`, `avVideo`, `price-columns`
 - `av/sectionStyles.js` — `parseSectionCustomOptions(sectionName)` parses all `- Token` display flags; `parseSectionCtaClass()` parses CTA button style tokens
 - `av/constants.js` — section type + ID prefix constants (re-exports CMSPage duck IDs)
 - `av/transform.js` — rewrites AV sections before render (pulls text/links from intl + pricing asset)
@@ -150,9 +150,10 @@ Built-in config is merged with hosted config from Sharetribe assets at runtime v
 - `src/components/PricingToggle/` — shared pricing plan card UI; used by both `BlockPriceSelector` and `SectionPriceSelector`
 - `src/components/StoreTypeTags/` — colored tag chips overlaid on the listing image for `vendedor-tienda` sellers; values come from the store's multi-enum `tipoTienda` user field (public scope), labels resolved from hosted `config.user.userFields`. Gate/label logic lives in `configAV.getStoreTypeTags(author, config)`. Rotating 4-color palette by index (`.tag0`–`.tag3`); renders `null` for non-store authors. Consumer positions it via `className`. Rendered by `AVListingCard` and the ListingPage gallery (`SectionGallery` carousel = top-left, `SectionHero` cover-photo = bottom-left). Requires `profile.publicData.userType` + `profile.publicData.tipoTienda` in the query `fields.user` — added to `SearchPage.duck.js` and `extensions/landingPage/av/listings.js` (ListingPage/ProfilePage already fetch full author publicData).
 - `src/components/AVWelcomePopup/` — onboarding welcome modal shown once to new sellers (`vendedor`/`vendedor-tienda`), rendered globally by `TopbarContainer`. All content is operator-editable via translation keys `AVWelcomePopup.<userType>.{imageUrl,eyebrow,title,text,primaryButtonLabel,primaryButtonUrl,secondaryButtonLabel,secondaryButtonUrl}` — empty keys hide that element (the `t` helper reads `intl.messages` to avoid `MISSING_TRANSLATION` noise). Full-bleed image + eyebrow (avBlue) + title + body + CTA buttons; close button sits outside the card on a dimmed backdrop. Eligibility/suppression live in `configAV` (`canShowWelcomePopup`, `welcomePopupSuppressedPaths` — hidden on `/signup` so it doesn't cover the verify-email message). Dismissal (close, backdrop, or CTA click) persists `publicData.onboardingCompleted` via `markVendedorOnboarded` (user.duck); CTA clicks wait for that persist (capped 1.2s) before navigating, otherwise the full-page nav cancels the request and the popup re-appears.
+- `src/components/IconChat/` — chat bubble SVG icon (48×48); rendered inside the `AVListingPageCarousel`'s "Chat" button, passed to `OrderPanel` via the `secondaryCtaButton` prop
+- `src/containers/ListingPage/AVListingDetails/` — curated listing-attribute summary (brand, sizes, condition, colors, category, género) rendered as `/s?pub_*` search links, plus a description excerpt with a "show more"/"show less" toggle (`AVListingDetails.showMore`/`showLess` translation keys); rendered by `AVListingPageCarousel` via `OrderPanel`'s `detailsSlot` prop
 
 Custom PageBuilder sections (in `src/containers/PageBuilder/SectionBuilder/`):
-- `SectionHeroCustom/` — gradient hero banner; type `avHero` (LandingPage) / `hero` (CMSPage)
 - `SectionHeroCustom2/` — multi-instance hero; type `avHero2`; sectionId prefix `av-hero2-*`; supports 2 CTAs, optional mobile bg + bgLink
 - `SectionHeroCustom3/` — block-based hero; type `avHero3`; sectionId prefix `av-hero3-*`; each block = image strip with text overlay
 - `SectionVideoSection/` — full-width 50/50 video + text split; type `avVideo`; sectionId prefix `av-video-*`; video URL from translation key
@@ -167,8 +168,24 @@ Custom PageBuilder sections (in `src/containers/PageBuilder/SectionBuilder/`):
 Custom PageBuilder blocks (in `src/containers/PageBuilder/BlockBuilder/`):
 - `BlockPriceSelector/` — block variant of pricing selector
 - `BlockWithCols/` — two-column text block
+- `BlockDefault` — supports a `smallerTitles ::` blockName prefix token, mirroring the section-level `- SmallerTitles` token: shifts all headings in the block's content down one size level
 
 Custom pages: `MakeOfferPage`, `RequestQuotePage`, `ManageAccountPage` (negotiation flow), `MyPurchasesPage`, `MySalesPage` (transaction history), `MyBalancePage` (seller financial dashboard), `BulkImportPage` (`/admin/bulk-import`, admin-only CSV+image bulk listing import via Integration SDK; see `docs/bulk-import.md`)
+
+### ListingPage Carousel Layout (AVListingPageCarousel)
+
+`src/containers/ListingPage/AVListingPageCarousel.js` + `.module.css` is the active `ListingPage`/`ListingPageVariant` component when `layoutConfig.listingPage?.variantType === 'carousel'` (see `routeConfiguration.js`); otherwise `ListingPageCoverPhoto` is used. A separate, unused `ListingPageCarousel.js` (non-AV) also exists in the same directory.
+
+**Responsive structure** (the `OrderPanel` becomes a fixed bottom-bar modal below `--viewportLarge`/1024px, so the order column only exists on desktop):
+- Mobile (<768px): single flex column — gallery, info (title + details), reviews.
+- Tablet (768–1024px): `.galleryColumn` is a 2-col grid (image 60% / info 40%); `.reviewsBlock` is a full-width row below.
+- Desktop (≥1024px): `.contentWrapper` is a 2-row grid — row 1 = `.galleryColumn` (sticky gallery only; info is hidden, its content lives in the order panel) + `.detailsColumn` (OrderPanel); row 2 = `.reviewsBlock` spanning both columns.
+
+**Sticky gallery containing block:** `.galleryBlock` is `position: sticky; top: calc(var(--avTopbarHeightDesktopTwoRow) + 24px)`. Its containing block is `.galleryColumn`, whose height is set by `.contentWrapper`'s `align-items: stretch` against `.detailsColumn` — i.e. only the order panel's height affects the gallery's sticky range. `.reviewsBlock` is kept as a sibling *outside* `.galleryColumn` (full-width grid row 2) specifically so it can never inflate the sticky containing block; if it were inside `.galleryColumn`, the stuck gallery would gain extra scroll range equal to `gap + reviewsHeight` and the (later-in-DOM) reviews would paint over its bottom edge while stuck.
+
+`--avTopbarHeightDesktopTwoRow` (defined in `avBrandOverrides.css`) is also used as `scroll-margin-top` on `.sectionReviews`/`.sectionAuthor` in `ListingPage.module.css` at `--viewportLarge`, so in-page anchor links land below the two-row desktop topbar.
+
+**OrderPanel customization slots:** `OrderPanel` (and `ProductOrderForm`) accept extra props so `AVListingPageCarousel` can restructure the panel without forking it: `detailsSlot` (rendered before the author block — `AVListingDetails`, see Custom AV Components), `footerSlot` (rendered at the end — the author/publish-date line), `hideAuthor` (suppresses OrderPanel's own author block, since `footerSlot` replaces it), and `secondaryCtaButton` (passed through to `ProductOrderForm`, rendered next to the submit button — the `IconChat` "Chat" button that calls `onContactUser()`).
 
 ### My Purchases & My Sales Pages
 
@@ -218,7 +235,7 @@ Extension hooks: `loadDataExtension`, `selectExtensionProps`, `getPageBuilderOpt
 
 **Redux:** `src/ducks/avExtension.duck.js` — global `avLandingExtension` slice storing `{ tagListingIds: { [sectionId]: uuid[] } }`; SSR-safe alternative to module-level cache; registered in `src/ducks/index.js`.
 
-**PageBuilder extension** (`src/extensions/pageBuilder/`): Provides AV sections and style helpers for CMSPage and other PageBuilder-rendered pages. Same hook pattern. AV subdir registers `avHero`, `avHero2`, `avHero3`, `avVideo`, `price-columns`.
+**PageBuilder extension** (`src/extensions/pageBuilder/`): Provides AV sections and style helpers for CMSPage and other PageBuilder-rendered pages. Same hook pattern. AV subdir registers `avHero2`, `avHero3`, `avVideo`, `price-columns`.
 
 **Other extensions:**
 - `src/extensions/accountNav/` — account settings side nav tab list (`getAccountSettingsTabs()`)
@@ -322,6 +339,7 @@ Encode display options in `sectionName` as `- Token` suffixes (space-dash-space 
 | `- Medium` | `isMedium` | Medium variant |
 | `- FullH` | `isFullH` | Full viewport height |
 | `- FullW` | `isFullW` | Full width, no container |
+| `- FullWHeader` | `isFullWHeader` | Header children (title, description) span full width (removes their max-width) |
 | `- ShortHero` | `isShortHero` | Reduced hero height |
 | `- ShortContent` | `isShortC` | Compact content area |
 | `- SmallerTitle` | `isSmallerT` | Smaller h1/h2 |
@@ -332,18 +350,19 @@ Encode display options in `sectionName` as `- Token` suffixes (space-dash-space 
 | `- CenterDescText` | `isCenterDescText` | Center-aligned description |
 | `- LargeDesc` | `isLargeDesc` | Larger description font |
 | `- SmallSubTitles` | `isSmallSubTitles` | Smaller subtitles |
+| `- SmallerTitles` | `isSmallerTitles` | All headings shift down one size level (H2→20 px, H3→18 px, H4→16 px, H5→14 px) |
 | `- Paddings` | `hasPaddings` | Force standard paddings |
 | `- NoPaddings` | `hasNoPaddings` | Remove all paddings |
 | `- NoPaddingsX` | `hasNoPaddingsX` | Remove horizontal paddings |
 | `- NoPaddingsY` | `hasNoPaddingsY` | Remove vertical paddings |
 | `- Heading2` | `isHeadingH` | h2 heading style |
 | `- 2/3 cols` | `isTwoThirdsCols` | Two-thirds column layout |
-| `- AvFeature` | `isAvFeature` | Feature block layout |
+| `- AvFeature` | `isAvFeature` | Feature block layout (includes FullW + FullH effects — no need to add those separately) |
 | `- ReverseFeature` | `isReverseFeature` | Reversed feature layout |
 | `- TextGray` | `hasTextGray` | Gray text |
 
-**CTA button tokens** (parsed by `parseSectionCtaClass`): `- sectionCtaBtnBlue`, `- sectionCtaBtnLightBlue`, `- sectionCtaBtnPurple`, `- sectionCtaBtnPink`, `- sectionCtaBtnYellow`
-**CTA modifiers:** `- roundedFull`, `- rounded`, `- square`, `- dashed`, `- solid`, `- noOutline`, `- headingFont`, `- bodyFont`, `- accentFont`, `- ctaBtnCenter`
+**CTA button tokens** (parsed by `parseSectionCtaClass`): `- SectionCtaBtnBlue`, `- SectionCtaBtnLightBlue`, `- SectionCtaBtnPurple`, `- SectionCtaBtnPink`, `- SectionCtaBtnYellow`
+**CTA modifiers:** `- RoundedFull`, `- Rounded`, `- Square`, `- Dashed`, `- Solid`, `- NoOutline`, `- HeadingFont`, `- BodyFont`, `- AccentFont`, `- CtaBtnCenter`
 
 To add a new token: add a `hasToken(sectionName, 'MyToken')` line in `parseSectionCustomOptions()` and a corresponding CSS class in `AVSectionContainer`.
 
@@ -416,6 +435,11 @@ In-repo docs in `docs/` (read these before changing the related subsystem):
 - `listing-custom-fields-setup.md` — Sharetribe Console listing-field setup
 - `console-customization-guide.md` — Console CMS/asset configuration
 - `test-account-setup.md`, `bidding-research.md`, `ai_notes.md`
+
+Implementation plans (written 2026-06-12, **not yet implemented** — execute task-by-task per the plan headers):
+- `plan-bulk-import-all-users.md` — open bulk import to all signed-in users (current user as author; privileged email list for `author_id`; security hardening; example ZIP; wizard CTA link)
+- `plan-favorites-page.md` — heart/like button on listings + `/favorites` page (privateData storage, `favorites.duck`, `FavoriteButton`, AV_PROFILE_LINKS entry)
+- `plan-shopping-bag.md` — localStorage shopping bag (`bag.duck`, `AddToBagButton` in ProductOrderForm, topbar `BagLink`, `/bag` page, `BagPopup`)
 
 ## Upstream Sync
 

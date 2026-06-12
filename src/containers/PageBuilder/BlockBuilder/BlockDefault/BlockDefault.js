@@ -82,6 +82,7 @@ const BlockDefault = props => {
     hasLargeList,
     hasTextLarger,
     hasTextSmaller,
+    hasSmallerTitles,
     hasShortContent,
     hasCTASecondary,
     hasCTATertiary,
@@ -119,6 +120,7 @@ const BlockDefault = props => {
     hasLargeList ? css.largeList : '',
     hasTextLarger ? css.textLarger : '',
     hasTextSmaller ? css.textSmaller : '',
+    hasSmallerTitles ? css.smallerTitles : '',
     hasShortContent ? css.shortContent : ''
   );
 

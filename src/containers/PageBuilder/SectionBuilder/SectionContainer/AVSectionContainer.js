@@ -64,6 +64,8 @@ const AVSectionContainer = props => {
     customOption?.hasTextGray ? avCss.sectionContentHasTextGray : null,
     customOption?.isAvFeature ? avCss.sectionContentAvFeature : null,
     customOption?.isHeadingH ? avCss.sectionContentHeadingH : null,
+    customOption?.isFullWHeader ? avCss.sectionContentFullWHeader : null,
+    customOption?.isSmallerTitles ? avCss.sectionContentSmallerTitles : null,
     as === 'footer' ? avCss.customFooter : null
   );
 

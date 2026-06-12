@@ -1,8 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useIntl } from 'react-intl';
 
 import Field from '../../Field';
+import { sanitizeUrl } from '../../../../util/sanitize';
+import { parseBlockCtaClass } from '../../../../extensions/pageBuilder/av/blocks';
 
 import css from './SectionHeroCustom3.module.css';
 
@@ -29,10 +30,11 @@ const alignmentClass = alignment => {
  * SectionHeroCustom3 — full-width two-half hero driven by the first two CMS blocks.
  *
  * Each half renders independently using its block's:
- *   - media      → background image
+ *   - media      → background image; its "Block image link" makes the whole panel
+ *                  clickable via a stretched-link overlay (separate destination)
  *   - title      → heading field
  *   - text       → paragraph/markdown field
- *   - callToAction → CTA button
+ *   - callToAction → CTA button with its own link (independent of the panel link)
  *   - alignment  → 'left' | 'center' | 'right' content alignment
  *
  * sectionId prefix: av-hero3-<id>
@@ -46,56 +48,18 @@ const alignmentClass = alignment => {
  * @param {Object}  props.options
  */
 const SectionHeroCustom3 = props => {
-  const {
-    sectionId,
-    className,
-    rootClassName,
-    defaultClasses,
-    blocks = [],
-    cta1Style,
-    cta2Style,
-    options,
-  } = props;
+  const { sectionId, className, rootClassName, defaultClasses, blocks = [], options } = props;
 
   if (!blocks.length) return null;
-
-  const intl = useIntl();
-  const sectionKey = sectionId.replace(/^av-hero3-/, '');
-  const bgLinkKeys = [
-    intl.formatMessage({ id: `AVHero3.${sectionKey}.bgLink`, defaultMessage: '' }),
-    intl.formatMessage({ id: `AVHero3.${sectionKey}.bgLink2`, defaultMessage: '' }),
-  ].map(v => (v && v !== '#' ? v : null));
 
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
 
-  const styleClassMap = {
-    primary: defaultClasses?.ctaButtonPrimary,
-    secondary: defaultClasses?.ctaButtonSecondary,
-    blue: defaultClasses?.ctaButtonBlue,
-    lightBlue: defaultClasses?.ctaButtonLightBlue,
-    purple: defaultClasses?.ctaButtonPurple,
-    pink: defaultClasses?.ctaButtonPink,
-    yellow: defaultClasses?.ctaButtonYellow,
-    roundedFull: defaultClasses?.roundedFull,
-    rounded: defaultClasses?.rounded,
-    square: defaultClasses?.square,
-    dashed: defaultClasses?.dashed,
-    solid: defaultClasses?.solid,
-    noOutline: defaultClasses?.noOutline,
-    headingFont: defaultClasses?.headingFont,
-    bodyFont: defaultClasses?.bodyFont,
-    accentFont: css.accentFont,
-  };
-  const resolveCtaClass = style =>
-    classNames(
-      (style || '')
-        .trim()
-        .split(/\s+/)
-        .map(t => styleClassMap[t])
-        .filter(Boolean)
-    ) || defaultClasses?.ctaButtonPrimary;
-  const ctaStyles = [resolveCtaClass(cta1Style), resolveCtaClass(cta2Style)];
+  // Button styling is driven by block name tokens (e.g. "blockCtaBtnBlue :: rounded ::")
+  // with a fallback to the section's primary button — which already reflects any
+  // section-name CTA tokens baked into defaultClasses by SectionBuilder.
+  const resolveCtaClass = block =>
+    parseBlockCtaClass(block.blockName, defaultClasses) || defaultClasses?.ctaButtonPrimary;
 
   const halves = blocks.slice(0, 2);
 
@@ -103,12 +67,12 @@ const SectionHeroCustom3 = props => {
     <section id={sectionId} className={classNames(rootClassName || css.root, className)}>
       {halves.map((block, i) => {
         const imageUrl = getImageUrl(block.media);
-        const bgLink = bgLinkKeys[i];
-        const HalfTag = bgLink ? 'a' : 'div';
+        // The whole-panel link comes from the block's "Block image link" setting
+        // (block.media.link.href) — independent of the CTA button's own link.
+        const bgLink = block.media?.link?.href ? sanitizeUrl(block.media.link.href) : null;
         return (
-          <HalfTag
+          <div
             key={block.blockId || block.blockName || i}
-            href={bgLink || undefined}
             className={classNames(
               css.half,
               imageUrl ? css.hasBg : '',
@@ -116,14 +80,35 @@ const SectionHeroCustom3 = props => {
             )}
             style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}
           >
-            <div className={classNames(css.content, alignmentClass(block.alignment))}>
+            {bgLink ? (
+              // Stretched-link overlay for the "Block image link": makes the whole
+              // panel clickable without nesting an <a> inside the CTA <a>. Labelled
+              // by the panel title (or image alt) since it's a real, keyboard-
+              // reachable link with a destination distinct from the CTA button.
+              <a
+                className={css.bgLinkOverlay}
+                href={bgLink}
+                aria-label={block.title?.content || block.media?.alt || undefined}
+              />
+            ) : null}
+            <div
+              className={classNames(
+                css.content,
+                alignmentClass(block.alignment),
+                bgLink ? css.contentLinked : ''
+              )}
+            >
               <Field data={block.title} options={fieldOptions} />
               <Field data={block.text} options={fieldOptions} />
-              {block.callToAction && !bgLink ? (
-                <Field data={block.callToAction} className={ctaStyles[i]} options={fieldOptions} />
+              {block.callToAction ? (
+                <Field
+                  data={block.callToAction}
+                  className={classNames(resolveCtaClass(block), css.ctaAbove)}
+                  options={fieldOptions}
+                />
               ) : null}
             </div>
-          </HalfTag>
+          </div>
         );
       })}
     </section>

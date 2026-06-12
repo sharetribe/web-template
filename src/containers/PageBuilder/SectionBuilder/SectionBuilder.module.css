@@ -204,9 +204,9 @@
   outline: 1px var(--_av-outline-style, solid) var(--_av-outline-color);
   font-family: var(--_av-font, var(--fontFamily));
   border-radius: var(--_av-radius, 26px);
-  font-size: 20px;
+  font-size: var(--fontSizeBase, 16px);
   font-weight: 700;
-  min-width: 160px;
+  min-width: 140px;
 
   &:hover {
     background-color: var(--_av-bg-hover, var(--_av-bg));

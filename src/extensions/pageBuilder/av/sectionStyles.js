@@ -29,29 +29,30 @@ export const getAvDefaultClassEntries = css => ({
   headingFont: css.headingFont,
   bodyFont: css.bodyFont,
   accentFont: css.accentFont,
+  ctaBtnCenter: css.ctaBtnCenter,
 });
 
 // CTA tokens recognized in `section.sectionName`. Order in BASE_MAP matters:
 // the first matching base token wins.
 const buildSectionCtaBaseMap = css => ({
-  sectionCtaBtnBlue: css.ctaButtonBlue,
-  sectionCtaBtnLightBlue: css.ctaButtonLightBlue,
-  sectionCtaBtnPurple: css.ctaButtonPurple,
-  sectionCtaBtnPink: css.ctaButtonPink,
-  sectionCtaBtnYellow: css.ctaButtonYellow,
+  SectionCtaBtnBlue: css.ctaButtonBlue,
+  SectionCtaBtnLightBlue: css.ctaButtonLightBlue,
+  SectionCtaBtnPurple: css.ctaButtonPurple,
+  SectionCtaBtnPink: css.ctaButtonPink,
+  SectionCtaBtnYellow: css.ctaButtonYellow,
 });
 
 const buildCtaModifierMap = css => ({
-  roundedFull: css.roundedFull,
-  rounded: css.rounded,
-  square: css.square,
-  dashed: css.dashed,
-  solid: css.solid,
-  noOutline: css.noOutline,
-  headingFont: css.headingFont,
-  bodyFont: css.bodyFont,
-  accentFont: css.accentFont,
-  ctaBtnCenter: css.ctaBtnCenter,
+  RoundedFull: css.roundedFull,
+  Rounded: css.rounded,
+  Square: css.square,
+  Dashed: css.dashed,
+  Solid: css.solid,
+  NoOutline: css.noOutline,
+  HeadingFont: css.headingFont,
+  BodyFont: css.bodyFont,
+  AccentFont: css.accentFont,
+  CtaBtnCenter: css.ctaBtnCenter,
 });
 
 const hasToken = (str, token) => new RegExp(`- ${token}(?!\\w)`).test(str);
@@ -108,6 +109,8 @@ export const parseSectionCustomOptions = sectionName => {
   customOption.isAvFeature = hasToken(sectionName, 'AvFeature');
   customOption.isReverseFeature = hasToken(sectionName, 'ReverseFeature');
   customOption.hasTextGray = hasToken(sectionName, 'TextGray');
+  customOption.isFullWHeader = hasToken(sectionName, 'FullWHeader');
+  customOption.isSmallerTitles = hasToken(sectionName, 'SmallerTitles');
 
   return customOption;
 };

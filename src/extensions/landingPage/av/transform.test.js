@@ -13,10 +13,8 @@ describe('landingPage AV transform', () => {
   });
 
   it('maps custom section types and injects listing data', () => {
-    const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
     const pageData = {
       sections: [
-        { sectionId: 'av-hero', title: { content: 'hero' } },
         { sectionId: 'av-recommendeds' },
         { sectionId: 'av-selections-1' },
         { sectionId: 'plain' },
@@ -29,14 +27,8 @@ describe('landingPage AV transform', () => {
       tagListingsSections: {},
     };
 
-    const transformed = transformCustomSections({ pageData, intl, extensionData });
-    const [hero, recommendeds, selections, plain] = transformed.sections;
-
-    expect(hero.sectionType).toBe('avHero');
-    expect(hero.classWrap).toBe('contentLeft');
-    expect(hero.callToAction.content).toBe('Explore now');
-    expect(hero.callToAction2.content).toBe('Browse all');
-    expect(hero.isLanding).toBe(true);
+    const transformed = transformCustomSections({ pageData, extensionData });
+    const [recommendeds, selections, plain] = transformed.sections;
 
     expect(recommendeds.sectionType).toBe('avRecommendeds');
     expect(recommendeds.listings).toEqual([{ id: 'rec-1' }]);
@@ -118,5 +110,32 @@ describe('landingPage AV transform', () => {
     expect(catSection.blocks).toBe(mockBlocks);
     // no listings prop injected
     expect(catSection.listings).toBeUndefined();
+  });
+
+  it('resolves AVHero2 bgLink from messages; unset or "#" yields no link', () => {
+    const makeIntl = messages => ({
+      messages,
+      formatMessage: ({ id, defaultMessage }) =>
+        messages[id] != null ? messages[id] : defaultMessage,
+    });
+    const run = messages =>
+      transformCustomSections({
+        pageData: { sections: [{ sectionId: 'av-hero2-shop' }] },
+        intl: makeIntl(messages),
+        extensionData: {
+          hasCustomSections: true,
+          listings: [],
+          selectionsListings: {},
+          tagListingsSections: {},
+        },
+      }).sections[0];
+
+    // Unset key → null (regression: previously react-intl returned the id, making
+    // the whole hero a bogus "AVHero2.shop.bgLink" link).
+    expect(run({}).bgLink).toBeNull();
+    // Sentinel "#" → null
+    expect(run({ 'AVHero2.shop.bgLink': '#' }).bgLink).toBeNull();
+    // Real path → kept
+    expect(run({ 'AVHero2.shop.bgLink': '/s' }).bgLink).toBe('/s');
   });
 });

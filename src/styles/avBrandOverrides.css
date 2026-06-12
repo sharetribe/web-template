@@ -7,6 +7,11 @@
  * minimises merge conflicts when syncing with upstream.
  */
 
+/* Required so PostCSS resolves `@media (--viewportMedium)` etc. in this file.
+   Without it those custom media queries stay literal and the browser ignores
+   them (the desktop branches silently never apply). */
+@import './customMediaQueries.css';
+
 :root {
   /* ================ AV Brand Palette ================ */
   --avGray1: hsl(0 0% 80%);
@@ -138,8 +143,104 @@ h4 {
   font-weight: var(--fontWeightRegular);
 }
 
-h4 {
-  font-size: 21px;
+/* ================ Heading sizes (AV override) ================
+   Single source of truth for heading font sizes. Overrides the upstream
+   element rules + global `.h1`–`.h6` (marketplaceDefaults.css) and the
+   PageBuilder Heading primitive's scoped `.h1`–`.h6` (Heading.module.css)
+   without editing those files. Mobile-first: base = below --viewportMedium,
+   media block = from --viewportMedium up.
+
+   - `hN` and global `.hN` win by source order (this file is imported after
+     marketplaceDefaults.css).
+   - Heading primitives are CSS-Modules scoped (`Heading_hN__<hash>`); the
+     `hN[class*='Heading_hN__']` form is (0,1,1) so it always beats the
+     module's own `.hN` (0,1,0) yet stays at/under the AV section heading
+     overrides (`.sectionContentSmallerTitles h2`, `header > h2` …), which
+     must keep winning. Only font-size is set; upstream line-height / margins
+     / uppercase are preserved. */
+
+/* Mobile (below --viewportMedium) */
+h1,
+.h1,
+h1[class*='Heading_h1__'] {
+  font-size: 42px;
+}
+h2,
+.h2,
+h2[class*='Heading_h2__'] {
+  font-size: 26px;
+}
+h3,
+.h3,
+h3[class*='Heading_h3__'] {
+  font-size: 18px;
+}
+h4,
+.h4,
+h4[class*='Heading_h4__'] {
+  font-size: 16px;
+}
+h5,
+.h5,
+h5[class*='Heading_h5__'] {
+  font-size: 15px;
+}
+h6,
+.h6,
+h6[class*='Heading_h6__'] {
+  font-size: 15px;
+}
+
+/* Desktop (from --viewportMedium) */
+@media (--viewportMedium) {
+  h1,
+  .h1,
+  h1[class*='Heading_h1__'] {
+    font-size: 50px;
+  }
+  h2,
+  .h2,
+  h2[class*='Heading_h2__'] {
+    font-size: 30px;
+  }
+  h3,
+  .h3,
+  h3[class*='Heading_h3__'] {
+    font-size: 20px;
+  }
+  h4,
+  .h4,
+  h4[class*='Heading_h4__'] {
+    font-size: 18px;
+  }
+  h5,
+  .h5,
+  h5[class*='Heading_h5__'] {
+    font-size: 16px;
+  }
+  h6,
+  .h6,
+  h6[class*='Heading_h6__'] {
+    font-size: 14px;
+  }
+}
+
+/* h1/h2 should never break a word mid-character — wrap whole words onto the
+   next line instead. Overrides Heading.module.css's `.h1`–`.h6`
+   (word-break: break-word; hyphens: auto) via the same specificity/source-order
+   strategy as the heading-size block above. word-break is inherited, so this
+   also wins over SectionContainer's `.sectionContent { word-break: break-word }`
+   on the h1/h2 elements themselves (an element's own declaration always beats
+   an inherited value). */
+h1,
+.h1,
+h1[class*='Heading_h1__'],
+h2,
+.h2,
+h2[class*='Heading_h2__'] {
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 pre {
@@ -153,10 +254,6 @@ pre {
 select,
 input,
 textarea {
-  font-size: 18px;
-}
-
-.h4 {
   font-size: 18px;
 }
 
@@ -256,4 +353,44 @@ textarea {
   background-color: var(--colorWhite);
   color: var(--avBlue);
   border: 1px solid var(--avBlue);
+}
+
+/* Tighten the grid gap of the PageBuilder article layout.
+   `.articleMain` is a CSS Modules scoped class (`SectionArticle_articleMain__<hash>`),
+   so match the stable prefix and raise specificity with `:root` (0,2,0) to beat the
+   module's own `.articleMain` rule (0,1,0) regardless of stylesheet injection order. */
+:root [class*='SectionArticle_articleMain__'] {
+  gap: 26px;
+}
+
+/* Add spacing between a paragraph and a list that immediately follows it.
+   The paragraph uses a CSS Modules scoped class (`P_p__<hash>`) whose
+   `+ ul` rule out-specifies a plain `p + ul`, so we match the stable
+   class prefix and prefix with `:root` to raise specificity (0,2,1). */
+:root [class*='P_p__'] + ul {
+  margin-top: 12px;
+}
+
+/* Center the PageBuilder section header (title/description/CTA) at all screen
+   sizes. Upstream only centers it from --viewportMedium up; below that it
+   uses `justify-content: start`. `.sectionDetails` is a CSS Modules scoped
+   class (`SectionBuilder_sectionDetails__<hash>`); match the stable prefix and
+   raise specificity with `:root` (0,2,0) to beat the module's own
+   `.sectionDetails` rule (0,1,0) — including its `@media (--viewportMedium)`
+   variant — regardless of stylesheet injection order. */
+:root [class*='SectionBuilder_sectionDetails__'] {
+  justify-content: center;
+}
+
+/* `justify-content: center` on `.sectionDetails` only centers its single grid
+   column when that column is narrower than the section — on mobile the
+   column spans the full width, so the header still looks left-aligned because
+   `.align` (composed by `.title`/`.description`/`.ctaButton`) sets
+   `text-align: left; justify-self: start` below --viewportMedium. Apply its
+   desktop values (`text-align: center; justify-self: center`) at all sizes too,
+   using the same `[class*='SectionBuilder_align__']` + `:root` (0,2,0)
+   specificity strategy as `.sectionDetails` above. */
+:root [class*='SectionBuilder_align__'] {
+  text-align: center;
+  justify-self: center;
 }

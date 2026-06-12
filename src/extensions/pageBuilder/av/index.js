@@ -6,7 +6,6 @@
 //   components expect (pulling text/links from intl + pricing asset).
 
 import {
-  AV_HERO_SECTION_TYPE,
   AV_HERO2_SECTION_TYPE,
   AV_HERO3_SECTION_TYPE,
   AV_VIDEO_SECTION_TYPE,
@@ -19,8 +18,6 @@ let cachedSectionComponents;
 const getSectionComponents = () => {
   if (cachedSectionComponents) return cachedSectionComponents;
 
-  const SectionHeroCustom = require('../../../containers/PageBuilder/SectionBuilder/SectionHeroCustom')
-    .default;
   const SectionHeroCustom2 = require('../../../containers/PageBuilder/SectionBuilder/SectionHeroCustom2')
     .default;
   const SectionHeroCustom3 = require('../../../containers/PageBuilder/SectionBuilder/SectionHeroCustom3')
@@ -31,7 +28,6 @@ const getSectionComponents = () => {
     .default;
 
   cachedSectionComponents = {
-    [AV_HERO_SECTION_TYPE]: { component: SectionHeroCustom },
     [AV_HERO2_SECTION_TYPE]: { component: SectionHeroCustom2 },
     [AV_HERO3_SECTION_TYPE]: { component: SectionHeroCustom3 },
     [AV_VIDEO_SECTION_TYPE]: { component: SectionVideoSection },

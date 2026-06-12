@@ -79,50 +79,32 @@
 }
 
 /* ── Typography ── */
-.title {
+/* `.title`, `.titleSmall` and `.titleBlue` are applied directly onto the Heading
+   element (h1/h2/h3) by <Field>, not onto a wrapper div. The previous descendant
+   selectors (`.title h2`) therefore never matched, so the heading fell back to the
+   Heading primitive's `.h2` size (40px). Scope under `.contentPane` (which always
+   wraps the title) so the rules land on the heading element itself and out-specify
+   the `.h1/.h2/.h3` rootClassName.
+   Note: font-size is intentionally NOT set here — the heading follows the central,
+   responsive heading scale in src/styles/avBrandOverrides.css (single source of
+   truth). `.titleSmall` below still opts into a smaller variant. */
+.contentPane .title {
   margin: 0 0 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--colorGrey900);
+}
 
-  h1,
-  h2,
-  h3 {
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--colorGrey900);
-    margin: 0;
-  }
+.contentPane .titleSmall {
+  font-size: 22px;
 
   @media (min-width: 768px) {
-    h1,
-    h2,
-    h3 {
-      font-size: 42px;
-    }
+    font-size: 28px;
   }
 }
 
-.titleSmall {
-  h1,
-  h2,
-  h3 {
-    font-size: 22px;
-  }
-
-  @media (min-width: 768px) {
-    h1,
-    h2,
-    h3 {
-      font-size: 28px;
-    }
-  }
-}
-
-.titleBlue {
-  h1,
-  h2,
-  h3 {
-    color: var(--avBlue);
-  }
+.contentPane .titleBlue {
+  color: var(--avBlue);
 }
 
 .description {

@@ -1,0 +1,142 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 0 4px;
+}
+
+/* No divider lines between rows (intentional). */
+.row,
+.sizesRow,
+.descriptionRow {
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--colorGrey700);
+  margin: 0;
+}
+
+.label {
+  color: var(--colorGrey900);
+}
+
+.link {
+  color: var(--marketplaceColor);
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+/* brand: AV purple, bold, a little larger; no field label */
+.brandRow {
+  margin: 0;
+}
+.brandLink {
+  display: inline-block;
+  color: var(--avPurple);
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  font-size: 18px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+.brandLink:hover {
+  text-decoration: underline;
+}
+
+/* all_sizes: slightly larger, rendered as chips */
+.sizesRow {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.chipItem {
+  display: inline-flex;
+  align-items: center;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--avYellow);
+  color: var(--avSecondary);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: var(--fontWeightMedium);
+  white-space: nowrap;
+}
+.chip:hover {
+  text-decoration: underline;
+}
+
+/* color: rendered as swatch circles */
+.colorRow {
+  composes: row;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.swatchList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.swatchItem {
+  display: inline-flex;
+  align-items: center;
+}
+.swatchLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--marketplaceColor);
+}
+.swatchLink:hover {
+  text-decoration: underline;
+}
+.swatch {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--colorGrey300);
+  flex-shrink: 0;
+}
+
+/* description excerpt + toggle */
+.descriptionRow {
+  color: var(--colorGrey700);
+}
+.descriptionText {
+  white-space: pre-wrap;
+}
+.toggleButton {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--colorGrey500);
+  font-size: 16px;
+  text-decoration: underline;
+}
+.toggleButton:hover {
+  color: var(--colorGrey700);
+}

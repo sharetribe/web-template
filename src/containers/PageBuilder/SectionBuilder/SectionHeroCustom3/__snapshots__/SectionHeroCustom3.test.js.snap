@@ -5,9 +5,8 @@ exports[`SectionHeroCustom3 matches snapshot 1`] = `
   class="root"
   id="av-hero3-main"
 >
-  <a
-    class="half halfLinked"
-    href="AVHero3.main.bgLink"
+  <div
+    class="half"
   >
     <div
       class="content alignLeft"
@@ -18,6 +17,6 @@ exports[`SectionHeroCustom3 matches snapshot 1`] = `
         Colección Primavera
       </h2>
     </div>
-  </a>
+  </div>
 </section>
 `;

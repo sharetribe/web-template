@@ -1,6 +1,6 @@
 'use strict';
 
-import { getEffectiveBlockType } from './blocks';
+import { getEffectiveBlockType, createBlockCustomProps } from './blocks';
 
 describe('getEffectiveBlockType', () => {
   it('returns blockInstagramFeed for blockId "av-insta-feed"', () => {
@@ -41,5 +41,25 @@ describe('getEffectiveBlockType', () => {
 
   it('handles undefined blockId and blockName gracefully', () => {
     expect(getEffectiveBlockType(undefined, undefined, 'blockDefault')).toBe('blockDefault');
+  });
+});
+
+describe('createBlockCustomProps', () => {
+  const intl = { formatMessage: () => '' };
+  const css = {};
+
+  it('sets hasSmallerTitles for blockName containing "smallerTitles ::"', () => {
+    const props = createBlockCustomProps(
+      { blockId: 'b1', blockName: 'smallerTitles ::' },
+      intl,
+      css
+    );
+    expect(props.hasSmallerTitles).toBe(true);
+  });
+
+  it('does not set hasSmallerTitles when the token is absent', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'smaller ::' }, intl, css);
+    expect(props.hasSmallerTitles).toBeUndefined();
+    expect(props.hasTextSmaller).toBe(true);
   });
 });

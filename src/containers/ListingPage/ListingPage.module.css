@@ -394,10 +394,15 @@
 }
 
 .orderPanelTitle {
-  /* Font */
+  /* Font: matches the AV h1 scale (avBrandOverrides.css) */
   composes: marketplaceAuthTitleStyles from global;
-  font-size: 28px;
-  line-height: 32px;
+  font-size: 42px;
+  line-height: 1.15;
+
+  @media (--viewportMedium) {
+    font-size: 50px;
+    line-height: 1.15;
+  }
 
   /* Layout */
   width: 100%;
@@ -662,6 +667,10 @@
   }
   @media (--viewportLarge) {
     padding: 8px 0;
+    /* TopbarDesktop renders two rows here (--avTopbarHeightDesktopTwoRow),
+       so anchoring/scrolling to this section must clear that, not just the
+       single-row --topbarHeightDesktop. */
+    scroll-margin-top: calc(var(--avTopbarHeightDesktopTwoRow) + 24px);
   }
 }
 
@@ -859,4 +868,11 @@
 
 .galleryStoreTags {
   top: 16px;
+
+  /* From --viewportMedium up, ListingImageGallery renders a vertical thumbnail
+     column (thumbnailPosition="left") at the left edge of .productGallery —
+     push the overlay past it so it sits on the main image, not the thumbnails. */
+  @media (--viewportMedium) {
+    left: calc(16px + var(--ig-thumbnail-size, 102px) + 8px);
+  }
 }

@@ -82,7 +82,7 @@ describe('landingPage AV sections helpers', () => {
   it('getTagListingsSections returns empty object when no tag sections', () => {
     const pageData = {
       sections: [
-        { sectionId: 'av-hero' },
+        { sectionId: 'av-recommendeds' },
         { sectionId: 'av-selections-1', blocks: [{ blockName: 'id' }] },
       ],
     };
@@ -91,7 +91,6 @@ describe('landingPage AV sections helpers', () => {
 
   it('returns whether custom AV sections exist', () => {
     expect(hasCustomSections({ sections: [{ sectionId: 'other' }] })).toBe(false);
-    expect(hasCustomSections({ sections: [{ sectionId: 'av-hero' }] })).toBe(true);
     expect(hasCustomSections({ sections: [{ sectionId: 'av-tag-listings-x' }] })).toBe(true);
     expect(hasCustomSections({ sections: [{ sectionId: 'av-selected-cats' }] })).toBe(true);
   });

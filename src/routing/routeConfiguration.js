@@ -23,6 +23,8 @@ const MakeOfferPage = loadable(() => import(/* webpackChunkName: "MakeOfferPage"
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
+// AV: redesigned carousel listing page (drop-in for the carousel variant).
+const AVListingPageCarousel = loadable(() => import(/* webpackChunkName: "AVListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/AVListingPageCarousel'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
 const ManageAccountPage = loadable(() => import(/* webpackChunkName: "ManageAccountPage" */ '../containers/ManageAccountPage/ManageAccountPage'));
 const MyPurchasesPage = loadable(() => import(/* webpackChunkName: "MyPurchasesPage" */ '../containers/MyPurchasesPage/MyPurchasesPage'));
@@ -73,8 +75,8 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 const routeConfiguration = (layoutConfig, accessControlConfig) => {
   const isSearchPageWithMap = layoutConfig.searchPage?.variantType === 'map';
   const SearchPage = isSearchPageWithMap ? SearchPageWithMap : SearchPageWithGrid;
-  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
-    ? ListingPageCarousel 
+  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel'
+    ? AVListingPageCarousel
     : ListingPageCoverPhoto;
 
   const isPrivateMarketplace = accessControlConfig?.marketplace?.private === true;

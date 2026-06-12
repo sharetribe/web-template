@@ -1,5 +1,4 @@
 import {
-  AV_HERO_SECTION_ID,
   AV_HERO2_SECTION_ID_PREFIX,
   AV_HERO3_SECTION_ID_PREFIX,
   AV_VIDEO_SECTION_ID_PREFIX,
@@ -93,7 +92,6 @@ export const hasCustomSections = pageData => {
   return sections.some(s => {
     const sectionId = s?.sectionId || '';
     return (
-      sectionId === AV_HERO_SECTION_ID ||
       sectionId === AV_RECOMMENDEDS_SECTION_ID ||
       isHero2SectionId(sectionId) ||
       isHero3SectionId(sectionId) ||

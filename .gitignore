@@ -13,5 +13,12 @@ build
 .DS_Store
 .env
 .env.development
+.claude/
+.codex/
+AGENTS.override.md
+.superpowers/
+.playwright-mcp/
+docs/
+!docs/operator-guide.md
 npm-debug.log
 yarn-error.log

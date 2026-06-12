@@ -183,6 +183,26 @@
   }
 }
 
+/* Block-level mirror of the section-name token "- SmallerTitles":
+   shift all headings down one size level. */
+.smallerTitles {
+  h1 {
+    font-size: 30px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  h3 {
+    font-size: 18px;
+  }
+  h4 {
+    font-size: 16px;
+  }
+  h5 {
+    font-size: 14px;
+  }
+}
+
 .largeList {
   ol {
     list-style-type: decimal-leading-zero;

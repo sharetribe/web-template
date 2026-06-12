@@ -276,7 +276,7 @@
 @media (max-width: 768px) {
   .image-gallery-slide-wrapper.image-gallery-thumbnails-left,
   .image-gallery-slide-wrapper.image-gallery-thumbnails-right {
-    width: calc(100% - 88px);
+    width: calc(100% - 96px);
   }
 }
 

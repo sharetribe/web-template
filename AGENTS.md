@@ -1,171 +1,180 @@
-# AGENTS.md – AI Agent guide for Sharetribe Web Template
+# AGENTS.md - Codex Guide for Sharetribe Web Template
 
-Sharetribe Web Template is a React-based marketplace web application with server-side rendering.
+This is the root Codex instruction file for the Archivo Vintach Sharetribe Web Template repository.
+Keep this file compact because Codex loads it automatically. Detailed subsystem notes live in
+`.codex/reference/`.
 
-# Technology Stack
+## Project
 
-React 18 + Redux Toolkit + Final Form + Express.js + Server-Side Rendering
+Archivo Vintach is a customized marketplace built on the
+[Sharetribe Web Template](https://github.com/sharetribe/web-template): React 18, Redux Toolkit,
+Final Form, Express SSR, Sharetribe Marketplace API, and Stripe Connect.
 
-# Architecture
+- GitHub: `https://github.com/honekun/sharetribe-web-template`
+- Upstream: `https://github.com/sharetribe/web-template`
+- Staging: `https://archivo-vintach.onrender.com/`
+- Docs: `https://www.sharetribe.com/docs/`
+- Node: `>=18.20.1 <23.2.0`
+- Package manager: Yarn
 
-```shell
-├── config            # Webpack configuration. Be careful when modifying these.
-├── scripts           # Scripts e.g. build, start, test, etc.
-├── public
-│   ├── static        # Static assets that are copied to the build directory.
-│   └── index.html    # The main HTML file.
-├── server
-│   ├── apiRouter.js  # Server has own API endpoints that can be called from the web app.
-│   ├── csp.js        # Content Security Policy configuration.
-│   ├── dataLoader.js # Load data for the server-side rendering.
-│   ├── index.js      # Node/Express server.
-│   └── renderer.js   # Render the app to a string on server.
-├── src
-│   ├── components    # Shared components.
-│   │   ├── SomeComponent                  # An example of a component directory.
-│   │   │   ├── SomeComponent.example.js   # Show the component on styleguide page.
-│   │   │   ├── SomeComponent.js           # The main component file.
-│   │   │   ├── SomeComponent.module.css
-│   │   │   └── SomeComponent.test.js
-│   │   └── index.js  # Export shared components and maintain the import order.
-│   ├── config        # Built-in configurations for the app. Hosted configurations override most of these.
-│   ├── containers    # Page-level components. Only these are connected to Redux store.
-│   │   ├── SomePage              # An example of a page-level component directory.
-│   │   │   ├── SomePage.duck.js  # Redux: contains a 'loadData' function and Redux slice creation.
-│   │   │   ├── SomePage.js       # The main component connected to Redux store.
-│   │   │   ├── SomePage.module.css
-│   │   │   └── SomePage.test.js
-│   │   ├── pageDataLoadingAPI.js  # Register loadData functions for route configuration.
-│   │   └── reducers.js            # Export all the page-specific reducers.
-│   ├── ducks         # Shared Redux files.
-│   ├── routing       # Contains route configuration.
-│   ├── transactions  # Transaction processes that this client app can handle.
-│   ├── translations
-│   │   └── en.json   # Default translations. These are overridden by hosted translations.
-│   ├── util
-│   ├── app.js        # Exports ClientApp and ServerApp components.
-│   ├── index.js      # Entry point for the client-side app.
-│   ├── reducers.js   # Combine global and page-level reducers.
-│   └── store.js      # Create and configure the Redux store.
-└── package.json
+## Commands
+
+```sh
+yarn run dev              # Frontend :3000 + backend API :3500
+yarn run dev-frontend     # Frontend only
+yarn run dev-backend      # Backend API only
+yarn run dev-server       # Production-like SSR with hot reload on :4000
+yarn start                # Production server
+
+yarn run build            # Build web bundle + server
+yarn run format           # Prettier JS/CSS
+yarn run format-ci        # Check JS/CSS formatting
+yarn test -- --watchAll=false
+yarn test-server
+yarn test-ci
+
+node .codex/scripts/codex-scaffold.js new-page MyPage --path /my-page
+node .codex/scripts/codex-scaffold.js new-section SectionBanner --target cms
+node .codex/scripts/branch-review.js
 ```
 
-## Hosted configurations and assets
+## Codex Setup
 
-The app fetches translations and configuration files on full page load from Sharetribe SDK with
-`sdk.asset*` commands. View the list in `src/config/configDefault.js` under `appCdnAssets`. These
-"hosted assets" are created in Sharetribe Console by a human marketplace admin and override local
-configurations in `src/config`. Prefer using hosted configurations wherever possible, and only
-create local configurations when Console does not allow the necessary pattern. See
-`https://www.sharetribe.com/docs/how-to/listings/extend-listing-data-in-template/` for an example of
-extending listing data.
+- `.codex/agents/` contains task-specific briefs for spawned agents.
+- `.codex/commands/` contains repeatable prompt workflows.
+- `.codex/checks/README.md` contains local guardrail checklists.
+- `.codex/reference/` contains detailed subsystem guidance.
+- `AGENTS.override.md` is gitignored and may be used for local, temporary instructions.
 
-Configurations are validated in `src/util/configHelpers.js` (`mergeConfig` function). Access in
-components via `useConfiguration()` hook.
+Read the relevant reference before touching a subsystem:
 
-If key assets are missing, the app shows a MaintenanceModeError (see `src/app.js` ClientApp for
-details).
+- `.codex/reference/architecture.md` - routing, Redux ducks, SSR, config, API boundaries.
+- `.codex/reference/pagebuilder.md` - PageBuilder sections, display tokens, extension rules.
+- `.codex/reference/listing-forms.md` - listing wizard customizations, image handling, pricing.
+- `.codex/reference/transactions.md` - transaction processes, My Sales/Purchases/Balance.
+- `.codex/reference/notifications.md` - server-only AV notification services.
+- `.codex/reference/i18n.md` - translation files and key checks.
+- `.codex/reference/upstream-sync.md` - upstream merge-risk watchlist.
+- `.codex/reference/local-overrides.md` - local override workflow.
 
-Full technical asset reference is available in https://www.sharetribe.com/docs/references/assets/.
+## Delegation
 
-# Code conventions
+Use project-local briefs when delegation is useful:
 
-## Styling
+- Explorer: `.codex/agents/sharetribe-web-template-explorer.md`
+- Implementer: `.codex/agents/sharetribe-web-template-implementer.md`
+- Auditor: `.codex/agents/sharetribe-web-template-auditor.md`
+- Translation reviewer: `.codex/agents/translation-reviewer.md`
 
-- Create responsive styles with 2 main breakpoints
-  - Start with mobile first approach:
-    - margins, paddings, and component heights should follow 6px baseline
-  - `--viewportMedium` starts at 768px.
-    - margins, paddings, and component heights should follow 8px baseline
-  - `--viewportLarge` starts at 1024px.
-  - common breakpoints are defined in `src/styles/customMediaQueries.css`
-- `/src/styles/marketplaceDefaults.css` file contains CSS variables, global CSS classes, and the
-  default styles for DOM elements.
-- Write component styles using class selectors. Do not use element selectors.
+Rules:
 
-## Dependency import order
+- Prefer explorer agents for read-only discovery.
+- Prefer worker agents for bounded implementation with disjoint file ownership.
+- Use the auditor for reviews or risky changes.
+- Use the translation reviewer for user-facing copy or translation-file changes.
+- Do not delegate overlapping write scopes.
+- Do not delegate transaction-process changes without explicit user approval.
 
-- Always follow this import order to avoid circular dependency errors:
-  1. Import external libraries and third-party assets
-  2. Import configurations, contexts, and `util` modules
-  3. Import shared components – the src/components/index.js file maintains correct import order
-     within the directory and has a comment link to further reading.
-  4. Import modules from parent directory
-  5. Import modules from same directory
-- See `src/containers/CheckoutPage/CheckoutPage.js` for an example on the correct import order
-- Group similar imports and separate them with descriptive code comments similarly to
-  `CheckoutPage.js`.
-- Imports from shared `components` directory or `util` directory should use relative paths that
-  include the directory name (e.g.import { IconComponent } from '../../components';)
+## Architecture Rules
 
-## Forms
+- Reusable UI belongs in `src/components/`.
+- Page containers and SSR data loading belong in `src/containers/<PageName>/`.
+- Page data should be loaded through `.duck.js` `loadData`, registered in
+  `src/containers/pageDataLoadingAPI.js` and `src/routing/routeConfiguration.js`.
+- Shared Redux state belongs in `src/ducks/`.
+- Non-SDK API wrappers belong in `src/util/api.js`.
+- Server-only integrations belong in `server/`.
+- AV customization extension hooks belong in `src/extensions/`.
+- Prefer hosted Sharetribe config/assets when Console supports the use case.
+- Use `useConfiguration()` for config access.
+- Use local utilities before adding dependencies; ask before adding a library.
 
-- Always use React Final Form for creating forms to gather user input
-- There are ready-made shared components to cover basic React Final Form field inputs, e.g.
-  "FieldTextInput" and "FieldSelect", etc.
-- Components that start with Field\* on src/components/index.js file are meant for React Final Form.
-- If new custom field is created, add potential label above the input and show errors below the
-  input using <ValidationError> component. Check that the input follows accessibility standards.
+## SSR Rules
 
-## Utilities
+- Guard browser APIs (`window`, `document`, `localStorage`, session storage) behind
+  `typeof window !== 'undefined'`.
+- Do not use `useEffect` for primary page data loading when SSR is expected.
+- Avoid hydration mismatches by keeping server and client render paths consistent.
+- Never import `server/services/*` from client-side code.
 
-- This codebase prefers local utilities instead of imported libraries due to bundle size concerns
-  and dependency management.
-- The `src/util/` directory contains production-ready utility helper functions to handle different
-  entities and use cases in the codebase. These utility functions are grouped by category in
-  descriptively named files, e.g. `currency.js`, `dates.js`, etc, and most files have a
-  correspondingly named test file.
-- Review the available utility functions and prefer using existing ones or adding a new local
-  utility function instead of importing new helper libraries. Ask the user explicitly before
-  importing a new library.
+## Sharetribe Rules
 
-## Redux
+- Use the Sharetribe SDK for Marketplace API calls.
+- Marketplace API reference:
+  `https://www.sharetribe.com/api-reference/marketplace.html#marketplace-api-reference`
+- Always use Stripe Connect, never direct charges.
+- Transaction-process, transition, payment, and payout changes require explicit user approval and
+  usually require matching Sharetribe backend/process updates.
+- Heroku has an ephemeral filesystem; do not write runtime files to disk.
 
-- Use Redux Toolkit and the Ducks pattern
-- There are two types of Redux duck files in the application:
-  - Global .duck.js files are used from multiple pages, and they live in the `src/ducks/` directory
-  - Page-level .duck.js files are used from a specific page, and they live in the corresponding page
-    directory.
+## UI, Forms, and Styling
 
-## API calls
+- Use functional React components and hooks.
+- Use CSS Modules and class selectors; do not use component element selectors.
+- Use React Final Form and shared `Field*` components for forms.
+- New custom fields need labels and validation errors via `ValidationError`.
+- Follow mobile-first breakpoints from `src/styles/customMediaQueries.css`: `--viewportMedium`
+  starts at 768px, `--viewportLarge` starts at 1024px.
+- Mobile spacing follows a 6px baseline; medium+ spacing follows an 8px baseline.
+- Use semantic HTML and preserve accessibility.
 
-- Use the Sharetribe SDK to call Sharetribe Marketplace API
-- For other API calls, including to the app's own server, create a function in `src/util/api.js` and
-  follow the established conventions.
-- Make API calls for a page (using the SDK) in a `src/containers/{PageName}.duck.js` file. See
-  `src/containers/ListingPage/ListingPage.duck.js` for an example.
-- Do not use a `useEffect` hook to make API data loading calls. Instead, add a page-level .duck.js
-  file that contains a loadData function. Register the loadData in
-  `src/containers/pageDataLoadingAPI.js` and `routeConfiguration.js` files following the existing
-  conventions in those files. This pattern is important for SSR, so with components that only render
-  content client-side, it is safe to diverge from this rule.
-- Marketplace API reference
-  https://www.sharetribe.com/api-reference/marketplace.html#marketplace-api-reference
+## Import Order
 
-## Transaction processes
+Follow the local Sharetribe import order:
 
-- The Sharetribe Web Template supports four transaction processes by default
-  - View `src/transactions/transaction.js` for transaction process definitions
-  - View `src/transactions/README.md` for more context on transaction process handling in this
-    repository.
-- Always ask for approval from user if attempting to make changes to transaction processes, and
-  remind them to make the necessary process updates towards the Sharetribe backend.
+1. External libraries and third-party assets.
+2. Configurations, contexts, and `util` modules.
+3. Shared components from `../../components`.
+4. Parent-directory modules.
+5. Same-directory modules.
+
+See `src/containers/CheckoutPage/CheckoutPage.js` for an example.
+
+## Internationalization
+
+- Use `FormattedMessage` or `intl.formatMessage()` for all user-facing copy.
+- Translation files: `src/translations/en.json`, `src/translations/es.json`,
+  `src/translations/en_av.json`, `src/translations/es_av.json`.
+- Keep AV-specific keys symmetric between `en_av.json` and `es_av.json`.
+- Use the translation-reviewer brief or `.codex/commands/i18n-check.md` for copy-heavy changes.
+
+## Testing
+
+- New `src/components/AV*/` components need colocated tests: render, key props, snapshot.
+- New `src/containers/*Page/` pages need smoke test + snapshot.
+- New `src/util/*.js` helpers need unit tests for every exported function.
+- New extension logic should include registry/detection tests when practical.
+- Use `renderWithProviders` from `src/util/testHelpers` for React tests.
+- Run targeted tests or `yarn test -- --watchAll=false` when feasible. If not, say why.
 
 ## Formatting
 
-Prettier: single quotes, 2 spaces, trailing commas, max line 100
+Prettier conventions: single quotes, 2 spaces, trailing commas, max line 100. After JS/CSS edits,
+run Prettier on touched files or `yarn run format`.
 
-## Internationalization (i18n)
+## Protected Files and Guardrails
 
-- Always use React Intl `FormattedMessage` or `intl.formatMessage()` for copy texts.
-- Add new internationalization strings as key-value pairs to `/src/translations/{en,de,es,fr}.json`
-  for local fallback values in the corresponding languages. Hosted translations are fetched
-  similarly to hosted configurations.
-  - pattern: `"ComponentName.key" : "Message with {variable}"`,
-- To access `intl` in components, use the `useIntl()` hook
+- Do not edit secret env files: `.env`, `.env.development`, `.env.test`, `.env.production`.
+- `.env-template` is allowed.
+- Before editing upstream Sharetribe template files, first check whether the change can be done in a
+  custom component, config file, extension hook, or CSS override.
+- If a watchlist file from `.codex/reference/upstream-sync.md` changes, keep the diff minimal and
+  call out upstream merge risk.
+- Use `node .codex/scripts/branch-review.js` before larger final handoffs.
 
-## ✅ Good patterns
+## Documentation
 
-- Prefer functional components and React hooks
-- Add JSDoc comments for the component and any exported functions
-- Components should use semantic HTML elements
+Read relevant docs before changing their subsystem:
+
+- `docs/bulk-import.md`
+- `docs/listing-custom-fields-setup.md`
+- `docs/console-customization-guide.md`
+- `docs/test-account-setup.md`
+- `docs/bidding-research.md`
+- `docs/ai_notes.md`
+
+Implementation plans (not yet implemented):
+
+- `docs/plan-bulk-import-all-users.md`
+- `docs/plan-favorites-page.md`
+- `docs/plan-shopping-bag.md`

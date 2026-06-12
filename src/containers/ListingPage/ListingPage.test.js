@@ -356,26 +356,23 @@ describe('ListingPage variants', () => {
       expect(screen.getByTestId('carousel')).toBeInTheDocument();
       expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
-      // Has order title (rendered for )
+      // Has order title (mobile heading + order panel title + desktop title)
       const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
       expect(orderTitle).toHaveLength(3);
 
-      // Has details section title and selected category info
-      expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Cat')).toBeInTheDocument();
-      expect(getByText('Cat 1')).toBeInTheDocument();
-      expect(getByRole('heading', { name: 'Color' })).toBeInTheDocument();
-      expect(getByText('Amarillo')).toBeInTheDocument();
-      expect(getByText('Negro')).toBeInTheDocument();
-      expect(getByRole('heading', { name: 'Tallas' })).toBeInTheDocument();
-      expect(getByText('XXS')).toBeInTheDocument();
-      expect(getByText('M')).toBeInTheDocument();
-      expect(getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
-      expect(getByText('HotList')).toBeInTheDocument();
-      expect(getByText('Ofertas')).toBeInTheDocument();
-
-      // Has details location title
-      expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
+      // AV redesign: listing fields render as search links (no divider-line headings).
+      // Details render twice (inline on mobile + inside the order panel on desktop).
+      const amarilloLinks = screen.getAllByRole('link', { name: 'Amarillo' });
+      expect(amarilloLinks.length).toBeGreaterThanOrEqual(1);
+      expect(amarilloLinks[0]).toHaveAttribute(
+        'href',
+        expect.stringContaining('pub_color=amarillo')
+      );
+      expect(screen.getAllByRole('link', { name: 'Negro' }).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByRole('link', { name: 'XXS' })[0]).toHaveAttribute(
+        'href',
+        expect.stringContaining('pub_all_sizes=xxs')
+      );
 
       // Has details reviews title
       const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
@@ -386,12 +383,16 @@ describe('ListingPage variants', () => {
       expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
       expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
 
-      // Has details provider/author title
-      expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
-      // Has link to provider's profile
-      expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
-      // Has button to contact provider
-      expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
+      // The redesigned carousel layout removes the generic details, map and author sections.
+      expect(
+        screen.queryByRole('heading', { name: 'ListingPage.detailsTitle' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: 'ListingPage.locationTitle' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: 'ListingPage.aboutProviderTitle' })
+      ).not.toBeInTheDocument();
     });
   });
 });

@@ -1,5 +1,12 @@
+@import '../../../../styles/customMediaQueries.css';
+
 .ingress {
-  font-size: 20px;
+  font-size: 15px;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+  }
+
   line-height: 1.46;
   letter-spacing: 1px;
   margin-top: 0;

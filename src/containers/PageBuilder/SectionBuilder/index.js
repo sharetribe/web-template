@@ -7,7 +7,6 @@ import SectionArticle from './SectionArticle';
 import SectionFeatures from './SectionFeatures';
 import SectionCarousel from './SectionCarousel';
 import SectionHero from './SectionHero';
-import SectionHeroCustom from './SectionHeroCustom';
 import SectionPriceSelector from './SectionPriceSelector';
 import SectionRecommendedListings from './SectionRecommendedListings';
 
@@ -20,7 +19,6 @@ export {
   SectionArticle,
   SectionFeatures,
   SectionCarousel,
-  SectionHeroCustom,
   SectionPriceSelector,
   SectionRecommendedListings,
 };

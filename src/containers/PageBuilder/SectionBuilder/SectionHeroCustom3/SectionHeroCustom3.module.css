@@ -16,12 +16,24 @@
 
 .halfLinked {
   cursor: pointer;
-  text-decoration: none;
-  display: block;
+}
 
-  &:hover {
-    text-decoration: none;
-  }
+/* Whole-panel click target derived from the block's CTA link. Sits above the
+   background image + scrim; the content lets clicks fall through to it
+   (pointer-events:none) while the CTA button re-enables its own clicks. */
+.bgLinkOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  text-decoration: none;
+}
+
+.contentLinked {
+  pointer-events: none;
+}
+
+.ctaAbove {
+  pointer-events: auto;
 }
 
 /* Dark scrim for text legibility when a bg image is present */
@@ -29,7 +41,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.1);
   z-index: 1;
 }
 

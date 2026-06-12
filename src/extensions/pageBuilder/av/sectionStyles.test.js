@@ -104,10 +104,16 @@ describe('parseSectionCustomOptions', () => {
     expect(result.isBlueTitle).toBe(false);
   });
 
+  it('sets isFullWHeader for "- FullWHeader" token', () => {
+    expect(parseSectionCustomOptions('Section - FullWHeader').isFullWHeader).toBe(true);
+    expect(parseSectionCustomOptions('Section - Large').isFullWHeader).toBe(false);
+  });
+
   it('does not set flags for absent tokens', () => {
     const result = parseSectionCustomOptions('Plain Section');
     expect(result.isLarge).toBe(false);
     expect(result.isFullH).toBe(false);
+    expect(result.isFullWHeader).toBe(false);
   });
 });
 
@@ -121,30 +127,30 @@ describe('parseSectionCtaClass', () => {
     expect(parseSectionCtaClass('Section - Large', css)).toBeNull();
   });
 
-  it('returns ctaButtonBlue class for "- sectionCtaBtnBlue" token', () => {
-    const result = parseSectionCtaClass('Section - sectionCtaBtnBlue', css);
+  it('returns ctaButtonBlue class for "- SectionCtaBtnBlue" token', () => {
+    const result = parseSectionCtaClass('Section - SectionCtaBtnBlue', css);
     expect(result).toContain('ctaButtonBlue');
   });
 
-  it('returns ctaButtonPink class for "- sectionCtaBtnPink" token', () => {
-    const result = parseSectionCtaClass('Section - sectionCtaBtnPink', css);
+  it('returns ctaButtonPink class for "- SectionCtaBtnPink" token', () => {
+    const result = parseSectionCtaClass('Section - SectionCtaBtnPink', css);
     expect(result).toContain('ctaButtonPink');
   });
 
   it('includes modifier classes alongside base class', () => {
-    const result = parseSectionCtaClass('Section - sectionCtaBtnBlue - roundedFull', css);
+    const result = parseSectionCtaClass('Section - SectionCtaBtnBlue - RoundedFull', css);
     expect(result).toContain('ctaButtonBlue');
     expect(result).toContain('roundedFull');
   });
 
   it('prepends ctaButton when only modifier tokens are present', () => {
-    const result = parseSectionCtaClass('Section - roundedFull', css);
+    const result = parseSectionCtaClass('Section - RoundedFull', css);
     expect(result).toContain('ctaButton');
     expect(result).toContain('roundedFull');
   });
 
   it('only picks the first base color token', () => {
-    const result = parseSectionCtaClass('Section - sectionCtaBtnBlue - sectionCtaBtnPink', css);
+    const result = parseSectionCtaClass('Section - SectionCtaBtnBlue - SectionCtaBtnPink', css);
     expect(result).toContain('ctaButtonBlue');
     expect(result).not.toContain('ctaButtonPink');
   });

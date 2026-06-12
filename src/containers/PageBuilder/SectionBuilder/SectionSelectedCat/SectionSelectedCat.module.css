@@ -18,8 +18,14 @@
 .textBlock {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  width: 100%;
   gap: 0;
+
+  @media (--viewportMedium) {
+    align-items: flex-start;
+    width: auto;
+  }
 }
 
 .title {
@@ -37,8 +43,12 @@
 }
 
 .sectionHeader .description {
-  text-align: left;
+  text-align: center;
   max-width: none;
+
+  @media (--viewportMedium) {
+    text-align: left;
+  }
 }
 
 .ctaButton {
@@ -184,4 +194,27 @@
           (var(--carouselHorizontalPadding) * 2) - (var(--carouselGap) * 3)
       ) / 4
   );
+}
+
+/* Below --viewportMLarge (968px): disable the carousel and lay out all
+   items in a static 2-up grid (no horizontal scroll, no arrows). */
+@media (max-width: 967px) {
+  .slider {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--carouselGap);
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .oneColumn .carouselItem,
+  .twoColumns .carouselItem,
+  .threeColumns .carouselItem,
+  .fourColumns .carouselItem {
+    width: auto;
+  }
+
+  .carouselArrows {
+    display: none;
+  }
 }

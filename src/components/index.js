@@ -16,6 +16,7 @@ export { default as IconAdd } from './IconAdd/IconAdd';
 export { default as IconAlert } from './IconAlert/IconAlert';
 export { default as IconArrowHead } from './IconArrowHead/IconArrowHead';
 export { default as IconBannedUser } from './IconBannedUser/IconBannedUser';
+export { default as IconChat } from './IconChat/IconChat';
 export { default as IconCheckmark } from './IconCheckmark/IconCheckmark';
 export { default as IconClose } from './IconClose/IconClose';
 export { default as IconDate } from './IconDate/IconDate';

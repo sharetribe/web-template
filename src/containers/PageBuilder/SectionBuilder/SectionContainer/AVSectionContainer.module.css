@@ -76,9 +76,35 @@
 }
 
 .sectionContentAvFeature {
+  --contentMaxWidthPages: 100%;
   --contentPaddingY: 0px;
   --contentPaddingX: 0px;
   padding: 0;
+}
+
+.sectionContentFullWHeader {
+  header > * {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+.sectionContentSmallerTitles {
+  h1 {
+    font-size: 30px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  h3 {
+    font-size: 18px;
+  }
+  h4 {
+    font-size: 16px;
+  }
+  h5 {
+    font-size: 14px;
+  }
 }
 
 /* ── Padding modifiers ── */

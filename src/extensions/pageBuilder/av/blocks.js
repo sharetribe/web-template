@@ -180,7 +180,7 @@ export const createBlockCustomProps = (block, intl, css) => {
     };
   }
 
-  if (block.blockName?.includes('2 buttons ::')) {
+  if (block.blockName?.includes('2Buttons ::')) {
     const tb = 'TwoButtons.' + block.blockId;
     const cta1ClassName = parseCtaStyleString(fmt(intl, tb + '.cta1Style'), css);
     const cta2ClassName = parseCtaStyleString(fmt(intl, tb + '.cta2Style'), css);
@@ -239,6 +239,8 @@ export const createBlockCustomProps = (block, intl, css) => {
   if (block.blockName?.includes('button secondary ::')) blockCustomProps.hasCTASecondary = true;
   if (block.blockName?.includes('button tertiary ::')) blockCustomProps.hasCTATertiary = true;
   if (block.blockName?.includes('smaller ::')) blockCustomProps.hasTextSmaller = true;
+  // Mirror of the section-name token "- SmallerTitles": shift all headings down one size level.
+  if (block.blockName?.includes('smallerTitles ::')) blockCustomProps.hasSmallerTitles = true;
   if (block.blockName?.includes('text larger ::')) blockCustomProps.hasTextLarger = true;
   if (block.blockName?.includes('text gray ::')) blockCustomProps.hasTextGray = true;
   if (block.blockName?.includes('text darkgray ::')) blockCustomProps.hasTextDarkGray = true;
@@ -276,7 +278,7 @@ export const createBlockCustomProps = (block, intl, css) => {
     };
   }
 
-  if (block.blockName?.includes('photo slider ::')) {
+  if (block.blockName?.includes('photoSlider ::')) {
     const ps = 'PhotoSlider.' + block.blockId;
     blockCustomProps.sliderImages = [
       fmt(intl, ps + '.image_1'),
