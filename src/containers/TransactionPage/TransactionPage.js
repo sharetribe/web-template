@@ -614,7 +614,7 @@ export const TransactionPageComponent = props => {
   };
 
   const scrollToMessage = messageId => {
-    const selector = `#msg-${messageId.uuid}`;
+    const selector = `#msg-${messageId}`;
     const el = document.querySelector(selector);
     if (el) {
       el.scrollIntoView({ block: 'start', behavior: 'smooth' });
