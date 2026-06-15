@@ -1195,27 +1195,33 @@ const transactionPageSlice = createSlice({
       // downloadFile cases
       .addCase(downloadFileThunk.pending, (state, action) => {
         const { fileAttachmentId } = action.meta.arg;
-        state.fileDownloads[fileAttachmentId.uuid] = {
-          inProgress: true,
-          error: null,
-        };
+        if (fileAttachmentId) {
+          state.fileDownloads[fileAttachmentId.uuid] = {
+            inProgress: true,
+            error: null,
+          };
+        }
       })
       .addCase(downloadFileThunk.fulfilled, (state, action) => {
         const fileAttachmentId = action.payload;
-        state.fileDownloads[fileAttachmentId.uuid] = {
-          inProgress: false,
-          error: null,
-        };
+        if (fileAttachmentId) {
+          state.fileDownloads[fileAttachmentId.uuid] = {
+            inProgress: false,
+            error: null,
+          };
+        }
       })
       .addCase(downloadFileThunk.rejected, (state, action) => {
         if (!action.payload) {
           return;
         }
         const { fileAttachmentId, error } = action.payload;
-        state.fileDownloads[fileAttachmentId.uuid] = {
-          inProgress: false,
-          error,
-        };
+        if (fileAttachmentId) {
+          state.fileDownloads[fileAttachmentId.uuid] = {
+            inProgress: false,
+            error,
+          };
+        }
       })
       // pollForMessageFileVerification cases
       .addCase(pollForMessageFileVerificationThunk.pending, (state, action) => {

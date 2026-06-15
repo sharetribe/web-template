@@ -159,7 +159,7 @@ const FileUpload = props => {
     <button
       type="button"
       className={classNames(css.fileNameDownloadable)}
-      onClick={() => onDownloadFile(file.id.uuid, true)}
+      onClick={() => onDownloadFile(file.id, true)}
     >
       <FileName name={name} />
     </button>
