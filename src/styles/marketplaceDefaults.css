@@ -316,7 +316,7 @@ h3 {
   @media (--viewportMedium) {
     font-size: 30px;
     line-height: 40px;
-    padding: 1px 0 7px 0;
+    padding: 0;
     /* x * 8px */
     margin-top: 16px;
     margin-bottom: 16px;

@@ -54,7 +54,11 @@
   }
 }
 
-.ctaButton {
+/* Self-chained to (0,2,0) so it out-specifies SectionBuilder's base
+   .ctaButton/.avCtaButton, which the production bundle (mini-css-extract) may emit
+   after this rule. Without the doubling these ties resolve by source order, which
+   differs between dev (style-loader) and prod — letting the base win in prod. */
+.ctaButton.ctaButton {
   font-family: var(--fontFamilyHeadings);
   font-size: 14px;
   font-weight: 400;

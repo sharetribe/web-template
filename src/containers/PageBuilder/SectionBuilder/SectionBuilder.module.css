@@ -21,7 +21,7 @@
   margin: 0 auto;
   padding: 0 32px;
   position: relative;
-  align-items: flex-start;
+  align-items: center;
 
   @media (--viewportMedium) {
     align-items: flex-start;
