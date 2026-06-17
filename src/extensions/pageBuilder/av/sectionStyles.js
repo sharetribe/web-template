@@ -79,38 +79,31 @@ export const parseSectionCtaClass = (sectionName, css) => {
 };
 
 // Parse all the `- Token` flags in section.sectionName into a customOption
-// object that AV section components consume.
+// object that AV section components consume. Keep the keys grouped the same way
+// they are documented in docs/operator-guide.md §5.1.
 export const parseSectionCustomOptions = sectionName => {
   const customOption = {};
   if (!sectionName) return customOption;
 
-  customOption.isBlueTitle = hasToken(sectionName, 'BlueTitle');
+  // Layout / width
   customOption.isLarge = hasToken(sectionName, 'Large');
-  customOption.isMedium = hasToken(sectionName, 'Medium');
-  customOption.isFullH = hasToken(sectionName, 'FullH');
   customOption.isFullW = hasToken(sectionName, 'FullW');
-  customOption.isShortC = hasToken(sectionName, 'ShortContent');
-  customOption.isSmallerT = hasToken(sectionName, 'SmallerTitle');
-  customOption.isMediumT = hasToken(sectionName, 'SmallTitle');
-
-  customOption.hasPaddings = hasToken(sectionName, 'Paddings');
-  customOption.hasNoPaddings = hasToken(sectionName, 'NoPaddings');
-  customOption.hasNoPaddingsX = hasToken(sectionName, 'NoPaddingsX');
-  customOption.hasNoPaddingsY = hasToken(sectionName, 'NoPaddingsY');
-
-  customOption.isHeadingH = hasToken(sectionName, 'Heading2');
-  customOption.isTwoThirdsCols = hasToken(sectionName, '2/3 cols');
+  customOption.isFullWHeader = hasToken(sectionName, 'FullWHeader');
   customOption.isShortHero = hasToken(sectionName, 'ShortHero');
-  customOption.isCenterTitleText = hasToken(sectionName, 'CenterTitleText');
-  customOption.isWhiteTitle = hasToken(sectionName, 'WhiteTitle');
-  customOption.isSmallSubTitles = hasToken(sectionName, 'SmallSubTitles');
-  customOption.isLargeDesc = hasToken(sectionName, 'LargeDesc');
-  customOption.isCenterDescText = hasToken(sectionName, 'CenterDescText');
+  customOption.isTwoThirdsCols = hasToken(sectionName, '2/3 cols');
   customOption.isAvFeature = hasToken(sectionName, 'AvFeature');
   customOption.isReverseFeature = hasToken(sectionName, 'ReverseFeature');
-  customOption.hasTextGray = hasToken(sectionName, 'TextGray');
-  customOption.isFullWHeader = hasToken(sectionName, 'FullWHeader');
+
+  // Title / text
+  customOption.isBlueTitle = hasToken(sectionName, 'BlueTitle');
+  customOption.isWhiteTitle = hasToken(sectionName, 'WhiteTitle');
+  customOption.isCenterTitleText = hasToken(sectionName, 'CenterTitleText');
+  customOption.isCenterDescText = hasToken(sectionName, 'CenterDescText');
+  customOption.isLargeDesc = hasToken(sectionName, 'LargeDesc');
   customOption.isSmallerTitles = hasToken(sectionName, 'SmallerTitles');
+
+  // Spacing
+  customOption.hasNoPaddings = hasToken(sectionName, 'NoPaddings');
 
   return customOption;
 };

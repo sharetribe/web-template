@@ -1,5 +1,14 @@
 @import '../../../../styles/customMediaQueries.css';
 
+/* ============================================================================
+   AV section display-option styles.
+
+   Each class below is applied by AVSectionContainer from a `- Token` flag
+   parsed in extensions/pageBuilder/av/sectionStyles.js. The operator-facing
+   description of every token lives in docs/operator-guide.md §5.1. Keep the
+   groups here in sync with that list.
+   ============================================================================ */
+
 /* bgLink overlay — renders behind children, captures full-section click */
 .bgClickArea {
   position: absolute;
@@ -8,8 +17,9 @@
   display: block;
 }
 
-/* ── Width / height modifiers ── */
+/* ── Layout / width ───────────────────────────────────────────────────────── */
 
+/* - Large */
 .sectionContentLarge {
   --contentMaxWidthPages: 1370px;
   --contentPaddingX: 18px;
@@ -22,20 +32,7 @@
   }
 }
 
-.sectionContentMedium {
-  --contentMaxWidthPages: 740px;
-  --contentPaddingX: 35px;
-
-  margin: auto;
-
-  header > p {
-    text-wrap: initial;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.5;
-  }
-}
-
+/* - FullW */
 .sectionContentFullW {
   --contentMaxWidthPages: 100%;
   --contentPaddingX: 0;
@@ -63,25 +60,7 @@
   }
 }
 
-.sectionContentShortC {
-  header + div {
-    gap: 60px;
-    max-width: 880px;
-  }
-}
-
-.sectionContentFullH {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.sectionContentAvFeature {
-  --contentMaxWidthPages: 100%;
-  --contentPaddingY: 0px;
-  --contentPaddingX: 0px;
-  padding: 0;
-}
-
+/* - FullWHeader */
 .sectionContentFullWHeader {
   header > * {
     max-width: none;
@@ -89,6 +68,69 @@
   }
 }
 
+/* - AvFeature (full-bleed; the side-by-side layout itself lives in SectionFeatures) */
+.sectionContentAvFeature {
+  --contentMaxWidthPages: 100%;
+  --contentPaddingY: 0px;
+  --contentPaddingX: 0px;
+  padding: 0;
+}
+
+/* ── Title / text ─────────────────────────────────────────────────────────── */
+
+/* - BlueTitle */
+.sectionContentBlueTitle {
+  header > h1,
+  header > h2,
+  header > h3 {
+    color: var(--avBlue);
+  }
+
+  header + div {
+    margin-top: 30px;
+  }
+}
+
+/* - WhiteTitle */
+.sectionContentWhiteTitle {
+  header > h1,
+  header > h2,
+  header > h3 {
+    color: var(--colorWhite);
+  }
+}
+
+/* - CenterTitleText */
+.sectionContentCenterTitleText {
+  header {
+    justify-content: center;
+  }
+
+  header > h1,
+  header > h2,
+  header > h3 {
+    text-align: center;
+    justify-self: center;
+  }
+}
+
+/* - CenterDescText */
+.sectionContentCenterDescText {
+  header > p {
+    text-align: center;
+  }
+}
+
+/* - LargeDesc */
+.sectionContentLargeDesc {
+  @media (--viewportMedium) {
+    header > p {
+      max-width: 968px;
+    }
+  }
+}
+
+/* - SmallerTitles: shift every heading down one size level */
 .sectionContentSmallerTitles {
   h1 {
     font-size: 30px;
@@ -107,158 +149,15 @@
   }
 }
 
-/* ── Padding modifiers ── */
+/* ── Spacing ──────────────────────────────────────────────────────────────── */
 
+/* - NoPaddings */
 .sectionContentNoPaddings {
   --contentPaddingY: 0px;
   --contentPaddingX: 0px;
 }
 
-.sectionContentNoPaddingsX {
-  --contentPaddingX: 0px;
-}
-
-.sectionContentNoPaddingsY {
-  --contentPaddingY: 0px;
-}
-
-.sectionContentHasPaddings {
-  padding: 90px 0 70px;
-
-  header + div {
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
-}
-
-/* ── Title modifiers ── */
-
-.sectionContentBlueTitle {
-  header > h1,
-  header > h2,
-  header > h3 {
-    color: var(--avBlue);
-  }
-
-  header + div {
-    margin-top: 30px;
-  }
-}
-
-.sectionContentWhiteTitle {
-  header > h1,
-  header > h2,
-  header > h3 {
-    color: var(--colorWhite);
-  }
-}
-
-.sectionContentCenterTitleText {
-  header {
-    justify-content: center;
-  }
-
-  header > h1,
-  header > h2,
-  header > h3 {
-    text-align: center;
-    justify-self: center;
-  }
-}
-
-.sectionContentSmallerTitle {
-  header {
-    margin-top: 50px;
-  }
-  header + div {
-    margin-top: 30px;
-    margin-bottom: 50px;
-  }
-  header h1,
-  header h2,
-  header h3 {
-    font-size: 28px;
-    line-height: 1.5;
-    font-weight: 700;
-    margin-bottom: 0;
-  }
-}
-
-.sectionContentMediumTitle {
-  header {
-    margin-top: 30px;
-  }
-  header + div {
-    margin-top: 30px;
-    margin-bottom: 30px;
-  }
-  header h1,
-  header h2,
-  header h3 {
-    font-size: 34px;
-    line-height: 1.5;
-    font-weight: 700;
-    margin-bottom: 0;
-  }
-}
-
-.sectionContentSmallSubTitles {
-  h1 {
-    font-size: 38px;
-    line-height: 1.2;
-  }
-  h2 {
-    font-size: 30px;
-    line-height: 1.3;
-  }
-  h3 {
-    font-size: 22px;
-    line-height: 1.4;
-  }
-}
-
-.sectionContentHeadingH {
-  header h1,
-  header h2,
-  header h3 {
-    font-size: 21px;
-    line-height: 24px;
-    font-weight: var(--fontWeightBold);
-
-    @media (--viewportMedium) {
-      font-size: 40px;
-      line-height: 56px;
-    }
-  }
-}
-
-/* ── Description modifiers ── */
-
-.sectionContentLargeDesc {
-  @media (--viewportMedium) {
-    header > p {
-      max-width: 968px;
-    }
-  }
-}
-
-.sectionContentCenterDescText {
-  header > p {
-    text-align: center;
-  }
-}
-
-.sectionContentHasTextGray {
-  header > p {
-    color: var(--colorGrey300);
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 28px;
-  }
-}
-
-/* ── Footer ── */
-
+/* ── Footer (section rendered with as="footer") ───────────────────────────── */
 .customFooter {
   background-color: var(--avBlue);
   color: white;

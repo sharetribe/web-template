@@ -12,66 +12,26 @@ describe('parseSectionCustomOptions', () => {
     expect(parseSectionCustomOptions('')).toEqual({});
   });
 
-  it('sets isBlueTitle for "- BlueTitle" token', () => {
-    expect(parseSectionCustomOptions('My Section - BlueTitle').isBlueTitle).toBe(true);
-  });
-
+  // ── Layout / width ──
   it('sets isLarge for "- Large" token', () => {
     expect(parseSectionCustomOptions('Hero - Large').isLarge).toBe(true);
-  });
-
-  it('sets isMedium for "- Medium" token', () => {
-    expect(parseSectionCustomOptions('Hero - Medium').isMedium).toBe(true);
-  });
-
-  it('sets isFullH for "- FullH" token', () => {
-    expect(parseSectionCustomOptions('Hero - FullH').isFullH).toBe(true);
   });
 
   it('sets isFullW for "- FullW" token', () => {
     expect(parseSectionCustomOptions('Hero - FullW').isFullW).toBe(true);
   });
 
-  it('sets isShortC for "- ShortContent" token', () => {
-    expect(parseSectionCustomOptions('Section - ShortContent').isShortC).toBe(true);
-  });
-
-  it('sets isSmallerT for "- SmallerTitle" token', () => {
-    expect(parseSectionCustomOptions('Section - SmallerTitle').isSmallerT).toBe(true);
-  });
-
-  it('sets isMediumT for "- SmallTitle" token', () => {
-    expect(parseSectionCustomOptions('Section - SmallTitle').isMediumT).toBe(true);
-  });
-
-  it('sets hasPaddings for "- Paddings" token', () => {
-    expect(parseSectionCustomOptions('Section - Paddings').hasPaddings).toBe(true);
-  });
-
-  it('sets hasNoPaddings for "- NoPaddings" but not for "- NoPaddingsX"', () => {
-    expect(parseSectionCustomOptions('Section - NoPaddings').hasNoPaddings).toBe(true);
-    expect(parseSectionCustomOptions('Section - NoPaddingsX').hasNoPaddings).toBe(false);
-    expect(parseSectionCustomOptions('Section - NoPaddingsY').hasNoPaddings).toBe(false);
-  });
-
-  it('sets hasNoPaddingsX for "- NoPaddingsX" token', () => {
-    expect(parseSectionCustomOptions('Section - NoPaddingsX').hasNoPaddingsX).toBe(true);
-  });
-
-  it('sets hasNoPaddingsY for "- NoPaddingsY" token', () => {
-    expect(parseSectionCustomOptions('Section - NoPaddingsY').hasNoPaddingsY).toBe(true);
+  it('sets isFullWHeader for "- FullWHeader" token', () => {
+    expect(parseSectionCustomOptions('Section - FullWHeader').isFullWHeader).toBe(true);
+    expect(parseSectionCustomOptions('Section - Large').isFullWHeader).toBe(false);
   });
 
   it('sets isShortHero for "- ShortHero" token', () => {
     expect(parseSectionCustomOptions('Hero - ShortHero').isShortHero).toBe(true);
   });
 
-  it('sets isCenterTitleText for "- CenterTitleText" token', () => {
-    expect(parseSectionCustomOptions('Section - CenterTitleText').isCenterTitleText).toBe(true);
-  });
-
-  it('sets isWhiteTitle for "- WhiteTitle" token', () => {
-    expect(parseSectionCustomOptions('Section - WhiteTitle').isWhiteTitle).toBe(true);
+  it('sets isTwoThirdsCols for "- 2/3 cols" token', () => {
+    expect(parseSectionCustomOptions('Section - 2/3 cols').isTwoThirdsCols).toBe(true);
   });
 
   it('sets isAvFeature for "- AvFeature" token', () => {
@@ -82,18 +42,38 @@ describe('parseSectionCustomOptions', () => {
     expect(parseSectionCustomOptions('Section - ReverseFeature').isReverseFeature).toBe(true);
   });
 
-  it('sets hasTextGray for "- TextGray" token', () => {
-    expect(parseSectionCustomOptions('Section - TextGray').hasTextGray).toBe(true);
+  // ── Title / text ──
+  it('sets isBlueTitle for "- BlueTitle" token', () => {
+    expect(parseSectionCustomOptions('My Section - BlueTitle').isBlueTitle).toBe(true);
   });
 
-  it('sets isHeadingH for "- Heading2" token', () => {
-    expect(parseSectionCustomOptions('Section - Heading2').isHeadingH).toBe(true);
+  it('sets isWhiteTitle for "- WhiteTitle" token', () => {
+    expect(parseSectionCustomOptions('Section - WhiteTitle').isWhiteTitle).toBe(true);
+  });
+
+  it('sets isCenterTitleText for "- CenterTitleText" token', () => {
+    expect(parseSectionCustomOptions('Section - CenterTitleText').isCenterTitleText).toBe(true);
+  });
+
+  it('sets isCenterDescText for "- CenterDescText" token', () => {
+    expect(parseSectionCustomOptions('Section - CenterDescText').isCenterDescText).toBe(true);
+  });
+
+  it('sets isSmallerTitles for "- SmallerTitles" token', () => {
+    expect(parseSectionCustomOptions('Section - SmallerTitles').isSmallerTitles).toBe(true);
   });
 
   it('does not set isLarge when only "- LargeDesc" is present', () => {
     const result = parseSectionCustomOptions('Section - LargeDesc');
     expect(result.isLarge).toBe(false);
     expect(result.isLargeDesc).toBe(true);
+  });
+
+  // ── Spacing ──
+  it('sets hasNoPaddings for "- NoPaddings" but not for "- NoPaddingsX/Y"', () => {
+    expect(parseSectionCustomOptions('Section - NoPaddings').hasNoPaddings).toBe(true);
+    expect(parseSectionCustomOptions('Section - NoPaddingsX').hasNoPaddings).toBe(false);
+    expect(parseSectionCustomOptions('Section - NoPaddingsY').hasNoPaddings).toBe(false);
   });
 
   it('handles multiple tokens in one sectionName', () => {
@@ -104,16 +84,31 @@ describe('parseSectionCustomOptions', () => {
     expect(result.isBlueTitle).toBe(false);
   });
 
-  it('sets isFullWHeader for "- FullWHeader" token', () => {
-    expect(parseSectionCustomOptions('Section - FullWHeader').isFullWHeader).toBe(true);
-    expect(parseSectionCustomOptions('Section - Large').isFullWHeader).toBe(false);
-  });
-
   it('does not set flags for absent tokens', () => {
     const result = parseSectionCustomOptions('Plain Section');
     expect(result.isLarge).toBe(false);
-    expect(result.isFullH).toBe(false);
+    expect(result.isFullW).toBe(false);
     expect(result.isFullWHeader).toBe(false);
+  });
+
+  it('ignores removed tokens (no flag emitted)', () => {
+    const result = parseSectionCustomOptions(
+      'Section - Medium - FullH - ShortContent - SmallerTitle - SmallTitle' +
+        ' - SmallSubTitles - TextGray - Paddings - NoPaddingsX - NoPaddingsY - Heading2'
+    );
+    expect(result.isMedium).toBeUndefined();
+    expect(result.isFullH).toBeUndefined();
+    expect(result.isShortC).toBeUndefined();
+    expect(result.isSmallerT).toBeUndefined();
+    expect(result.isMediumT).toBeUndefined();
+    expect(result.isSmallSubTitles).toBeUndefined();
+    expect(result.hasTextGray).toBeUndefined();
+    expect(result.hasPaddings).toBeUndefined();
+    expect(result.hasNoPaddingsX).toBeUndefined();
+    expect(result.hasNoPaddingsY).toBeUndefined();
+    expect(result.isHeadingH).toBeUndefined();
+    // The kept "- NoPaddings" base must NOT trigger on the removed X/Y variants.
+    expect(result.hasNoPaddings).toBe(false);
   });
 });
 

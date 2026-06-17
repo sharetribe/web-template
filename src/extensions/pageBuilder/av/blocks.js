@@ -21,8 +21,6 @@ let cachedBlockComponents;
 export const getAvBlockComponents = () => {
   if (cachedBlockComponents) return cachedBlockComponents;
 
-  const BlockWithCols = require('../../../containers/PageBuilder/BlockBuilder/BlockWithCols')
-    .default;
   const BlockPriceSelector = require('../../../containers/PageBuilder/BlockBuilder/BlockPriceSelector')
     .default;
   const BlockInstagramFeed = require('../../../containers/PageBuilder/BlockBuilder/BlockInstagramFeed/BlockInstagramFeed')
@@ -33,7 +31,6 @@ export const getAvBlockComponents = () => {
     .default;
 
   cachedBlockComponents = {
-    blockWithCols: { component: BlockWithCols },
     blockPriceSelector: { component: BlockPriceSelector },
     blockInstagramFeed: { component: BlockInstagramFeed },
     blockMarkdownTable: { component: BlockMarkdownTable },
@@ -43,12 +40,12 @@ export const getAvBlockComponents = () => {
 };
 
 // `blockId` shorthands let CMS authors use a fixed block id and skip the
-// blockType field entirely.
+// blockType field entirely. (blockName is unused now but kept in the signature
+// so the BlockBuilder call site stays untouched.)
 export const getEffectiveBlockType = (blockId, blockName, fallbackType) => {
   if (blockId === 'av-insta-feed') return 'blockInstagramFeed';
   if (blockId?.startsWith('av-table-')) return 'blockMarkdownTable';
   if (blockId === 'av-contact-form') return 'blockBrevoForm';
-  if (blockName?.includes('2 cols buttons ::')) return 'blockWithCols';
   return fallbackType;
 };
 
@@ -152,9 +149,9 @@ const getDefaultClassesForBlock = css => ({
   ctaButtonSecondary: css.ctaButtonSecondary,
 });
 
-// Walks block.blockName for "feature ::" tokens and returns the full prop map
-// that BlockBuilder spreads onto the rendered Block component. Behavior is
-// preserved verbatim from the previous inline implementation.
+// Walks block.blockName for "token ::" flags and returns the prop map that
+// BlockBuilder spreads onto the rendered Block component. Each token here is
+// documented in docs/operator-guide.md §5.2.
 export const createBlockCustomProps = (block, intl, css) => {
   const DEFAULT_CLASSES = getDefaultClassesForBlock(css);
   const blockCustomProps = {};
@@ -162,41 +159,7 @@ export const createBlockCustomProps = (block, intl, css) => {
   blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
   blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
 
-  if (block.blockName?.includes('contact buttons ::')) {
-    const cb = 'ContactButtons.' + block.blockId;
-    blockCustomProps.contactButtons = {
-      ctaButtonPrimaryClass: DEFAULT_CLASSES.ctaButtonPrimary,
-      ctaButtonSecondaryClass: DEFAULT_CLASSES.ctaButtonSecondary,
-      callToAction1: {
-        fieldType: 'internalButtonLink',
-        href: fmt(intl, cb + '.cta1Link', 'Hello'),
-        content: fmt(intl, cb + '.cta1Text', 'Hello'),
-      },
-      callToAction2: {
-        fieldType: 'internalButtonLink',
-        href: fmt(intl, cb + '.cta2Link', 'Hello'),
-        content: fmt(intl, cb + '.cta2Text', 'Hello'),
-      },
-      social: {
-        fieldType: 'socialMediaLink',
-        href: fmt(intl, cb + '.socialLink', 'Hello'),
-        content: fmt(intl, cb + '.socialText', 'Hello'),
-      },
-    };
-  }
-
-  if (block.blockName?.includes('2 cols ::')) {
-    const bc = 'BlueCols.' + block.blockId;
-    blockCustomProps.blueCols = {
-      col1Title: fmt(intl, bc + '.col1Title', ' '),
-      col1Text: fmt(intl, bc + '.col1Text', ' '),
-      col2Title: fmt(intl, bc + '.col2Title', ' '),
-      col2Text: fmt(intl, bc + '.col2Text', ' '),
-      col3Title: fmt(intl, bc + '.col3Title', ' '),
-      col3Text: fmt(intl, bc + '.col3Text', ' '),
-    };
-  }
-
+  // 2Buttons :: — a two-button row below the block content.
   if (block.blockName?.includes('2Buttons ::')) {
     const tb = 'TwoButtons.' + block.blockId;
     const cta1ClassName = parseCtaStyleString(fmt(intl, tb + '.cta1Style'), css);
@@ -218,89 +181,23 @@ export const createBlockCustomProps = (block, intl, css) => {
     };
   }
 
-  if (block.blockName?.includes('full height media ::')) blockCustomProps.hasFullHeightMedia = true;
-
-  if (block.blockName?.includes('buyer list ::')) {
-    const cl = 'CustomList.' + block.blockId;
-    blockCustomProps.showBuyerList = true;
-    blockCustomProps.buyerListButton = {
-      fieldType: 'internalButtonLink',
-      href: fmt(intl, cl + '.buttonLink', ' '),
-      content: fmt(intl, cl + '.buttonText', ' '),
-    };
-    blockCustomProps.buyerListData = [];
-    for (let r = 1; r <= 5; r++) {
-      blockCustomProps.buyerListData.push({
-        title: fmt(intl, cl + '.title' + r, ' '),
-        text: fmt(intl, cl + '.text' + r, ' '),
-      });
-    }
-  }
-  if (block.blockName?.includes('seller list ::')) {
-    const cl = 'CustomList.' + block.blockId;
-    blockCustomProps.showSellerList = true;
-    blockCustomProps.sellerListButton = {
-      fieldType: 'internalButtonLink',
-      href: fmt(intl, cl + '.buttonLink', ' '),
-      content: fmt(intl, cl + '.buttonText', ' '),
-    };
-    blockCustomProps.sellerListData = [];
-    for (let r = 1; r <= 5; r++) {
-      blockCustomProps.sellerListData.push({
-        title: fmt(intl, cl + '.title' + r, ' '),
-        text: fmt(intl, cl + '.text' + r, ' '),
-      });
-    }
-  }
-
-  if (block.blockName?.includes('button secondary ::')) blockCustomProps.hasCTASecondary = true;
-  if (block.blockName?.includes('button tertiary ::')) blockCustomProps.hasCTATertiary = true;
-  if (block.blockName?.includes('smaller ::')) blockCustomProps.hasTextSmaller = true;
-  // Mirror of the section-name token "- SmallerTitles": shift all headings down one size level.
-  if (block.blockName?.includes('smallerTitles ::')) blockCustomProps.hasSmallerTitles = true;
-  // Move the block media in between the title and the rest of the content
-  // (title → media → text/CTA) instead of rendering it above the title.
+  // Layout / text style flags.
+  // mediaTitle :: — render media between the title and the rest of the content.
   if (block.blockName?.includes('mediaTitle ::')) blockCustomProps.hasMediaTitle = true;
-  // Block-level mirror of the section-name token "- BlueTitle": color only this
-  // block's title in the AV blue (does not affect headings inside the body text).
+  // smallerTitles :: — mirror of the section-name token "- SmallerTitles".
+  if (block.blockName?.includes('smallerTitles ::')) blockCustomProps.hasSmallerTitles = true;
+  // blueTitle :: — mirror of "- BlueTitle"; colors only this block's own title.
   if (block.blockName?.includes('blueTitle ::')) blockCustomProps.hasBlueTitle = true;
-  if (block.blockName?.includes('text larger ::')) blockCustomProps.hasTextLarger = true;
-  if (block.blockName?.includes('text gray ::')) blockCustomProps.hasTextGray = true;
-  if (block.blockName?.includes('text darkgray ::')) blockCustomProps.hasTextDarkGray = true;
-  if (block.blockName?.includes('text nogap ::')) blockCustomProps.hasTextNoGap = true;
-  if (block.blockName?.includes('large list :: ')) blockCustomProps.hasLargeList = true;
+  if (block.blockName?.includes('icon img ::')) blockCustomProps.hasIconImg = true;
+  if (block.blockName?.includes('social links ::')) blockCustomProps.hasSocialLinks = true;
   if (block.blockName?.includes('newsletter form ::')) {
     blockCustomProps.hasNewsletterForm = true;
     blockCustomProps.disclaimerText = fmt(intl, 'NewsletterForm.disclaimerText');
     blockCustomProps.okMsg = fmt(intl, 'NewsletterForm.successMessage');
     blockCustomProps.errorMsg = fmt(intl, 'NewsletterForm.errorMessage');
   }
-  if (block.blockName?.includes('icon img ::')) blockCustomProps.hasIconImg = true;
-  if (block.blockName?.includes('social links ::')) blockCustomProps.hasSocialLinks = true;
-  if (block.blockName?.includes('content short ::')) blockCustomProps.hasShortContent = true;
 
-  if (block.blockName?.includes('2 cols buttons ::')) {
-    blockCustomProps.ctaButtonPrimaryClass = DEFAULT_CLASSES.ctaButtonPrimary;
-    blockCustomProps.ctaButtonSecondaryClass = DEFAULT_CLASSES.ctaButtonSecondary;
-
-    const bwc = 'BlockWithCols.' + block.blockId;
-    blockCustomProps.titleEyebrow = fmt(intl, bwc + '.titleEyebrow');
-    blockCustomProps.col1Title = fmt(intl, bwc + '.col1Title', 'Hello');
-    blockCustomProps.col2Title = fmt(intl, bwc + '.col2Title', 'Hello');
-    blockCustomProps.col1Text = fmt(intl, bwc + '.col1Text', 'Hello');
-    blockCustomProps.col2Text = fmt(intl, bwc + '.col2Text', 'Hello');
-    blockCustomProps.callToAction1 = {
-      fieldType: 'internalButtonLink',
-      href: fmt(intl, bwc + '.cta1Link', 'Hello'),
-      content: fmt(intl, bwc + '.cta1Text', 'Hello'),
-    };
-    blockCustomProps.callToAction2 = {
-      fieldType: 'internalButtonLink',
-      href: fmt(intl, bwc + '.cta2Link', 'Hello'),
-      content: fmt(intl, bwc + '.cta2Text', 'Hello'),
-    };
-  }
-
+  // photoSlider :: — 4-image carousel sourced from intl keys.
   if (block.blockName?.includes('photoSlider ::')) {
     const ps = 'PhotoSlider.' + block.blockId;
     blockCustomProps.sliderImages = [

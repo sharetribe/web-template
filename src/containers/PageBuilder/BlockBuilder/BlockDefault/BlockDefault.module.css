@@ -3,14 +3,12 @@
 .root {
 }
 
+/* ── Media ────────────────────────────────────────────────────────────────── */
+
 .media {
   width: 100%;
   border-radius: 8px;
   margin-bottom: 0;
-}
-
-.fullHeightMedia {
-  height: 100%;
 }
 
 /* Media moved into the text column (title → media → content) via the
@@ -19,6 +17,14 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+/* "icon img ::": render the block media as a small centered icon. */
+.iconImg {
+  width: 48px;
+  margin: auto;
+}
+
+/* ── Text column ──────────────────────────────────────────────────────────── */
 
 .text {
   width: 100%;
@@ -35,6 +41,55 @@
 .text .blueTitle {
   color: var(--avBlue);
 }
+
+/* Block-level mirror of the section-name token "- SmallerTitles":
+   shift all headings down one size level. */
+.smallerTitles {
+  h1 {
+    font-size: 30px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  h3 {
+    font-size: 18px;
+    padding-bottom: 3px;
+  }
+  h4 {
+    font-size: 16px;
+  }
+  h5 {
+    font-size: 14px;
+  }
+}
+
+/* "icon img ::": tighten the text column around a small icon. */
+.slimContent {
+  h3,
+  h4 {
+    font-family: var(--fontFamilyHeadings);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 140%; /* 28px */
+
+    + h4,
+    + h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+  }
+
+  p {
+    margin: 0 auto;
+    line-height: 150%; /* 24px */
+  }
+
+  a {
+    display: inline-block;
+  }
+}
+
+/* ── Alignment ────────────────────────────────────────────────────────────── */
 
 .alignLeft {
   text-align: left;
@@ -75,13 +130,7 @@
   }
 }
 
-.reverseMediaPos {
-  flex-direction: column !important;
-
-  @media (--viewportMedium) {
-    flex-direction: row !important;
-  }
-}
+/* ── Two-button row ("2Buttons ::") ───────────────────────────────────────── */
 
 .titleEyebrow {
   color: var(--gray, #bcbcbc);
@@ -102,309 +151,5 @@
 
   a {
     margin-top: 0;
-  }
-}
-
-.btnInstagram {
-  color: var(--avBlue);
-  font-size: 16px;
-  font-weight: var(--fontWeightBold);
-  line-height: 150%; /* 24px */
-  text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-skip-ink: auto;
-  text-decoration-thickness: auto;
-  text-underline-offset: 1px;
-  text-decoration-thickness: 2px;
-  text-underline-position: from-font;
-  transition: var(--linkTransition);
-
-  &:hover {
-    color: var(--colorBlack);
-    text-underline-offset: 4px;
-    text-decoration-thickness: 2px;
-  }
-}
-
-.colWrap {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-
-  h3 {
-    font-family: var(--fontFamilyHeadings);
-    font-size: 22px;
-    font-style: normal;
-    font-weight: var(--fontWeightBold);
-    line-height: 140%; /* 28px */
-  }
-
-  h3,
-  p {
-    padding: 0;
-  }
-
-  > * {
-    flex-basis: 33%;
-  }
-}
-
-.iconImg {
-  width: 48px;
-  margin: auto;
-}
-
-.textGray {
-  p {
-    color: var(--colorGrey300);
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 150%; /* 30px */
-  }
-}
-
-.textDarkGray {
-  h3,
-  h4 {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 140%; /* 25.2px */
-  }
-
-  p {
-    color: #727272;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 150%; /* 30px */
-  }
-}
-
-.textLarger {
-  p {
-    font-size: 22px;
-    line-height: 1.33;
-  }
-}
-
-.textSmaller {
-  h3 {
-    font-size: 20px;
-    line-height: 1.5;
-    font-weight: 700;
-    letter-spacing: 0;
-    padding: 0;
-    text-transform: none;
-  }
-}
-
-/* Block-level mirror of the section-name token "- SmallerTitles":
-   shift all headings down one size level. */
-.smallerTitles {
-  h1 {
-    font-size: 30px;
-  }
-  h2 {
-    font-size: 20px;
-  }
-  h3 {
-    font-size: 18px;
-    padding-bottom: 3px;
-  }
-  h4 {
-    font-size: 16px;
-  }
-  h5 {
-    font-size: 14px;
-  }
-}
-
-.largeList {
-  ol {
-    list-style-type: decimal-leading-zero;
-    padding-left: 4em;
-
-    li {
-      color: var(--colorGrey600);
-      font-family: var(--fontFamilyHeadings);
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 110%; /* 24px */
-      padding: 14px 0;
-
-      &::marker {
-        font-family: var(--fontFamilyAccent);
-        font-size: 24px;
-        font-weight: var(--fontWeightBold);
-        color: var(--colorGrey300);
-        line-height: 140%; /* 33.6px */
-        transition: var(--colorTransition);
-      }
-
-      &:hover {
-        &::marker {
-          color: var(--colorGrey600);
-        }
-      }
-
-      @media (--viewportLarge) {
-        padding: 24px 0;
-        font-size: 30px;
-        line-height: 120%; /* 36px */
-      }
-    }
-  }
-}
-
-ol.titleList {
-  list-style: none; /* Removes the default numbers */
-  padding-left: 0; /* Remove default padding from the ol */
-  margin: auto;
-  max-width: 600px;
-
-  + div {
-    text-align: center;
-  }
-
-  li::before {
-    content: '';
-    width: 24px;
-    height: 24px;
-    margin-right: 0.5em; /* Adds space between number and content */
-    flex-basis: 3rem;
-    flex-shrink: 0;
-    background-color: var(--colorGrey300);
-    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'><g stroke='black' stroke-linecap='round' stroke-width='5.5'><path d='M24 8v32'/><path d='M10.144 16 37.856 32'/><path d='M10.144 32 37.856 16'/></g></svg>")
-      center / contain no-repeat;
-    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'><g stroke='black' stroke-linecap='round' stroke-width='5.5'><path d='M24 8v32'/><path d='M10.144 16 37.856 32'/><path d='M10.144 32 37.856 16'/></g></svg>")
-      center / contain no-repeat;
-    transition: var(--colorTransition);
-  }
-
-  li {
-    display: flex; /* Makes the list item a flex container */
-    align-items: center; /* Vertically centers content along the cross-axis */
-    /* Add padding/margin as needed for the list items */
-
-    > div {
-      width: 100%;
-    }
-
-    div > * {
-      font-family: var(--fontFamilyHeadings);
-      font-weight: var(--fontWeightRegular);
-      font-style: normal;
-      font-size: 15px;
-      line-height: 120%;
-      letter-spacing: 0;
-      color: var(--colorGrey600);
-    }
-
-    div > h3 {
-      font-family: var(--fontFamilyHeadings);
-      font-weight: var(--fontWeightRegular);
-      font-style: normal;
-      font-size: 25px;
-      line-height: 120%;
-      letter-spacing: 0;
-      color: var(--colorGrey700);
-      margin-bottom: 0;
-      transition: var(--colorTransition);
-    }
-
-    &:hover {
-      &::before {
-        background-color: #000;
-      }
-
-      div > h3 {
-        color: #000;
-      }
-    }
-  }
-}
-
-.slimContent {
-  h3,
-  h4 {
-    font-family: var(--fontFamilyHeadings);
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 140%; /* 28px */
-
-    + h4,
-    + h3 {
-      margin-top: 0;
-      margin-bottom: 20px;
-    }
-  }
-
-  p {
-    margin: 0 auto;
-    line-height: 150%; /* 24px */
-  }
-
-  a {
-    display: inline-block;
-  }
-}
-
-.shortContent {
-  > * {
-    max-width: 500px;
-  }
-}
-
-.colsSecondary {
-  h1,
-  h2,
-  h3 {
-    color: var(--ctaSecondaryBG);
-    margin-top: 0;
-  }
-}
-
-.ctaSecondary {
-  display: inline-block;
-  padding: 11px 22px;
-  font-size: 14px;
-  background-color: var(--ctaSecondaryBG);
-  color: var(--ctaSecondary);
-  border: 1px solid var(--ctaSecondaryBG);
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 400;
-  margin-top: 12px;
-  font-family: var(--fontFamilyHeadings);
-  line-height: 150%; /* 21px */
-  transition: var(--colorTransition);
-
-  &:hover {
-    text-decoration: none;
-    background-color: var(--ctaPrimaryBG);
-    color: var(--ctaSecondaryBG);
-    border-color: var(--ctaSecondaryBG);
-  }
-}
-
-.ctaTertiary {
-  composes: ctaSecondary;
-  background-color: var(--ctaPrimaryBG);
-  color: var(--ctaSecondaryBG);
-  border-color: var(--ctaSecondaryBG);
-  transition: var(--colorTransition);
-
-  &:hover {
-    background-color: var(--ctaSecondaryBG);
-    color: var(--ctaPrimaryBG);
-  }
-}
-
-.textNoGap {
-  h1 + p,
-  h2 + p,
-  h3 + p,
-  h4 + p {
-    margin-top: 0;
-    padding-top: 0;
   }
 }

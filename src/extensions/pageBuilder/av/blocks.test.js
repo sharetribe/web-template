@@ -25,21 +25,19 @@ describe('getEffectiveBlockType', () => {
     expect(getEffectiveBlockType('av-contact-form', null, 'defaultBlock')).toBe('blockBrevoForm');
   });
 
-  it('returns blockWithCols for blockName containing "2 cols buttons ::"', () => {
-    expect(getEffectiveBlockType('block-1', '2 cols buttons :: A :: B', 'defaultBlock')).toBe(
-      'blockWithCols'
-    );
-  });
-
-  it('returns fallbackType when no special blockId or blockName matches', () => {
+  it('returns fallbackType when no special blockId matches', () => {
     expect(getEffectiveBlockType('regular-block', 'Normal block', 'blockDefault')).toBe(
       'blockDefault'
     );
   });
 
-  it('blockId shortcuts take priority over blockName shortcuts', () => {
+  it('only blockId drives the shortcut; blockName is ignored', () => {
     expect(getEffectiveBlockType('av-insta-feed', '2 cols buttons :: A', 'defaultBlock')).toBe(
       'blockInstagramFeed'
+    );
+    // A blockName that previously routed to a component now falls through.
+    expect(getEffectiveBlockType('regular-block', '2 cols buttons :: A', 'defaultBlock')).toBe(
+      'defaultBlock'
     );
   });
 
@@ -66,9 +64,8 @@ describe('createBlockCustomProps', () => {
   });
 
   it('does not set hasSmallerTitles when the token is absent', () => {
-    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'smaller ::' }, intl, css);
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'blueTitle ::' }, intl, css);
     expect(props.hasSmallerTitles).toBeUndefined();
-    expect(props.hasTextSmaller).toBe(true);
   });
 
   it('sets hasMediaTitle for blockName containing "mediaTitle ::"', () => {
@@ -77,7 +74,7 @@ describe('createBlockCustomProps', () => {
   });
 
   it('does not set hasMediaTitle when the token is absent', () => {
-    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'smaller ::' }, intl, css);
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'blueTitle ::' }, intl, css);
     expect(props.hasMediaTitle).toBeUndefined();
   });
 
@@ -87,8 +84,53 @@ describe('createBlockCustomProps', () => {
   });
 
   it('does not set hasBlueTitle when the token is absent', () => {
-    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'smaller ::' }, intl, css);
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'mediaTitle ::' }, intl, css);
     expect(props.hasBlueTitle).toBeUndefined();
+  });
+
+  it('sets hasIconImg for "icon img ::"', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'icon img ::' }, intl, css);
+    expect(props.hasIconImg).toBe(true);
+  });
+
+  it('builds a 4-image sliderImages array for "photoSlider ::"', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'photoSlider ::' }, intl, css);
+    expect(Array.isArray(props.sliderImages)).toBe(true);
+    expect(props.sliderImages).toHaveLength(4);
+  });
+
+  it('builds twoButtons for "2Buttons ::"', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: '2Buttons ::' }, intl, css);
+    expect(props.twoButtons).toBeTruthy();
+    expect(props.twoButtons.callToAction1.fieldType).toBe('internalButtonLink');
+  });
+
+  it('ignores removed block tokens (no prop emitted)', () => {
+    const props = createBlockCustomProps(
+      {
+        blockId: 'b1',
+        blockName:
+          '2 cols :: contact buttons :: buyer list :: seller list :: text gray ::' +
+          ' text darkgray :: text nogap :: text larger :: smaller :: large list ::' +
+          ' content short :: full height media :: button secondary :: button tertiary ::',
+      },
+      intl,
+      css
+    );
+    expect(props.blueCols).toBeUndefined();
+    expect(props.contactButtons).toBeUndefined();
+    expect(props.showBuyerList).toBeUndefined();
+    expect(props.showSellerList).toBeUndefined();
+    expect(props.hasTextGray).toBeUndefined();
+    expect(props.hasTextDarkGray).toBeUndefined();
+    expect(props.hasTextNoGap).toBeUndefined();
+    expect(props.hasTextLarger).toBeUndefined();
+    expect(props.hasTextSmaller).toBeUndefined();
+    expect(props.hasLargeList).toBeUndefined();
+    expect(props.hasShortContent).toBeUndefined();
+    expect(props.hasFullHeightMedia).toBeUndefined();
+    expect(props.hasCTASecondary).toBeUndefined();
+    expect(props.hasCTATertiary).toBeUndefined();
   });
 });
 

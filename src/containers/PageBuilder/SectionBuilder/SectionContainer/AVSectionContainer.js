@@ -44,28 +44,21 @@ const AVSectionContainer = props => {
 
   const innerCss = classNames(
     upstreamCss.sectionContent,
-    customOption?.isBlueTitle ? avCss.sectionContentBlueTitle : null,
-    customOption?.isCenterTitleText ? avCss.sectionContentCenterTitleText : null,
-    customOption?.isWhiteTitle ? avCss.sectionContentWhiteTitle : null,
-    customOption?.isSmallSubTitles ? avCss.sectionContentSmallSubTitles : null,
-    customOption?.isLargeDesc ? avCss.sectionContentLargeDesc : null,
-    customOption?.isCenterDescText ? avCss.sectionContentCenterDescText : null,
+    // Layout / width
     customOption?.isLarge ? avCss.sectionContentLarge : null,
-    customOption?.isMedium ? avCss.sectionContentMedium : null,
-    customOption?.isFullH ? avCss.sectionContentFullH : null,
     customOption?.isFullW ? avCss.sectionContentFullW : null,
-    customOption?.isShortC ? avCss.sectionContentShortC : null,
-    customOption?.isSmallerT ? avCss.sectionContentSmallerTitle : null,
-    customOption?.isMediumT ? avCss.sectionContentMediumTitle : null,
-    customOption?.hasPaddings ? avCss.sectionContentHasPaddings : null,
-    customOption?.hasNoPaddings ? avCss.sectionContentNoPaddings : null,
-    customOption?.hasNoPaddingsX ? avCss.sectionContentNoPaddingsX : null,
-    customOption?.hasNoPaddingsY ? avCss.sectionContentNoPaddingsY : null,
-    customOption?.hasTextGray ? avCss.sectionContentHasTextGray : null,
-    customOption?.isAvFeature ? avCss.sectionContentAvFeature : null,
-    customOption?.isHeadingH ? avCss.sectionContentHeadingH : null,
     customOption?.isFullWHeader ? avCss.sectionContentFullWHeader : null,
+    customOption?.isAvFeature ? avCss.sectionContentAvFeature : null,
+    // Title / text
+    customOption?.isBlueTitle ? avCss.sectionContentBlueTitle : null,
+    customOption?.isWhiteTitle ? avCss.sectionContentWhiteTitle : null,
+    customOption?.isCenterTitleText ? avCss.sectionContentCenterTitleText : null,
+    customOption?.isCenterDescText ? avCss.sectionContentCenterDescText : null,
+    customOption?.isLargeDesc ? avCss.sectionContentLargeDesc : null,
     customOption?.isSmallerTitles ? avCss.sectionContentSmallerTitles : null,
+    // Spacing
+    customOption?.hasNoPaddings ? avCss.sectionContentNoPaddings : null,
+    // Footer
     as === 'footer' ? avCss.customFooter : null
   );
 

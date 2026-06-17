@@ -66,37 +66,15 @@ const BlockDefault = props => {
     options = {},
     alignment,
     twoButtons,
-    blueCols,
-    showBuyerList,
-    buyerListData,
-    buyerListButton,
-    showSellerList,
-    sellerListData,
-    sellerListButton,
-    contactButtons,
-    hasFullHeightMedia,
     hasIconImg,
-    hasTextGray,
-    hasTextDarkGray,
-    hasTextNoGap,
-    hasLargeList,
-    hasTextLarger,
-    hasTextSmaller,
     hasSmallerTitles,
     hasMediaTitle,
     hasBlueTitle,
-    hasShortContent,
-    hasCTASecondary,
-    hasCTATertiary,
     sliderImages,
     ctaButtonWrapClass,
     ...customProps
   } = props;
-  const classes = classNames(
-    rootClassName || css.root,
-    className,
-    hasLargeList ? css.reverseMediaPos : ''
-  );
+  const classes = classNames(rootClassName || css.root, className);
   const hasTextComponentFields = hasDataInFields([title, text, callToAction], options);
 
   const alignmentClasses = {
@@ -107,35 +85,15 @@ const BlockDefault = props => {
 
   const alignmentClass = alignmentClasses[alignment];
 
-  const ctaCustomClass = classNames(
-    hasCTASecondary ? css.ctaSecondary : hasCTATertiary ? css.ctaTertiary : ctaButtonClass
-  );
-
   const textComponentsClass = classNames(
     textClassName,
     alignmentClass,
     css.text,
     hasIconImg ? css.slimContent : '',
-    hasTextGray ? css.textGray : '',
-    hasTextDarkGray ? css.textDarkGray : '',
-    hasTextNoGap ? css.textNoGap : '',
-    hasLargeList ? css.largeList : '',
-    hasTextLarger ? css.textLarger : '',
-    hasTextSmaller ? css.textSmaller : '',
-    hasSmallerTitles ? css.smallerTitles : '',
-    hasShortContent ? css.shortContent : ''
+    hasSmallerTitles ? css.smallerTitles : ''
   );
 
-  const fieldMediaClass = classNames(
-    mediaClassName,
-    hasIconImg ? css.iconImg : '',
-    hasFullHeightMedia ? css.fullHeightMedia : ''
-  );
-
-  const hasBuyerButtonField =
-    buyerListButton?.content?.trim().length > 0 && buyerListButton?.content?.trim().length > 0;
-  const hasSellerButtonField =
-    sellerListButton?.content?.trim().length > 0 && sellerListButton?.content?.trim().length > 0;
+  const fieldMediaClass = classNames(mediaClassName, hasIconImg ? css.iconImg : '');
 
   // The block media. When `hasMediaTitle` is set it is rendered between the
   // title and the rest of the content (see below); otherwise it stays above
@@ -176,119 +134,8 @@ const BlockDefault = props => {
           />
           {mediaInTitle ? renderMedia(css.mediaInTitle) : null}
           <Field data={text} options={options} />
-          <Field data={callToAction} className={ctaCustomClass} options={options} />
+          <Field data={callToAction} className={ctaButtonClass} options={options} />
 
-          {showBuyerList ? (
-            <div>
-              <ol className={css.titleList}>
-                {buyerListData.map((item, index) =>
-                  item.title.trim() ? (
-                    <li key={index}>
-                      <div>
-                        <h3>{item.title}</h3>
-                        <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
-                      </div>
-                    </li>
-                  ) : null
-                )}
-              </ol>
-              {hasBuyerButtonField ? (
-                <div>
-                  <Field
-                    data={buyerListButton}
-                    className={customProps.ctaButtonSecondaryClass}
-                    options={options}
-                  />
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-
-          {showSellerList ? (
-            <div>
-              <ol className={css.titleList}>
-                {sellerListData.map((item, index) =>
-                  item.title.trim() ? (
-                    <li key={index}>
-                      <div>
-                        <h3>{item.title}</h3>
-                        <div dangerouslySetInnerHTML={{ __html: item.text }}></div>
-                      </div>
-                    </li>
-                  ) : null
-                )}
-              </ol>
-              {hasSellerButtonField ? (
-                <div>
-                  <Field
-                    data={sellerListButton}
-                    className={customProps.ctaButtonSecondaryClass}
-                    options={options}
-                  />
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-
-          {contactButtons ? (
-            <div>
-              <div className={classNames(css.buttonWrap, ctaButtonWrapClass)}>
-                <Field
-                  data={contactButtons.callToAction1}
-                  className={customProps.ctaButtonPrimaryClass}
-                  options={options}
-                />
-                <Field
-                  data={contactButtons.callToAction2}
-                  className={customProps.ctaButtonSecondaryClass}
-                  options={options}
-                />
-
-                <a
-                  className={css.btnInstagram}
-                  href={contactButtons.social.href}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="34"
-                    height="34"
-                    viewBox="0 0 34 34"
-                    fill="none"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M22.6667 4.59473H11.3333C7.42132 4.59473 4.25 7.76605 4.25 11.6781V23.0114C4.25 26.9234 7.42132 30.0947 11.3333 30.0947H22.6667C26.5786 30.0947 29.75 26.9234 29.75 23.0114V11.6781C29.75 7.76605 26.5786 4.59473 22.6667 4.59473ZM27.2708 23.0114C27.263 25.5509 25.2062 27.6078 22.6667 27.6156H11.3333C8.79375 27.6078 6.73694 25.5509 6.72917 23.0114V11.6781C6.73694 9.13847 8.79375 7.08167 11.3333 7.07389H22.6667C25.2062 7.08167 27.263 9.13847 27.2708 11.6781V23.0114ZM23.7292 12.0322C24.5116 12.0322 25.1458 11.398 25.1458 10.6156C25.1458 9.83316 24.5116 9.19889 23.7292 9.19889C22.9467 9.19889 22.3125 9.83316 22.3125 10.6156C22.3125 11.398 22.9467 12.0322 23.7292 12.0322ZM17 10.9697C13.4792 10.9697 10.625 13.8239 10.625 17.3447C10.625 20.8656 13.4792 23.7197 17 23.7197C20.5208 23.7197 23.375 20.8656 23.375 17.3447C23.3788 15.6528 22.7083 14.0291 21.5119 12.8328C20.3156 11.6364 18.6919 10.966 17 10.9697ZM13.1042 17.3447C13.1042 19.4964 14.8484 21.2406 17 21.2406C19.1516 21.2406 20.8958 19.4964 20.8958 17.3447C20.8958 15.1931 19.1516 13.4489 17 13.4489C14.8484 13.4489 13.1042 15.1931 13.1042 17.3447Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  {contactButtons.social.content}
-                </a>
-              </div>
-            </div>
-          ) : null}
-          {blueCols ? (
-            <div className={classNames(css.colWrap, css.colsSecondary)}>
-              <div>
-                <h3>{blueCols.col1Title}</h3>
-                <p>{blueCols.col1Text}</p>
-              </div>
-              {blueCols.col2Title.trim() ? (
-                <div>
-                  <h3>{blueCols.col2Title}</h3>
-                  <p>{blueCols.col2Text}</p>
-                </div>
-              ) : null}
-              {blueCols.col3Title.trim() ? (
-                <div>
-                  <h3>{blueCols.col3Title}</h3>
-                  <p>{blueCols.col3Text}</p>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
           {twoButtons ? (
             <div className={classNames(css.buttonWrap, ctaButtonWrapClass)}>
               <Field
