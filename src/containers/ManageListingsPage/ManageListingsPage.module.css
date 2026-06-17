@@ -125,7 +125,8 @@
   padding: 0 24px;
 
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  /* 2-up on small screens, matching the search results / profile grids. */
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   width: 100%;
 
@@ -146,6 +147,12 @@
 .listingCard {
   margin-bottom: 36px;
   width: 100%;
+
+  /* Stretch the card to fill its grid cell so cards in the same row match
+     height (the grid stretches the <li>, but a block <li> lets the card keep
+     its natural content height). grid stretches the single child in both
+     dimensions without needing a width:100% on the card itself. */
+  display: grid;
 }
 
 /**

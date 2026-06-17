@@ -3,7 +3,10 @@ import classNames from 'classnames';
 
 import Field from '../../Field';
 import { sanitizeUrl } from '../../../../util/sanitize';
-import { parseBlockCtaClass } from '../../../../extensions/pageBuilder/av/blocks';
+import {
+  parseBlockCtaClass,
+  mergeBlockCtaClass,
+} from '../../../../extensions/pageBuilder/av/blocks';
 
 import css from './SectionHeroCustom3.module.css';
 
@@ -59,7 +62,11 @@ const SectionHeroCustom3 = props => {
   // with a fallback to the section's primary button — which already reflects any
   // section-name CTA tokens baked into defaultClasses by SectionBuilder.
   const resolveCtaClass = block =>
-    parseBlockCtaClass(block.blockName, defaultClasses) || defaultClasses?.ctaButtonPrimary;
+    mergeBlockCtaClass(
+      parseBlockCtaClass(block.blockName, defaultClasses),
+      defaultClasses?.ctaButtonPrimary,
+      defaultClasses
+    );
 
   const halves = blocks.slice(0, 2);
 

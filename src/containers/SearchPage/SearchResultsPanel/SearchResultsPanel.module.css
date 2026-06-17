@@ -24,6 +24,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
+
+  /* The grid stretches each <li> to the tallest cell in its row, but a block
+     <li> lets the card keep its natural content height and sit top-aligned, so
+     same-row cards looked different heights. Making the <li> a flex container
+     stretches the card to fill the cell, so every card in a row matches. */
+  display: flex;
 }
 
 .listingCards {

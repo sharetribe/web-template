@@ -108,24 +108,41 @@ export const parseCtaStyleString = (styleStr, css) => {
 
 // Tokens written as "token ::" inside block.blockName,
 // e.g. "blockCtaBtnBlue :: rounded :: dashed ::".
+//
+// Returns the base color class (or null when the block specifies only
+// modifiers) and the list of modifier classes separately, so the caller can
+// LAYER block modifiers onto a section-inherited base color instead of
+// clobbering it. Position/border/font modifiers only set CSS vars and never
+// imply a base color, so a modifier-only block (e.g. "ctaBtnCenter ::") keeps
+// whatever base the section's `- SectionCtaBtn*` token provided.
 export const parseBlockCtaClass = (blockName, css) => {
   if (!blockName) return null;
   const baseMap = buildBlockCtaBaseMap(css);
   const modMap = buildBlockCtaModifierMap(css);
   const tokens = [...blockName.matchAll(/(\S+)\s*::/g)].map(m => m[1]);
   if (!tokens.length) return null;
-  const classes = [];
-  let hasBase = false;
+  let baseClass = null;
+  const modifierClasses = [];
   for (const token of tokens) {
     if (baseMap[token]) {
-      classes.push(baseMap[token]);
-      hasBase = true;
+      baseClass = baseMap[token];
     } else if (modMap[token]) {
-      classes.push(modMap[token]);
+      modifierClasses.push(modMap[token]);
     }
   }
-  if (!hasBase && classes.length) classes.unshift(css.ctaButton);
-  return classes.length ? classNames(classes.filter(Boolean)) : null;
+  if (!baseClass && !modifierClasses.length) return null;
+  return { baseClass, modifierClasses };
+};
+
+// Merge a parsed block CTA override onto the CTA class the section already
+// supplies (`inheritedClass`, e.g. the blue from a `- SectionCtaBtnBlue` token).
+// The block's own color token replaces the inherited base; modifiers always
+// layer on top. Falls back to the neutral `css.ctaButton` only when nothing is
+// inherited so a modifier-only block still renders a real button.
+export const mergeBlockCtaClass = (override, inheritedClass, css) => {
+  if (!override) return inheritedClass || null;
+  const base = override.baseClass || inheritedClass || css.ctaButton;
+  return classNames(base, ...override.modifierClasses) || null;
 };
 
 // ---- Per-block customProps ----

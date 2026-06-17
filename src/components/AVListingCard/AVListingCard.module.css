@@ -39,6 +39,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  flex-grow: 1;
   padding: 14px 20px 20px;
 }
 
@@ -139,6 +140,8 @@
 .mainInfo {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  flex-grow: 1;
 }
 
 /* Title is kept in the DOM for screen readers / accessible card naming, but

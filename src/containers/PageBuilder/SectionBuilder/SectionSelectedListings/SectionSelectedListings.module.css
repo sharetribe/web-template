@@ -156,6 +156,13 @@
 .carouselItem {
   flex: 0 0 auto;
   scroll-snap-align: start;
+
+  /* Stretch the card to fill its cell. The slider (flex carousel, and the 2-up
+     grid below 968px) sizes every item to the tallest in its row, but a block
+     item lets the card keep its natural content height and sit top-aligned, so
+     a card without an original ("was") price ended up shorter than its
+     row-mate. Flex + stretch makes the card fill the cell height. */
+  display: flex;
 }
 
 .listingCard {

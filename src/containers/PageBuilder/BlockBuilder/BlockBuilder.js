@@ -11,6 +11,7 @@ import {
   getAvBlockComponents,
   getEffectiveBlockType,
   parseBlockCtaClass,
+  mergeBlockCtaClass,
   createBlockCustomProps,
 } from '../../../extensions/pageBuilder/av/blocks';
 
@@ -91,12 +92,28 @@ const BlockBuilder = props => {
     const customProps = createBlockCustomProps(block, intl, sectionCss);
     const blockCtaOverride = parseBlockCtaClass(block.blockName, sectionCss);
     if (blockCtaOverride) {
-      customProps.ctaButtonClass = blockCtaOverride;
+      // Layer the block's CTA tokens onto the section-inherited CTA class
+      // (e.g. `- SectionCtaBtnBlue`): a block color token replaces the base,
+      // while modifiers (position/border/font) layer on top and keep the
+      // inherited color. `otherProps.ctaButtonClass` is the section default.
+      customProps.ctaButtonClass = mergeBlockCtaClass(
+        blockCtaOverride,
+        otherProps.ctaButtonClass,
+        sectionCss
+      );
       if (customProps.twoButtons) {
         if (!customProps.twoButtons.cta1ClassName)
-          customProps.ctaButtonPrimaryClass = blockCtaOverride;
+          customProps.ctaButtonPrimaryClass = mergeBlockCtaClass(
+            blockCtaOverride,
+            customProps.ctaButtonPrimaryClass,
+            sectionCss
+          );
         if (!customProps.twoButtons.cta2ClassName)
-          customProps.ctaButtonSecondaryClass = blockCtaOverride;
+          customProps.ctaButtonSecondaryClass = mergeBlockCtaClass(
+            blockCtaOverride,
+            customProps.ctaButtonSecondaryClass,
+            sectionCss
+          );
       }
     }
     const tokens = block.blockName

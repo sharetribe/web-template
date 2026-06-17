@@ -44,10 +44,12 @@
   --TopbarMobileMenu_topMargin: 46px;
 
   /* AV: the desktop TopbarDesktop is a two-row layout (logo/search row +
-   * custom-links row), so at --viewportLarge it is twice the single-row
-   * height plus the 1px row divider. Pages with a fixed Topbar (e.g.
-   * SearchPage) must offset content by this instead of --topbarHeightDesktop. */
-  --avTopbarHeightDesktopTwoRow: calc(var(--topbarHeightDesktop) * 2 + 1px);
+   * custom-links row). Row 1 = --topbarHeightDesktop; row 2 (the custom-links
+   * nav) is capped at --avTopbarSecondRowHeight (see the .bottomRow override
+   * below). Pages with a fixed Topbar (e.g. SearchPage) must offset content by
+   * this instead of --topbarHeightDesktop. */
+  --avTopbarSecondRowHeight: 54px;
+  --avTopbarHeightDesktopTwoRow: calc(var(--topbarHeightDesktop) + var(--avTopbarSecondRowHeight));
 
   /* ================ Font Families ================ */
   --fontFamily: 'Non Bureau', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial,
@@ -141,6 +143,7 @@ h2,
 h3,
 h4 {
   font-weight: var(--fontWeightRegular);
+  word-break: auto-phrase;
 }
 
 /* ================ Heading sizes (AV override) ================
@@ -164,31 +167,41 @@ h1,
 .h1,
 h1[class*='Heading_h1__'] {
   font-size: 42px;
+  word-break: auto-phrase;
 }
 h2,
 .h2,
 h2[class*='Heading_h2__'] {
   font-size: 26px;
+  word-break: auto-phrase;
 }
 h3,
 .h3,
 h3[class*='Heading_h3__'] {
   font-size: 18px;
+  word-break: auto-phrase;
+
+  > * {
+    word-break: auto-phrase;
+  }
 }
 h4,
 .h4,
 h4[class*='Heading_h4__'] {
   font-size: 16px;
+  word-break: auto-phrase;
 }
 h5,
 .h5,
 h5[class*='Heading_h5__'] {
   font-size: 15px;
+  word-break: auto-phrase;
 }
 h6,
 .h6,
 h6[class*='Heading_h6__'] {
   font-size: 15px;
+  word-break: auto-phrase;
 }
 
 /* Desktop (from --viewportMedium) */
@@ -374,6 +387,7 @@ textarea {
 :root [class*='P_p__'] + ul li {
   line-height: 20px;
   padding: 0px 0 3px;
+  word-break: auto-phrase;
 }
 
 /* Center the PageBuilder section header (title/description/CTA) at all screen
@@ -398,4 +412,79 @@ textarea {
 :root [class*='SectionBuilder_align__'] {
   text-align: center;
   justify-self: center;
+}
+
+/* Remove the 80ch reading-width cap on the PageBuilder `<p>` primitive so body
+   copy fills its container. `.p` is a CSS Modules scoped class
+   (`P_p__<hash>`, from Primitives/P/P.module.css); match the stable prefix and
+   raise specificity with `:root` (0,2,0) to beat the module's own `.p` rule
+   (0,1,0) regardless of stylesheet injection order. */
+:root [class*='P_p__'] {
+  max-width: none;
+  margin-top: 4px;
+  padding-top: 0;
+  word-break: auto-phrase;
+}
+
+/* ================ Topbar second row height cap (desktop) ================
+   The two-row desktop TopbarDesktop's second row (`.bottomRow`, the
+   CustomLinksMenu nav) defaults to min-height: --topbarHeightDesktop (72px).
+   Cap it at --avTopbarSecondRowHeight (54px). `.bottomRow` is a CSS Modules
+   scoped class (`TopbarDesktop_bottomRow__<hash>`); match the stable prefix and
+   raise specificity with `:root` (0,2,0) to beat the module's own rule.
+
+   The nav link labels carry 27–28px vertical margins sized for the old 72px
+   row — those margins are what vertically centre each label, so the row's real
+   height tracks them. Scale them down to fit the shorter row. All rules are
+   scoped UNDER `.bottomRow` so the row-1 create-listing pill (same
+   `.priorityLinkLabel` class, rendered in `.rightGroup`) is never affected. */
+:root [class*='TopbarDesktop_bottomRow__'] {
+  min-height: var(--avTopbarSecondRowHeight);
+  height: var(--avTopbarSecondRowHeight);
+  /* Drop the divider line below the nav (upstream `border-bottom`) and decorate
+   * the whole navbar with a soft drop shadow instead. */
+  border-bottom: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Sit above page content so the shadow is painted over it, not under. */
+  position: relative;
+  z-index: 1;
+}
+
+/* 18px top/bottom + ~18px label line-height = 54px → labels stay centred.
+   `linkMenuLabelWrapper__` is matched unprefixed because it exists in BOTH
+   LinksMenu.module.css and LinksMenuDropdown.module.css (the category/user
+   dropdown triggers, e.g. "Ropa"); a `LinksMenu_…` prefix would miss the
+   `LinksMenuDropdown_…` hash. */
+:root [class*='TopbarDesktop_bottomRow__'] [class*='CustomLinksMenu_leftLinkLabel__'],
+:root [class*='TopbarDesktop_bottomRow__'] [class*='PriorityLinks_priorityLinkLabel__'],
+:root [class*='TopbarDesktop_bottomRow__'] [class*='linkMenuLabelWrapper__'] {
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+/* ================ Hide ProductOrderForm price breakdown ================
+   Hide the order price breakdown block in the purchase OrderPanel form.
+   `.breakdownWrapper` is a CSS Modules scoped class
+   (`ProductOrderForm_breakdownWrapper__<hash>`); match the stable prefix. */
+[class*='ProductOrderForm_breakdownWrapper__'] {
+  display: none;
+}
+
+/* ================ ListingPage font sizes (product page) ================
+   Tune the listing detail font scale: title 22px, price 20px, brand 16px.
+   All three are CSS Modules scoped classes; match the stable prefix and raise
+   specificity with `:root` (0,2,0) to beat each component's own rule — the
+   title (`ListingPage_orderPanelTitle`) also has a viewportMedium 50px bump,
+   which a flat 22px here overrides at every width. */
+:root [class*='ListingPage_orderPanelTitle__'] {
+  font-size: 22px;
+}
+:root [class*='OrderPanel_priceValue__'] {
+  font-size: 20px;
+}
+:root [class*='OrderPanel_priceValueInCTA__'] {
+  font-size: 22px;
+}
+:root [class*='AVListingDetails_brandLink__'] {
+  font-size: 16px;
 }

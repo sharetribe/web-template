@@ -143,11 +143,15 @@
   align-items: center;
   width: 100%;
   max-width: 520px;
-  height: 44px;
+  height: 40px;
   padding: 0 20px;
-  border: 1px solid var(--colorGrey300);
+  border: 2px solid var(--colorGrey300);
   border-radius: 999px;
   background-color: var(--colorGrey50);
+
+  &:focus-within {
+    border-color: var(--colorGrey500);
+  }
 }
 
 /* These is used with Inbox, Sign up, and Log in */

@@ -157,6 +157,10 @@
 .carouselItem {
   flex: 0 0 auto;
   scroll-snap-align: start;
+
+  /* Stretch the card to fill its cell so cards in the same row match height.
+     See SectionSelectedListings for the full rationale. */
+  display: flex;
 }
 
 .categoryCard {

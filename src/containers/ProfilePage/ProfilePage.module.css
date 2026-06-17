@@ -167,6 +167,11 @@
 
 .listing {
   width: 100%;
+
+  /* Stretch the card to fill its grid cell so cards in the same row match
+     height even when one has an extra line (e.g. a strike-through "was"
+     price). grid stretches the single child in both dimensions safely. */
+  display: grid;
 }
 
 .mobileReviewsTitle {
