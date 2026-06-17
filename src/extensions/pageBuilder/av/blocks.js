@@ -258,6 +258,12 @@ export const createBlockCustomProps = (block, intl, css) => {
   if (block.blockName?.includes('smaller ::')) blockCustomProps.hasTextSmaller = true;
   // Mirror of the section-name token "- SmallerTitles": shift all headings down one size level.
   if (block.blockName?.includes('smallerTitles ::')) blockCustomProps.hasSmallerTitles = true;
+  // Move the block media in between the title and the rest of the content
+  // (title → media → text/CTA) instead of rendering it above the title.
+  if (block.blockName?.includes('mediaTitle ::')) blockCustomProps.hasMediaTitle = true;
+  // Block-level mirror of the section-name token "- BlueTitle": color only this
+  // block's title in the AV blue (does not affect headings inside the body text).
+  if (block.blockName?.includes('blueTitle ::')) blockCustomProps.hasBlueTitle = true;
   if (block.blockName?.includes('text larger ::')) blockCustomProps.hasTextLarger = true;
   if (block.blockName?.includes('text gray ::')) blockCustomProps.hasTextGray = true;
   if (block.blockName?.includes('text darkgray ::')) blockCustomProps.hasTextDarkGray = true;

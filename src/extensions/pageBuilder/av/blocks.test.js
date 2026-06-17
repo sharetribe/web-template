@@ -70,6 +70,26 @@ describe('createBlockCustomProps', () => {
     expect(props.hasSmallerTitles).toBeUndefined();
     expect(props.hasTextSmaller).toBe(true);
   });
+
+  it('sets hasMediaTitle for blockName containing "mediaTitle ::"', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'mediaTitle ::' }, intl, css);
+    expect(props.hasMediaTitle).toBe(true);
+  });
+
+  it('does not set hasMediaTitle when the token is absent', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'smaller ::' }, intl, css);
+    expect(props.hasMediaTitle).toBeUndefined();
+  });
+
+  it('sets hasBlueTitle for blockName containing "blueTitle ::"', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'blueTitle ::' }, intl, css);
+    expect(props.hasBlueTitle).toBe(true);
+  });
+
+  it('does not set hasBlueTitle when the token is absent', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'smaller ::' }, intl, css);
+    expect(props.hasBlueTitle).toBeUndefined();
+  });
 });
 
 describe('parseBlockCtaClass', () => {

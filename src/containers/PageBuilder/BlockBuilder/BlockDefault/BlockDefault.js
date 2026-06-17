@@ -83,6 +83,8 @@ const BlockDefault = props => {
     hasTextLarger,
     hasTextSmaller,
     hasSmallerTitles,
+    hasMediaTitle,
+    hasBlueTitle,
     hasShortContent,
     hasCTASecondary,
     hasCTATertiary,
@@ -135,28 +137,44 @@ const BlockDefault = props => {
   const hasSellerButtonField =
     sellerListButton?.content?.trim().length > 0 && sellerListButton?.content?.trim().length > 0;
 
+  // The block media. When `hasMediaTitle` is set it is rendered between the
+  // title and the rest of the content (see below); otherwise it stays above
+  // the text column as usual.
+  const renderMedia = extraClassName =>
+    sliderImages?.length ? (
+      <ImageSliderBlockComponent
+        images={sliderImages}
+        className={classNames(fieldMediaClass, extraClassName)}
+        options={options}
+      />
+    ) : (
+      <FieldMedia
+        media={media}
+        sizes={responsiveImageSizes}
+        className={classNames(fieldMediaClass, extraClassName)}
+        options={options}
+      />
+    );
+
+  // Place the media inside the text column (after the title) only when the
+  // token is set AND there are text fields to anchor it under. Otherwise keep
+  // it at the top so a media-only block still renders.
+  const mediaInTitle = hasMediaTitle && hasTextComponentFields;
+
   return (
     <BlockContainer id={blockId} className={classes}>
-      {sliderImages?.length ? (
-        <ImageSliderBlockComponent
-          images={sliderImages}
-          className={fieldMediaClass}
-          options={options}
-        />
-      ) : (
-        <FieldMedia
-          media={media}
-          sizes={responsiveImageSizes}
-          className={fieldMediaClass}
-          options={options}
-        />
-      )}
+      {mediaInTitle ? null : renderMedia()}
       {hasTextComponentFields ? (
         <div className={textComponentsClass}>
           {twoButtons && twoButtons.titleEyebrow ? (
             <span className={css.titleEyebrow}>{twoButtons.titleEyebrow}</span>
           ) : null}
-          <Field data={title} options={options} />
+          <Field
+            data={title}
+            className={hasBlueTitle ? css.blueTitle : undefined}
+            options={options}
+          />
+          {mediaInTitle ? renderMedia(css.mediaInTitle) : null}
           <Field data={text} options={options} />
           <Field data={callToAction} className={ctaCustomClass} options={options} />
 

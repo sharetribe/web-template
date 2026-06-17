@@ -13,6 +13,13 @@
   height: 100%;
 }
 
+/* Media moved into the text column (title → media → content) via the
+   "mediaTitle ::" block-name token. Adds breathing room above/below. */
+.mediaInTitle {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .text {
   width: 100%;
   margin-top: 20px;
@@ -20,6 +27,13 @@
   &:first-child {
     margin-top: 0;
   }
+}
+
+/* Block-level mirror of the section-name token "- BlueTitle": color only the
+   block's own title (the title Field carries this class), scoped under .text so
+   it never touches headings inside the body markdown. */
+.text .blueTitle {
+  color: var(--avBlue);
 }
 
 .alignLeft {
