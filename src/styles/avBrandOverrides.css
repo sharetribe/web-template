@@ -368,7 +368,12 @@ textarea {
    `+ ul` rule out-specifies a plain `p + ul`, so we match the stable
    class prefix and prefix with `:root` to raise specificity (0,2,1). */
 :root [class*='P_p__'] + ul {
-  margin-top: 12px;
+  margin-top: 0;
+}
+
+:root [class*='P_p__'] + ul li {
+  line-height: 20px;
+  padding: 0px 0 3px;
 }
 
 /* Center the PageBuilder section header (title/description/CTA) at all screen
