@@ -65,12 +65,12 @@
   gap: 0;
   flex-direction: column;
 
-  @media (--viewportMLarge) {
+  @media (--viewportMedium) {
     flex-direction: row-reverse;
   }
 
   &:nth-child(even) {
-    @media (--viewportMLarge) {
+    @media (--viewportMedium) {
       flex-direction: row;
     }
   }
@@ -81,7 +81,7 @@
     width: 100%;
     min-width: 0;
 
-    @media (--viewportMLarge) {
+    @media (--viewportMedium) {
       flex: 0 0 50%;
       width: 50%;
     }
@@ -100,7 +100,7 @@
       border-radius: 0;
     }
 
-    @media (--viewportMLarge) {
+    @media (--viewportMedium) {
       height: 100%;
 
       & img {

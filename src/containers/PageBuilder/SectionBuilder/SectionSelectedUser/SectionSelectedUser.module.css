@@ -10,7 +10,9 @@
   @media (--viewportMedium) {
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-end;
+    /* Match .sectionDetailsH's desktop flex-start to avoid a dev/prod
+       source-order tie (see SectionSelectedListings.module.css). */
+    align-items: flex-start;
   }
 }
 
