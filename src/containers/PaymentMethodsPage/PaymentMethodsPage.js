@@ -10,6 +10,7 @@ import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../u
 import { savePaymentMethod, deletePaymentMethod } from '../../ducks/paymentMethods.duck';
 import { handleCardSetup } from '../../ducks/stripe.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
+import { defaultCountry } from '../../config/configAV';
 
 import { H3, SavedCardDetails, Page, UserNav, LayoutSideNavigation } from '../../components';
 
@@ -153,7 +154,7 @@ const PaymentMethodsPageComponent = props => {
     ? `${ensuredCurrentUser.attributes.profile.firstName} ${ensuredCurrentUser.attributes.profile.lastName}`
     : null;
 
-  const initialValuesForStripePayment = { name: userName, country: 'MX' };
+  const initialValuesForStripePayment = { name: userName, country: defaultCountry };
 
   const card = hasDefaultPaymentMethod
     ? ensurePaymentMethodCard(currentUser.stripeCustomer.defaultPaymentMethod).attributes.card

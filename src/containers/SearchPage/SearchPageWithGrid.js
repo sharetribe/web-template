@@ -6,6 +6,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { parse } from '../../util/urlHelpers';
 import { makeGetListingsByIdSelector } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
+import { injectAvFilters } from '../../extensions/searchFilters/avFilters';
 
 import { Page } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
@@ -175,29 +176,10 @@ export class SearchPageComponent extends Component {
       currentUser,
     });
 
-    // AV: group individual size filters into a single grouped filter
-    const customSizesKeys = ['standard_sizes', 'us_sizes', 'mx_sizes', 'curvy_sizes'];
-    const mutableFilters = [...baseAvailableFilters];
-    const tmpSizeFilters = [];
-    mutableFilters.forEach((itm, idx) => {
-      if (customSizesKeys.includes(itm.key)) {
-        tmpSizeFilters.push({ ...itm });
-        mutableFilters[idx] = null;
-      }
-    });
-    if (tmpSizeFilters.length > 0) {
-      mutableFilters.splice(3, 0, {
-        key: 'grouped_sizes',
-        scope: 'public',
-        schemaType: 'grouped_enum',
-        filterConfig: {
-          label: intl.formatMessage({ id: 'SearchPage.groupedSizesLabel' }),
-          filterType: 'GroupedSelectMultipleFilter',
-        },
-        childFilters: tmpSizeFilters,
-      });
-    }
-    const availableFilters = mutableFilters.filter(Boolean);
+    // AV: collapse the individual size filters into a single grouped filter
+    // (construction lives in the searchFilters extension; rendering is handled
+    // by getAvFilter's grouped_enum branch).
+    const availableFilters = injectAvFilters(baseAvailableFilters, intl);
 
     const sortBy = mode => {
       return sortConfig.active ? (

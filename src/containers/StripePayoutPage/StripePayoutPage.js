@@ -10,6 +10,7 @@ import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
 import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
 import { getDisplayAccountType } from '../../util/stripeConnect';
+import { defaultCountry } from '../../config/configAV';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import {
   stripeAccountClearError,
@@ -220,7 +221,7 @@ export const StripePayoutPageComponent = props => {
               inProgress={payoutDetailsSaveInProgress}
               ready={payoutDetailsSaved}
               currentUser={ensuredCurrentUser}
-              initialValues={!stripeConnected ? { country: 'MX' } : undefined}
+              initialValues={!stripeConnected ? { country: defaultCountry } : undefined}
               stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
               savedCountry={savedCountry}
               savedAccountType={savedAccountType}

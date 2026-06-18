@@ -193,6 +193,29 @@ const BlankPage = props => {
  * @returns {JSX.Element}
  */
 export const AuthenticationPageComponent = props => {
+  const [tosModalOpen, setTosModalOpen] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
+  const [authError, setAuthError] = useState(getAuthErrorFromCookies());
+  const [mounted, setMounted] = useState(false);
+
+  const config = useConfiguration();
+  const intl = useIntl();
+
+  useEffect(() => {
+    // Remove the autherror cookie once the content is saved to state
+    // because we don't want to show the error message e.g. after page refresh
+    if (authError) {
+      Cookies.remove('st-autherror');
+    }
+    setMounted(true);
+  }, []);
+
+  // On mobile, it's better to scroll to top.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [tosModalOpen, privacyModalOpen]);
+
   const {
     authInProgress,
     currentUser,
@@ -216,28 +239,6 @@ export const AuthenticationPageComponent = props => {
     pageAssetsFetchError,
     staticContext,
   } = props;
-
-  const [tosModalOpen, setTosModalOpen] = useState(false);
-  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
-  const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
-  const [authError, setAuthError] = useState(getAuthErrorFromCookies());
-  const [mounted, setMounted] = useState(false);
-  const config = useConfiguration();
-  const intl = useIntl();
-
-  useEffect(() => {
-    // Remove the autherror cookie once the content is saved to state
-    // because we don't want to show the error message e.g. after page refresh
-    if (authError) {
-      Cookies.remove('st-autherror');
-    }
-    setMounted(true);
-  }, []);
-
-  // On mobile, it's better to scroll to top.
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [tosModalOpen, privacyModalOpen]);
 
   // History API has potentially state tied to this route
   // We have used that state to store previous URL ("from"),
@@ -300,6 +301,7 @@ export const AuthenticationPageComponent = props => {
     // Already authenticated, redirect back to the page the user tried to access
     return <Redirect to={from} />;
   } else if (shouldRedirectToLandingPage) {
+    // Already authenticated, redirect to the landing page (this was direct access to /login or /signup)
     return <NamedRedirect name="LandingPage" />;
   } else if (show404) {
     // User type not found, show 404

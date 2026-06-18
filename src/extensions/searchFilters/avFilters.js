@@ -6,6 +6,47 @@ import GroupedEnumFilter from '../../containers/SearchPage/GroupedEnumFilter/Gro
 import GroupedMultiSelectFilter from '../../containers/SearchPage/GroupedMultiSelectFilter/GroupedMultiSelectFilter';
 import SelectMultipleFilter from '../../containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter';
 
+// Listing-field keys for the individual per-region size enum filters that AV
+// collapses into a single `grouped_sizes` parent filter.
+const GROUPED_SIZE_KEYS = ['standard_sizes', 'us_sizes', 'mx_sizes', 'curvy_sizes'];
+
+/**
+ * Transform the available-filters list before it is rendered: collapse the
+ * individual size enum filters (standard/us/mx/curvy) into a single
+ * `grouped_sizes` parent filter, which `getAvFilter`'s grouped_enum branch
+ * renders as one expander. Returns a new array and leaves the input untouched;
+ * when no size filters are present it just returns the (compacted) list.
+ *
+ * @param {Array} availableFilters upstream-derived filter configs
+ * @param {Object} intl react-intl instance (for the grouped filter label)
+ * @returns {Array} filters with the size filters replaced by `grouped_sizes`
+ */
+export const injectAvFilters = (availableFilters = [], intl) => {
+  const mutableFilters = [...availableFilters];
+  const sizeFilters = [];
+  mutableFilters.forEach((filter, idx) => {
+    if (GROUPED_SIZE_KEYS.includes(filter?.key)) {
+      sizeFilters.push({ ...filter });
+      mutableFilters[idx] = null;
+    }
+  });
+
+  if (sizeFilters.length > 0) {
+    mutableFilters.splice(3, 0, {
+      key: 'grouped_sizes',
+      scope: 'public',
+      schemaType: 'grouped_enum',
+      filterConfig: {
+        label: intl.formatMessage({ id: 'SearchPage.groupedSizesLabel' }),
+        filterType: 'GroupedSelectMultipleFilter',
+      },
+      childFilters: sizeFilters,
+    });
+  }
+
+  return mutableFilters.filter(Boolean);
+};
+
 /**
  * Try to render an AV-specific filter for the given schema type / config.
  *
