@@ -248,6 +248,15 @@ class Menu extends Component {
         : { left: contentPlacementOffset, minWidth: menuWidth };
     }
 
+    // Reached on first render (before the menu/content refs attach) or when the
+    // menu can't be measured. Render the content at its natural position.
+    //
+    // AV: upstream parked the *closed* content off-screen here
+    // (`return this.state.isOpen ? {} : { left: '-10000px' }`) to avoid a
+    // first-render overflow flash. That is no longer needed — MenuContent's
+    // `.isClosed` now collapses the closed menu (`max-height: 0; overflow: hidden`),
+    // so it can't overflow. Keeping the off-screen offset would also fight the
+    // `max-height` open/close transition added for scrollable (large) menus.
     return {};
   }
 
