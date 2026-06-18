@@ -1,0 +1,44 @@
+@import '../../styles/customMediaQueries.css';
+
+/* AV-only ManageListingsPage classes (new), kept out of the upstream
+   ManageListingsPage.module.css so that file stays pristine. Imported by
+   ManageListingsPage.js as `avCss`. */
+
+/* Header row: page title on the left, "create listing" button on the right. */
+.headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 24px 24px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 24px 32px 24px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0 36px 32px 36px;
+  }
+}
+
+/* "Create listing" pill button. */
+.newListingButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 26px;
+  background-color: var(--avBlue);
+  color: var(--avYellowLight);
+  outline: 1px solid var(--avYellowLight);
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--avBlueDark);
+    color: var(--avYellowLight);
+    text-decoration: none;
+  }
+}

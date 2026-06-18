@@ -22,6 +22,7 @@ import {
 
 // Import modules from this directory
 import css from './EditListingLocationForm.module.css';
+import avCss from '../editListingGridAV.module.css';
 
 const identity = v => v;
 
@@ -88,7 +89,7 @@ export const EditListingLocationForm = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          <div className={css.fieldsGrid}>
+          <div className={avCss.fieldsGrid}>
             {updateListingError ? (
               <p className={css.error}>
                 <FormattedMessage id="EditListingLocationForm.updateFailed" />

@@ -50,16 +50,6 @@
   }
 }
 
-/* In the vertical (left) thumbnail layout, the first/last edge margins above
-   (meant for the horizontal bottom strip) push the first thumbnail out of the
-   column on mobile. Zero them so the column stays left-aligned. */
-:global(.image-gallery-thumbnails-left .image-gallery-thumbnail:first-child) {
-  margin-left: 0;
-}
-:global(.image-gallery-thumbnails-left .image-gallery-thumbnail:last-child) {
-  margin-right: 0;
-}
-
 :global(.image-gallery-slide-wrapper) {
   background-color: var(--colorWhite);
   border-bottom: 1px solid var(--colorGrey100);
@@ -222,18 +212,4 @@
 
 .closeIcon {
   composes: marketplaceModalCloseIcon from global;
-}
-
-.imageLabel {
-  background-color: var(--avBlue);
-  color: var(--colorWhite);
-  font-family: var(--fontFamilyHeadings);
-  font-weight: var(--fontWeightBold);
-  font-size: 16px;
-  line-height: 1.4;
-  text-align: center;
-  margin-top: 6px;
-  margin-bottom: 0;
-  padding: 6px 12px;
-  border-radius: var(--borderRadiusMedium);
 }

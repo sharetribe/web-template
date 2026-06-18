@@ -58,8 +58,7 @@
 }
 
 .price {
-  font-size: 22px;
-  line-height: 1.2;
+  composes: h4 from global;
   font-weight: var(--fontWeightBold);
   margin: 0 0 0 24px;
 
@@ -68,24 +67,12 @@
     padding: 0;
   }
 }
-.originalPrice {
-  font-size: 14px;
-  color: var(--colorGrey500);
-  text-decoration: line-through;
-  display: block;
-  margin: 0 0 2px 24px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 2px 0;
-  }
-}
-
 .priceValue {
-  color: var(--avBlue);
+  color: var(--marketplaceColor);
 }
 
 .perUnit {
-  color: var(--avBlue);
+  color: var(--marketplaceColor);
 }
 
 .author {
@@ -133,7 +120,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
   }
 }
 

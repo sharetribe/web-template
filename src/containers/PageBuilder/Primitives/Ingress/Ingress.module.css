@@ -1,17 +1,9 @@
-@import '../../../../styles/customMediaQueries.css';
-
 .ingress {
-  font-size: 15px;
-
-  @media (--viewportMedium) {
-    font-size: 16px;
-  }
-
-  line-height: 1.46;
-  letter-spacing: 1px;
+  font-size: 18px;
+  line-height: 1.66;
   margin-top: 0;
   margin-bottom: 0;
-  letter-spacing: 1px;
+  letter-spacing: 0;
   /* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
   text-wrap: balance;
 

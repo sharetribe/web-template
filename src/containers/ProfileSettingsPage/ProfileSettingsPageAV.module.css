@@ -1,0 +1,8 @@
+/* AV-only ProfileSettingsPage classes (new), kept out of the upstream
+   ProfileSettingsPage.module.css. Imported by ProfileSettingsPage.js as `avCss`.
+   These remove the topbar drop-shadow on this page. */
+
+.desktopTopbar,
+.mobileTopbar {
+  box-shadow: none;
+}

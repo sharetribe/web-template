@@ -1,0 +1,31 @@
+@import '../../styles/customMediaQueries.css';
+
+/* AV-only ListingPage overlay classes (store-type tags shown on the gallery
+   image), kept out of the upstream ListingPage.module.css. Imported as `avCss`
+   by SectionHero.js (hero variant) and SectionGallery.js (carousel variant).
+   The restyles of upstream ListingPage classes live in avBrandOverrides.css. */
+
+.heroStoreTags,
+.galleryStoreTags {
+  position: absolute;
+  left: 16px;
+  z-index: 1;
+  pointer-events: none;
+  max-width: calc(100% - 32px);
+}
+
+/* Hero wrapper is just the image — anchor bottom-left. */
+.heroStoreTags {
+  bottom: 16px;
+}
+
+/* The carousel's .productGallery wraps image + thumbnail strip, so anchor to the
+   top of the image instead. From --viewportMedium up, ListingImageGallery
+   renders a left thumbnail column; push the overlay past it onto the main image. */
+.galleryStoreTags {
+  top: 16px;
+
+  @media (--viewportMedium) {
+    left: calc(16px + var(--ig-thumbnail-size, 102px) + 8px);
+  }
+}

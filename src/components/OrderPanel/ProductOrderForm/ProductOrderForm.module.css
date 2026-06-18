@@ -71,21 +71,6 @@
   }
 }
 
-/* "Comprar": AV ctaButtonBlue theming */
-.submitButtonCta {
-  background-color: var(--avBlue);
-  color: var(--avYellowLight);
-  border: 1px solid var(--avYellowLight);
-  border-radius: 26px;
-  font-weight: 700;
-}
-.submitButtonCta:hover,
-.submitButtonCta:focus {
-  background-color: #1d4ed8;
-  color: var(--avYellowLight);
-  box-shadow: none;
-}
-
 .finePrint {
   composes: marketplaceTinyFontStyles from global;
   text-align: center;

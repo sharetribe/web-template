@@ -66,7 +66,7 @@
     transition: var(--colorTransition);
 
     &:hover {
-      background-color: #1d4ed8;
+      background-color: var(--avBlueDark);
       color: var(--avYellowLight);
       outline-color: var(--avYellowLight);
     }

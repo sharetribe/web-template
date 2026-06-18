@@ -80,7 +80,7 @@
 .msgOk {
   font-weight: var(--fontWeightBold);
   font-size: 14px;
-  color: #e6e56a;
+  color: var(--avYellow);
   margin-top: 0.5rem;
 }
 

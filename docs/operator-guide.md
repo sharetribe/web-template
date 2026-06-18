@@ -668,7 +668,7 @@ appearance without any code changes. These tokens are set directly in the **Sect
 
 - **Section Name tokens** (prefix `- Token`) — apply to the whole section: layout width, title
   colour, padding, button colour, and more. See [Section Display Options](#51-section-display-options).
-- **Block Name tokens** (suffix `token ::`) — apply to a single block: text size, button style,
+- **Block Name tokens** (suffix `token ::`) — apply to a single block: title style, button colour,
   embedded components, and more. See [Block Name Tokens](#52-block-name-tokens).
 
 Multiple tokens of either kind can be combined freely.
@@ -678,148 +678,132 @@ Multiple tokens of either kind can be combined freely.
 ### 5.1 Section Display Options
 
 Any section's **Section Name** field can carry extra style tokens that change how that section
-looks, without any code changes. Tokens are added after the section's main name, separated by
-spaces, each starting with a dash.
+looks, with no code changes. Write each token **after** the section's normal name as a space, a
+dash, a space, then the token (`- Token`). Combine as many as you like.
 
-**Example:** `My Hero Section - Large - CenterTitleText - NoPaddingsY`
+**Example:** `My Hero Section - Large - CenterTitleText - NoPaddings`
 
-**Layout options:**
+> Tokens are matched as whole words, so similar tokens never collide — `- Large` does not trigger
+> `- LargeDesc`, and `- NoPaddings` is not triggered by any longer token.
 
-| Token            | Effect                                            |
-| ---------------- | ------------------------------------------------- |
-| `- Large`        | Wider content area                                |
-| `- Medium`       | Medium-width content area                         |
-| `- FullW`        | Full screen width, edge to edge                   |
-| `- FullWHeader`  | Header children (title, description) span full width (removes their max-width) |
-| `- FullH`        | Full viewport height                              |
-| `- ShortHero`    | Reduces hero banner height to roughly half screen |
-| `- ShortContent`    | Reduced content block height                         |
-| `- 2/3 cols`        | Two-thirds column layout                             |
-| `- Heading2`        | Title displayed as a larger heading style            |
-| `- AvFeature`       | Feature-block layout (image and text side by side); includes full-width and no-padding behaviour — no need to add `- FullW` or `- FullH` separately |
-| `- ReverseFeature`  | Same as AvFeature but with the image on the right    |
+#### Layout and width
 
-**Text style options:**
+| Token              | Effect                                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `- Large`          | Widens the content area (up to 1370 px) so the section spans most of the page instead of the default reading width.                                          |
+| `- FullW`          | Full browser width, edge to edge — removes horizontal padding and the rounded corners on images. Best for full-bleed banners and image strips.               |
+| `- FullWHeader`    | Lets the header (title + description) stretch the full content width instead of being capped at the default reading width. Pairs well with centered text.     |
+| `- ShortHero`      | **Hero banners only** (`avHero2`): cuts the hero height to roughly half the screen.                                                                           |
+| `- 2/3 cols`       | **Two-column sections only**: splits the two columns into a one-third / two-thirds ratio instead of an even 50 / 50 split.                                    |
+| `- AvFeature`      | Feature layout — image and text sit side by side, full-bleed with no padding. This already includes full-width behaviour, so you do **not** add `- FullW`.    |
+| `- ReverseFeature` | The same feature layout as `- AvFeature`, but with the image on the opposite side.                                                                            |
 
-| Token               | Effect                    |
-| ------------------- | ------------------------- |
-| `- BlueTitle`       | Title text in brand blue  |
-| `- WhiteTitle`      | Title text in white       |
-| `- CenterTitleText` | Title and text centered   |
-| `- CenterDescText`  | Description text centered |
-| `- SmallerTitle`    | Smaller title font        |
-| `- SmallTitle`      | Medium title font         |
-| `- SmallSubTitles`  | Smaller subtitle text     |
-| `- SmallerTitles`   | All headings shift down one size level (H2→20 px, H3→18 px, H4→16 px, H5→14 px) |
-| `- LargeDesc`       | Larger description text   |
-| `- TextGray`        | All text in gray          |
+#### Title and text
 
-**Spacing options:**
+| Token               | Effect                                                                                                                                                       |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `- BlueTitle`       | Colours the section title (heading levels 1–3) in AV brand blue and adds a little space below the header.                                                    |
+| `- WhiteTitle`      | Colours the section title (heading levels 1–3) white — use on dark backgrounds.                                                                              |
+| `- CenterTitleText` | Centres the section title horizontally.                                                                                                                      |
+| `- CenterDescText`  | Centres the section's description paragraph.                                                                                                                  |
+| `- LargeDesc`       | Widens the description (up to 968 px on larger screens) so a long intro wraps onto fewer lines.                                                               |
+| `- SmallerTitles`   | Shifts every heading down one size level: H1 → 30 px, H2 → 20 px, H3 → 18 px, H4 → 16 px, H5 → 14 px. Use when a section's default headings feel too large.   |
 
-| Token           | Effect                          |
-| --------------- | ------------------------------- |
-| `- Paddings`    | Adds padding around content     |
-| `- NoPaddings`  | Removes all padding             |
-| `- NoPaddingsX` | Removes left/right padding only |
-| `- NoPaddingsY` | Removes top/bottom padding only |
+#### Spacing
 
-**Button color options:**
+| Token          | Effect                                                                |
+| -------------- | --------------------------------------------------------------------- |
+| `- NoPaddings` | Removes all padding (top, bottom, left and right) around the content. |
 
-| Token                      | Effect                |
-| -------------------------- | --------------------- |
-| `- SectionCtaBtnBlue`      | Blue CTA button       |
-| `- SectionCtaBtnLightBlue` | Light blue CTA button |
-| `- SectionCtaBtnPurple`    | Purple CTA button     |
-| `- SectionCtaBtnPink`      | Pink CTA button       |
-| `- SectionCtaBtnYellow`    | Yellow CTA button     |
+#### Call-to-action button colour
 
-**Button shape and style options:**
+Restyles the CTA buttons inside the section (hero buttons, feature buttons, etc.). Pick **one** colour.
 
-| Token            | Effect                          |
-| ---------------- | ------------------------------- |
-| `- RoundedFull`  | Fully rounded (pill) button     |
-| `- Rounded`      | Slightly rounded button corners |
-| `- Square`       | Straight-cornered button        |
-| `- Dashed`       | Dashed border button            |
-| `- Solid`        | Solid border button             |
-| `- NoOutline`    | No border or outline            |
-| `- HeadingFont`  | Heading font on the button label |
-| `- BodyFont`     | Body font on the button label    |
-| `- AccentFont`   | Accent font on the button label  |
-| `- CtaBtnCenter` | Center the button horizontally  |
+| Token                      | Effect            |
+| -------------------------- | ----------------- |
+| `- SectionCtaBtnBlue`      | Blue button       |
+| `- SectionCtaBtnLightBlue` | Light-blue button |
+| `- SectionCtaBtnPurple`    | Purple button     |
+| `- SectionCtaBtnPink`      | Pink button       |
+| `- SectionCtaBtnYellow`    | Yellow button     |
+
+#### Call-to-action button shape and font
+
+Combine these freely with one colour token above (e.g.
+`- SectionCtaBtnBlue - RoundedFull - HeadingFont`). Used on their own — with no colour token — they
+restyle the section's default button.
+
+| Token            | Effect                                        |
+| ---------------- | --------------------------------------------- |
+| `- RoundedFull`  | Fully rounded (pill) corners.                 |
+| `- Rounded`      | Slightly rounded corners (10 px).             |
+| `- Square`       | Nearly straight corners (4 px).               |
+| `- Dashed`       | Dashed outline.                               |
+| `- Solid`        | Solid outline.                                |
+| `- NoOutline`    | Removes the button's outline.                 |
+| `- HeadingFont`  | Heading font on the button label.             |
+| `- BodyFont`     | Body font on the button label.                |
+| `- AccentFont`   | Accent (decorative) font on the button label. |
+| `- CtaBtnCenter` | Centres a single button horizontally.         |
 
 ---
 
 ### 5.2 Block Name Tokens
 
-Block-level behaviour is controlled by tokens placed inside the **Block Name** field in Console.
-Each token ends with ` ::` (space + double colon). Multiple tokens can be combined in any order.
+Block-level styling is controlled by tokens placed inside a block's **Block Name** field in
+Console. Each token ends with ` ::` (a space, then a double colon). Combine as many as you like, in
+any order.
 
-**Example:** `2Buttons :: text gray :: button secondary ::`
+**Example:** `2Buttons :: smallerTitles ::`
 
 #### Layout and structure
 
-| Token                | Effect                                                                         |
-| -------------------- | ------------------------------------------------------------------------------ |
-| `2 cols ::`          | Renders two text columns side by side (text from intl keys `BlueCols.<blockId>.*`) |
-| `2Buttons ::`        | Adds a two-button row below the block content (buttons from intl keys `TwoButtons.<blockId>.*`) |
-| `2 cols buttons ::`  | Two-column layout with two buttons below (renders `BlockWithCols`; content from intl keys `BlockWithCols.<blockId>.*`) |
-| `contact buttons ::` | Replaces default buttons with two CTA links + a social link (from intl keys `ContactButtons.<blockId>.*`) |
-| `photoSlider ::`     | Adds a 4-image photo carousel (URLs from intl keys `PhotoSlider.<blockId>.image_1` … `.image_4`) |
-| `full height media ::` | Stretches block media to fill the full block height                          |
-| `icon img ::`        | Displays block media as a small icon instead of a full image                   |
-| `content short ::`   | Compact content area (reduced height)                                          |
-| `social links ::`    | Shows social media icon links                                                  |
+| Token                | Effect                                                                                                                                       |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `2Buttons ::`        | Adds a row of two buttons below the block content. Button text, links and styles come from the intl keys `TwoButtons.<blockId>.*` (see §10).  |
+| `photoSlider ::`     | Adds a 4-image photo carousel that auto-advances. Image URLs come from `PhotoSlider.<blockId>.image_1` … `.image_4` (see §10).                |
+| `mediaTitle ::`      | Moves the block's image to sit **between** the title and the rest of the content (title → image → text/button) instead of above the title.    |
+| `icon img ::`        | Renders the block's image as a small centred icon (48 px) and tightens the surrounding text — for icon-and-label feature blocks.              |
+| `social links ::`    | Shows social-media icon links (rendered by the footer block).                                                                                |
+| `newsletter form ::` | Embeds the Brevo email signup form. Disclaimer / success / error text come from the `NewsletterForm.*` keys (see §10).                        |
 
-#### Content blocks
+#### Title style
 
-| Token              | Effect                                                                                         |
-| ------------------ | ---------------------------------------------------------------------------------------------- |
-| `buyer list ::`    | Feature list (5 rows) styled for buyers; button and rows from intl keys `CustomList.<blockId>.*` |
-| `seller list ::`   | Feature list (5 rows) styled for sellers; button and rows from intl keys `CustomList.<blockId>.*` |
-| `newsletter form ::` | Embeds a Brevo email signup form; disclaimer/success/error text from intl keys `NewsletterForm.*` |
+| Token              | Effect                                                                                                                                                          |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `smallerTitles ::` | Shifts every heading in the block down one size level (H1 → 30 px, H2 → 20 px, H3 → 18 px, H4 → 16 px, H5 → 14 px). Block-level mirror of section `- SmallerTitles`. |
+| `blueTitle ::`     | Colours only the block's own title in AV brand blue. Does **not** affect headings inside the body text. Block-level mirror of section `- BlueTitle`.            |
 
-#### Text style
+#### Block CTA button colour
 
-| Token              | Effect                                |
-| ------------------ | ------------------------------------- |
-| `smaller ::`       | Smaller body text                     |
-| `text larger ::`   | Larger body text                      |
-| `text gray ::`     | Gray text                             |
-| `text darkgray ::` | Dark gray text                        |
-| `text nogap ::`    | Removes the gap between text elements |
-| `large list ::`    | Larger list item style                |
+These set the colour of a single block's call-to-action button. They are mainly used to override
+the section-level button colour on one `avHero3` panel (see §4.9). Pick **one** colour.
 
-#### Button style
+| Token                     | Effect            |
+| ------------------------- | ----------------- |
+| `blockCtaBtnBlue ::`      | Blue button       |
+| `blockCtaBtnLightBlue ::` | Light-blue button |
+| `blockCtaBtnPurple ::`    | Purple button     |
+| `blockCtaBtnPink ::`      | Pink button       |
+| `blockCtaBtnYellow ::`    | Yellow button     |
 
-| Token                 | Effect                                      |
-| --------------------- | ------------------------------------------- |
-| `button secondary ::`  | Secondary button style for the block's CTA |
-| `button tertiary ::`   | Tertiary button style for the block's CTA  |
+The same shape and font modifiers available for section buttons also work here with the `::`
+syntax, layered on top of the colour: `roundedFull ::`, `rounded ::`, `square ::`, `dashed ::`,
+`solid ::`, `noOutline ::`, `headingFont ::`, `bodyFont ::`, `accentFont ::`, `ctaBtnCenter ::`. A
+modifier on its own (e.g. `ctaBtnCenter ::`) keeps whatever colour the section already set.
 
-#### Block CTA button colour (primarily used in `avHero3` panels)
-
-These tokens control the button colour for a single block when you need to override the section-level style.
-
-| Token                   | Effect            |
-| ----------------------- | ----------------- |
-| `blockCtaBtnBlue ::`    | Blue button       |
-| `blockCtaBtnLightBlue ::` | Light blue button |
-| `blockCtaBtnPurple ::`  | Purple button     |
-| `blockCtaBtnPink ::`    | Pink button       |
-| `blockCtaBtnYellow ::`  | Yellow button     |
-
-The same shape/font modifiers available for section-level buttons also work here with the `::` syntax: `roundedFull ::`, `rounded ::`, `square ::`, `dashed ::`, `solid ::`, `noOutline ::`, `headingFont ::`, `bodyFont ::`, `accentFont ::`, `ctaBtnCenter ::`.
+**Example Block Name:** `blockCtaBtnBlue :: rounded ::`
 
 #### Block ID shorthands
 
-These special **Block ID** values activate a specific block component automatically — you do not need to set the Block Type field.
+These special **Block ID** values activate a specific block component automatically — you do not
+need to set the Block Type field.
 
-| Block ID            | Block component rendered                                    |
-| ------------------- | ----------------------------------------------------------- |
-| `av-insta-feed`     | Instagram feed widget                                       |
-| `av-table-*`        | Markdown table (e.g. `av-table-fees`); content from block text |
-| `av-contact-form`   | Brevo contact form                                          |
+| Block ID          | Block component rendered                                       |
+| ----------------- | -------------------------------------------------------------- |
+| `av-insta-feed`   | Instagram feed widget                                          |
+| `av-table-*`      | Markdown table (e.g. `av-table-fees`); content from block text |
+| `av-contact-form` | Brevo contact form                                             |
 
 ---
 
@@ -1525,18 +1509,6 @@ either button — or closing the popup — marks onboarding as complete, so the 
 
 | Area                    | Key / pattern                               | English default | Spanish default | Operator note                                                             |
 | ----------------------- | ------------------------------------------- | --------------- | --------------- | ------------------------------------------------------------------------- |
-| Contact buttons block   | `ContactButtons.<blockId>.cta1Text`         | —               | —               | First CTA text for blocks whose Block Name includes `contact buttons ::`. |
-| Contact buttons block   | `ContactButtons.<blockId>.cta1Link`         | —               | —               | First CTA link.                                                           |
-| Contact buttons block   | `ContactButtons.<blockId>.cta2Text`         | —               | —               | Second CTA text.                                                          |
-| Contact buttons block   | `ContactButtons.<blockId>.cta2Link`         | —               | —               | Second CTA link.                                                          |
-| Contact buttons block   | `ContactButtons.<blockId>.socialText`       | —               | —               | Social link label.                                                        |
-| Contact buttons block   | `ContactButtons.<blockId>.socialLink`       | —               | —               | Social link URL.                                                          |
-| Blue columns block      | `BlueCols.<blockId>.col1Title`              | Empty           | Empty           | Column 1 title for `2 cols ::` blocks.                                    |
-| Blue columns block      | `BlueCols.<blockId>.col1Text`               | Empty           | Empty           | Column 1 body.                                                            |
-| Blue columns block      | `BlueCols.<blockId>.col2Title`              | Empty           | Empty           | Column 2 title.                                                           |
-| Blue columns block      | `BlueCols.<blockId>.col2Text`               | Empty           | Empty           | Column 2 body.                                                            |
-| Blue columns block      | `BlueCols.<blockId>.col3Title`              | Empty           | Empty           | Column 3 title.                                                           |
-| Blue columns block      | `BlueCols.<blockId>.col3Text`               | Empty           | Empty           | Column 3 body.                                                            |
 | Two-buttons block       | `TwoButtons.<blockId>.titleEyebrow`         | Empty           | Empty           | Optional eyebrow above the block title.                                   |
 | Two-buttons block       | `TwoButtons.<blockId>.cta1Text`             | —               | —               | First CTA text.                                                           |
 | Two-buttons block       | `TwoButtons.<blockId>.cta1Link`             | —               | —               | First CTA link.                                                           |
@@ -1544,19 +1516,6 @@ either button — or closing the popup — marks onboarding as complete, so the 
 | Two-buttons block       | `TwoButtons.<blockId>.cta2Text`             | —               | —               | Second CTA text.                                                          |
 | Two-buttons block       | `TwoButtons.<blockId>.cta2Link`             | —               | —               | Second CTA link.                                                          |
 | Two-buttons block       | `TwoButtons.<blockId>.cta2Style`            | Empty           | Empty           | Optional style tokens.                                                    |
-| Buyer/seller list block | `CustomList.<blockId>.buttonText`           | Empty           | Empty           | CTA text for `buyer list ::` or `seller list ::` blocks.                  |
-| Buyer/seller list block | `CustomList.<blockId>.buttonLink`           | Empty           | Empty           | CTA link for list blocks.                                                 |
-| Buyer/seller list block | `CustomList.<blockId>.title1` … `title5`    | Empty           | Empty           | Row titles. Use matching numeric suffixes.                                |
-| Buyer/seller list block | `CustomList.<blockId>.text1` … `text5`      | Empty           | Empty           | Row body text. Use matching numeric suffixes.                             |
-| Two-column CTA block    | `BlockWithCols.<blockId>.titleEyebrow`      | Empty           | Empty           | Optional eyebrow for `2 cols buttons ::` blocks.                          |
-| Two-column CTA block    | `BlockWithCols.<blockId>.col1Title`         | —               | —               | First column title.                                                       |
-| Two-column CTA block    | `BlockWithCols.<blockId>.col1Text`          | —               | —               | First column body.                                                        |
-| Two-column CTA block    | `BlockWithCols.<blockId>.col2Title`         | —               | —               | Second column title.                                                      |
-| Two-column CTA block    | `BlockWithCols.<blockId>.col2Text`          | —               | —               | Second column body.                                                       |
-| Two-column CTA block    | `BlockWithCols.<blockId>.cta1Text`          | —               | —               | First CTA text.                                                           |
-| Two-column CTA block    | `BlockWithCols.<blockId>.cta1Link`          | —               | —               | First CTA link.                                                           |
-| Two-column CTA block    | `BlockWithCols.<blockId>.cta2Text`          | —               | —               | Second CTA text.                                                          |
-| Two-column CTA block    | `BlockWithCols.<blockId>.cta2Link`          | —               | —               | Second CTA link.                                                          |
 | Photo slider block      | `PhotoSlider.<blockId>.image_1` … `image_4` | Empty           | Empty           | Image URLs for `photoSlider ::` blocks.                                   |
 
 ### Newsletter form

@@ -6,6 +6,7 @@ import { ResponsiveImage, Modal, StoreTypeTags } from '../../components';
 import ImageCarousel from './ImageCarousel/ImageCarousel';
 
 import css from './ListingPage.module.css';
+import avCss from './ListingPageAV.module.css';
 
 const VIEW_PHOTOS_BUTTON_ID = 'viewPhotosButton';
 
@@ -43,7 +44,7 @@ const SectionHero = props => {
   return (
     <section className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
-        <StoreTypeTags author={listing?.author} className={css.heroStoreTags} />
+        <StoreTypeTags author={listing?.author} className={avCss.heroStoreTags} />
         {mounted && listing.id ? (
           <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
             {actionBar}

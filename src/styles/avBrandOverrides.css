@@ -15,15 +15,16 @@
 :root {
   /* ================ AV Brand Palette ================ */
   --avGray1: hsl(0 0% 80%);
-  --avBlue: hsl(234, 88%, 48%); /* #0f26e4 */
-  --avBlueLight: hsl(208, 89%, 63%); /* #4da8f5 */
-  --avPink: hsl(326, 63%, 59%); /* #d8559f */
-  --avPurple: hsl(284, 40%, 66%); /* #b986cb */
-  --avPurpleLight: hsl(284, 42%, 88%); /* #e8d8ef */
-  --avYellow: hsl(59, 71%, 66%); /* #e6e469 */
-  --avYellowLight: hsl(63, 71%, 89%); /* #f5f7d0 */
+  --avBlue: hsl(234 88% 48%); /* #0f26e4 */
+  --avBlueLight: hsl(208 89% 63%); /* #4da8f5 */
+  --avBlueDark: #1d4ed8; /* hover/active state blue */
+  --avPink: hsl(326 63% 59%); /* #d8559f */
+  --avPurple: hsl(284 40% 66%); /* #b986cb */
+  --avPurpleLight: hsl(284 42% 88%); /* #e8d8ef */
+  --avYellow: hsl(59 71% 66%); /* #e6e469 */
+  --avYellowLight: hsl(63 71% 89%); /* #f5f7d0 */
 
-  /* Accent: solid blue used for selected/active backgrounds (chips, option rows) */
+  /* Accent: brand pink used for selected/active backgrounds (chips, option rows) */
   --avAccent: var(--avPink);
   /* Secondary: high-contrast foreground for text/icons on --avAccent backgrounds */
   --avSecondary: var(--avBlue);
@@ -33,6 +34,7 @@
 
   /* ================ Color Overrides ================ */
   --colorSuccess: #2ecc71;
+  --colorSuccessDark: #239954;
   --colorFail: var(--avPink);
   /* ================ CTA Colors ================ */
   --ctaPrimary: var(--colorBlack);
@@ -58,14 +60,14 @@
   --fontFamilyRoboto: 'Ticketing', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
-  --fontFamilyAccent: 'Ticketing', -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial,
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  /* Accent currently shares the Roboto/Ticketing stack. */
+  --fontFamilyAccent: var(--fontFamilyRoboto);
 
   --fontFamilyHeadings: 'PPNeueCorp', 'Non Bureau', -apple-system, BlinkMacSystemFont, 'Inter',
     Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
-  --fontFamilyDisplay: 'PPNeueCorp', 'Non Bureau', -apple-system, BlinkMacSystemFont, 'Inter',
-    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  /* Display currently shares the headings stack. */
+  --fontFamilyDisplay: var(--fontFamilyHeadings);
 
   --fontSizeBase: 16px;
 
@@ -117,20 +119,38 @@
   box-shadow: none;
 }
 
-/*
- * NOTE: FieldCheckbox and FieldRadioButton use hidden native inputs (opacity:0,
- * height:0, width:0) and render custom SVG icons. Global input[type] selectors
- * do not apply to them. Brand colours and sizes are controlled directly in:
- *   src/components/FieldCheckbox/FieldCheckbox.module.css
- *   src/components/FieldRadioButton/FieldRadioButton.module.css
- */
+/* FieldCheckbox / FieldRadioButton use hidden native inputs (opacity:0) + custom
+ * SVG icons, so the global input[type] rules above don't reach them. Brand the
+ * SVG stroke/fill and size the wrappers via their scoped class prefixes instead
+ * (relocated here from the two module files to keep them upstream-clean). Only
+ * the `--marketplaceColor`→`--avBlue` and wrapper-height changes are reproduced;
+ * the success/disabled variants stay as upstream defaults. */
+:root [class*='FieldCheckbox_input__']:hover + label [class*='FieldCheckbox_box__'],
+:root [class*='FieldCheckbox_input__']:focus + label [class*='FieldCheckbox_box__'],
+:root [class*='FieldCheckbox_input__']:checked + label [class*='FieldCheckbox_box__'],
+:root [class*='FieldCheckbox_input__']:checked + label [class*='FieldCheckbox_checked__'] {
+  stroke: var(--avBlue);
+}
+:root [class*='FieldCheckbox_checked__'] {
+  fill: var(--avBlue);
+}
+:root [class*='FieldCheckbox_checkboxWrapper__'] {
+  height: 20px;
+
+  @media (--viewportMedium) {
+    height: 20px;
+  }
+}
+:root [class*='FieldRadioButton_radioButtonWrapper__'] {
+  height: 20px;
+}
+:root [class*='FieldRadioButton_checkedStyle__'] {
+  stroke: var(--avBlue);
+  fill: var(--avBlue);
+}
 
 /* ================ AV Typography Overrides ================ */
 /* Moved from marketplaceDefaults.css to keep that file upstream-clean. */
-
-:root {
-  --colorSuccessDark: #239954;
-}
 
 body {
   letter-spacing: 1px;
@@ -177,6 +197,15 @@ h2[class*='Heading_h2__'] {
   font-size: 26px;
   word-break: auto-phrase;
 }
+
+h2[class*='Heading_h2__'] {
+  margin-bottom: 12px;
+}
+h2[class*='Heading_h2__'] + p[class*='P_p__'],
+h2[class*='Heading_h2__'] + p[class*='Ingress_ingress__'] {
+  margin-top: 0;
+}
+
 h3,
 .h3,
 h3[class*='Heading_h3__'] {
@@ -187,18 +216,42 @@ h3[class*='Heading_h3__'] {
     word-break: auto-phrase;
   }
 }
+h3[class*='Heading_h3__'] {
+  margin-bottom: 12px;
+}
+h3[class*='Heading_h3__'] + p[class*='P_p__'],
+h3[class*='Heading_h3__'] + p[class*='Ingress_ingress__'] {
+  margin-top: 0;
+}
+
 h4,
 .h4,
 h4[class*='Heading_h4__'] {
   font-size: 16px;
   word-break: auto-phrase;
 }
+h4[class*='Heading_h4__'] {
+  margin-bottom: 12px;
+}
+h4[class*='Heading_h4__'] + p[class*='P_p__'],
+h4[class*='Heading_h4__'] + p[class*='Ingress_ingress__'] {
+  margin-top: 0;
+}
+
 h5,
 .h5,
 h5[class*='Heading_h5__'] {
   font-size: 15px;
   word-break: auto-phrase;
 }
+h5[class*='Heading_h5__'] {
+  margin-bottom: 12px;
+}
+h5[class*='Heading_h5__'] + p[class*='P_p__'],
+h5[class*='Heading_h5__'] + p[class*='Ingress_ingress__'] {
+  margin-top: 0;
+}
+
 h6,
 .h6,
 h6[class*='Heading_h6__'] {
@@ -258,6 +311,44 @@ h2[class*='Heading_h2__'] {
   hyphens: none;
 }
 
+/* Brand heading typeface on ALL headings — PageBuilder section/block titles,
+   markdown/content headings, and any raw heading — so it applies everywhere.
+   Element-level (0,0,1) beats the inherited body font; component headings that
+   set their own font-family via a class still take precedence. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--fontFamilyHeadings);
+}
+
+/* The rest of the AV heading look (regular weight, letter-spacing, uppercase)
+   applies only to the PageBuilder Heading primitive (section/block titles), not
+   to markdown/content headings. The primitive renders per-level scoped classes
+   `Heading_h1__` … `Heading_h6__` — there is NO shared `.heading` class — so
+   target each level. `:root [class*='Heading_hN__']` (0,2,0) beats the module's
+   own `.hN` (0,1,0) regardless of source order.
+
+   NOTE: heading COLOUR is intentionally not set here. Left to the module's `.hN`
+   (--colorGrey900 — visually black, and the body-text colour), dark contexts
+   like the footer (`.footer h2`) and dark-theme sections (`.darkTheme h2`), both
+   (0,1,1), keep winning. Forcing a colour at (0,2,0) here would clobber them. */
+:root [class*='Heading_h1__'],
+:root [class*='Heading_h2__'],
+:root [class*='Heading_h3__'],
+:root [class*='Heading_h4__'],
+:root [class*='Heading_h5__'],
+:root [class*='Heading_h6__'] {
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+:root h2[class*='Heading_h2__'] {
+  line-height: 1.2;
+}
+
 pre {
   font-size: 18px;
 
@@ -299,7 +390,8 @@ textarea {
 
 /* ================ AV Title Helper Classes ================ */
 
-.marketplaceAuthTitleStyles {
+.marketplaceAuthTitleStyles,
+:root [class*='AuthenticationPage_tab__'] {
   font-family: var(--fontFamilyHeadings);
   font-weight: var(--fontWeightBold);
   font-size: 24px;
@@ -307,10 +399,8 @@ textarea {
   margin: 0;
 
   @media (--viewportMedium) {
-    font-weight: var(--fontWeightBold);
     line-height: 30px;
     font-size: 28px;
-    margin: 0;
   }
 }
 
@@ -328,7 +418,8 @@ textarea {
 
 /* ================ LayoutSideNavigation page title ================ */
 
-.sideNavPageTitle {
+.sideNavPageTitle,
+:root [class*='InboxPage_title__'] {
   align-self: center;
   padding: 0px 0 8px 0;
   margin-top: 16px;
@@ -340,15 +431,11 @@ textarea {
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-top: 16px;
-    margin-bottom: 16px;
     font-size: 30px;
   }
 
   @media (--viewportLarge) {
     padding: 5px 0 3px 0;
-    margin-top: 16px;
-    margin-bottom: 16px;
     align-self: unset;
   }
 }
@@ -376,6 +463,8 @@ textarea {
    module's own `.articleMain` rule (0,1,0) regardless of stylesheet injection order. */
 :root [class*='SectionArticle_articleMain__'] {
   gap: 26px;
+  max-width: var(--contentMaxWidthPages, 784px);
+  padding: 32px;
 }
 
 /* Add spacing between a paragraph and a list that immediately follows it.
@@ -426,6 +515,49 @@ textarea {
   margin-top: 4px;
   padding-top: 0;
   word-break: auto-phrase;
+  line-height: 1.33;
+  letter-spacing: 0.06em;
+}
+
+/* ================ PageBuilder Primitives (AV restyle) ================
+   Relocated from each Primitive's own *.module.css so those upstream files stay
+   pristine. Each uses the stable scoped-class prefix + `:root` (0,2,0) to beat
+   the module's own rule (0,1,0) regardless of stylesheet source order. Only the
+   AV-changed properties are set here; everything else stays upstream. */
+
+/* Primitives/Image — square image corners (upstream: 8px). */
+:root [class*='Image_fieldImage__'] {
+  border-radius: var(--borderRadiusNone);
+}
+
+/* Primitives/Text — span line-height (upstream: 1.66). */
+:root [class*='Text_span__'] {
+  line-height: 1.33;
+}
+
+/* Primitives/YoutubeEmbed — square corners (upstream: 8px). */
+:root [class*='YoutubeEmbed_video__'] {
+  border-radius: var(--borderRadiusNone);
+}
+
+/* Primitives/Ingress — smaller ingress text + AV letter-spacing (upstream:
+   18px / line-height 1.66 / letter-spacing 0). */
+:root [class*='Ingress_ingress__'] {
+  font-size: 15px;
+  line-height: 1.46;
+  letter-spacing: 1px;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+  }
+}
+
+/* marketplaceDefaults.css set `h2 { padding: 1px 0 7px 0 }` at --viewportMedium;
+   AV removes that baseline nudge. Kept here so marketplaceDefaults stays pristine. */
+@media (--viewportMedium) {
+  h2 {
+    padding: 0;
+  }
 }
 
 /* ================ Topbar second row height cap (desktop) ================
@@ -472,21 +604,377 @@ textarea {
   display: none;
 }
 
-/* ================ ListingPage font sizes (product page) ================
-   Tune the listing detail font scale: title 22px, price 20px, brand 16px.
-   All three are CSS Modules scoped classes; match the stable prefix and raise
-   specificity with `:root` (0,2,0) to beat each component's own rule — the
-   title (`ListingPage_orderPanelTitle`) also has a viewportMedium 50px bump,
-   which a flat 22px here overrides at every width. */
-:root [class*='ListingPage_orderPanelTitle__'] {
-  font-size: 22px;
-}
+/* ================ OrderPanel price block (AV) ================
+   Brand colour + AV price scale. `.originalPrice` is a NEW class so it lives in
+   OrderPanelAV.module.css (a global override can't create a class the JS
+   references); the rest restyle upstream classes. `OrderPanel_price__` matches
+   only `.price` (not `.priceValue`, which has no `price__` boundary). */
 :root [class*='OrderPanel_priceValue__'] {
   font-size: 20px;
+  color: var(--avBlue);
 }
 :root [class*='OrderPanel_priceValueInCTA__'] {
   font-size: 22px;
 }
+:root [class*='OrderPanel_perUnit__'] {
+  color: var(--avBlue);
+}
+:root [class*='OrderPanel_price__'] {
+  font-size: 22px;
+  line-height: 1.2;
+}
+:root [class*='OrderPanel_orderHeading__'] {
+  @media (--viewportLarge) {
+    margin-bottom: 1rem;
+  }
+}
+
+/* ================ Upstream component restyles (AV) ================
+   Cosmetic tweaks that previously lived inside upstream component *.module.css
+   files, relocated here so those files stay byte-identical to upstream. Each
+   targets the stable scoped-class prefix and raises specificity with `:root`
+   (0,2,0) to beat the module's own rule regardless of source order. Only the
+   AV-changed properties are set; all other upstream rules are untouched. */
+
+/* Button — extra letter-spacing on the pill button label (desktop). */
+:root [class*='Button_buttonPill__'] {
+  @media (--viewportMedium) {
+    letter-spacing: 1px;
+  }
+}
+
+/* ValidationError — slightly larger error text (upstream: 13px). */
+:root [class*='ValidationError_root__'] {
+  font-size: 14px;
+}
+
+/* MenuContent — animate max-height on close so the menu collapses smoothly
+   (upstream only transitions opacity). */
+:root [class*='MenuContent_content__'] {
+  transition: opacity var(--transitionStyleButton), max-height var(--transitionStyleButton);
+}
+:root [class*='MenuContent_isClosed__'] {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+/* LinkedLogo — drop the upstream horizontal padding on the logo link
+   (the two-row topbar positions the logo itself). */
+:root [class*='LinkedLogo_root__'] {
+  /* --viewportMedium already covers --viewportLarge (the override out-specifies
+     the upstream large-screen padding too). */
+  @media (--viewportMedium) {
+    padding: 0;
+  }
+}
+
+/* PageBuilder layout — clamp the single grid column to the container width so a
+   full-bleed/min-content section can't blow the track out to ~100vw and cause
+   horizontal scroll. */
+:root [class*='PageBuilder_layout__'],
+:root [class*='PageBuilder_main__'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* TabNavHorizontal dark skin — reskinned as an AV white/blue pill bar. Used only
+   by UserNav (the sole `skin="dark"` consumer); a future dark consumer should
+   branch on a new skin value rather than reverting this. Upstream used grey700
+   bg / grey200 text. */
+:root [class*='TabNavHorizontal_darkSkin__'] {
+  background-color: var(--colorWhite);
+}
+:root [class*='TabNavHorizontal_tabContentDarkSkin__'] {
+  color: var(--avBlue);
+  font-weight: 600;
+  border-bottom-color: transparent;
+}
+:root [class*='TabNavHorizontal_tabContentDarkSkin__']:hover,
+:root [class*='TabNavHorizontal_tabContentDarkSkin__']:focus {
+  background-color: var(--avBlue);
+  color: var(--colorWhite);
+  border-bottom-color: transparent;
+}
+:root [class*='TabNavHorizontal_selectedTabContentDarkSkin__'] {
+  background-color: var(--avBlue);
+  color: var(--colorWhite);
+  border-bottom-color: transparent;
+}
+:root [class*='TabNavHorizontal_disabledDarkSkin__'] {
+  color: var(--colorGrey300);
+  opacity: 0.5;
+}
+
+/* AuthenticationPage Signup / ConfirmSignup — even 50/50 name fields
+   (upstream: 34% / 66%). */
+:root [class*='SignupForm_firstNameRoot__'],
+:root [class*='SignupForm_lastNameRoot__'],
+:root [class*='ConfirmSignupForm_firstNameRoot__'],
+:root [class*='ConfirmSignupForm_lastNameRoot__'] {
+  width: calc(50% - 9px);
+}
+
+/* ================ ManageListingsPage restyles (AV) ================
+   New classes (.headingRow/.newListingButton) live in
+   ManageListingsPageAV.module.css; these restyle upstream classes.
+   `ManageListingsPage_heading__` / `_listingCard__` match only `.heading` /
+   `.listingCard` (not `.headingRow` / `.listingCards`, which have no `__`
+   boundary there). The grid replicates every breakpoint so the (0,2,0) base
+   rule never clobbers the module's larger-screen columns. */
+:root [class*='ManageListingsPage_heading__'] {
+  margin: 0;
+}
+:root [class*='ManageListingsPage_listingCards__'] {
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+:root [class*='ManageListingsPage_listingCard__'] {
+  display: grid;
+}
+
+/* ================ ListingPage restyles (AV) ================
+   New overlay classes (.heroStoreTags/.galleryStoreTags) live in
+   ListingPageAV.module.css; these restyle upstream classes. */
+
+/* Listing-detail font sizes — `orderPanelTitle` also has a viewportMedium 50px
+   bump, which the flat 22px overrides at every width. (`AVListingDetails` is the
+   AV brand-link component shown in the listing detail.) */
+:root [class*='ListingPage_orderPanelTitle__'] {
+  font-size: 22px;
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  line-height: 1.15;
+}
 :root [class*='AVListingDetails_brandLink__'] {
   font-size: 16px;
+}
+
+/* Containing block for the store-tag overlays. */
+:root [class*='ListingPage_imageWrapperForSectionHero__'],
+:root [class*='ListingPage_productGallery__'] {
+  position: relative;
+}
+
+/* Brand colour for the price + author link. */
+:root [class*='ListingPage_desktopPriceValue__'],
+:root [class*='ListingPage_authorNameLink__'] {
+  color: var(--avBlue);
+}
+
+/* Section titles use the AV listing-section title scale (upstream composes the
+   body `p`). */
+:root [class*='ListingPage_sectionHeading__'],
+:root [class*='ListingPage_sectionHeadingWithExtraMargin__'] {
+  font-family: var(--fontFamilyHeadings);
+  font-weight: var(--fontWeightBold);
+  font-size: 20px;
+  line-height: 1.2;
+
+  @media (--viewportMedium) {
+    font-size: 28px;
+    line-height: 30px;
+  }
+}
+
+/* Detail rows (brand / size / condition list). */
+:root [class*='ListingPage_detailsRow__'] {
+  padding: 1px 0 4px 0;
+  line-height: 36px;
+  gap: 0;
+}
+
+/* Reviews / author sections must clear the taller two-row desktop topbar when
+   anchored or scrolled to. */
+:root [class*='ListingPage_sectionReviews__'],
+:root [class*='ListingPage_sectionAuthor__'] {
+  @media (--viewportLarge) {
+    scroll-margin-top: calc(var(--avTopbarHeightDesktopTwoRow) + 24px);
+  }
+}
+
+/* ================ ProfilePage restyles (AV) ================
+   All restyles of upstream classes (no new classes). Headings use the brand
+   headings font; the listings grid matches SearchResultsPanel; `.listing`
+   becomes a stretch grid cell. `.listing` uses a self-chained attribute selector
+   (0,3,0) so it beats the upstream `:nth-of-type` margin rules (0,2,0) it must
+   cancel, regardless of source order. The `_listing__` / `_listings__` /
+   `_listingsTitle__` prefixes are mutually non-matching. */
+:root [class*='ProfilePage_mobileHeading__'],
+:root [class*='ProfilePage_desktopHeading__'],
+:root [class*='ProfilePage_listingsTitle__'],
+:root [class*='ProfilePage_mobileReviewsTitle__'],
+:root [class*='ProfilePage_desktopReviewsTitle__'] {
+  font-family: var(--fontFamilyHeadings);
+}
+:root [class*='ProfilePage_listingsTitle__'] {
+  font-size: 24px;
+}
+:root [class*='ProfilePage_desktopReviewsTitle__'] {
+  font-size: 20px;
+  line-height: 1.2;
+}
+:root [class*='ProfilePage_listings__'] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  width: 100%;
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1440px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (--viewportXLarge) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+:root [class*='ProfilePage_listing__'][class*='ProfilePage_listing__'] {
+  width: 100%;
+  display: grid;
+  margin: 0;
+}
+
+/* ================ SearchResultsPanel restyles (AV) ================
+   2-up grid (matches profile / manage); flex <li> so cards in a row match
+   height. Breakpoints are replicated so the (0,2,0) base never clobbers the
+   module's larger-screen columns. `_listingCards__` ≠ `_listingCardsMapVariant__`. */
+:root [class*='SearchResultsPanel_listingCardsMapVariant__'] {
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (--viewportXLarge) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+:root [class*='SearchResultsPanel_resultItem__'] {
+  display: flex;
+}
+:root [class*='SearchResultsPanel_listingCards__'] {
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1440px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (--viewportXLarge) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ================ UserNav restyles (AV) ================
+   The grey divider border was moved here from TabNavHorizontal `.root` so it
+   scopes to UserNav only. */
+:root [class*='UserNav_root__'] {
+  @media (--viewportMedium) {
+    justify-content: space-between;
+    padding: 0 24px 0 24px;
+    border: 1px solid var(--colorGrey100);
+    border-width: 1px 0;
+  }
+  @media (--viewportLarge) {
+    padding: 0 60px;
+  }
+}
+
+/* ================ EditListingPage / InboxPage mobile topbar (AV) ================
+   Show the mobile-topbar shadow only from --viewportWide (not --viewportLarge)
+   so the desktop and mobile topbars don't both render on tablet widths. */
+:root [class*='EditListingPage_mobileTopbar__'],
+:root [class*='InboxPage_mobileTopbar__'] {
+  @media (--viewportLarge) {
+    box-shadow: none;
+  }
+  @media (--viewportWide) {
+    box-shadow: var(--boxShadowLight);
+  }
+}
+
+/* ================ SearchPage two-row topbar offsets (AV) ================
+   The two-row desktop topbar (--avTopbarHeightDesktopTwoRow) is taller than
+   --topbarHeightDesktop, so fixed/sticky content must clear it at viewportLarge.
+   `SearchPage_map__` matches only `.map` (not `.mapPanel`/`.mapWrapper`/`.mapRoot`). */
+:root [class*='SearchPage_container__'] {
+  @media (--viewportLarge) {
+    padding-top: var(--avTopbarHeightDesktopTwoRow);
+    min-height: calc(100vh - var(--avTopbarHeightDesktopTwoRow));
+    scroll-margin-top: var(--avTopbarHeightDesktopTwoRow);
+  }
+}
+:root [class*='SearchPage_layoutWrapperMain__'] {
+  @media (--viewportLarge) {
+    scroll-margin-top: var(--avTopbarHeightDesktopTwoRow);
+  }
+}
+:root [class*='SearchPage_map__'] {
+  @media (--viewportLarge) {
+    top: var(--avTopbarHeightDesktopTwoRow);
+    height: calc(100vh - var(--avTopbarHeightDesktopTwoRow));
+  }
+}
+
+/* ================ SectionColumns fourColumns responsive (AV) ================
+   2-up from --viewportXSmall, 4-up from --viewportLarge (upstream: 4-up from
+   --viewportMedium). The xsmall rule (0,2,0) overrides the reverted module's
+   medium rule (0,1,0) at every width >= xsmall. (`.twoThirdsCols` lives in
+   SectionColumnsAV.module.css.) */
+:root [class*='SectionColumns_fourColumns__'] {
+  @media (--viewportXSmall) {
+    grid-template-columns: repeat(2, calc((100% - 1 * 32px) / 2));
+  }
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
+  }
+}
+
+/* ================ ProfileSettingsPage restyles (AV) ================
+   New topbar classes live in ProfileSettingsPageAV.module.css; these restyle
+   upstream classes. `.profileLink` upstream composes buttonSecondaryInline — the
+   (0,2,0) override replaces it with the AV blue pill. */
+:root [class*='ProfileSettingsPage_headingContainer__'] {
+  align-items: center;
+}
+:root [class*='ProfileSettingsPage_profileLink__'] {
+  display: inline-block;
+  padding: 11px 22px;
+  margin: 0 0 0 auto;
+  float: right;
+  flex-shrink: 0;
+  background-color: var(--avBlue);
+  color: var(--avYellowLight);
+  border: none;
+  outline: 1px solid var(--avYellowLight);
+  outline-offset: 0;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--fontFamily);
+  line-height: 150%;
+  text-align: center;
+  text-decoration: none;
+  transition: var(--colorTransition);
+}
+:root [class*='ProfileSettingsPage_profileLink__']:hover {
+  background-color: var(--avBlueDark);
+  color: var(--avYellowLight);
+  outline-color: var(--avYellowLight);
+  text-decoration: none;
+}
+
+/* ================ AuthenticationPage restyles (AV) ================
+   `.tab` gets the AV auth title via the `marketplaceAuthTitleStyles` selector
+   above; these add the remaining tweaks. */
+:root [class*='AuthenticationPage_tab__'] {
+  white-space: nowrap;
+}
+:root [class*='AuthenticationPage_loginForm__'] label,
+:root [class*='AuthenticationPage_signupForm__'] label {
+  font-size: 16px;
+}
+:root [class*='AuthenticationPage_error__'] {
+  color: var(--colorFail);
 }

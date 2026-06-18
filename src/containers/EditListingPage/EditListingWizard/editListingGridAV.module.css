@@ -1,0 +1,41 @@
+@import '../../../styles/customMediaQueries.css';
+
+/* Shared two-column field grid for the Details / Delivery / Location edit forms.
+   Relocated out of each upstream EditListing*Form.module.css so those files stay
+   pristine. Imported as `avCss` by the three (already-forked) forms. */
+
+.fieldsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 24px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Default: every direct child spans the full row. Custom listing fields wrap
+ * themselves in the global `.customField` (via DisplayOverrideField) and opt in
+ * to half-width on viewportMedium+. */
+.fieldsGrid > :where(*) {
+  grid-column: 1 / -1;
+}
+
+.fieldsGrid > :where(:global(.customField)) {
+  @media (--viewportMedium) {
+    grid-column: span 1;
+  }
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.catCols {
+  display: flex;
+  gap: 24px;
+}
+
+.catCols > * {
+  flex-basis: 50%;
+}

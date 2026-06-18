@@ -42,6 +42,7 @@ import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 import SubmitFinePrint from './SubmitFinePrint/SubmitFinePrint';
 
 import css from './OrderPanel.module.css';
+import avCss from './OrderPanelAV.module.css';
 
 const { Money } = sdkTypes;
 
@@ -209,7 +210,7 @@ const PriceMaybe = props => {
   ) : (
     <div className={css.priceContainer}>
       {formattedOriginalPrice ? (
-        <s className={css.originalPrice}>{formattedOriginalPrice}</s>
+        <s className={avCss.originalPrice}>{formattedOriginalPrice}</s>
       ) : null}
       <p className={css.price}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />

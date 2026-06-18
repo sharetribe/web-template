@@ -220,7 +220,7 @@
 .ctaButtonBlue {
   composes: avCtaButton;
   --_av-bg: var(--avBlue);
-  --_av-bg-hover: #1d4ed8;
+  --_av-bg-hover: var(--avBlueDark);
   --_av-color: var(--avYellowLight);
   --_av-outline-color: var(--avYellowLight);
   --_av-outline-style: solid;

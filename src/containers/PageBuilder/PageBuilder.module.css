@@ -1,10 +1,6 @@
 .layout {
   min-height: 100vh;
   grid-template-rows: auto 1fr auto;
-  /* Clamp the single grid column to the container width. Without this, a
-     full-bleed/min-content child can blow the implicit track out to ~100vw,
-     overflowing past the vertical scrollbar and causing horizontal scroll. */
-  grid-template-columns: minmax(0, 1fr);
 }
 
 .topbar {
@@ -15,9 +11,6 @@
 
 .main {
   display: grid;
-  /* Same blowout guard as .layout: keep the implicit column from expanding to
-     the min-content of full-bleed sections (which would overflow ~100vw). */
-  grid-template-columns: minmax(0, 1fr);
   scroll-margin-top: var(--topbarHeight);
   @media (--viewportMedium) {
     scroll-margin-top: var(--topbarHeightDesktop);

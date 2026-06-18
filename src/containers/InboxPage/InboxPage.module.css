@@ -21,8 +21,6 @@
     height: var(--topbarHeightDesktop);
   }
 
-  /* Hide where the desktop topbar appears (--viewportLarge); otherwise both the
-   * mobile and desktop topbars render together on tablet widths (1024–1600px). */
   @media (--viewportLarge) {
     display: none;
   }
@@ -32,7 +30,7 @@
 .mobileTopbar {
   box-shadow: none;
 
-  @media (--viewportWide) {
+  @media (--viewportLarge) {
     box-shadow: var(--boxShadowLight);
   }
 }
@@ -70,7 +68,23 @@
 }
 
 .title {
-  composes: sideNavPageTitle from global;
+  align-self: center;
+  padding: 0px 0 8px 0;
+
+  /* Layout */
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  @media (--viewportLarge) {
+    padding: 5px 0 3px 0;
+    align-self: unset;
+  }
 }
 
 .tabs {

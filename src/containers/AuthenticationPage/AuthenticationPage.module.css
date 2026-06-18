@@ -45,11 +45,10 @@
 }
 
 .tab {
-  composes: marketplaceAuthTitleStyles from global;
+  composes: marketplaceModalTitleStyles from global;
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
-  white-space: nowrap;
 
   /* Break long words into multiple lines to avoid overflow */
   word-break: break-word;
@@ -78,13 +77,6 @@
   @media (--viewportMedium) {
     margin-top: 30px;
     padding-top: 2px;
-  }
-}
-
-.loginForm,
-.signupForm {
-  label {
-    font-size: 16px;
   }
 }
 
@@ -243,7 +235,6 @@
 
 .error {
   composes: marketplaceModalPasswordMargins from global;
-  color: var(--colorFail);
 }
 
 /* ================ Social logins & SSO ================ */

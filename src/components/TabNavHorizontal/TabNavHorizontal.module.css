@@ -6,12 +6,8 @@
   overflow-x: auto;
 }
 
-/* AV: `darkSkin` is consumed only by `UserNav` (only place in the codebase
- * passing `skin="dark"`). We reskin it as an AV-branded white pill bar.
- * If a future consumer wants the original Sharetribe dark grey treatment,
- * branch on a new skin value rather than reverting this class. */
 .darkSkin {
-  background-color: var(--colorWhite);
+  background-color: var(--colorGrey700);
 }
 
 .tab {
@@ -78,27 +74,22 @@
   text-decoration: none;
 }
 
-/* Dark skin — AV reskin (see note on .darkSkin above) */
+/* Dark skin */
 .tabContentDarkSkin {
-  color: var(--avBlue);
-  font-weight: 600;
-  border-bottom-color: transparent;
+  color: var(--colorGrey200);
 
   &:hover,
   &:focus {
-    background-color: var(--avBlue);
     color: var(--colorWhite);
-    border-bottom-color: transparent;
   }
 }
 
 .selectedTabContentDarkSkin {
-  background-color: var(--avBlue);
+  border-bottom-color: var(--colorWhite);
   color: var(--colorWhite);
-  border-bottom-color: transparent;
 }
 
 .disabledDarkSkin {
-  color: var(--colorGrey300);
-  opacity: 0.5;
+  color: var(--colorBlack);
+  opacity: 0.3;
 }

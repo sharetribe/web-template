@@ -10,10 +10,13 @@
   margin: 0;
 
   display: grid;
-  /* Up to --viewportMLarge (968px): static 2-up grid (no carousel/single column) */
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 24px;
   width: 100%;
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @media (--viewportXLarge) {
     grid-template-columns: repeat(3, 1fr);
@@ -24,25 +27,23 @@
   list-style: none;
   padding: 0;
   margin: 0;
-
-  /* The grid stretches each <li> to the tallest cell in its row, but a block
-     <li> lets the card keep its natural content height and sit top-aligned, so
-     same-row cards looked different heights. Making the <li> a flex container
-     stretches the card to fill the cell, so every card in a row matches. */
-  display: flex;
 }
 
 .listingCards {
   padding: 0 0 72px 0;
 
   display: grid;
-  /* Up to --viewportMLarge (968px): static 2-up grid */
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 24px;
   width: 100%;
 
+  @media (min-width: 550px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   @media (--viewportMedium) {
     padding: 0 0 96px 0;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media (--viewportLarge) {

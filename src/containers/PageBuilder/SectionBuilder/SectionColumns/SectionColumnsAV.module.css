@@ -1,0 +1,14 @@
+@import '../../../../styles/customMediaQueries.css';
+
+/* AV-only SectionColumns class (the `- 2/3 cols` token layout), kept out of the
+   upstream SectionColumns.module.css. Imported by SectionColumns.js as `avCss`.
+   Composes the upstream `.baseColumn` so it keeps the shared column base. */
+
+.twoThirdsCols {
+  composes: baseColumn from './SectionColumns.module.css';
+
+  @media (--viewportMLarge) {
+    grid-template-columns: 2fr 1fr;
+    gap: 64px;
+  }
+}

@@ -11,6 +11,7 @@ import FilterPlain from '../FilterPlain/FilterPlain';
 import FilterPopup from '../FilterPopup/FilterPopup';
 
 import css from './SelectMultipleFilter.module.css';
+import avCss from './SelectMultipleFilterAV.module.css';
 
 // SelectMultipleFilter doesn't need array mutators since it doesn't require validation.
 // TODO: Live edit didn't work with FieldCheckboxGroup
@@ -39,7 +40,7 @@ const ColorSwatches = props => {
   const { id, className, name, options } = props;
   return (
     <fieldset className={className}>
-      <ul className={css.list2cols}>
+      <ul className={avCss.list2cols}>
         {options.map(optionConfig => {
           const { option, label } = optionConfig;
           const fieldId = `${id}.${option}`;

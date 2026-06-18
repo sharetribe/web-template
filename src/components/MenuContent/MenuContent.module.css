@@ -6,16 +6,13 @@
   border-top: 1px solid var(--colorGrey100);
   box-shadow: var(--boxShadowPopup);
   border-radius: 0 0 2px 2px;
-  transition: opacity var(--transitionStyleButton), max-height var(--transitionStyleButton);
+  transition: var(--transitionStyleButton);
 }
 
 .isClosed {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  max-height: 0;
-  overflow: hidden;
-  padding: 0 !important;
 }
 
 .isOpen {

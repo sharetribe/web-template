@@ -20,6 +20,7 @@ import { maxLength, required, composeValidators } from '../../../../util/validat
 import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
 // Import modules from this directory
 import css from './EditListingDetailsForm.module.css';
+import avCss from '../editListingGridAV.module.css';
 
 const TITLE_MAX_LENGTH = 60;
 
@@ -392,7 +393,7 @@ const EditListingDetailsForm = props => (
         <Form className={classes} onSubmit={handleSubmit}>
           <ErrorMessage fetchErrors={fetchErrors} />
 
-          <div className={css.fieldsGrid}>
+          <div className={avCss.fieldsGrid}>
             <FieldSelectListingType
               name="listingType"
               listingTypes={selectableListingTypes}
@@ -404,7 +405,7 @@ const EditListingDetailsForm = props => (
             />
 
             {showCategories && isCompatibleCurrency && (
-              <div className={css.catCols}>
+              <div className={avCss.catCols}>
                 <FieldSelectCategory
                   values={values}
                   prefix={categoryPrefix}

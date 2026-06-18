@@ -25,6 +25,7 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
+import avCss from './ProfileSettingsPageAV.module.css';
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
@@ -173,8 +174,8 @@ export const ProfileSettingsPageComponent = props => {
         topbar={
           <>
             <TopbarContainer
-              desktopClassName={css.desktopTopbar}
-              mobileClassName={css.mobileTopbar}
+              desktopClassName={avCss.desktopTopbar}
+              mobileClassName={avCss.mobileTopbar}
             />
             <UserNav
               currentPage="ProfileSettingsPage"

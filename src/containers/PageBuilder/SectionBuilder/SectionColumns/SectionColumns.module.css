@@ -27,21 +27,8 @@
 }
 .fourColumns {
   composes: baseColumn;
-
-  @media (--viewportXSmall) {
-    grid-template-columns: repeat(2, calc((100% - 1 * 32px) / 2));
-  }
-
-  @media (--viewportLarge) {
+  @media (--viewportMedium) {
     grid-template-columns: repeat(4, calc((100% - 3 * 32px) / 4));
-  }
-}
-
-.twoThirdsCols {
-  composes: baseColumn;
-  @media (--viewportMLarge) {
-    grid-template-columns: 2fr 1fr;
-    gap: 64px;
   }
 }
 

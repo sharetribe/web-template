@@ -14,7 +14,7 @@
   &:hover + label .box,
   &:focus + label .box,
   &:checked + label .box {
-    stroke: var(--avBlue);
+    stroke: var(--marketplaceColor);
   }
 
   /* successColor version */
@@ -34,7 +34,7 @@
   /* Display the "check" when checked */
   &:checked + label .checked {
     display: inline;
-    stroke: var(--avBlue);
+    stroke: var(--marketplaceColor);
     stroke-width: 1px;
   }
 
@@ -68,7 +68,7 @@
 }
 
 .checkboxWrapper {
-  height: 20px;
+  height: 32px;
   margin-top: -2px;
   margin-right: 8px;
   align-self: baseline;
@@ -78,14 +78,14 @@
   cursor: pointer;
 
   @media (--viewportMedium) {
-    height: 20px;
+    height: 24px;
     margin-top: -1px;
   }
 }
 
 .checked {
   display: none;
-  fill: var(--avBlue);
+  fill: var(--marketplaceColor);
 }
 .checkedSuccess {
   display: none;

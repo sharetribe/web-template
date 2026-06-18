@@ -78,31 +78,6 @@
   }
 }
 
-.fieldsGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0 24px;
-
-  @media (--viewportMedium) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* Default direct children to full row span. Half-width opt-in via .customField. */
-.fieldsGrid > :where(*) {
-  grid-column: 1 / -1;
-}
-
-.fieldsGrid > :where(:global(.customField)) {
-  @media (--viewportMedium) {
-    grid-column: span 1;
-  }
-}
-
-.fullWidth {
-  grid-column: 1 / -1;
-}
-
 .submitButton {
   margin-top: auto;
   margin-bottom: 24px;

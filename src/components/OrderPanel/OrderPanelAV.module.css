@@ -1,0 +1,17 @@
+@import '../../styles/customMediaQueries.css';
+
+/* AV-only OrderPanel styles, kept out of the upstream OrderPanel.module.css so
+   that file stays pristine. Imported by OrderPanel.js as `avCss`. */
+
+/* Strike-through "was" price shown above the current price. */
+.originalPrice {
+  font-size: 14px;
+  color: var(--colorGrey500);
+  text-decoration: line-through;
+  display: block;
+  margin: 0 0 2px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 2px 0;
+  }
+}

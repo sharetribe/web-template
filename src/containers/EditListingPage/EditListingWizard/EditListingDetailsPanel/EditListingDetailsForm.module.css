@@ -64,42 +64,6 @@
   display: none;
 }
 
-.fieldsGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0 24px;
-
-  @media (--viewportMedium) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* Default: every direct child spans the full row. Custom listing fields wrap
- * themselves in `.customField` (via DisplayOverrideField) and override this
- * to render half-width on viewportMedium+. */
-.fieldsGrid > :where(*) {
-  grid-column: 1 / -1;
-}
-
-.fieldsGrid > :where(:global(.customField)) {
-  @media (--viewportMedium) {
-    grid-column: span 1;
-  }
-}
-
-.fullWidth {
-  grid-column: 1 / -1;
-}
-
-.catCols {
-  display: flex;
-  gap: 24px;
-}
-
-.catCols > * {
-  flex-basis: 50%;
-}
-
 .submitButton {
   margin-top: auto;
   margin-bottom: 24px;

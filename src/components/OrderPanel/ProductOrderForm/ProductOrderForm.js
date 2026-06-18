@@ -21,6 +21,7 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 
 import css from './ProductOrderForm.module.css';
+import avCss from './ProductOrderFormAV.module.css';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -282,7 +283,7 @@ const renderForm = formRenderProps => {
       <div className={css.submitButton}>
         <PrimaryButton
           type="submit"
-          className={css.submitButtonCta}
+          className={avCss.submitButtonCta}
           inProgress={submitInProgress}
           disabled={submitDisabled}
         >

@@ -39,7 +39,6 @@
 
 .imageWrapperForSectionHero {
   composes: heroHeight;
-  position: relative;
   background-color: var(--colorGrey100); /* Loading BG color */
 
   /* Image carousel can be opened from the image, therefore we should show a pointer */
@@ -394,21 +393,13 @@
 }
 
 .orderPanelTitle {
-  /* Font: matches the AV h1 scale (avBrandOverrides.css) */
-  composes: marketplaceAuthTitleStyles from global;
-  font-size: 42px;
-  line-height: 1.15;
-
-  @media (--viewportMedium) {
-    font-size: 50px;
-    line-height: 1.15;
-  }
+  /* Font */
+  font-weight: var(--fontWeightBold);
 
   /* Layout */
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
-
   &.titleMarginForOwnListingNoImage {
     margin-top: 100px;
     @media (--viewportMedium) {
@@ -469,7 +460,7 @@
 .desktopPriceValue {
   /* Font */
   composes: marketplaceModalTitleStyles from global;
-  color: var(--avBlue);
+  color: var(--marketplaceColor);
 
   @media (--viewportMedium) {
     margin-top: 0;
@@ -529,7 +520,7 @@
 
 .authorNameLink {
   composes: textSmall from global;
-  color: var(--avBlue);
+  color: var(--colorGrey700);
 }
 
 .contactWrapper {
@@ -587,7 +578,7 @@
 .sectionHeading,
 .sectionHeadingWithExtraMargin {
   /* Font for sections titles */
-  composes: marketplaceListingSectionTitleStyles from global;
+  composes: p from global;
   padding: 0;
   font-weight: var(--fontWeightBold);
 
@@ -667,10 +658,6 @@
   }
   @media (--viewportLarge) {
     padding: 8px 0;
-    /* TopbarDesktop renders two rows here (--avTopbarHeightDesktopTwoRow),
-       so anchoring/scrolling to this section must clear that, not just the
-       single-row --topbarHeightDesktop. */
-    scroll-margin-top: calc(var(--avTopbarHeightDesktopTwoRow) + 24px);
   }
 }
 
@@ -683,10 +670,11 @@
   display: inline-flex;
   justify-content: space-between;
   width: 100%;
-  padding: 1px 0 4px 0;
-  line-height: 36px;
   list-style: none;
   font-weight: var(--fontWeightRegular);
+  line-height: 24px;
+  padding: 7px 0px 10px;
+  gap: 8px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--colorGrey100);
@@ -764,7 +752,6 @@
 }
 
 .productGallery {
-  position: relative;
   margin: 0 0 36px 0;
 
   @media (--viewportMedium) {
@@ -847,32 +834,4 @@
   right: 0;
   width: 100%;
   height: 100%;
-}
-
-/* AV: store-type tags overlaid on the ListingPage gallery image.
-   Hero wrapper is just the image (bottom-left). The carousel's .productGallery
-   wraps the image + thumbnail strip, so its overlay anchors to the top of the
-   image instead. */
-.heroStoreTags,
-.galleryStoreTags {
-  position: absolute;
-  left: 16px;
-  z-index: 1;
-  pointer-events: none;
-  max-width: calc(100% - 32px);
-}
-
-.heroStoreTags {
-  bottom: 16px;
-}
-
-.galleryStoreTags {
-  top: 16px;
-
-  /* From --viewportMedium up, ListingImageGallery renders a vertical thumbnail
-     column (thumbnailPosition="left") at the left edge of .productGallery —
-     push the overlay past it so it sits on the main image, not the thumbnails. */
-  @media (--viewportMedium) {
-    left: calc(16px + var(--ig-thumbnail-size, 102px) + 8px);
-  }
 }

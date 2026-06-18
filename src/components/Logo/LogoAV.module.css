@@ -1,0 +1,7 @@
+/* AV-only Logo styles, kept out of the upstream Logo.module.css so that file
+   stays pristine. Imported by Logo.js as `avCss`. */
+
+/* Larger logo used by the white/footer logo version. */
+.logoWhite {
+  max-height: 80px;
+}

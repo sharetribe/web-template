@@ -26,6 +26,7 @@ import {
 
 // Import modules from this directory
 import css from './EditListingDeliveryForm.module.css';
+import avCss from '../editListingGridAV.module.css';
 
 const identity = v => v;
 
@@ -132,7 +133,7 @@ export const EditListingDeliveryForm = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          <div className={css.fieldsGrid}>
+          <div className={avCss.fieldsGrid}>
             <FieldCheckbox
               id={formId ? `${formId}.pickup` : 'pickup'}
               className={classNames(css.deliveryCheckbox, {

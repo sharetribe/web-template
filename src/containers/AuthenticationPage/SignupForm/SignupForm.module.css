@@ -33,11 +33,11 @@
 }
 
 .firstNameRoot {
-  width: calc(50% - 9px);
+  width: calc(34% - 9px);
 }
 
 .lastNameRoot {
-  width: calc(50% - 9px);
+  width: calc(66% - 9px);
 }
 
 .password {

@@ -6,6 +6,7 @@ import BlockBuilder from '../../BlockBuilder';
 
 import AVSectionContainer from '../SectionContainer/AVSectionContainer';
 import css from './SectionColumns.module.css';
+import avCss from './SectionColumnsAV.module.css';
 
 // The number of columns (numColumns) affects styling and responsive images
 const COLUMN_CONFIG = [
@@ -107,7 +108,7 @@ const SectionColumns = props => {
           className={classNames(
             defaultClasses.blockContainer,
             customOption?.isTwoThirdsCols && numColumns === 2
-              ? css.twoThirdsCols
+              ? avCss.twoThirdsCols
               : getColumnCSS(numColumns),
             { [css.noSidePaddings]: isInsideContainer }
           )}

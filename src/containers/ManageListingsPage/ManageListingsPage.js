@@ -35,6 +35,7 @@ import {
   discardDraft,
 } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
+import avCss from './ManageListingsPageAV.module.css';
 import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 
 const Heading = props => {
@@ -43,14 +44,14 @@ const Heading = props => {
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
 
   return hasResults ? (
-    <div className={css.headingRow}>
+    <div className={avCss.headingRow}>
       <H3 as="h1" className={css.heading}>
         <FormattedMessage
           id="ManageListingsPage.youHaveListings"
           values={{ count: pagination.totalItems }}
         />
       </H3>
-      <NamedLink className={css.newListingButton} name="NewListingPage">
+      <NamedLink className={avCss.newListingButton} name="NewListingPage">
         <FormattedMessage id="ManageListingsPage.createListing" />
       </NamedLink>
     </div>

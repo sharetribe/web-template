@@ -19,6 +19,7 @@ import {
 import './image-gallery.css';
 
 import css from './ListingImageGallery.module.css';
+import avCss from './ListingImageGalleryAV.module.css';
 
 const IMAGE_GALLERY_OPTIONS = {
   showPlayButton: false,
@@ -155,7 +156,7 @@ const ListingImageGallery = props => {
             />
           </div>
         </AspectRatioWrapper>
-        {item.slotLabel ? <p className={css.imageLabel}>{item.slotLabel}</p> : null}
+        {item.slotLabel ? <p className={avCss.imageLabel}>{item.slotLabel}</p> : null}
       </div>
     );
   };

@@ -108,7 +108,7 @@
 
   &:hover {
     text-decoration: none;
-    background-color: #1d4ed8;
+    background-color: var(--avBlueDark);
     color: var(--avYellowLight);
   }
 }

@@ -3,6 +3,7 @@ import ListingImageGallery from './ListingImageGallery/ListingImageGallery';
 import { StoreTypeTags } from '../../components';
 
 import css from './ListingPage.module.css';
+import avCss from './ListingPageAV.module.css';
 
 const SectionGallery = props => {
   const { listing, variantPrefix, thumbnailPosition, className } = props;
@@ -12,7 +13,7 @@ const SectionGallery = props => {
   const thumbnailVariants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
   return (
     <section className={className || css.productGallery} data-testid="carousel">
-      <StoreTypeTags author={listing?.author} className={css.galleryStoreTags} />
+      <StoreTypeTags author={listing?.author} className={avCss.galleryStoreTags} />
       <ListingImageGallery
         images={images}
         imageSlots={imageSlots}

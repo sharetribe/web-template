@@ -1,0 +1,18 @@
+/* AV-only ProductOrderForm styles, kept out of the upstream
+   ProductOrderForm.module.css so that file stays pristine. Imported by
+   ProductOrderForm.js as `avCss`. */
+
+/* "Comprar" submit button — AV ctaButtonBlue theming. */
+.submitButtonCta {
+  background-color: var(--avBlue);
+  color: var(--avYellowLight);
+  border: 1px solid var(--avYellowLight);
+  border-radius: 26px;
+  font-weight: 700;
+}
+.submitButtonCta:hover,
+.submitButtonCta:focus {
+  background-color: var(--avBlueDark);
+  color: var(--avYellowLight);
+  box-shadow: none;
+}
