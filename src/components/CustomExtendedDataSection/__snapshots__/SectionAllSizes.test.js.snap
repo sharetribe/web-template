@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionAllSizes matches snapshot 1`] = `
+<section
+  class="sectionAllSizes"
+>
+  <h2
+    class="sectionHeading"
+  >
+    Sizes
+  </h2>
+  <ul
+    class="list"
+  >
+    <li
+      class="item"
+    >
+      <span
+        class="chip"
+        title="S"
+      >
+        <span
+          class="label"
+        >
+          S
+        </span>
+      </span>
+    </li>
+  </ul>
+</section>
+`;

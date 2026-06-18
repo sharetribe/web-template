@@ -134,6 +134,10 @@
   display: block;
 }
 
+/* AV: contextual styles applied when GroupedEnumFilter wraps FilterPlain markup
+   in a `.grouped` element. Intentionally kept in this module (not a separate AV
+   one) because the rules target FilterPlain's own scoped classes (.plain,
+   .openSign), which a separate CSS module could not reference. */
 .grouped {
   padding: 0 8px;
 

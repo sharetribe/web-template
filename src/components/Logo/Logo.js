@@ -110,6 +110,9 @@ export const LogoComponent = props => {
       </div>
     );
   } else if (version === 'white') {
+    // AV: white logo variant for dark backgrounds (e.g. footer). Renders a static
+    // asset and bypasses the hosted-logo branches above; reached via
+    // LinkedLogo's version="white". Intentional fork of this upstream component.
     return (
       <div>
         <img className={logoImageClasses} src={logoImageWhite} alt={marketplaceName} {...rest} />

@@ -9,6 +9,13 @@ import SectionColor from './SectionColor';
 import SectionAllSizes from './SectionAllSizes';
 import SectionYoutubeVideo from './SectionYoutubeVideo';
 
+// AV: multi-enum fields that render with a custom display component instead of
+// the default SectionMultiEnum, dispatched by field key.
+const MULTI_ENUM_COMPONENTS_BY_KEY = {
+  color: SectionColor,
+  all_sizes: SectionAllSizes,
+};
+
 /**
  * This component displays extended data that corresponds to asset based custom field
  * configurations. It can be used for displaying listing, user, and transaction custom fields.
@@ -41,15 +48,9 @@ const CustomExtendedDataSection = props => {
       <SectionDetails {...sectionDetailsProps} pickExtendedDataFields={pickExtendedDataFields} />
       {propsForCustomFields.map(customFieldProps => {
         const { schemaType, key, ...fieldProps } = customFieldProps;
-        return schemaType === SCHEMA_TYPE_MULTI_ENUM && key === 'color' ? (
-          <SectionColor
-            key={key}
-            className={className}
-            rootClassName={rootClassName}
-            {...fieldProps}
-          />
-        ) : schemaType === SCHEMA_TYPE_MULTI_ENUM && key === 'all_sizes' ? (
-          <SectionAllSizes
+        const MultiEnumByKey = MULTI_ENUM_COMPONENTS_BY_KEY[key];
+        return schemaType === SCHEMA_TYPE_MULTI_ENUM && MultiEnumByKey ? (
+          <MultiEnumByKey
             key={key}
             className={className}
             rootClassName={rootClassName}

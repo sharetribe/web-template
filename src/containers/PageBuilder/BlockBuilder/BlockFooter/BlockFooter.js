@@ -61,8 +61,8 @@ const BlockFooter = props => {
         <div className={classNames(css.newsletter)}>
           <NewsletterForm
             disclaimerText={props.disclaimerText}
-            okMsg={props.okMsg || 'Thanks! Please check your inbox.'}
-            errorMsg={props.errorMsg || 'Subscription failed. Try again later.'}
+            okMsg={props.okMsg}
+            errorMsg={props.errorMsg}
           />
         </div>
       ) : null}

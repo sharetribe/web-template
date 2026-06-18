@@ -15,6 +15,8 @@ import css from './FieldRadioButton.module.css';
  */
 const IconRadioButton = props => {
   const { className, checkedClassName, showAsRequired } = props;
+  // AV: 14px artwork enlarged to 20px via width/height + an explicit viewBox.
+  // viewBox cannot be set from CSS, so this sizing must live in the markup.
   return (
     <div>
       <svg

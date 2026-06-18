@@ -22,6 +22,7 @@
   z-index: 2;
   transition: all ease-in-out 500ms;
 
+  /* AV: keep the carousel arrows faintly visible on touch devices (no hover). */
   @media (any-hover: none) and (pointer: coarse) {
     opacity: 0.75;
   }

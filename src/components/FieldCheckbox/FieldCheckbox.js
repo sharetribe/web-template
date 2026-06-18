@@ -16,6 +16,8 @@ import css from './FieldCheckbox.module.css';
  */
 const IconCheckbox = props => {
   const { className, checkedClassName, boxClassName } = props;
+  // AV: 14px artwork enlarged to 20px via width/height + an explicit viewBox.
+  // viewBox cannot be set from CSS, so this sizing must live in the markup.
   return (
     <svg
       className={className}

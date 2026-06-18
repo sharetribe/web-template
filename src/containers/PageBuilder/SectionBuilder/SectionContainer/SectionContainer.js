@@ -31,7 +31,6 @@ const SectionContainer = props => {
   const { className, rootClassName, id, as, children, appearance, options, ...otherProps } = props;
   const Tag = as || 'section';
   const classes = classNames(rootClassName || css.root, className);
-  const innerCss = css.sectionContent;
 
   return (
     <Tag className={classes} id={id} {...otherProps}>
@@ -43,7 +42,7 @@ const SectionContainer = props => {
         />
       ) : null}
 
-      <div className={innerCss}>{children}</div>
+      <div className={css.sectionContent}>{children}</div>
     </Tag>
   );
 };

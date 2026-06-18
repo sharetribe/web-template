@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IconChat matches snapshot 1`] = `
+<svg
+  class="root"
+  height="48"
+  viewBox="0 0 48 48"
+  width="48"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    class="bubbleBg"
+    cx="24"
+    cy="24"
+    r="24"
+  />
+  <rect
+    class="bubbleFg"
+    height="18"
+    rx="5"
+    width="28"
+    x="10"
+    y="11"
+  />
+  <polygon
+    class="bubbleFg"
+    points="16,29 16,36 24,29"
+  />
+  <circle
+    class="dot"
+    cx="18"
+    cy="20"
+    r="2.2"
+  />
+  <circle
+    class="dot"
+    cx="24"
+    cy="20"
+    r="2.2"
+  />
+  <circle
+    class="dot"
+    cx="30"
+    cy="20"
+    r="2.2"
+  />
+</svg>
+`;

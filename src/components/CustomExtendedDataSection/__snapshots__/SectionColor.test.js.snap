@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionColor matches snapshot 1`] = `
+<section
+  class="sectionColor"
+>
+  <h2
+    class="sectionHeading"
+  >
+    Color
+  </h2>
+  <ul
+    class="list"
+  >
+    <li
+      class="item"
+    >
+      <span
+        class="circle"
+        style="background-color: rgb(204, 204, 204);"
+        title="Red"
+      />
+      <span
+        class="label"
+      >
+        Red
+      </span>
+    </li>
+  </ul>
+</section>
+`;

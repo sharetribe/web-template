@@ -20,6 +20,9 @@
 }
 
 .sectionContent {
+  /* AV: --contentPaddingX/Y are the base padding tokens that the variant classes
+     in AVSectionContainer.module.css override; keep them defined here (this file
+     is intentionally co-owned with AVSectionContainer, which imports it). */
   --contentPaddingY: 40px;
   --contentPaddingX: 32px;
 
