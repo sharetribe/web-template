@@ -104,6 +104,10 @@ export const parseSectionCustomOptions = sectionName => {
 
   // Spacing
   customOption.hasNoPaddings = hasToken(sectionName, 'NoPaddings');
+  customOption.hasSmallGapCols = hasToken(sectionName, 'SmallGapCols');
+  customOption.hasSmallGapRows = hasToken(sectionName, 'SmallGapRows');
+  customOption.hasNoGapCols = hasToken(sectionName, 'NoGapCols');
+  customOption.hasNoGapRows = hasToken(sectionName, 'NoGapRows');
 
   return customOption;
 };

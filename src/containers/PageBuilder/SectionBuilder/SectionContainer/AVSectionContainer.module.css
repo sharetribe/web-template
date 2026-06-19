@@ -157,6 +157,26 @@
   --contentPaddingX: 0px;
 }
 
+/* - SmallGapCols / - SmallGapRows: tighten the grid gap in column/grid sections.
+   These set CSS vars that the grid (`.baseColumn` in SectionColumns) consumes via
+   inheritance; the grid keeps its 32px default when the token is absent. */
+.sectionContentSmallGapCols {
+  --avSectionColGap: 8px;
+}
+
+.sectionContentSmallGapRows {
+  --avSectionRowGap: 8px;
+}
+
+/* - NoGapCols / - NoGapRows: collapse the grid gap to 0 (same var hook as above). */
+.sectionContentNoGapCols {
+  --avSectionColGap: 0px;
+}
+
+.sectionContentNoGapRows {
+  --avSectionRowGap: 0px;
+}
+
 /* ── Footer (section rendered with as="footer") ───────────────────────────── */
 .customFooter {
   background-color: var(--avBlue);

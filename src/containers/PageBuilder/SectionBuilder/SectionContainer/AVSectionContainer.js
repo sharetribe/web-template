@@ -58,6 +58,10 @@ const AVSectionContainer = props => {
     customOption?.isSmallerTitles ? avCss.sectionContentSmallerTitles : null,
     // Spacing
     customOption?.hasNoPaddings ? avCss.sectionContentNoPaddings : null,
+    customOption?.hasSmallGapCols ? avCss.sectionContentSmallGapCols : null,
+    customOption?.hasSmallGapRows ? avCss.sectionContentSmallGapRows : null,
+    customOption?.hasNoGapCols ? avCss.sectionContentNoGapCols : null,
+    customOption?.hasNoGapRows ? avCss.sectionContentNoGapRows : null,
     // Footer
     as === 'footer' ? avCss.customFooter : null
   );

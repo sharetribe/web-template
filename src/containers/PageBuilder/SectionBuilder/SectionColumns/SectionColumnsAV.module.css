@@ -9,6 +9,8 @@
 
   @media (--viewportMLarge) {
     grid-template-columns: 2fr 1fr;
-    gap: 64px;
+    /* AV: var-driven so `- SmallGapCols`/`- SmallGapRows` tokens still apply here;
+       2/3-col layouts keep their wider 64px default when no token is set. */
+    gap: var(--avSectionRowGap, 64px) var(--avSectionColGap, 64px);
   }
 }

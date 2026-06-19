@@ -76,6 +76,36 @@ describe('parseSectionCustomOptions', () => {
     expect(parseSectionCustomOptions('Section - NoPaddingsY').hasNoPaddings).toBe(false);
   });
 
+  it('sets hasSmallGapCols / hasSmallGapRows independently for their tokens', () => {
+    const cols = parseSectionCustomOptions('Section - SmallGapCols');
+    expect(cols.hasSmallGapCols).toBe(true);
+    expect(cols.hasSmallGapRows).toBe(false);
+
+    const rows = parseSectionCustomOptions('Section - SmallGapRows');
+    expect(rows.hasSmallGapRows).toBe(true);
+    expect(rows.hasSmallGapCols).toBe(false);
+
+    const both = parseSectionCustomOptions('Section - SmallGapCols - SmallGapRows');
+    expect(both.hasSmallGapCols).toBe(true);
+    expect(both.hasSmallGapRows).toBe(true);
+  });
+
+  it('sets hasNoGapCols / hasNoGapRows independently for their tokens', () => {
+    const cols = parseSectionCustomOptions('Section - NoGapCols');
+    expect(cols.hasNoGapCols).toBe(true);
+    expect(cols.hasNoGapRows).toBe(false);
+    // The narrower "- NoGapCols" must not be triggered by "- SmallGapCols".
+    expect(parseSectionCustomOptions('Section - SmallGapCols').hasNoGapCols).toBe(false);
+
+    const rows = parseSectionCustomOptions('Section - NoGapRows');
+    expect(rows.hasNoGapRows).toBe(true);
+    expect(rows.hasNoGapCols).toBe(false);
+
+    const both = parseSectionCustomOptions('Section - NoGapCols - NoGapRows');
+    expect(both.hasNoGapCols).toBe(true);
+    expect(both.hasNoGapRows).toBe(true);
+  });
+
   it('handles multiple tokens in one sectionName', () => {
     const result = parseSectionCustomOptions('Hero - Large - CenterTitleText - WhiteTitle');
     expect(result.isLarge).toBe(true);

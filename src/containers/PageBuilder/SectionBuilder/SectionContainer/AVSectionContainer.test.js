@@ -64,6 +64,37 @@ describe('AVSectionContainer', () => {
     expect(container.firstChild).toBeInTheDocument();
   });
 
+  it('applies the small-gap classes for SmallGapCols/SmallGapRows options', () => {
+    const { container } = render(
+      <AVSectionContainer
+        id="test-section"
+        options={{}}
+        customOption={{ hasSmallGapCols: true, hasSmallGapRows: true }}
+      >
+        content
+      </AVSectionContainer>
+    );
+    // CSS modules are mapped via identity-obj-proxy in jest, so class === key name.
+    const inner = container.querySelector('.sectionContentSmallGapCols');
+    expect(inner).toBeInTheDocument();
+    expect(inner).toHaveClass('sectionContentSmallGapRows');
+  });
+
+  it('applies the no-gap classes for NoGapCols/NoGapRows options', () => {
+    const { container } = render(
+      <AVSectionContainer
+        id="test-section"
+        options={{}}
+        customOption={{ hasNoGapCols: true, hasNoGapRows: true }}
+      >
+        content
+      </AVSectionContainer>
+    );
+    const inner = container.querySelector('.sectionContentNoGapCols');
+    expect(inner).toBeInTheDocument();
+    expect(inner).toHaveClass('sectionContentNoGapRows');
+  });
+
   it('matches snapshot', () => {
     const { asFragment } = render(
       <AVSectionContainer id="test-section" options={{}}>
