@@ -1439,6 +1439,12 @@
   "AVListingDetails.showMore": "Show more",
   "AVListingDetails.showLess": "Show less",
 
+  "AVShippingTypeSelector.legend": "Choose a delivery option",
+  "AVShippingTypeSelector.noOptions": "Shipping is not available for this item — contact AV.",
+  "AVShippingTypeSelector.type.cdmxLocal": "CDMX Local",
+  "AVShippingTypeSelector.type.nacionalExpress": "Nacional Express",
+  "AVShippingTypeSelector.type.nacionalEstandar": "Nacional Estándar",
+
   "AVWelcomePopup.vendedor.imageUrl": "",
   "AVWelcomePopup.vendedor.eyebrow": "",
   "AVWelcomePopup.vendedor.title": "",

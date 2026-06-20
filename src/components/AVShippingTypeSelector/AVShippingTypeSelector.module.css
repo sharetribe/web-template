@@ -1,0 +1,31 @@
+.root {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.legend {
+  font-weight: var(--fontWeightSemiBold);
+  margin-bottom: 12px;
+}
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.radio {
+  margin: 0;
+}
+.typeLabel {
+  flex: 1;
+}
+.price {
+  font-weight: var(--fontWeightSemiBold);
+}
+.empty {
+  color: var(--colorGrey700);
+}
