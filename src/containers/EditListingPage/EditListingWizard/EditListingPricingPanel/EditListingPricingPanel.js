@@ -63,7 +63,12 @@ const getInitialValues = props => {
             }
           : {}),
         avPackageSize:
-          publicData?.avPackageSize || getPackageSizeForCategory(publicData?.categoryLevel1),
+          publicData?.avPackageSize ||
+          getPackageSizeForCategory(
+            publicData?.categoryLevel1,
+            publicData?.categoryLevel2,
+            publicData?.categoryLevel3
+          ),
       };
 };
 
@@ -141,7 +146,12 @@ const EditListingPricingPanel = props => {
 
   // AV: package size — default from category, hidden for bookings/especial, locked post-sale.
   const avPackageSize =
-    publicData?.avPackageSize || getPackageSizeForCategory(publicData?.categoryLevel1);
+    publicData?.avPackageSize ||
+    getPackageSizeForCategory(
+      publicData?.categoryLevel1,
+      publicData?.categoryLevel2,
+      publicData?.categoryLevel3
+    );
   const isEspecial = isEspecialSize(avPackageSize);
   // Show the size field for non-booking (item) listings only.
   const showPackageSize = !isBooking && !isEspecial;
