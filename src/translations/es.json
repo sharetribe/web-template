@@ -319,6 +319,10 @@
   "EditListingPricingAndStockPanel.createListingTitle": "Precio e inventario",
   "EditListingPricingAndStockPanel.listingPriceCurrencyInvalid": "La moneda del anuncio es diferente de la moneda del sistema ({marketplaceCurrency}). No es posible editar el precio.",
   "EditListingPricingAndStockPanel.title": "Precio e inventario de {listingTitle}",
+  "EditListingPricingForm.packageSize.L": "L — 50×40×15 cm · ≤1.5 kg · caja grande",
+  "EditListingPricingForm.packageSize.M": "M — 35×30×10 cm · ≤1.0 kg · caja mediana (default)",
+  "EditListingPricingForm.packageSize.S": "S — 25×20×8 cm · ≤0.5 kg · sobre acolchado",
+  "EditListingPricingForm.packageSizeLabel": "Talla de paquete",
   "EditListingPricingForm.priceInputPlaceholder": "Agrega un precio…",
   "EditListingPricingForm.pricePerProduct": "Precio {unitType, select, day {por día} night {por noche} hour {por hora} other {}}",
   "EditListingPricingForm.priceRequired": "Necesitas agregar un precio válido.",
@@ -1432,6 +1436,12 @@
   "UserNav.profileSettings": "Configuración de perfil",
   "UserNav.screenreader.userNav": "Navegación de perfil de usuario",
   "UserNav.yourListings": "Tus anuncios",
+
+  "AVShippingTypeSelector.legend": "Elige una opción de envío",
+  "AVShippingTypeSelector.noOptions": "El envío no está disponible para este artículo — contacta a AV.",
+  "AVShippingTypeSelector.type.cdmxLocal": "CDMX Local",
+  "AVShippingTypeSelector.type.nacionalExpress": "Nacional Express",
+  "AVShippingTypeSelector.type.nacionalEstandar": "Nacional Estándar",
 
   "AVWelcomePopup.vendedor.imageUrl": "",
   "AVWelcomePopup.vendedor.title": "",
