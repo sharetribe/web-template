@@ -19,6 +19,7 @@ import {
   FieldCurrencyInput,
   FieldCheckboxGroup,
   FieldTextInput,
+  FieldSelect,
 } from '../../../../components';
 
 import EarningsEstimator from '../EditListingPricingPanel/EarningsEstimator';
@@ -142,6 +143,8 @@ export const EditListingPricingAndStockForm = props => (
         updateInProgress,
         fetchErrors,
         showOriginalPrice,
+        showPackageSize,
+        packageSizeLocked,
         values,
       } = formRenderProps;
 
@@ -211,6 +214,26 @@ export const EditListingPricingAndStockForm = props => (
             validate={priceValidators}
           />
           <EarningsEstimator price={values?.price} marketplaceCurrency={marketplaceCurrency} />
+
+          {showPackageSize ? (
+            <FieldSelect
+              id={`${formId}.avPackageSize`}
+              name="avPackageSize"
+              className={css.input}
+              disabled={packageSizeLocked}
+              label={intl.formatMessage({ id: 'EditListingPricingForm.packageSizeLabel' })}
+            >
+              <option value="S">
+                {intl.formatMessage({ id: 'EditListingPricingForm.packageSize.S' })}
+              </option>
+              <option value="M">
+                {intl.formatMessage({ id: 'EditListingPricingForm.packageSize.M' })}
+              </option>
+              <option value="L">
+                {intl.formatMessage({ id: 'EditListingPricingForm.packageSize.L' })}
+              </option>
+            </FieldSelect>
+          ) : null}
 
           <UpdateStockToInfinityCheckboxMaybe
             formId={formId}

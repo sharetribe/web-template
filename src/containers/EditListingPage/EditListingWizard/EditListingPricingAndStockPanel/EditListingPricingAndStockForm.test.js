@@ -44,3 +44,31 @@ describe('EditListingDeliveryForm', () => {
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();
   });
 });
+
+describe('EditListingPricingAndStockForm package size', () => {
+  const baseProps = {
+    intl: fakeIntl,
+    onSubmit: noop,
+    marketplaceCurrency: 'MXN',
+    listingMinimumPriceSubUnits: 0,
+    unitType: 'item',
+    listingType: { listingType: 'sell-bikes', stockType: 'multipleItems' },
+    saveActionMsg: 'Save',
+    updated: false,
+    updateInProgress: false,
+    disabled: false,
+    ready: false,
+  };
+
+  it('renders the package size select when showPackageSize is true', () => {
+    render(<EditListingPricingAndStockForm {...baseProps} showPackageSize={true} />);
+    expect(screen.getByLabelText(/EditListingPricingForm.packageSizeLabel/i)).toBeInTheDocument();
+  });
+
+  it('does not render the select when showPackageSize is false', () => {
+    render(<EditListingPricingAndStockForm {...baseProps} showPackageSize={false} />);
+    expect(
+      screen.queryByLabelText(/EditListingPricingForm.packageSizeLabel/i)
+    ).not.toBeInTheDocument();
+  });
+});

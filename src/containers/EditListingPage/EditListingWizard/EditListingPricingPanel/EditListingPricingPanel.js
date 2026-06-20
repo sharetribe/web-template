@@ -27,7 +27,6 @@ import css from './EditListingPricingPanel.module.css';
 // AV: gate the "original price" (strike-through) field by seller user type
 import { canShowOriginalPrice } from '../../../../config/configAV';
 // AV: package-size default-from-category + "especial" size detection (Spec A shipping)
-import { getPackageSizeForCategory, isEspecialSize } from '../../../../config/configAVShipping';
 
 const { Money } = sdkTypes;
 
@@ -62,13 +61,6 @@ const getInitialValues = props => {
               ),
             }
           : {}),
-        avPackageSize:
-          publicData?.avPackageSize ||
-          getPackageSizeForCategory(
-            publicData?.categoryLevel1,
-            publicData?.categoryLevel2,
-            publicData?.categoryLevel3
-          ),
       };
 };
 
@@ -143,20 +135,6 @@ const EditListingPricingPanel = props => {
   const transactionProcessAlias = listingTypeConfig?.transactionType?.alias;
   const process = listingTypeConfig?.transactionType?.process;
   const isBooking = isBookingProcess(process);
-
-  // AV: package size — default from category, hidden for bookings/especial, locked post-sale.
-  const avPackageSize =
-    publicData?.avPackageSize ||
-    getPackageSizeForCategory(
-      publicData?.categoryLevel1,
-      publicData?.categoryLevel2,
-      publicData?.categoryLevel3
-    );
-  const isEspecial = isEspecialSize(avPackageSize);
-  // Show the size field for non-booking (item) listings only.
-  const showPackageSize = !isBooking && !isEspecial;
-  // Lock after a confirmed sale (flag set by the label-generation poller — Spec B).
-  const packageSizeLocked = !!publicData?.avPackageSizeLocked;
 
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
@@ -254,9 +232,6 @@ const EditListingPricingPanel = props => {
                 publicData: {
                   ...originalPriceMaybe,
                   ...priceVariationsEnabledMaybe.publicData,
-                  ...(showPackageSize && !packageSizeLocked
-                    ? { avPackageSize: values.avPackageSize || avPackageSize }
-                    : {}),
                 },
               };
             }
@@ -283,8 +258,6 @@ const EditListingPricingPanel = props => {
           updateInProgress={updateInProgress}
           fetchErrors={errors}
           showOriginalPrice={showOriginalPrice}
-          showPackageSize={showPackageSize}
-          packageSizeLocked={packageSizeLocked}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>
