@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix a text in EN language
+  [#864](https://github.com/sharetribe/web-template/pull/864)
 - [fix] Fix some texts in EN language
   [#863](https://github.com/sharetribe/web-template/pull/863)
 - [fix] Fix file storage domain default value
