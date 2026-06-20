@@ -100,35 +100,55 @@ async function handleNewUser(resource) {
   await runNotifications(tasks);
 }
 
-// Maps transition name fragments → { buyerTemplate, sellerTemplate, notifyBoth }
-const TRANSITION_MAP = {
-  '/purchased': {
+// Maps EXACT transition names → WhatsApp templates.
+//
+// Important: events carry `lastTransition` (the transition name, e.g.
+// `transition/confirm-payment`), NOT the resulting state. A previous version
+// keyed this map on state/past-tense fragments (`/purchased`, `/cancelled`, …)
+// matched with `endsWith`, which silently broke 5 of 6 rules (e.g. `/purchased`
+// only matched `transition/mark-received-from-purchased`; `/cancelled`,
+// `/accepted`, `/declined`, `/offer-made` matched nothing). Transition names
+// are verified against ext/transaction-processes/*/process.edn.
+const TRANSITION_RULES = [
+  {
+    transitions: ['transition/confirm-payment'],
     buyerTemplate: 'av_purchase_confirmed',
     sellerTemplate: 'av_sale_received',
-    notifyBoth: true,
   },
-  '/delivered': {
+  {
+    transitions: ['transition/mark-delivered', 'transition/operator-mark-delivered'],
     buyerTemplate: 'av_delivered',
-    notifyBoth: false,
   },
-  '/cancelled': {
+  {
+    transitions: ['transition/cancel', 'transition/auto-cancel', 'transition/operator-cancel'],
     buyerTemplate: 'av_cancelled',
     sellerTemplate: 'av_cancelled',
-    notifyBoth: true,
   },
-  '/accepted': {
+  {
+    transitions: ['transition/accept', 'transition/operator-accept'],
     buyerTemplate: 'av_booking_accepted',
-    notifyBoth: false,
   },
-  '/declined': {
+  {
+    transitions: ['transition/decline', 'transition/operator-decline'],
     buyerTemplate: 'av_booking_declined',
-    notifyBoth: false,
   },
-  '/offer-made': {
+  {
+    transitions: [
+      'transition/make-offer',
+      'transition/make-offer-after-inquiry',
+      'transition/make-offer-from-request',
+    ],
     sellerTemplate: 'av_new_message',
-    notifyBoth: false,
   },
-};
+];
+
+// Resolve a transition name to its notification rule (or null). Exact match —
+// never substring/endsWith — so e.g. `mark-received-from-purchased` does not
+// trigger the purchase notification.
+function matchTransitionRule(transition) {
+  if (!transition) return null;
+  return TRANSITION_RULES.find(rule => rule.transitions.includes(transition)) || null;
+}
 
 async function handleTransactionEvent(resource) {
   const sdk = getIntegrationSdk();
@@ -137,10 +157,8 @@ async function handleTransactionEvent(resource) {
   const relationships = resource?.relationships || {};
 
   // Find matching rule
-  const matchedKey = Object.keys(TRANSITION_MAP).find(k => transition.endsWith(k));
-  if (!matchedKey) return;
-
-  const rule = TRANSITION_MAP[matchedKey];
+  const rule = matchTransitionRule(transition);
+  if (!rule) return;
 
   // Resolve user IDs from relationships
   const customerId = relationships.customer?.data?.id?.uuid;
@@ -309,4 +327,4 @@ async function startPoller() {
   }
 }
 
-module.exports = { startPoller };
+module.exports = { startPoller, matchTransitionRule };
