@@ -7,6 +7,7 @@ const {
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
+const { getShippingPrice } = require('../../src/config/configAVShipping');
 
 /**
  * Get quantity and add extra line-items that are related to delivery method
@@ -24,15 +25,21 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
   const { shippingPriceInSubunitsOneItem, shippingPriceInSubunitsAdditionalItems } =
     publicData || {};
 
-  // Calculate shipping fee if applicable
-  const shippingFee = isShipping
-    ? calculateShippingFee(
+  // AV: prefer the static size×type grid price; fall back to the seller's flat price.
+  const gridPrice = isShipping
+    ? getShippingPrice(publicData?.avPackageSize, orderData?.avShippingType)
+    : null;
+
+  const shippingFee = !isShipping
+    ? null
+    : gridPrice != null
+    ? new Money(gridPrice, currency)
+    : calculateShippingFee(
         shippingPriceInSubunitsOneItem,
         shippingPriceInSubunitsAdditionalItems,
         currency,
         quantity
-      )
-    : null;
+      );
 
   // Add line-item for given delivery method.
   // Note: by default, pickup considered as free and, therefore, we don't add pickup fee line-item

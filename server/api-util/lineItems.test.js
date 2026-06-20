@@ -776,4 +776,44 @@ describe('transactionLineItems', () => {
       expect(result[0].unitPrice.currency).toBe('USD'); // Uses listing currency
     });
   });
+
+  describe('AV grid shipping fee', () => {
+    const { getShippingPrice } = require('../../src/config/configAVShipping');
+    const cfg = require('../../src/config/configAVShipping');
+
+    beforeAll(() => {
+      cfg.priceGrid.M.nacionalEstandar = 12900; // MX$129.00
+    });
+
+    const listing = {
+      attributes: {
+        price: new Money(50000, 'MXN'),
+        publicData: {
+          unitType: 'item',
+          avPackageSize: 'M',
+          shippingEnabled: true,
+          shippingPriceInSubunitsOneItem: 5000, // flat fallback, should be ignored
+        },
+      },
+    };
+
+    test('uses grid price for shipping fee when avShippingType present', () => {
+      const orderData = {
+        stockReservationQuantity: 1,
+        deliveryMethod: 'shipping',
+        avShippingType: 'nacionalEstandar',
+      };
+      const items = transactionLineItems(listing, orderData, null, null);
+      const shipping = items.find(li => li.code === 'line-item/shipping-fee');
+      expect(shipping.unitPrice.amount).toBe(12900);
+      expect(shipping.unitPrice.currency).toBe('MXN');
+    });
+
+    test('falls back to flat price when no avShippingType', () => {
+      const orderData = { stockReservationQuantity: 1, deliveryMethod: 'shipping' };
+      const items = transactionLineItems(listing, orderData, null, null);
+      const shipping = items.find(li => li.code === 'line-item/shipping-fee');
+      expect(shipping.unitPrice.amount).toBe(5000);
+    });
+  });
 });
