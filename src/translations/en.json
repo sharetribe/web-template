@@ -1326,7 +1326,7 @@
   "TransactionPage.default-negotiation.provider.customer-offer-pending.title": "{customerName} made a counter offer.",
   "TransactionPage.default-negotiation.provider.deliver.actionButton": "I've delivered the order",
   "TransactionPage.default-negotiation.provider.deliver.actionError": "Oops, delivering the order failed. Please try again.",
-  "TransactionPage.default-negotiation.provider.delivered.extraInfo": "{customerName} can accept the what you delivered or request changes.",
+  "TransactionPage.default-negotiation.provider.delivered.extraInfo": "{customerName} can accept what you delivered or request changes.",
   "TransactionPage.default-negotiation.provider.delivered.title": "The order was delivered.",
   "TransactionPage.default-negotiation.provider.inquiry.title": "You sent an inquiry.",
   "TransactionPage.default-negotiation.provider.offer-accepted.extraInfo": "Deliver the order and notify {customerName} to receive your payment.",
