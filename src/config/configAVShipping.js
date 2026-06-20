@@ -47,7 +47,7 @@ function isCdmxDestination(destinationAddress) {
   const state = String(destinationAddress.state || '').toLowerCase();
   const postal = String(destinationAddress.postalCode || destinationAddress.zip || '');
   const cdmxStateNames = ['ciudad de méxico', 'ciudad de mexico', 'cdmx', 'distrito federal'];
-  const isCdmxPostal = /^0[0-9]{4}$/.test(postal); // CDMX postal codes start with 0
+  const isCdmxPostal = /^(0[1-9]|1[0-6])\d{3}$/.test(postal); // CDMX postal codes span 01000-16999
   return cdmxStateNames.includes(state) || isCdmxPostal;
 }
 
