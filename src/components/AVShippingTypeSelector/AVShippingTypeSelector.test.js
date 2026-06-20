@@ -48,4 +48,39 @@ describe('AVShippingTypeSelector', () => {
     fireEvent.click(screen.getAllByRole('radio')[1]);
     expect(onSelect).toHaveBeenCalledWith('nacionalExpress');
   });
+
+  test('renders no radios and shows the no-options message when availableTypes is empty', () => {
+    render(
+      <AVShippingTypeSelector
+        size="M"
+        availableTypes={[]}
+        selectedType={null}
+        onSelect={() => {}}
+        currency="MXN"
+      />,
+      {
+        messages: {
+          'AVShippingTypeSelector.noOptions':
+            'Shipping is not available for this item — contact AV.',
+        },
+      }
+    );
+    expect(screen.queryAllByRole('radio')).toHaveLength(0);
+    expect(screen.getByText(/contact AV/i)).toBeInTheDocument();
+  });
+
+  test('reflects selectedType on the matching radio only', () => {
+    render(
+      <AVShippingTypeSelector
+        size="M"
+        availableTypes={['nacionalEstandar', 'nacionalExpress']}
+        selectedType="nacionalExpress"
+        onSelect={() => {}}
+        currency="MXN"
+      />
+    );
+    const radios = screen.getAllByRole('radio');
+    expect(radios[0]).not.toBeChecked();
+    expect(radios[1]).toBeChecked();
+  });
 });
