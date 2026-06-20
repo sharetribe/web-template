@@ -15,11 +15,19 @@ const packageSizes = {
 
 const deliveryTypes = ['cdmxLocal', 'nacionalExpress', 'nacionalEstandar'];
 
-// MXN subunits (centavos), IVA included. null = not yet priced (TBC with Segmail).
+// MXN subunits (centavos), IVA included. null = not yet priced.
+//
+// ⚠️ TEST PLACEHOLDER VALUES — NOT REAL TARIFFS. These exist only to validate
+// Plan A end-to-end (so the checkout selector renders priced options and the
+// breakdown shows a shipping fee). Replace EVERY value below with the
+// Segmail-confirmed prices before launch (see docs/AV Configuracion Envios
+// Jun 2026 §2/§5). Ordering used for the placeholders: cdmxLocal < nacionalEstandar
+// < nacionalExpress, and S < M < L. Set a cell back to `null` to hide that
+// option at checkout.
 const priceGrid = {
-  S: { cdmxLocal: null, nacionalExpress: null, nacionalEstandar: null },
-  M: { cdmxLocal: null, nacionalExpress: null, nacionalEstandar: null },
-  L: { cdmxLocal: null, nacionalExpress: null, nacionalEstandar: null },
+  S: { cdmxLocal: 7900, nacionalEstandar: 9900, nacionalExpress: 14900 }, // TEST ONLY
+  M: { cdmxLocal: 9900, nacionalEstandar: 12900, nacionalExpress: 18900 }, // TEST ONLY
+  L: { cdmxLocal: 12900, nacionalEstandar: 15900, nacionalExpress: 22900 }, // TEST ONLY
 };
 
 // Maps a category id → package size. Only the EXCEPTIONS to the default (`M`)
