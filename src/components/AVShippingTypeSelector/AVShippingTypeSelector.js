@@ -19,7 +19,11 @@ const AVShippingTypeSelector = props => {
   const { size, availableTypes, selectedType, onSelect, currency } = props;
   const intl = useIntl();
 
-  if (!availableTypes || availableTypes.length === 0) {
+  // Defense-in-depth: even though callers are expected to pass already-priced
+  // types, never render a radio for a type the grid has no price for.
+  const pricedTypes = (availableTypes || []).filter(type => getShippingPrice(size, type) != null);
+
+  if (pricedTypes.length === 0) {
     return (
       <p className={css.empty}>{intl.formatMessage({ id: 'AVShippingTypeSelector.noOptions' })}</p>
     );
@@ -30,7 +34,7 @@ const AVShippingTypeSelector = props => {
       <legend className={css.legend}>
         {intl.formatMessage({ id: 'AVShippingTypeSelector.legend' })}
       </legend>
-      {availableTypes.map(type => {
+      {pricedTypes.map(type => {
         const price = getShippingPrice(size, type);
         const priceLabel = price != null ? formatMoney(intl, new Money(price, currency)) : '';
         const id = `avShippingType_${type}`;

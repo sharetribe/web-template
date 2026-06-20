@@ -75,7 +75,7 @@ export const {
   packageSizes: shippingPackageSizes,
   deliveryTypes: shippingDeliveryTypes,
   priceGrid: shippingPriceGrid,
-  defaultPackageSize: defaultPackageSize,
+  defaultPackageSize,
   getPackageSizeForCategory,
   isEspecialSize,
   getShippingPrice,

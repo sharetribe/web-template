@@ -69,6 +69,20 @@ describe('AVShippingTypeSelector', () => {
     expect(screen.getByText(/contact AV/i)).toBeInTheDocument();
   });
 
+  test('filters out unpriced types and renders only the priced radio', () => {
+    cfg.priceGrid.M.nacionalExpress = null;
+    render(
+      <AVShippingTypeSelector
+        size="M"
+        availableTypes={['nacionalEstandar', 'nacionalExpress']}
+        selectedType={null}
+        onSelect={() => {}}
+        currency="MXN"
+      />
+    );
+    expect(screen.getAllByRole('radio')).toHaveLength(1);
+  });
+
   test('reflects selectedType on the matching radio only', () => {
     render(
       <AVShippingTypeSelector

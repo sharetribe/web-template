@@ -23,6 +23,16 @@ const priceGrid = {
 };
 
 // Keyed by Console categoryLevel1 id. Populate with real ids — see plan Task 1, Step 6.
+//
+// Mapping rules (source: docs/AV Configuracion Envios Jun 2026.docx.md) to apply
+// once real Console categoryLevel1 ids are known:
+//   S       — Lencería/Pijama; De baño (swimwear); Bolsa chica (clutch/mini bag/cartera)
+//   L       — Chamarras; Abrigos; Bolsa grande (tote/mochila/weekender);
+//             Tenis/Sneakers; Botines; Botas
+//   especial — Hogar — Decoración/frágiles (ceramics, glass)
+//   M (default, i.e. any category not listed above) — everything else: tops,
+//             shirts, jeans, dresses, skirts, shorts, suits, jumpsuits, blazers,
+//             mid-size bags, flats, heels, home textiles
 const categoryPackageSizeMap = {};
 
 function getPackageSizeForCategory(categoryId) {

@@ -778,11 +778,14 @@ describe('transactionLineItems', () => {
   });
 
   describe('AV grid shipping fee', () => {
-    const { getShippingPrice } = require('../../src/config/configAVShipping');
     const cfg = require('../../src/config/configAVShipping');
 
     beforeAll(() => {
       cfg.priceGrid.M.nacionalEstandar = 12900; // MX$129.00
+    });
+
+    afterAll(() => {
+      cfg.priceGrid.M.nacionalEstandar = null; // restore shipped all-null state
     });
 
     const listing = {

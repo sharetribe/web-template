@@ -580,6 +580,10 @@ export const CheckoutPageWithPayment = props => {
   // Destination drives CDMX-local availability. The shipping address is collected
   // inside StripePaymentForm's own Final Form, so it is not observable here; fall back
   // to any destination persisted in orderData. Non-CDMX types are unaffected.
+  // NOTE: this currently always resolves empty (orderData never carries
+  // shippingDetails/recipientState/recipientPostal here), so `cdmxLocal` gating
+  // is effectively inert today. Making it live is a follow-up that requires
+  // lifting the shipping address state out of StripePaymentForm.
   const avDestination = {
     state: orderData?.shippingDetails?.state || orderData?.recipientState,
     postalCode: orderData?.shippingDetails?.postalCode || orderData?.recipientPostal,
