@@ -4,7 +4,9 @@ import '@testing-library/jest-dom';
 import { fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../../../util/testHelpers';
 
-import EditListingPricingForm from './EditListingPricingForm';
+import EditListingPricingForm, {
+  EditListingPricingForm as NamedEditListingPricingForm,
+} from './EditListingPricingForm';
 
 const { screen, userEvent, fireEvent } = testingLibrary;
 
@@ -39,5 +41,29 @@ describe('EditListingDeliveryForm', () => {
 
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();
+  });
+});
+
+const baseProps = {
+  marketplaceCurrency: 'MXN',
+  unitType: 'item',
+  listingTypeConfig: { transactionType: { process: 'default-purchase' } },
+  saveActionMsg: 'Save',
+  onSubmit: () => {},
+  showPackageSize: true,
+  packageSizeLocked: false,
+};
+
+describe('EditListingPricingForm package size', () => {
+  test('renders the package size select when showPackageSize is true', () => {
+    render(<NamedEditListingPricingForm {...baseProps} />);
+    expect(screen.getByLabelText(/EditListingPricingForm.packageSizeLabel/i)).toBeInTheDocument();
+  });
+
+  test('does not render the select when showPackageSize is false', () => {
+    render(<NamedEditListingPricingForm {...baseProps} showPackageSize={false} />);
+    expect(
+      screen.queryByLabelText(/EditListingPricingForm.packageSizeLabel/i)
+    ).not.toBeInTheDocument();
   });
 });

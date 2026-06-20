@@ -12,7 +12,7 @@ import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput } from '../../../../components';
+import { Button, Form, FieldCurrencyInput, FieldSelect } from '../../../../components';
 
 import BookingPriceVariants from './BookingPriceVariants';
 import StartTimeInterval from './StartTimeInverval';
@@ -116,6 +116,8 @@ export const EditListingPricingForm = props => (
         updateInProgress = false,
         fetchErrors,
         showOriginalPrice,
+        showPackageSize,
+        packageSizeLocked,
         initialValues: formInitialValues,
         values: formValues,
       } = formRenderProps;
@@ -187,6 +189,25 @@ export const EditListingPricingForm = props => (
                 marketplaceCurrency={marketplaceCurrency}
                 includePaymentProcessing
               />
+              {showPackageSize ? (
+                <FieldSelect
+                  id={`${formId}avPackageSize`}
+                  name="avPackageSize"
+                  className={css.input}
+                  disabled={packageSizeLocked}
+                  label={intl.formatMessage({ id: 'EditListingPricingForm.packageSizeLabel' })}
+                >
+                  <option value="S">
+                    {intl.formatMessage({ id: 'EditListingPricingForm.packageSize.S' })}
+                  </option>
+                  <option value="M">
+                    {intl.formatMessage({ id: 'EditListingPricingForm.packageSize.M' })}
+                  </option>
+                  <option value="L">
+                    {intl.formatMessage({ id: 'EditListingPricingForm.packageSize.L' })}
+                  </option>
+                </FieldSelect>
+              ) : null}
             </>
           )}
           {isFixedLengthBooking ? (
