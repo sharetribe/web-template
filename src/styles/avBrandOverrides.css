@@ -165,7 +165,9 @@ h2,
 h3,
 h4 {
   font-weight: var(--fontWeightRegular);
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 /* ================ Heading sizes (AV override) ================
@@ -189,13 +191,17 @@ h1,
 .h1,
 h1[class*='Heading_h1__'] {
   font-size: 42px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 h2,
 .h2,
 h2[class*='Heading_h2__'] {
   font-size: 26px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 h2[class*='Heading_h2__'] {
@@ -210,10 +216,14 @@ h3,
 .h3,
 h3[class*='Heading_h3__'] {
   font-size: 18px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 
   > * {
-    word-break: auto-phrase;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
   }
 }
 h3[class*='Heading_h3__'] {
@@ -228,7 +238,9 @@ h4,
 .h4,
 h4[class*='Heading_h4__'] {
   font-size: 16px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 h4[class*='Heading_h4__'] {
   margin-bottom: 12px;
@@ -242,7 +254,9 @@ h5,
 .h5,
 h5[class*='Heading_h5__'] {
   font-size: 15px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 h5[class*='Heading_h5__'] {
   margin-bottom: 12px;
@@ -256,7 +270,9 @@ h6,
 .h6,
 h6[class*='Heading_h6__'] {
   font-size: 15px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 /* Desktop (from --viewportMedium) */
@@ -478,7 +494,9 @@ textarea {
 :root [class*='P_p__'] + ul li {
   line-height: 20px;
   padding: 0px 0 3px;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 /* Center the PageBuilder section header (title/description/CTA) at all screen
@@ -514,7 +532,9 @@ textarea {
   max-width: none;
   margin-top: 4px;
   padding-top: 0;
-  word-break: auto-phrase;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
   line-height: 1.33;
   letter-spacing: 0.06em;
 }

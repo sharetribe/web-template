@@ -188,8 +188,9 @@ export const createBlockCustomProps = (block, intl, css) => {
   if (block.blockName?.includes('smallerTitles ::')) blockCustomProps.hasSmallerTitles = true;
   // blueTitle :: — mirror of "- BlueTitle"; colors only this block's own title.
   if (block.blockName?.includes('blueTitle ::')) blockCustomProps.hasBlueTitle = true;
-  // fullLinks :: — apply `word-break: auto-phrase` to links in the block's body
-  // P elements so long URLs/words wrap on phrase boundaries instead of overflowing.
+  // fullLinks :: — keep links in the block's body P elements whole (never break a
+  // word/URL mid-character; `word-break: keep-all`). A too-long link overflows at
+  // full size rather than being split.
   if (block.blockName?.includes('fullLinks ::')) blockCustomProps.hasFullLinks = true;
   if (block.blockName?.includes('icon img ::')) blockCustomProps.hasIconImg = true;
   if (block.blockName?.includes('social links ::')) blockCustomProps.hasSocialLinks = true;

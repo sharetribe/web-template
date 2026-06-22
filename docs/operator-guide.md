@@ -777,7 +777,7 @@ any order.
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `smallerTitles ::` | Shifts every heading in the block down one size level (H1 → 30 px, H2 → 20 px, H3 → 18 px, H4 → 16 px, H5 → 14 px). Block-level mirror of section `- SmallerTitles`. |
 | `blueTitle ::`     | Colours only the block's own title in AV brand blue. Does **not** affect headings inside the body text. Block-level mirror of section `- BlueTitle`.            |
-| `fullLinks ::`     | Lets links inside the block's body paragraphs wrap on whole-phrase boundaries (`word-break: auto-phrase`) instead of overflowing the column on long URLs or unbroken words. |
+| `fullLinks ::`     | Keeps links inside the block's body paragraphs whole — a word or URL is never broken mid-character (`word-break: keep-all`); a too-long link overflows at full size instead of being split. |
 
 #### Block CTA button colour
 

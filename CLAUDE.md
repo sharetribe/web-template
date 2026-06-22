@@ -102,7 +102,7 @@ yarn run translate                         # Translation management
 | `SectionSelectedUser` | `avSelectedUsers` / `av-selected-users-*` | block names = user UUIDs |
 | `SectionInstaGrid` | `avInstaGrid` / `av-insta-grid-*` | 2–6 col image grid |
 
-**Custom blocks** (`BlockBuilder/`): `BlockPriceSelector`, `BlockDefault`. `BlockDefault` blockName tokens (parsed in `extensions/pageBuilder/av/blocks.js` `createBlockCustomProps`): `smallerTitles ::` (mirrors `- SmallerTitles`), `mediaTitle ::` (renders media between the title and the rest of the content: title → media → text/CTA), `blueTitle ::` (mirrors `- BlueTitle` but colors only that block's own title, not body-markdown headings); `fullLinks ::` (applies `word-break: auto-phrase` to links in the block's body `<p>` elements so long URLs/words wrap on phrase boundaries).
+**Custom blocks** (`BlockBuilder/`): `BlockPriceSelector`, `BlockDefault`. `BlockDefault` blockName tokens (parsed in `extensions/pageBuilder/av/blocks.js` `createBlockCustomProps`): `smallerTitles ::` (mirrors `- SmallerTitles`), `mediaTitle ::` (renders media between the title and the rest of the content: title → media → text/CTA), `blueTitle ::` (mirrors `- BlueTitle` but colors only that block's own title, not body-markdown headings); `fullLinks ::` (applies `word-break: keep-all` to links in the block's body `<p>` elements so a word/URL is never broken mid-character — a too-long link overflows at full size instead of splitting).
 
 ### ListingPage carousel layout (AVListingPageCarousel)
 
