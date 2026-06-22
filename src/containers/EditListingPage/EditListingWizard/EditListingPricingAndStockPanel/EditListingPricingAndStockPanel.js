@@ -222,7 +222,15 @@ const EditListingPricingAndStockPanel = props => {
             // New values for listing attributes
             const updateValues = {
               price,
-              publicData: { ...originalPriceMaybe, ...avPackageSizeMaybe },
+              publicData: {
+                ...originalPriceMaybe,
+                ...avPackageSizeMaybe,
+                // AV: every product ships. The native Delivery wizard step is
+                // removed, so auto-enable shipping here — this is what makes
+                // OrderPanel offer shipping (deliveryMethod='shipping') and the
+                // checkout delivery-type selector + grid pricing engage.
+                shippingEnabled: true,
+              },
               ...stockUpdateMaybe,
             };
             // Save the initialValues to state

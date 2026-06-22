@@ -978,15 +978,3 @@ textarea {
 :root [class*='AuthenticationPage_error__'] {
   color: var(--colorFail);
 }
-
-/* ================ Edit Listing wizard: hide the Delivery tab (AV) ================
-   AV ships physical products via the custom size×type shipping flow (package size
-   on the Pricing & Stock panel + the checkout delivery-type selector). The native
-   Sharetribe "shipping" delivery field is enabled in Console only to power that
-   flow's deliveryMethod/address plumbing — sellers should not edit the flat
-   delivery fields directly. Hide the wizard's "Delivery" (Envío) tab from the nav.
-   The route (/edit/delivery) stays reachable by direct URL on purpose. The tab
-   wrapper carries the literal id `EditListingWizard_delivery` (see Tabs/TabNav). */
-#EditListingWizard_delivery {
-  display: none;
-}

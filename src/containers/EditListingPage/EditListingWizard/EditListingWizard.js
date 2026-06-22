@@ -7,8 +7,6 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { displayDescription } from '../../../util/configHelpers.js';
 import {
-  displayDeliveryPickup,
-  displayDeliveryShipping,
   displayLocation,
   displayPrice,
   requirePayoutDetails,
@@ -87,10 +85,13 @@ const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
 const tabsForListingType = (processName, listingTypeConfig) => {
   const locationMaybe = displayLocation(listingTypeConfig) ? [LOCATION] : [];
   const pricingMaybe = displayPrice(listingTypeConfig) ? [PRICING] : [];
-  const deliveryMaybe =
-    displayDeliveryPickup(listingTypeConfig) || displayDeliveryShipping(listingTypeConfig)
-      ? [DELIVERY]
-      : [];
+  // AV: the native Delivery step is intentionally omitted from the purchase
+  // wizard. AV ships every product via the custom size×type flow (package size
+  // on the Pricing & Stock panel + the checkout delivery-type selector), and
+  // `shippingEnabled` is auto-set on save (see EditListingPricingAndStockPanel),
+  // so sellers never configure delivery. Native shipping stays enabled in Console
+  // only to power deliveryMethod/address plumbing. Dropping DELIVERY here also
+  // moves listing publishing to the Pricing & Stock tab (the new last tab).
   const styleOrPhotosTab = requireListingImage(listingTypeConfig) ? [] : [STYLE];
 
   // You can reorder these panels.
@@ -101,7 +102,7 @@ const tabsForListingType = (processName, listingTypeConfig) => {
   //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
   const tabs = {
     ['default-booking']: [DETAILS, ...locationMaybe, PRICING, AVAILABILITY, ...styleOrPhotosTab],
-    ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
+    ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...styleOrPhotosTab],
     ['default-negotiation']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
     ['default-inquiry']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
   };

@@ -124,7 +124,10 @@ describe('CheckoutPage', () => {
     const props = {
       ...commonProps,
       pageData: {
-        orderData: { quantity: 2, deliveryMethod: 'shipping' },
+        // AV: a delivery type must be selected before the payment form (which
+        // contains the shipping-address fields) is shown. Pre-select one so this
+        // test exercises the address + payment fields.
+        orderData: { quantity: 2, deliveryMethod: 'shipping', avShippingType: 'nacionalEstandar' },
         listing,
       },
       processName: 'default-purchase',
