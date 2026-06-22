@@ -7,7 +7,7 @@ const {
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
-const { getShippingPrice } = require('../../src/config/configAVShipping');
+const { getShippingPrice, resolvePackageSize } = require('../../src/config/configAVShipping');
 
 /**
  * Get quantity and add extra line-items that are related to delivery method
@@ -26,8 +26,10 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
     publicData || {};
 
   // AV: prefer the static size×type grid price; fall back to the seller's flat price.
+  // Resolve size from publicData with the category fallback so listings without an
+  // explicit avPackageSize are still priced (matches the checkout-side resolution).
   const gridPrice = isShipping
-    ? getShippingPrice(publicData?.avPackageSize, orderData?.avShippingType)
+    ? getShippingPrice(resolvePackageSize(publicData), orderData?.avShippingType)
     : null;
 
   const shippingFee = !isShipping

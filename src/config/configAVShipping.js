@@ -87,6 +87,18 @@ function getPackageSizeForCategory(...categoryIds) {
   return defaultPackageSize;
 }
 
+// Resolve the package size for a listing from its publicData: an explicit
+// `avPackageSize` wins; otherwise fall back to the category mapping (which itself
+// defaults to `M`). Use this everywhere a listing's size is consumed so listings
+// created before the size field existed still price/ship correctly.
+function resolvePackageSize(publicData) {
+  const pd = publicData || {};
+  return (
+    pd.avPackageSize ||
+    getPackageSizeForCategory(pd.categoryLevel1, pd.categoryLevel2, pd.categoryLevel3)
+  );
+}
+
 function isEspecialSize(size) {
   return size === 'especial';
 }
@@ -125,6 +137,7 @@ module.exports = {
   priceGrid,
   categoryPackageSizeMap,
   getPackageSizeForCategory,
+  resolvePackageSize,
   isEspecialSize,
   getShippingPrice,
   getAvailableDeliveryTypes,

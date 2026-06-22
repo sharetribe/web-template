@@ -111,3 +111,26 @@ describe('getPackageSizeForCategory mapping (real Console category ids)', () => 
     expect(getPackageSizeForCategory(undefined, null)).toBe('M');
   });
 });
+
+describe('resolvePackageSize(publicData)', () => {
+  const { resolvePackageSize } = require('./configAVShipping');
+
+  test('prefers an explicit avPackageSize', () => {
+    expect(resolvePackageSize({ avPackageSize: 'L', categoryLevel1: 'ropa' })).toBe('L');
+  });
+
+  test('falls back to the category mapping when avPackageSize is absent', () => {
+    expect(
+      resolvePackageSize({ categoryLevel1: 'ropa', categoryLevel2: 'ropa-sacos-chamarras' })
+    ).toBe('L');
+    expect(resolvePackageSize({ categoryLevel1: 'accesorios' })).toBe('S');
+  });
+
+  test('falls back to the default size for unmapped/empty publicData', () => {
+    expect(
+      resolvePackageSize({ categoryLevel1: 'bolsas', categoryLevel2: 'bolsas-formales' })
+    ).toBe('M');
+    expect(resolvePackageSize({})).toBe('M');
+    expect(resolvePackageSize()).toBe('M');
+  });
+});

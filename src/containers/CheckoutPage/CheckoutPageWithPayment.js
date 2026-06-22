@@ -48,7 +48,7 @@ import css from './CheckoutPage.module.css';
 import { defaultCountry } from '../../config/configAV';
 // AV shipping: buyer-facing delivery-type selector + grid-driven availability
 import AVShippingTypeSelector from '../../components/AVShippingTypeSelector';
-import { getAvailableDeliveryTypes } from '../../config/configAVShipping';
+import { getAvailableDeliveryTypes, resolvePackageSize } from '../../config/configAVShipping';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
 // https://stripe.com/docs/payments/payment-intents/status
@@ -572,7 +572,9 @@ export const CheckoutPageWithPayment = props => {
   const showLocation = (isBooking || isNegotiation) && listingLocation?.address;
 
   // AV shipping: only purchases shipped (not picked up) require a delivery-type choice.
-  const avPackageSize = listing?.attributes?.publicData?.avPackageSize;
+  // Resolve from publicData with the category fallback (default M) so listings
+  // created before the size field existed still get priced shipping options.
+  const avPackageSize = resolvePackageSize(listing?.attributes?.publicData);
   const isAvShipping =
     isPurchase &&
     orderData?.deliveryMethod === 'shipping' &&
