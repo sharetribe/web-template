@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code working in this repository.
 
 ## Overview
 
-Customized marketplace ("Archivo Vintach") built on the [Sharetribe Web Template](https://github.com/sharetribe/web-template) (React + Express SSR). Fork of `sharetribe/web-template`, deployed to Heroku (production) and Render.com (staging). Uses Stripe Connect for payments via Sharetribe Marketplace API.
+Customized marketplace ("Archivo Vintach") built on the [Sharetribe Web Template](https://github.com/sharetribe/web-template) (React + Express SSR). Fork of `sharetribe/web-template`, deployed to Heroku (production) and Render.com (staging). Stripe Connect payments via Sharetribe Marketplace API.
 
 - GitHub: https://github.com/honekun/sharetribe-web-template
 - Upstream: https://github.com/sharetribe/web-template
@@ -14,298 +14,135 @@ Customized marketplace ("Archivo Vintach") built on the [Sharetribe Web Template
 ## Commands
 
 ```sh
-yarn run dev              # Frontend (port 3000) + backend API server (port 3500) concurrently
-yarn run dev-frontend     # Frontend only (webpack-dev-server via sharetribe-scripts)
+yarn run dev              # Frontend (3000) + backend API (3500) concurrently
+yarn run dev-frontend     # Frontend only (webpack-dev-server)
 yarn run dev-backend      # Backend API server only (nodemon)
-yarn run dev-server       # Full production-like SSR with hot reload (port 4000)
+yarn run dev-server       # Production-like SSR with hot reload (4000)
 yarn start                # Production server (node server/index.js)
 
-yarn run build            # Build web bundle + server (build-web && build-server)
+yarn run build            # build-web && build-server
 yarn run clean            # Remove build directory
 
-yarn test                 # Frontend tests (Jest + React Testing Library, interactive watch mode)
-yarn test -- --watchAll=false              # Run all tests once (no watch)
-yarn test -- --testPathPattern=auth        # Run tests matching "auth" in path
-yarn test -- --testNamePattern="login"     # Run tests matching "login" in name
-yarn test-server                           # Server tests only (jest ./server/**/*.test.js)
-yarn test-ci                               # CI: server tests then client tests (--runInBand)
+yarn test                                  # Frontend tests, interactive watch
+yarn test -- --watchAll=false              # Run all tests once
+yarn test -- --testPathPattern=auth        # Match "auth" in path
+yarn test -- --testNamePattern="login"     # Match "login" in name
+yarn test-server                           # Server tests only
+yarn test-ci                               # CI: server then client (--runInBand)
 
-yarn run format           # Prettier (JS + CSS)
-yarn run format-ci        # Check formatting without modifying
-yarn run config           # Config validation/setup wizard
-yarn run translate        # Translation management
+yarn run format / format-ci                # Prettier (write / check)
+yarn run config                            # Config validation/setup wizard
+yarn run translate                         # Translation management
 ```
 
 **Node:** `>=18.20.1 <23.2.0` | **Package manager:** Yarn
 
 ## Architecture
 
-### Routing & Data Loading
+**Routing & data loading** — Routes in `src/routing/routeConfiguration.js`: each has `path`, `name` (for `NamedLink`/`NamedRedirect`), a `@loadable/component`, and an optional `loadData` thunk. `loadData` runs on both server (`server/dataLoader.js`, before render) and client (`RouteComponentRenderer` in `Routes.js`, on mount/nav). Each container exports `loadData` via `src/containers/pageDataLoadingAPI.js`.
 
-Routes defined in `src/routing/routeConfiguration.js` — each route specifies a `path`, `name` (used by `NamedLink`/`NamedRedirect`), a `@loadable/component` for code-splitting, and an optional `loadData` thunk for SSR data prefetching.
+**Redux ducks** — Self-contained modules (`@reduxjs/toolkit` `createSlice`/`createAsyncThunk`). Global ducks in `src/ducks/` (`auth`, `user`, `ui`, `stripe`, `marketplaceData`, …); container ducks colocated. SDK injected as `thunkAPI.extra`. Entities normalized in `marketplaceData.duck.js` (containers hold IDs). Errors via `storableError()`.
 
-The `loadData` pattern is critical: server calls `loadData` before rendering (via `server/dataLoader.js`), and the client calls it again on mount/navigation (via `RouteComponentRenderer` in `src/routing/Routes.js`). Each container exports its `loadData` through `src/containers/pageDataLoadingAPI.js`.
+**SSR** — Express in `/server/`: `index.js` (middleware/CSP/routes/renderer), `renderer.js` (store + `StaticRouter` → HTML), `dataLoader.js`, `auth.js` (Passport social), `api-util/sdk.js` (cookie token store), `api-util/cache.js` (in-memory LRU, Heroku-safe), `csp.js`. **Guard all browser APIs (`window`/`document`/`localStorage`) behind `typeof window !== 'undefined'`.**
 
-### Redux (Ducks Pattern)
+**Container/Page pattern** — `PageName.js` (component + `mapStateToProps` + `compose(connect(...))`), `PageName.duck.js` (state + `loadData`), `PageName.module.css`, optional sub-components.
 
-State is organized as Redux ducks — self-contained modules with action types, creators, reducers, and selectors in a single file. Uses `@reduxjs/toolkit` (`createSlice`, `createAsyncThunk`).
+**PageBuilder** (`src/containers/PageBuilder/`) — Renders dynamic pages from Sharetribe hosted assets. `SectionBuilder.js` maps section configs → components (delegates token parsing to `extensions/pageBuilder/av/sectionStyles.js`); `AVSectionContainer.js` is the AV drop-in replacement for upstream `SectionContainer`, handling all display-option tokens. Section appearance encoded in `sectionName` via `- Token` flags (see Section Display-Option Tokens). Custom sections registered via `options.sectionComponents`.
 
-- **Global ducks** in `src/ducks/`: `auth`, `user`, `routing`, `ui`, `stripe`, `stripeConnectAccount`, `paymentMethods`, `marketplaceData` (normalized entities), `hostedAssets`, `emailVerification`
-- **Container ducks** colocated: `src/containers/SearchPage/SearchPage.duck.js`, etc.
-- SDK instance is injected as `thunkAPI.extra` in async thunks
-- Entities (listings, users, transactions) are normalized in `marketplaceData.duck.js`; containers hold references by ID
-- Errors serialized via `storableError()` util
+**Transaction processes** (`src/transactions/transaction.js`) — `default-purchase` (ITEM), `default-booking` (DAY/NIGHT/HOUR/FIXED), `default-inquiry` (INQUIRY), `default-negotiation` (OFFER/REQUEST). State machines in `transactionProcess*.js`. CheckoutPage → `CheckoutPageWithPayment` (Stripe) or `CheckoutPageWithInquiryProcess`.
 
-### SSR (Server-Side Rendering)
+**SDK** — `sharetribe-flex-sdk`; client wrapper `src/util/sdkLoader.js`, server `server/api-util/sdk.js`. Tokens in HttpOnly cookies (auto-refresh). Hosted assets via `sdk.assets.search()`, cached 1hr server-side.
 
-Express server in `/server/`. Key files:
-- `server/index.js` — middleware stack (helmet, CSP, compression, auth, API routes, renderer)
-- `server/renderer.js` — creates Redux store, renders React to string with `StaticRouter`, injects state into HTML
-- `server/dataLoader.js` — matches URL to route, calls `loadData` before render
-- `server/auth.js` — Passport for social auth (Facebook, Google)
-- `server/api-util/sdk.js` — server-side SDK instantiation with token store from cookies
-- `server/api-util/cache.js` — in-memory LRU cache (Heroku-safe, ephemeral)
-- `server/csp.js` — Content Security Policy configuration
+**Config** (`src/config/`) — Built-in config merged with hosted Sharetribe config at runtime via `util/configHelpers.js`; access via `useConfiguration()`. AV-specific:
+- `configListingDisplay.js` — client-only render override map swapping inputs for hosted listing fields (`all_sizes`→`groupedMultiSelect`, `color`→`colorGridPicker`, `brand`→`searchableSelect`). Read by `EditListingDetailsForm`; does NOT change backend search schema.
+- `configAV.js` — AV defaults kept out of upstream files: `defaultCountry` (Stripe payment/payout, `REACT_APP_AV_DEFAULT_COUNTRY`); `sellerUserTypes` + `canShowOriginalPrice()` (originalPrice gate); `storeSellerUserType`/`storeTypeFieldKey`/`getStoreTypeTags()` (StoreTypeTags gate/labels); `welcomePopupUserTypes`/`canShowWelcomePopup()`/`welcomePopupSuppressedPaths` (AVWelcomePopup gate). The three gates are intentionally separate.
 
-**SSR constraint:** Guard all browser APIs (`window`, `document`, `localStorage`) behind `typeof window !== 'undefined'` checks.
+**Styling** — CSS Modules (`*.module.css`, `className={css.root}`). Globals in `src/styles/`: `marketplaceDefaults.css`, `avBrandOverrides.css`, `customMediaQueries.css`. Theme vars `--marketplaceColor[Dark|Light]`. Dark theme via `css.darkTheme` (section `textColor: 'white'`). **Topbar breakpoint:** desktop topbar shows at `--viewportLarge` (1024px); pages passing `mobileRootClassName={css.mobileTopbar}` must hide `.mobileTopbar` at `--viewportLarge` too (not `--viewportWide`/1600px) or both topbars render on tablet.
 
-### Container/Page Pattern
-
-Each page container has:
-1. **Component** (`PageName.js`) — React component with `mapStateToProps`, wrapped via `compose(connect(...))`
-2. **Duck** (`PageName.duck.js`) — Redux state, `loadData` thunk, SDK calls
-3. **Styles** (`PageName.module.css`) — CSS Modules
-4. Optional sub-components in subdirectories
-
-### PageBuilder (CMS-Driven Pages)
-
-`src/containers/PageBuilder/` renders dynamic pages from Sharetribe hosted assets (JSON from Console CMS).
-
-- `PageBuilder.js` — orchestrator
-- `SectionBuilder/SectionBuilder.js` — maps section configs to components; delegates sectionName token parsing to `src/extensions/pageBuilder/av/sectionStyles.js`
-- `SectionBuilder/SectionContainer/AVSectionContainer.js` — AV drop-in replacement for upstream `SectionContainer`; handles all display-option tokens from `parseSectionCustomOptions()` without touching upstream files
-- 11+ section types in `SectionBuilder/Section*/` (7 upstream + multiple custom AV sections)
-- Custom sections registered via `options.sectionComponents` prop
-- Section appearance encoded in `sectionName` string via `- Token` flags (e.g., `- Large`, `- ShortHero`, `- CenterTitleText`); parsed by `parseSectionCustomOptions()` in `sectionStyles.js`
-
-**PageBuilder extensions** (`src/extensions/pageBuilder/`):
-- `av/index.js` — registers AV section components for CMSPage: `avHero2`, `avHero3`, `avVideo`, `price-columns`
-- `av/sectionStyles.js` — `parseSectionCustomOptions(sectionName)` parses all `- Token` display flags; `parseSectionCtaClass()` parses CTA button style tokens
-- `av/constants.js` — section type + ID prefix constants (re-exports CMSPage duck IDs)
-- `av/transform.js` — rewrites AV sections before render (pulls text/links from intl + pricing asset)
-
-### Transaction Processes
-
-4 transaction types defined in `src/transactions/transaction.js`:
-- **Purchase** (`default-purchase`) — one-time buy, unit type: ITEM
-- **Booking** (`default-booking`) — time-based, unit types: DAY/NIGHT/HOUR/FIXED
-- **Inquiry** (`default-inquiry`) — contact only, unit type: INQUIRY
-- **Negotiation** (`default-negotiation`) — offer/counter-offer, unit types: OFFER/REQUEST
-
-Each has a state machine in `src/transactions/transactionProcess*.js`. CheckoutPage dispatches to either `CheckoutPageWithPayment` (Stripe) or `CheckoutPageWithInquiryProcess`.
-
-### API Integration (Sharetribe SDK)
-
-- Package: `sharetribe-flex-sdk`
-- Client-side wrapper: `src/util/sdkLoader.js`
-- Server-side: `server/api-util/sdk.js`
-- Token management: HttpOnly cookies via `expressCookieStore`, auto-refresh by SDK
-- Hosted assets (CMS content, translations) fetched via `sdk.assets.search()`, cached 1hr server-side
-
-### Config System
-
-Files in `src/config/`: `configDefault.js`, `configListing.js`, `configSearch.js`, `configStripe.js`, `configUser.js`, `configLayout.js`, `configBranding.js`, `configMaps.js`, etc.
-
-Built-in config is merged with hosted config from Sharetribe assets at runtime via `src/util/configHelpers.js`. Access in components via `useConfiguration()` hook from `src/context/configurationContext`.
-
-**Listing field display overrides:** `src/config/configListingDisplay.js` is a client-only override map that swaps the default input for hosted-asset listing fields (e.g., `all_sizes` → `groupedMultiSelect` with Standard/MX/US/Curvy groups; `color` → `colorGridPicker`; `brand` → `searchableSelect`). Read by `EditListingDetailsForm`. Does NOT change backend search schema — render-only.
-
-**AV-owned defaults:** `src/config/configAV.js` holds AV-specific defaults to keep upstream files free of marketplace literals. Exports:
-- `defaultCountry` — ISO 3166-1 alpha-2 used by `CheckoutPageWithPayment.js` (Stripe payment + recipient country) and `EditListingWizard.js` (Stripe Connect payout country). Override via `REACT_APP_AV_DEFAULT_COUNTRY`.
-- `sellerUserTypes` + `canShowOriginalPrice(currentUser)` — single source of truth for the originalPrice (strike-through "was") field gate; read by both `EditListingPricingAndStockPanel.js` and `EditListingPricingPanel.js`. Add new seller userTypes here rather than inlining `includes(userType)` checks.
-- `storeSellerUserType` (`'vendedor-tienda'`) + `storeTypeFieldKey` (`'tipoTienda'`) + `getStoreTypeTags(author, config)` — gate/label logic for the `StoreTypeTags` overlay (see Custom AV Components). Intentionally separate from `sellerUserTypes` (the originalPrice gate is unrelated).
-- `welcomePopupUserTypes` (`['vendedor', 'vendedor-tienda']`) + `canShowWelcomePopup(currentUser)` + `welcomePopupSuppressedPaths` (`['/signup']`) — eligibility gate for the `AVWelcomePopup` (see Custom AV Components), read by `TopbarContainer.js`. `canShowWelcomePopup` checks userType + `!onboardingCompleted`; the caller also excludes the suppressed paths and per-session dismissal. Intentionally separate from `sellerUserTypes`.
-
-**Shared controls pattern** across all three custom field components (FieldGroupedMultiSelect, FieldColorDropdown, FieldSearchableSelect): clear (×) + toggle (▼/▲) buttons in a `.controls` flex group — 32×32px, `border-radius: 4px`, grey hover bg, focus-visible outline. Translation keys `expand` and `collapse` are required for all three; `clearAll` for FieldGroupedMultiSelect and FieldColorDropdown; `clear` for FieldSearchableSelect.
-
-### Styling
-
-- **CSS Modules** (`*.module.css`) for component-scoped styles — use `className={css.root}`
-- **Global styles** in `src/styles/`: `marketplaceDefaults.css` (base variables), `avBrandOverrides.css` (AV brand), `customMediaQueries.css` (breakpoints)
-- **CSS custom properties** for theming: `--marketplaceColor`, `--marketplaceColorDark`, `--marketplaceColorLight`
-- **Dark theme** applied via `css.darkTheme` class when section has `textColor: 'white'`
-- Conditional classes via `classnames` package
-- **Topbar mobile/desktop breakpoint:** the desktop topbar (`Topbar.module.css .desktop`) appears at `--viewportLarge` (1024px). Pages that pass `mobileRootClassName={css.mobileTopbar}` to `TopbarContainer` (EditListingPage, InboxPage, MyPurchases/MySales/MyBalancePage) **replace** the default `css.container` and must hide their `.mobileTopbar` at `--viewportLarge` too — hiding at `--viewportWide` (1600px) renders both topbars together on tablet widths.
+**CSS placement (keep upstream files clean).** Never edit an upstream `*.module.css` just to restyle it. Instead:
+- **Restyle an existing upstream class/element** (color, spacing, font, layout) → add a global override to `src/styles/avBrandOverrides.css`. Reach scoped classes with `:root [class*='Component_localClass__'] { … }` — the `:root` raises specificity to (0,2,0) so it beats the module's own `.localClass` (0,1,0) regardless of source order (CSS Modules load after the globals). Brand vars (`--av*`) and global element rules also live here.
+- **Add a new component-specific class** consumed by JS → put it in a new co-located AV module (`<Component>.av.module.css`) imported by the (already-forked) component, not in the upstream `.module.css`. A global override can't apply a class the module never declares.
+- Pristine upstream baseline for diffing/reverting a file: `git diff a252774a -- <file>` (the `upstream/main` merge-base); empty diff = clean. The big forked files (TopbarDesktop/MobileMenu/SearchForm + CustomLinksMenu, SectionBuilder, BlockDefault, SectionFeatures/Footer, vendored `image-gallery.css`) are intentionally kept as-is.
 
 ## Custom AV Components
 
-- `src/components/AVListingCard/` — custom listing card; overlays `StoreTypeTags` on the image for `vendedor-tienda` authors
-- `src/components/AVUserCard/` — user profile card used in `SectionSelectedUser`
-- `src/components/AVCategoryCard/` — category card for `SectionSelectedCat`; portrait image + name overlay (frosted gradient); links to `/s?pub_categoryLevel1=<id>`
-- `src/components/FieldSwatch/` — color swatch display (14 color mappings keyed to listing enum values)
-- `src/components/FieldColorDropdown/` — dropdown color picker (reuses swatchColors/swatchBg from FieldSwatch); react-final-form integrated; controls row: clear (×) + toggle (▼/▲) buttons, panel header has no close button
-- `src/components/FieldGroupedMultiSelect/` — Final Form field with grouped options + removable yellow chips (used for `all_sizes`); clicking chip area opens dropdown; `.triggerCollapsed` prevents blank-row whitespace when chips present
-- `src/components/FieldSearchableSelect/` — searchable single-select combobox (used for `brand`); selected option highlighted yellow/blue in dropdown list; controls row: clear + toggle buttons matching FieldGroupedMultiSelect
-- `src/components/NewsletterForm/` — Brevo email subscribe form; posts to `/api/brevo/subscribe`
-- `src/components/PricingToggle/` — shared pricing plan card UI; used by both `BlockPriceSelector` and `SectionPriceSelector`
-- `src/components/StoreTypeTags/` — colored tag chips overlaid on the listing image for `vendedor-tienda` sellers; values come from the store's multi-enum `tipoTienda` user field (public scope), labels resolved from hosted `config.user.userFields`. Gate/label logic lives in `configAV.getStoreTypeTags(author, config)`. Rotating 4-color palette by index (`.tag0`–`.tag3`); renders `null` for non-store authors. Consumer positions it via `className`. Rendered by `AVListingCard` and the ListingPage gallery (`SectionGallery` carousel = top-left, `SectionHero` cover-photo = bottom-left). Requires `profile.publicData.userType` + `profile.publicData.tipoTienda` in the query `fields.user` — added to `SearchPage.duck.js` and `extensions/landingPage/av/listings.js` (ListingPage/ProfilePage already fetch full author publicData).
-- `src/components/AVWelcomePopup/` — onboarding welcome modal shown once to new sellers (`vendedor`/`vendedor-tienda`), rendered globally by `TopbarContainer`. All content is operator-editable via translation keys `AVWelcomePopup.<userType>.{imageUrl,eyebrow,title,text,primaryButtonLabel,primaryButtonUrl,secondaryButtonLabel,secondaryButtonUrl}` — empty keys hide that element (the `t` helper reads `intl.messages` to avoid `MISSING_TRANSLATION` noise). Full-bleed image + eyebrow (avBlue) + title + body + CTA buttons; close button sits outside the card on a dimmed backdrop. Eligibility/suppression live in `configAV` (`canShowWelcomePopup`, `welcomePopupSuppressedPaths` — hidden on `/signup` so it doesn't cover the verify-email message). Dismissal (close, backdrop, or CTA click) persists `publicData.onboardingCompleted` via `markVendedorOnboarded` (user.duck); CTA clicks wait for that persist (capped 1.2s) before navigating, otherwise the full-page nav cancels the request and the popup re-appears.
-- `src/components/IconChat/` — chat bubble SVG icon (48×48); rendered inside the `AVListingPageCarousel`'s "Chat" button, passed to `OrderPanel` via the `secondaryCtaButton` prop
-- `src/containers/ListingPage/AVListingDetails/` — curated listing-attribute summary (brand, sizes, condition, colors, category, género) rendered as `/s?pub_*` search links, plus a description excerpt with a "show more"/"show less" toggle (`AVListingDetails.showMore`/`showLess` translation keys); rendered by `AVListingPageCarousel` via `OrderPanel`'s `detailsSlot` prop
+`src/components/`:
+- `AVListingCard/` — listing card; overlays `StoreTypeTags` for `vendedor-tienda` authors
+- `AVUserCard/` — profile card for `SectionSelectedUser`
+- `AVCategoryCard/` — category card for `SectionSelectedCat`; links to `/s?pub_categoryLevel1=<id>`
+- `FieldSwatch/` — color swatch display (14 color mappings)
+- `FieldColorDropdown/` — dropdown color picker (reuses FieldSwatch colors); Final Form
+- `FieldGroupedMultiSelect/` — grouped multi-select, removable yellow chips (`all_sizes`)
+- `FieldSearchableSelect/` — searchable single-select combobox (`brand`)
+- `NewsletterForm/` — Brevo subscribe; posts `/api/brevo/subscribe`
+- `PricingToggle/` — shared pricing card UI (BlockPriceSelector + SectionPriceSelector)
+- `StoreTypeTags/` — colored tag chips for `vendedor-tienda`; values from `tipoTienda` user field; gate/labels in `configAV.getStoreTypeTags()`; needs `profile.publicData.{userType,tipoTienda}` in `fields.user` (added to `SearchPage.duck.js` + `extensions/landingPage/av/listings.js`)
+- `AVWelcomePopup/` — one-time onboarding modal for new sellers, rendered by `TopbarContainer`; all content via `AVWelcomePopup.<userType>.*` translation keys (empty = hidden); dismissal persists `publicData.onboardingCompleted` via `markVendedorOnboarded`. See `memory/welcome-popup`.
+- `IconChat/` — chat bubble SVG; the carousel's "Chat" button (OrderPanel `secondaryCtaButton`)
+- `BalanceSummary/`, `PayoutItem/`, `TransactionFilters/` — MyBalancePage UI
 
-Custom PageBuilder sections (in `src/containers/PageBuilder/SectionBuilder/`):
-- `SectionHeroCustom2/` — multi-instance hero; type `avHero2`; sectionId prefix `av-hero2-*`; supports 2 CTAs, optional mobile bg + bgLink
-- `SectionHeroCustom3/` — block-based hero; type `avHero3`; sectionId prefix `av-hero3-*`; each block = image strip with text overlay
-- `SectionVideoSection/` — full-width 50/50 video + text split; type `avVideo`; sectionId prefix `av-video-*`; video URL from translation key
-- `SectionPriceSelector/` — interactive pricing selector (data from hosted asset `content/pricing-plans.json`)
-- `SectionSelectedListings/` — hand-picked listing carousel; sectionId prefix `av-selections`; each block's `blockName` = listing UUID
-- `SectionRecommendedListings/` — auto-fetched listing grid; sectionId `av-recommendeds`; block names = listing UUIDs
-- `SectionTagCatListings/` — tag/category-filtered listing carousel; sectionId prefix `av-tag-listings`; first block's `blockName` encodes filter: `tag:<value>`, `cat:<value>`, or plain value (defaults to tag)
-- `SectionSelectedCat/` — category card carousel using `AVCategoryCard`; sectionId prefix `av-selected-cats`; each block provides `blockName` (category ID), optional `title` (display name), and `media` (image); no SDK fetch
-- `SectionSelectedUser/` — user profile card carousel using `AVUserCard`; type `avSelectedUsers`; sectionId prefix `av-selected-users-*`; block names = user UUIDs
-- `SectionInstaGrid/` — responsive Instagram-style image grid (2–6 cols); type `avInstaGrid`; sectionId prefix `av-insta-grid-*`; images from block media fields
+**Shared field-controls pattern** (FieldGroupedMultiSelect, FieldColorDropdown, FieldSearchableSelect): clear (×) + toggle (▼/▲) in `.controls` flex group, 32×32px, `border-radius: 4px`. Required translation keys: `expand`/`collapse` (all three); `clearAll` (grouped + color); `clear` (searchable).
 
-Custom PageBuilder blocks (in `src/containers/PageBuilder/BlockBuilder/`):
-- `BlockPriceSelector/` — block variant of pricing selector
-- `BlockWithCols/` — two-column text block
-- `BlockDefault` — supports a `smallerTitles ::` blockName prefix token, mirroring the section-level `- SmallerTitles` token: shifts all headings in the block's content down one size level
+`src/containers/ListingPage/AVListingDetails/` — curated attribute summary (brand/sizes/condition/colors/category/género) as `/s?pub_*` links + description excerpt with show more/less; rendered via OrderPanel `detailsSlot`.
 
-Custom pages: `MakeOfferPage`, `RequestQuotePage`, `ManageAccountPage` (negotiation flow), `MyPurchasesPage`, `MySalesPage` (transaction history), `MyBalancePage` (seller financial dashboard), `BulkImportPage` (`/admin/bulk-import`, admin-only CSV+image bulk listing import via Integration SDK; see `docs/bulk-import.md`)
+**Custom pages:** `MakeOfferPage`, `RequestQuotePage`, `ManageAccountPage` (negotiation); `MyPurchasesPage`, `MySalesPage`, `MyBalancePage`; `BulkImportPage` (`/admin/bulk-import`, admin CSV+image import — see `docs/bulk-import.md`).
 
-### ListingPage Carousel Layout (AVListingPageCarousel)
+### Custom PageBuilder sections (`SectionBuilder/`)
 
-`src/containers/ListingPage/AVListingPageCarousel.js` + `.module.css` is the active `ListingPage`/`ListingPageVariant` component when `layoutConfig.listingPage?.variantType === 'carousel'` (see `routeConfiguration.js`); otherwise `ListingPageCoverPhoto` is used. A separate, unused `ListingPageCarousel.js` (non-AV) also exists in the same directory.
+| Section | type / sectionId prefix | Notes |
+|---|---|---|
+| `SectionHeroCustom2` | `avHero2` / `av-hero2-*` | 2 CTAs, optional mobile bg + bgLink |
+| `SectionHeroCustom3` | `avHero3` / `av-hero3-*` | block-based; each block = image strip + overlay |
+| `SectionVideoSection` | `avVideo` / `av-video-*` | 50/50 video+text; URL from translation key |
+| `SectionPriceSelector` | — | data from `content/pricing-plans.json` |
+| `SectionSelectedListings` | `av-selections` | block `blockName` = listing UUID |
+| `SectionRecommendedListings` | `av-recommendeds` | block names = listing UUIDs |
+| `SectionTagCatListings` | `av-tag-listings` | first block `blockName` = `tag:<v>`/`cat:<v>`/plain |
+| `SectionSelectedCat` | `av-selected-cats` | AVCategoryCard; block = category id + title + media |
+| `SectionSelectedUser` | `avSelectedUsers` / `av-selected-users-*` | block names = user UUIDs |
+| `SectionInstaGrid` | `avInstaGrid` / `av-insta-grid-*` | 2–6 col image grid |
 
-**Responsive structure** (the `OrderPanel` becomes a fixed bottom-bar modal below `--viewportLarge`/1024px, so the order column only exists on desktop):
-- Mobile (<768px): single flex column — gallery, info (title + details), reviews.
-- Tablet (768–1024px): `.galleryColumn` is a 2-col grid (image 60% / info 40%); `.reviewsBlock` is a full-width row below.
-- Desktop (≥1024px): `.contentWrapper` is a 2-row grid — row 1 = `.galleryColumn` (sticky gallery only; info is hidden, its content lives in the order panel) + `.detailsColumn` (OrderPanel); row 2 = `.reviewsBlock` spanning both columns.
+**Custom blocks** (`BlockBuilder/`): `BlockPriceSelector`, `BlockDefault`. `BlockDefault` blockName tokens (parsed in `extensions/pageBuilder/av/blocks.js` `createBlockCustomProps`): `smallerTitles ::` (mirrors `- SmallerTitles`), `mediaTitle ::` (renders media between the title and the rest of the content: title → media → text/CTA), `blueTitle ::` (mirrors `- BlueTitle` but colors only that block's own title, not body-markdown headings); `fullLinks ::` (applies `word-break: auto-phrase` to links in the block's body `<p>` elements so long URLs/words wrap on phrase boundaries).
 
-**Sticky gallery containing block:** `.galleryBlock` is `position: sticky; top: calc(var(--avTopbarHeightDesktopTwoRow) + 24px)`. Its containing block is `.galleryColumn`, whose height is set by `.contentWrapper`'s `align-items: stretch` against `.detailsColumn` — i.e. only the order panel's height affects the gallery's sticky range. `.reviewsBlock` is kept as a sibling *outside* `.galleryColumn` (full-width grid row 2) specifically so it can never inflate the sticky containing block; if it were inside `.galleryColumn`, the stuck gallery would gain extra scroll range equal to `gap + reviewsHeight` and the (later-in-DOM) reviews would paint over its bottom edge while stuck.
+### ListingPage carousel layout (AVListingPageCarousel)
 
-`--avTopbarHeightDesktopTwoRow` (defined in `avBrandOverrides.css`) is also used as `scroll-margin-top` on `.sectionReviews`/`.sectionAuthor` in `ListingPage.module.css` at `--viewportLarge`, so in-page anchor links land below the two-row desktop topbar.
+`src/containers/ListingPage/AVListingPageCarousel.js` is active when `layoutConfig.listingPage?.variantType === 'carousel'`, else `ListingPageCoverPhoto`. (Unused non-AV `ListingPageCarousel.js` also exists.) OrderPanel becomes a fixed bottom-bar modal below 1024px, so the order column is desktop-only. **Sticky-gallery gotcha:** `.reviewsBlock` is kept a sibling *outside* `.galleryColumn` (full-width grid row 2) so it can't inflate the sticky gallery's containing block. OrderPanel accepts `detailsSlot`/`footerSlot`/`hideAuthor`/`secondaryCtaButton` props to restructure without forking. Full detail: `memory/listing-page-carousel-layout`.
 
-**OrderPanel customization slots:** `OrderPanel` (and `ProductOrderForm`) accept extra props so `AVListingPageCarousel` can restructure the panel without forking it: `detailsSlot` (rendered before the author block — `AVListingDetails`, see Custom AV Components), `footerSlot` (rendered at the end — the author/publish-date line), `hideAuthor` (suppresses OrderPanel's own author block, since `footerSlot` replaces it), and `secondaryCtaButton` (passed through to `ProductOrderForm`, rendered next to the submit button — the `IconChat` "Chat" button that calls `onContactUser()`).
+### My Purchases / Sales / Balance
 
-### My Purchases & My Sales Pages
+`/my-purchases` + `/my-sales` reuse `InboxItem` + `getStateData` from InboxPage; ducks hard-code `only: 'order'` / `only: 'sale'`. `/my-balance` is a seller financial dashboard: **no direct Stripe balance API** — totals computed client-side from transaction `payoutTotal` via `Promise.all` of paginated + 3 summary `sdk.transactions.query()` calls. Shared util `src/transactions/transactionHelpers.js`: `getStatusFromLastTransition`, `getCompletedTransitions`, `getRefundedTransitions`, `buildFilteredQueryParams`. All three registered in `routeConfiguration.js`/`pageDataLoadingAPI.js`/`reducers.js`; linked from TopbarDesktop, TopbarMobileMenu, UserNav.
 
-Dedicated transaction history pages at `/my-purchases` and `/my-sales`. Both reuse `InboxItem` from `InboxPage` and `getStateData` from `InboxPage.stateData` — no custom card components. Ducks use `createSlice`/`createAsyncThunk`, hard-coding `only: 'order'` (purchases) or `only: 'sale'` (sales) against `sdk.transactions.query()`.
+## Extensions
 
-Files per page: `.js` (component), `.duck.js` (Redux), `.module.css` (styles), `.test.js` (tests). Registered in `routeConfiguration.js`, `pageDataLoadingAPI.js`, and `reducers.js`. Links added to `TopbarDesktop.js` (ProfileMenu `MenuItem`), `TopbarMobileMenu.js` (`<li>` in accountLinksWrapper), and `UserNav.js` (TabNavHorizontal tabs after "Your listings").
+AV keeps upstream files unmodified via extension architecture in `src/extensions/`. Hooks: `loadDataExtension`, `selectExtensionProps`, `getPageBuilderOptions`, `transformPageData`.
 
-### My Balance Page (Seller Financial Dashboard)
+- `landingPage/av/` — `constants.js`, `sections.js`, `listings.js` (`queryListingsByIds`/`queryListingsByFilter`/`parseFilterFromBlockName`), `transform.js`, `index.js` (registers AV sections + wires hooks). `LandingPage.js`/`LandingPage.duck.js` contain **only the extension wiring** (the `mapStateToProps`/`loadData` seam) — add features via the registry, never inline.
+- `pageBuilder/av/` — registers `avHero2`/`avHero3`/`avVideo`/`price-columns` for CMSPage; `sectionStyles.js` (`parseSectionCustomOptions`, `parseSectionCtaClass`); `constants.js`; `transform.js`.
+- `accountNav/` (`getAccountSettingsTabs()`), `topbar/` (custom link config), `searchFilters/`.
+- Redux: `src/ducks/avExtension.duck.js` — `avLandingExtension` slice (`tagListingIds`), SSR-safe, registered in `ducks/index.js`.
 
-Seller-focused financial dashboard at `/my-balance`. Shows balance summary cards at top, transaction filters, and a paginated payout history list. Uses `LayoutSideNavigation` + `UserNav` like MySalesPage.
+## AV-noti: Notifications (Welcome Email + WhatsApp)
 
-**Key constraint:** No direct Stripe balance API through Sharetribe SDK. All financial data comes from `sdk.transactions.query()` — balance totals are computed client-side from transaction `payoutTotal` values.
+Server-side in `server/services/`. `eventPoller.js` polls the Integration API every 5 min (started in `server/index.js`, guarded by `SHARETRIBE_INTEGRATION_CLIENT_ID`; in-memory cursor resets on restart → first boot polls last 10 min). `welcomeEmailService.js` (Brevo email + PDF), `pdfGenerator.js` (PDFKit → `Promise<Buffer>`), `whatsappService.js` (Meta Cloud API, all sends via `sendWhatsApp({phone,templateName,params})`, no-ops if phone/env missing).
 
-**Components:**
-- `src/components/BalanceSummary/` — 3 summary cards (Total Earnings, Pending, Cancelled count) with color-coded left borders (green/yellow/red). Uses `formatMoney` for currency display.
-- `src/components/PayoutItem/` — financial transaction row showing listing title (linked to SaleDetailsPage), buyer name, date, gross/net amounts, and a status badge (completed/pending/cancelled).
-- `src/components/TransactionFilters/` — URL-param-based filter controls: status select, process type select, date range inputs, clear button. On change, navigates via `history.push()` with updated query params (resets page=1). SSR-compatible.
+Events: `user/created` → welcome email + admin & user WhatsApp; `transaction/transitioned` → buyer/seller WhatsApp by transition; `message/created` → other party. **Never import `server/services/*` in client code.**
 
-**Duck (`MyBalancePage.duck.js`):**
-Two async thunks dispatched in parallel via `Promise.all()`:
-1. `loadTransactionsThunk` — paginated sale transactions with filter params from URL search. Uses `buildFilteredQueryParams()` from `transactionHelpers.js`.
-2. `fetchSummaryThunk` — 3 parallel `sdk.transactions.query()` calls (completed/cancelled/all) with `perPage: 100` to compute balance totals client-side. Sums `payoutTotal.amount` from responses.
+Env vars: `SHARETRIBE_INTEGRATION_CLIENT_ID`, `SHARETRIBE_INTEGRATION_CLIENT_SECRET`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ADMIN_PHONE` (E.164), `BREVO_SENDER_EMAIL`, `BREVO_SENDER_NAME`.
 
-**Transaction helpers (`src/transactions/transactionHelpers.js`):**
-Shared utility module providing:
-- `getStatusFromLastTransition(processName, lastTransition)` → `'completed' | 'pending' | 'cancelled'`
-- `getCompletedTransitions()` — aggregates completed transitions across all payment processes (excludes inquiry)
-- `getRefundedTransitions()` — aggregates refunded/cancelled transitions across all payment processes
-- `buildFilteredQueryParams(searchParams, options)` — parses URL search params (`status`, `process`, `dateFrom`, `dateTo`, `page`) into SDK-compatible query params
+WhatsApp templates (need Meta approval): `av_welcome_user`, `av_admin_new_user`, `av_purchase_confirmed`, `av_sale_received`, `av_delivered`, `av_cancelled`, `av_booking_accepted`, `av_booking_declined`, `av_new_message`.
 
-**Navigation:** Tab in UserNav (after "My Sales"), MenuItem in TopbarDesktop ProfileMenu, `<li>` in TopbarMobileMenu.
+## Listing Form Customizations (Edit Listing Wizard)
 
-### Extension Patterns
+- **Two-column grid** — Details/Delivery/Location panels use `.fieldsGrid` (1fr 1fr at `--viewportMedium`); full-width fields use `.fullWidth`.
+- **Photos in Details** — when `requireListingImage(listingTypeConfig)`, the Photos step is hidden and a `PhotoGallerySection` (free-form, max 10, drag-reorder via `@dnd-kit`; merge logic in `reconcileOrderedImages.js`) goes in Details. Otherwise standalone `EditListingPhotosPanel` + `ImageSlot` (4 labeled slots → `publicData.imageSlots`, captions rendered by `ListingImageGallery.js`).
+- **Original price** — `publicData.originalPrice` `{amount,currency}`, must exceed `price`; renders as strike-through "was" in OrderPanel + cards.
+- **EarningsEstimator** — fee breakdown below price input (simple price only). Fees from `config.earningsEstimate` (`configDefault.js`), env overrides `REACT_APP_PROVIDER_COMMISSION_PERCENTAGE` (10), `REACT_APP_STRIPE_FEE_PERCENTAGE` (2.9), `REACT_APP_STRIPE_FEE_FIXED_AMOUNT` (30¢).
 
-AV uses an extension architecture to keep upstream files unmodified. Extensions live in `src/extensions/`.
-
-**LandingPage extension** (`src/extensions/landingPage/`): Provides AV section components and data loading for LandingPage specifically.
-
-Extension hooks: `loadDataExtension`, `selectExtensionProps`, `getPageBuilderOptions`, `transformPageData`.
-
-**AV extension files** (`src/extensions/landingPage/av/`):
-- `constants.js` — sectionId prefixes and sectionType strings for all AV section types on LandingPage
-- `sections.js` — detection helpers and data extractors
-- `listings.js` — SDK queries; `queryListingsByIds`, `queryListingsByFilter`; `parseFilterFromBlockName` parses `tag:<v>` / `cat:<v>` / plain blockName into SDK params
-- `transform.js` — injects `listings` prop into each section before render
-- `index.js` — lazy-loads and registers all AV section components; wires the 4 extension hooks
-
-**Redux:** `src/ducks/avExtension.duck.js` — global `avLandingExtension` slice storing `{ tagListingIds: { [sectionId]: uuid[] } }`; SSR-safe alternative to module-level cache; registered in `src/ducks/index.js`.
-
-**PageBuilder extension** (`src/extensions/pageBuilder/`): Provides AV sections and style helpers for CMSPage and other PageBuilder-rendered pages. Same hook pattern. AV subdir registers `avHero2`, `avHero3`, `avVideo`, `price-columns`.
-
-**Other extensions:**
-- `src/extensions/accountNav/` — account settings side nav tab list (`getAccountSettingsTabs()`)
-- `src/extensions/topbar/` — TopbarDesktop custom link config
-- `src/extensions/searchFilters/` — AV search filter helpers
-
-### AV-noti: Event-Driven Notifications (Welcome Email + WhatsApp)
-
-Server-side notification system in `server/services/`. Polls the Sharetribe Integration API every 5 minutes to detect new events and fire notifications via Brevo (email) and Meta Cloud API (WhatsApp).
-
-**Files:**
-- `server/services/eventPoller.js` — Integration API polling engine; started from `server/index.js` after server listens, guarded by `SHARETRIBE_INTEGRATION_CLIENT_ID` presence
-- `server/services/welcomeEmailService.js` — sends branded Brevo transactional email with Getting Started PDF attached (`sendWelcomeEmail({ email, firstName, lastName })`)
-- `server/services/pdfGenerator.js` — PDFKit PDF generator; returns `Promise<Buffer>` (`generateGettingStartedPDF({ firstName })`)
-- `server/services/whatsappService.js` — Meta Cloud API sender; all calls go through `sendWhatsApp({ phone, templateName, params })`; gracefully no-ops if phone/env missing
-
-**Event → notification mapping:**
-- `user/created` → welcome email with PDF + admin WhatsApp alert + user WhatsApp welcome (if phone in `protectedData`)
-- `transaction/transitioned` → buyer/seller WhatsApp based on transition name (purchased, delivered, cancelled, accepted, declined, offer-made)
-- `message/created` → WhatsApp to the other party in the transaction
-
-**Required env vars** (add to `.env.development` and all deployment environments):
-```
-SHARETRIBE_INTEGRATION_CLIENT_ID     # Sharetribe Console → Build → Integrations
-SHARETRIBE_INTEGRATION_CLIENT_SECRET
-WHATSAPP_ACCESS_TOKEN                # Meta Business Manager permanent token
-WHATSAPP_PHONE_NUMBER_ID             # WABA phone number ID
-WHATSAPP_ADMIN_PHONE                 # Admin phone in E.164 format (+521XXXXXXXXXX)
-BREVO_SENDER_EMAIL                   # e.g. hola@archinovintach.com
-BREVO_SENDER_NAME                    # e.g. Archivo Vintach
-```
-
-**WhatsApp templates** (must be pre-approved in Meta Business Manager before use):
-`av_welcome_user`, `av_admin_new_user`, `av_purchase_confirmed`, `av_sale_received`, `av_delivered`, `av_cancelled`, `av_booking_accepted`, `av_booking_declined`, `av_new_message`
-
-**Key constraint:** Never import `server/services/*` in client-side code. The poller runs only on the server process. The in-memory `lastSequenceId` cursor resets on restart — on first boot it polls the last 10 minutes to avoid missing events during deploys.
-
-### Listing Form Customizations (Edit Listing Wizard)
-
-Customizations to the listing creation/edit forms in `src/containers/EditListingPage/EditListingWizard/`:
-
-**Two-column layout** — Details, Delivery, and Location panels use a CSS grid (`.fieldsGrid`) that switches from single column on mobile to `1fr 1fr` at `--viewportMedium`. Full-width fields (title, description, address) use `.fullWidth` (`grid-column: 1 / -1`). Custom listing fields flow naturally into the grid. Submit buttons remain outside the grid.
-
-**Photos merged into Details panel** — For listing types that require images (`requireListingImage(listingTypeConfig)` is true), the separate Photos wizard step is hidden. Instead, a `PhotoGallerySection` in the Details panel provides inline image upload (free-form, max 10 images). The standalone `EditListingPhotosPanel` with `ImageSlot` still exists and renders for listing types that do NOT require images. The `publicData.imageSlots` mapping (front/back/horizontal/details) is built by `EditListingPhotosPanel` when it is shown.
-
-Key files:
-- `.../EditListingDetailsPanel/PhotoGallerySection.js` + `.module.css` — inline free-form photo upload in the Details step. Drag-to-reorder via `@dnd-kit`. `PlaceholderSlot` is keyboard-accessible (`role="button"`, Enter/Space → trigger upload).
-- `.../EditListingDetailsPanel/reconcileOrderedImages.js` — pure helper that merges the user's drag-reordered list with incoming Redux `images`: preserves order, refreshes objects after upload id resolution, drops removed, appends new. Co-located unit tests.
-- `.../EditListingPhotosPanel/ImageSlot.js` + `.module.css` — labeled upload slot (used only when Photos step is active)
-- `.../EditListingPhotosPanel/EditListingPhotosFormSlots.js` — 4-slot form for listings types without required images
-- `src/containers/ListingPage/ListingImageGallery/ListingImageGallery.js` — renders slot label captions from `publicData.imageSlots`
-
-**Original price (strike-through)** — The Pricing & Stock panel includes an `originalPrice` field (stored in `publicData.originalPrice` as `{ amount, currency }`). Must be greater than `price` to display as a strike-through "was" price in `OrderPanel` and listing cards.
-
-**Earnings estimator** — The Pricing panel shows an `EarningsEstimator` info card below the price input (simple price only, not price variants). Displays listing price, marketplace fee, Stripe processing fee, and net earnings using `formatMoney`. Fee percentages come from `config.earningsEstimate` in `configDefault.js`, overridable via env vars:
-- `REACT_APP_PROVIDER_COMMISSION_PERCENTAGE` (default: 10)
-- `REACT_APP_STRIPE_FEE_PERCENTAGE` (default: 2.9)
-- `REACT_APP_STRIPE_FEE_FIXED_AMOUNT` (default: 30, in currency sub-units/cents)
-
-Key files:
-- `.../EditListingPricingAndStockPanel/EarningsEstimator.js` + `.module.css`
-- `.../EditListingPricingAndStockPanel/EditListingPricingAndStockPanel.js` — renders `EarningsEstimator` and `originalPrice` field
-
-### CMSPage Pricing Asset
-
-`CMSPage.duck.js` fetches pricing plan data from `content/pricing-plans.json` (Sharetribe hosted asset) alongside the page JSON. Data is stored in `state.CMSPage.pricingPlansData`. The component falls back to intl-based data if the asset doesn't exist yet. See `docs/ai_notes.md` Section 4 for the JSON schema and pending setup steps.
+**CMSPage pricing asset:** `CMSPage.duck.js` fetches `content/pricing-plans.json` → `state.CMSPage.pricingPlansData` (intl fallback). Schema in `docs/ai_notes.md` §4.
 
 ## Testing Conventions
 
-Every new AV component or custom page must ship with a co-located `.test.js` file. Use `renderWithProviders` from `src/util/testHelpers` — it wraps React Testing Library with a Redux store and router.
+Every new AV component/page ships a co-located `.test.js`. Use `renderWithProviders` from `src/util/testHelpers` (RTL + Redux store + router).
 
 ```js
 import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
@@ -313,142 +150,116 @@ import '@testing-library/jest-dom';
 const { screen } = testingLibrary;
 ```
 
-**Minimum requirements:**
-- New `src/components/AV*/` → render + key props + snapshot
-- New `src/containers/*Page/` → smoke test + snapshot (`it('renders without crashing', ...)`)
-- New `src/util/*.js` helpers → unit tests for each exported function
-- New `src/extensions/*/` → registry/detection logic tests (see `landingPage/registry.test.js` as pattern)
+Minimum: `AV*` components → render + props + snapshot; `*Page/` containers → smoke + snapshot; `util/*.js` → unit tests per export; `extensions/*` → registry/detection tests. Ducks/utils → pure unit tests. Always run `yarn test -- --watchAll=false` before declaring done.
 
-Duck reducers and utility functions in `src/util/` should have pure unit tests (no render needed). Always run `yarn test -- --watchAll=false` before declaring a task complete.
-
-**Gotchas seen across upstream merges (v11.x):**
-- `formatMoney(intl, money)` in `src/util/currency.js` uses `new Intl.NumberFormat('en-US', ...)` directly — it ignores the passed `intl` argument. Tests must assert the formatted string (`'$20.00'`, not `'20'`); negatives render as `-$2.00`.
-- `currencyDisplay: 'narrowSymbol'` in `settingsCurrency.js` means MXN renders as `$` (not `MX$`) in en-US. Snapshots from before this change need regeneration (`yarn test -u`).
-- `validSchemaOptions` requires `enumOptions[].option` to be a **string**. Numeric option values are silently dropped + warn. Test fixtures must use `{ option: '29', label: '29' }`, not `{ option: 29, ... }`.
-- `ResponsiveImage` builds a `srcset` attribute, not `src`. Tests asserting `getByRole('img').getAttribute(...)` must use `'srcset'`, and the mocked variant keys must match the consumer's `variants` prop (e.g. `AVCategoryCard` requests `['original400','800','1200','2400']`).
-- `ProfileSettingsForm` renders `bioHeadingVendedor` / `bioHeadingTienda` per-userType, not a single `bioHeading`. There is no `bioLabel` — the textarea uses a placeholder.
-- The `Unsupported listing extended data configurations detected (listingTypeConfig)` warning from `configHelpers.js:874` is upstream signal, not noise. It fires whenever a test's narrow listingTypes don't intersect with the default helper fixtures (`bikeType`/`tire-size`/`brand`). Don't broaden the fixtures — that makes those fields leak into `EditListingPage` tests that expect them filtered out.
+**Gotchas (upstream v11.x merges):**
+- `formatMoney(intl, money)` (`util/currency.js`) uses `new Intl.NumberFormat('en-US')` directly — ignores `intl`. Assert formatted strings (`'$20.00'`; negatives `-$2.00`).
+- `currencyDisplay: 'narrowSymbol'` → MXN renders as `$` (not `MX$`) in en-US. Regenerate old snapshots (`yarn test -u`).
+- `validSchemaOptions` needs `enumOptions[].option` to be a **string** — `{ option: '29', label: '29' }`, not numeric (silently dropped + warns).
+- `ResponsiveImage` builds `srcset`, not `src`. Assert `'srcset'`; mocked variant keys must match the consumer's `variants` prop.
+- `ProfileSettingsForm` renders `bioHeadingVendedor`/`bioHeadingTienda` per-userType (no single `bioHeading`, no `bioLabel` — textarea uses a placeholder).
+- `Unsupported listing extended data configurations detected` warning (`configHelpers.js:874`) is upstream signal, not noise — fires when narrow test listingTypes don't intersect default fixtures. Don't broaden fixtures.
 
 ## Section Display-Option Tokens
 
-Encode display options in `sectionName` as `- Token` suffixes (space-dash-space before each token). Parsed by `parseSectionCustomOptions()` in `src/extensions/pageBuilder/av/sectionStyles.js` — never read `sectionName` directly inside section components.
+Encode in `sectionName` as `- Token` suffixes (space-dash-space). Parsed by `parseSectionCustomOptions()` in `extensions/pageBuilder/av/sectionStyles.js` — **never read `sectionName` directly in section components.**
+
+Operator-facing reference for the full set lives in `docs/operator-guide.md` §5.1.
 
 | Token | Property | Effect |
 |-------|----------|--------|
-| `- Large` | `isLarge` | Enlarged height/padding |
-| `- Medium` | `isMedium` | Medium variant |
-| `- FullH` | `isFullH` | Full viewport height |
-| `- FullW` | `isFullW` | Full width, no container |
-| `- FullWHeader` | `isFullWHeader` | Header children (title, description) span full width (removes their max-width) |
-| `- ShortHero` | `isShortHero` | Reduced hero height |
-| `- ShortContent` | `isShortC` | Compact content area |
-| `- SmallerTitle` | `isSmallerT` | Smaller h1/h2 |
-| `- SmallTitle` | `isMediumT` | Even smaller title |
-| `- BlueTitle` | `isBlueTitle` | Brand-blue title |
-| `- WhiteTitle` | `isWhiteTitle` | White title |
-| `- CenterTitleText` | `isCenterTitleText` | Center-aligned title |
-| `- CenterDescText` | `isCenterDescText` | Center-aligned description |
-| `- LargeDesc` | `isLargeDesc` | Larger description font |
-| `- SmallSubTitles` | `isSmallSubTitles` | Smaller subtitles |
-| `- SmallerTitles` | `isSmallerTitles` | All headings shift down one size level (H2→20 px, H3→18 px, H4→16 px, H5→14 px) |
-| `- Paddings` | `hasPaddings` | Force standard paddings |
+| `- Large` | `isLarge` | Wider content area (max 1370px) |
+| `- FullW` | `isFullW` | Full width, edge to edge |
+| `- FullWHeader` | `isFullWHeader` | Header children span full width |
+| `- ShortHero` | `isShortHero` | Reduced hero height (avHero2; consumed in SectionHeroCustom2) |
+| `- 2/3 cols` | `isTwoThirdsCols` | One-third/two-thirds split (SectionColumns) |
+| `- AvFeature` / `- ReverseFeature` | `isAvFeature` / `isReverseFeature` | Feature layout (SectionFeatures); AvFeature also sets full-bleed in AVSectionContainer |
+| `- BlueTitle` / `- WhiteTitle` | `isBlueTitle` / `isWhiteTitle` | Title color |
+| `- CenterTitleText` / `- CenterDescText` | `isCenterTitleText` / `isCenterDescText` | Center title / description |
+| `- LargeDesc` | `isLargeDesc` | Wider description max-width |
+| `- SmallerTitles` | `isSmallerTitles` | All headings down one level (H1→30/H2→20/H3→18/H4→16/H5→14px) |
 | `- NoPaddings` | `hasNoPaddings` | Remove all paddings |
-| `- NoPaddingsX` | `hasNoPaddingsX` | Remove horizontal paddings |
-| `- NoPaddingsY` | `hasNoPaddingsY` | Remove vertical paddings |
-| `- Heading2` | `isHeadingH` | h2 heading style |
-| `- 2/3 cols` | `isTwoThirdsCols` | Two-thirds column layout |
-| `- AvFeature` | `isAvFeature` | Feature block layout (includes FullW + FullH effects — no need to add those separately) |
-| `- ReverseFeature` | `isReverseFeature` | Reversed feature layout |
-| `- TextGray` | `hasTextGray` | Gray text |
+| `- SmallGapCols` | `hasSmallGapCols` | Column/grid sections: 8px column gap (sets `--avSectionColGap`) |
+| `- SmallGapRows` | `hasSmallGapRows` | Column/grid sections: 8px row gap (sets `--avSectionRowGap`) |
+| `- NoGapCols` | `hasNoGapCols` | Column/grid sections: 0 column gap (sets `--avSectionColGap`) |
+| `- NoGapRows` | `hasNoGapRows` | Column/grid sections: 0 row gap (sets `--avSectionRowGap`) |
 
-**CTA button tokens** (parsed by `parseSectionCtaClass`): `- SectionCtaBtnBlue`, `- SectionCtaBtnLightBlue`, `- SectionCtaBtnPurple`, `- SectionCtaBtnPink`, `- SectionCtaBtnYellow`
-**CTA modifiers:** `- RoundedFull`, `- Rounded`, `- Square`, `- Dashed`, `- Solid`, `- NoOutline`, `- HeadingFont`, `- BodyFont`, `- AccentFont`, `- CtaBtnCenter`
+**CTA tokens** (`parseSectionCtaClass`): `- SectionCtaBtn{Blue,LightBlue,Purple,Pink,Yellow}`. **Modifiers:** `- RoundedFull`, `- Rounded`, `- Square`, `- Dashed`, `- Solid`, `- NoOutline`, `- HeadingFont`, `- BodyFont`, `- AccentFont`, `- CtaBtnCenter`.
 
-To add a new token: add a `hasToken(sectionName, 'MyToken')` line in `parseSectionCustomOptions()` and a corresponding CSS class in `AVSectionContainer`.
+To add a token: add `hasToken(sectionName, 'MyToken')` in `parseSectionCustomOptions()` + a CSS class in `AVSectionContainer` (and document it in operator-guide §5.1).
 
 ## Coding Conventions
 
-- Follow Sharetribe Web Template conventions: CSS Modules, functional React, Redux ducks
-- Client-side env vars use `REACT_APP_` prefix; server-side secrets do not
-- Prefer extending over overriding core template files (reduces upstream merge conflicts)
-- Always use Stripe Connect — never direct charges
-- Heroku has ephemeral filesystem — never write files to disk at runtime
+- Sharetribe conventions: CSS Modules, functional React, Redux ducks.
+- Client env vars use `REACT_APP_` prefix; server secrets do not.
+- Prefer extending over overriding core template files (reduces merge conflicts).
+- Always use Stripe Connect — never direct charges.
+- Heroku filesystem is ephemeral — never write files to disk at runtime.
 
 ## Upstream File Policy
 
-**Do not modify upstream Sharetribe template files unless there is no alternative.**
+**Do not modify upstream Sharetribe files unless there is no alternative.** First ask: can this be a custom component, config file, extension hook, or CSS override instead? Only touch upstream files when genuinely required (new route, nav link). Keep changes minimal — add, don't rewrite.
 
-Before editing any upstream file, ask: can this be done in a custom component, a config file, an extension hook, or a CSS override instead? Only touch upstream files when the feature genuinely requires it (e.g. wiring a new route, adding a nav link).
+### Watchlist — high merge-conflict risk
 
-When an upstream file must be modified, keep the change minimal and isolated — add, don't rewrite.
-
-### Watchlist — high merge-conflict risk, avoid unless documented
-
-These files are the most likely to conflict on `git merge upstream/main`. Changes here must be carefully justified and noted in commit messages:
-
-| File | Why it's touched |
+| File | Why touched |
 |---|---|
-| `src/components/CustomExtendedDataField/CustomExtendedDataField.js` | `groupedMultiSelect` + `colorGridPicker` input branches |
-| `src/util/configHelpers.js` | Listing field merge strategy (code wins over Console) |
-| `src/containers/SearchPage/FilterComponent.js` | Custom filter type branches |
-| `src/containers/SearchPage/SearchPage.shared.js` | Filter assembly pipeline |
-| `src/containers/PageBuilder/BlockBuilder/BlockBuilder.js` | Custom block registration |
-| `src/containers/PageBuilder/BlockBuilder/BlockDefault.js` | Custom block registration |
-| `src/containers/PageBuilder/SectionBuilder/SectionBuilder.js` | Custom section registration |
-| `src/containers/PageBuilder/SectionBuilder/SectionContainer/SectionContainer.js` | Modified to delegate display-option logic to `AVSectionContainer` |
-| `src/util/lineItemHelpers.js` | Fixed commission line item |
-| `src/translations/en.json` | AV translation keys mixed with upstream |
-| `src/config/configHelpers.js` | (same as configHelpers.js above) |
-| `src/containers/TopbarContainer/Topbar/TopbarDesktop/CustomLinksMenu/*` | AV user/category dropdowns with local design data (~480 LOC across 12 files) |
-| `src/containers/CheckoutPage/CheckoutPageWithPayment.js` | Default Stripe payment/recipient country (reads `configAV.defaultCountry`) |
-| `src/containers/EditListingPage/EditListingWizard/EditListingWizard.js` | Default Stripe Connect payout country (reads `configAV.defaultCountry`) |
-| `src/containers/EditListingPage/EditListingWizard/EditListingWizardTab.js` | `currentUser` prop drilling for pricing panels |
-| `src/containers/EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm.js` | Two-column grid + inline `PhotoGallerySection` |
-| `src/containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingPanel.js` | `originalPrice` field gated by `configAV.canShowOriginalPrice` |
-| `src/containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingForm.js` | `originalPrice` field UI |
-| `src/containers/ManageListingsPage/ManageListingsPage.js` | Heading row with "Create listing" `NamedLink` |
-| `src/components/TabNavHorizontal/TabNavHorizontal.module.css` | `darkSkin` family reskinned for `UserNav` (only consumer); `.root` left untouched |
-| `src/components/UserNav/UserNav.js` | Active-state expanded to all account settings pages |
+| `components/CustomExtendedDataField/CustomExtendedDataField.js` | `groupedMultiSelect` + `colorGridPicker` branches |
+| `components/FieldCurrencyInput/FieldCurrencyInput.js` | Price inputs forced to `en-US` (`$1,325.00`) to match `formatMoney` display — was locale-dependent `1.325,00 $` |
+| `util/configHelpers.js` | Listing field merge (code wins over Console) |
+| `containers/SearchPage/FilterComponent.js` | Custom filter type branches (delegates to `searchFilters/avFilters`) |
+| `containers/SearchPage/SearchPageWithGrid.js` | Grouped-sizes filter injection (`injectAvFilters`) |
+| `PageBuilder/BlockBuilder/{BlockBuilder,BlockDefault}.js` | Custom block registration |
+| `PageBuilder/SectionBuilder/SectionBuilder.js` | Custom section registration |
+| `translations/en.json` | AV keys mixed with upstream |
+| `TopbarContainer/Topbar/TopbarDesktop/CustomLinksMenu/*` | AV user/category dropdowns (~480 LOC) |
+| `CheckoutPage/CheckoutPageWithPayment.js` | Default Stripe country (`configAV.defaultCountry`) |
+| `EditListingWizard/EditListingWizard.js` | Default Stripe Connect payout country |
+| `EditListingWizard/EditListingWizardTab.js` | `currentUser` prop drilling for pricing |
+| `EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm.js` | Two-column grid + `PhotoGallerySection` |
+| `EditListingWizard/EditListingPricingPanel/EditListingPricing{Panel,Form}.js` | `originalPrice` field (gated by `configAV`) |
+| `ManageListingsPage/ManageListingsPage.js` | "Create listing" `NamedLink` heading |
+| `components/UserNav/UserNav.js` | Active-state expanded to all account pages |
+| `containers/ProfilePage/ProfilePage.js` | `ListingCard` → `AVListingCard` swap |
+| `containers/AuthenticationPage/UserFieldDisplayName.js` | Per-userType display-name label (store sellers) |
+| `containers/ListingPage/SectionHero.js` | `StoreTypeTags` overlay on the gallery hero |
+| `containers/ListingPage/CustomListingFields.js` | Force-show the hosted-hidden `tags` field |
+| `PageBuilder/SectionBuilder/SectionColumns/SectionColumns.js` | `AVSectionContainer` + `2/3 cols` token |
+| `PageBuilder/SectionBuilder/SectionCarousel/SectionCarousel.js` | `AVSectionContainer` + `useDebouncedWindowResize` |
+| `components/CustomExtendedDataSection/CustomExtendedDataSection.js` | Custom `color`/`all_sizes` display dispatch (key→component map) |
+| `components/LayoutComposer/LayoutSideNavigation/LayoutWrapperAccountSettingsSideNav.js` | Account tabs from `getAccountSettingsTabs()` extension |
 
-### Unavoidable upstream files (accept conflicts, append at bottom)
+Also high-conflict on sync: `SearchResultsPanel.js` (AVListingCard swap), `CMSPage.js` (section injection), `TopbarDesktop.js`/`TopbarMobileMenu.js`/`UserNav.js` (nav links), `EditListingPhotosPanel/`, `EditListing{Delivery,Location}Form.js` (grid wrappers), `EditListingPricingAndStockPanel.js` (EarningsEstimator + originalPrice), `SectionGallery.js`/`ListingImageGallery.js` (imageSlots captions), `OrderBreakdown.js` (`LineItemProviderCommissionFixedMaybe`), `OrderPanel.js` (originalPrice), `configDefault.js` (earningsEstimate). Small CSS-module forks (restyles kept inline due to scoped-class/var coupling — see the `AV:` comments in each): `SectionContainer.module.css`, `SectionListings.module.css`, `FilterPlain.module.css`.
 
-AV additions to these files are always appended at the bottom to minimise diff noise:
+Brand colors and the `TabNavHorizontal` `darkSkin` reskin were consolidated into `avBrandOverrides.css` (commit `c3bfa1b06`), so `marketplaceDefaults.css` and `TabNavHorizontal.module.css` are now upstream-clean — do not re-add AV CSS to them.
+
+### Unavoidable upstream files — append AV additions at the bottom
 
 | File | AV addition |
 |---|---|
-| `src/routing/routeConfiguration.js` | Custom page routes (MyPurchasesPage, MySalesPage, MyBalancePage, BulkImportPage) |
-| `src/containers/pageDataLoadingAPI.js` | `loadData` exports for custom pages |
-| `src/reducers.js` | Custom page reducers |
-| `src/ducks/index.js` | `avExtension` duck registration |
-| `server/index.js` | AV-noti event poller startup + `mountCustomApiRoutes(app)` call (one line, before `app.use('/api', apiRouter)`) |
-| `server/customApiRoutes.js` | AV-owned file — registers `/api/brevo`, `/api/instagram`, `/api/my-balance`, `/api/bulk-import` |
+| `routing/routeConfiguration.js` | Custom page routes |
+| `containers/pageDataLoadingAPI.js` | `loadData` exports |
+| `containers/reducers.js` | Custom page reducers |
+| `ducks/index.js` | `avExtension` duck |
+| `server/index.js` | AV-noti poller + `mountCustomApiRoutes(app)` (before `app.use('/api', apiRouter)`) |
+| `server/customApiRoutes.js` | AV-owned: `/api/brevo`, `/api/instagram`, `/api/my-balance`, `/api/bulk-import` |
 
 ## Deployment
 
-- **Production (Heroku):** `git push heroku main` — `heroku-postbuild` runs `yarn build`
-- **Staging (Render.com):** use Stripe test keys (`pk_test_`/`sk_test_`); may cold-start after inactivity
-
-## Documentation
-
-In-repo docs in `docs/` (read these before changing the related subsystem):
-- `bulk-import.md` — CSV+image bulk listing importer architecture & CSV format
-- `listing-custom-fields-setup.md` — Sharetribe Console listing-field setup
-- `console-customization-guide.md` — Console CMS/asset configuration
-- `test-account-setup.md`, `bidding-research.md`, `ai_notes.md`
-
-Implementation plans (written 2026-06-12, **not yet implemented** — execute task-by-task per the plan headers):
-- `plan-bulk-import-all-users.md` — open bulk import to all signed-in users (current user as author; privileged email list for `author_id`; security hardening; example ZIP; wizard CTA link)
-- `plan-favorites-page.md` — heart/like button on listings + `/favorites` page (privateData storage, `favorites.duck`, `FavoriteButton`, AV_PROFILE_LINKS entry)
-- `plan-shopping-bag.md` — localStorage shopping bag (`bag.duck`, `AddToBagButton` in ProductOrderForm, topbar `BagLink`, `/bag` page, `BagPopup`)
+- **Production (Heroku):** `git push heroku main` — `heroku-postbuild` runs `yarn build`.
+- **Staging (Render.com):** Stripe test keys (`pk_test_`/`sk_test_`); may cold-start.
 
 ## Upstream Sync
 
 ```sh
 git remote add upstream https://github.com/sharetribe/web-template.git
-git fetch upstream
-git merge upstream/main
+git fetch upstream && git merge upstream/main
 ```
 
-When resolving conflicts, review customized areas first: `src/config`, `src/components`, customized containers, `src/extensions/`.
+Resolve conflicts reviewing customized areas first: `src/config`, `src/components`, customized containers, `src/extensions/`. See the Watchlist above for the highest-risk files.
 
-High-conflict files to watch: `SearchResultsPanel.js` (AVListingCard swap), `CMSPage.js` (custom section injection), `marketplaceDefaults.css` (AV brand colors), `TopbarDesktop.js` and `TopbarMobileMenu.js` (My Purchases/Sales/Balance menu links), `UserNav.js` (My Purchases/Sales/Balance tabs), `server/index.js` (AV-noti poller startup), `EditListingPhotosPanel/` (labeled image slots), `EditListingDetailsPanel/` (two-column grid + inline PhotoGallerySection), `EditListingDeliveryForm.js` / `EditListingLocationForm.js` (two-column grid wrappers), `EditListingPricingAndStockPanel.js` (EarningsEstimator + originalPrice), `SectionContainer/SectionContainer.js` (delegates to AVSectionContainer), `SectionGallery.js` and `ListingImageGallery.js` (imageSlots label captions), `OrderBreakdown.js` (adds `LineItemProviderCommissionFixedMaybe`), `OrderPanel.js` (originalPrice strike-through), `configDefault.js` (earningsEstimate block), `routeConfiguration.js` (MyPurchasesPage/MySalesPage/MyBalancePage/BulkImportPage routes).
+## Documentation
+
+`docs/` (read before changing the related subsystem): `bulk-import.md`, `listing-custom-fields-setup.md`, `console-customization-guide.md`, `test-account-setup.md`, `bidding-research.md`, `ai_notes.md`.
+
+Implementation plans (written 2026-06-12, **not yet implemented** — execute task-by-task per plan headers): `plan-bulk-import-all-users.md`, `plan-favorites-page.md`, `plan-shopping-bag.md`.

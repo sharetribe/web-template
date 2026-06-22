@@ -70,6 +70,7 @@ const BlockDefault = props => {
     hasSmallerTitles,
     hasMediaTitle,
     hasBlueTitle,
+    hasFullLinks,
     sliderImages,
     ctaButtonWrapClass,
     ...customProps
@@ -90,7 +91,8 @@ const BlockDefault = props => {
     alignmentClass,
     css.text,
     hasIconImg ? css.slimContent : '',
-    hasSmallerTitles ? css.smallerTitles : ''
+    hasSmallerTitles ? css.smallerTitles : '',
+    hasFullLinks ? css.fullLinks : ''
   );
 
   const fieldMediaClass = classNames(mediaClassName, hasIconImg ? css.iconImg : '');

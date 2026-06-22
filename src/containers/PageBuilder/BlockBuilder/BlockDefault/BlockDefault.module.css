@@ -42,6 +42,12 @@
   color: var(--avBlue);
 }
 
+/* "fullLinks ::": let links inside the block's body P elements wrap on phrase
+   boundaries instead of overflowing the column on long URLs/unbroken words. */
+.fullLinks p a {
+  word-break: auto-phrase;
+}
+
 /* Block-level mirror of the section-name token "- SmallerTitles":
    shift all headings down one size level. */
 .smallerTitles {

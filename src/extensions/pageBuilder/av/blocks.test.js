@@ -88,6 +88,16 @@ describe('createBlockCustomProps', () => {
     expect(props.hasBlueTitle).toBeUndefined();
   });
 
+  it('sets hasFullLinks for blockName containing "fullLinks ::"', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'fullLinks ::' }, intl, css);
+    expect(props.hasFullLinks).toBe(true);
+  });
+
+  it('does not set hasFullLinks when the token is absent', () => {
+    const props = createBlockCustomProps({ blockId: 'b1', blockName: 'blueTitle ::' }, intl, css);
+    expect(props.hasFullLinks).toBeUndefined();
+  });
+
   it('sets hasIconImg for "icon img ::"', () => {
     const props = createBlockCustomProps({ blockId: 'b1', blockName: 'icon img ::' }, intl, css);
     expect(props.hasIconImg).toBe(true);
