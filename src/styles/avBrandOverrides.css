@@ -978,3 +978,17 @@ textarea {
 :root [class*='AuthenticationPage_error__'] {
   color: var(--colorFail);
 }
+
+/* ================ Checkout: sticky order-summary column (AV) ================
+   Keep the right-hand details/order-breakdown card in view while the (often
+   long) order form + payment column scrolls. Desktop only — the card is hidden
+   below --viewportLarge. The simplified checkout topbar is normal-flow (scrolls
+   away), so a small top offset is enough. align-self:flex-start ensures the
+   sticky element isn't stretched by the flex row. */
+@media (--viewportLarge) {
+  :root [class*='CheckoutPage_detailsContainerDesktop__'] {
+    position: sticky;
+    top: 24px;
+    align-self: flex-start;
+  }
+}
