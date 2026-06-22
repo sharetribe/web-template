@@ -107,9 +107,15 @@ const EnhancedCheckoutPage = props => {
     params,
     scrollingDisabled,
     speculateTransactionInProgress,
+    speculatedTransaction,
     onInquiryWithoutPayment,
     initiateOrderError,
   } = props;
+  // AV: only the INITIAL speculation should blank the page with a full-page
+  // spinner. A re-speculation (e.g. selecting a shipping type) keeps the previous
+  // speculatedTransaction (see CheckoutPage.duck), so the page stays mounted and
+  // the order breakdown shows its own localized loading state.
+  const showInitialSpinner = speculateTransactionInProgress && !speculatedTransaction;
   const processName = getProcessName(pageData);
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
@@ -190,7 +196,7 @@ const EnhancedCheckoutPage = props => {
       transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
-  ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
+  ) : processName && !isInquiryProcess && !showInitialSpinner ? (
     <CheckoutPageWithPayment
       config={config}
       routeConfiguration={routeConfiguration}

@@ -451,7 +451,12 @@ const checkoutPageSlice = createSlice({
       .addCase(speculateTransactionThunk.pending, state => {
         state.speculateTransactionInProgress = true;
         state.speculateTransactionError = null;
-        state.speculatedTransaction = null;
+        // AV: keep the previously speculated transaction in place while a new
+        // speculation is in flight. On the initial load it is already null (so the
+        // page shows its full-page spinner), but on a re-speculation — e.g. after
+        // the buyer selects a shipping type — retaining it keeps the checkout page
+        // mounted (Stripe form/input preserved) and lets the order breakdown show
+        // a localized loading state instead of the whole page flashing to a spinner.
       })
       .addCase(speculateTransactionThunk.fulfilled, (state, action) => {
         // Check that the local devices clock is within a minute from the server

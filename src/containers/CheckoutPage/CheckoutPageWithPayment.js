@@ -432,6 +432,7 @@ export const CheckoutPageWithPayment = props => {
   const {
     scrollingDisabled,
     speculateTransactionError,
+    speculateTransactionInProgress,
     speculatedTransaction: speculatedTransactionMaybe,
     isClockInSync,
     initiateOrderError,
@@ -676,6 +677,7 @@ export const CheckoutPageWithPayment = props => {
             speculateTransactionErrorMessage={errorMessages.speculateTransactionErrorMessage}
             breakdown={breakdown}
             priceVariantName={priceVariantName}
+            speculateInProgress={speculateTransactionInProgress}
           />
           <section className={css.paymentContainer}>
             {errorMessages.initiateOrderErrorMessage}
@@ -748,6 +750,7 @@ export const CheckoutPageWithPayment = props => {
           isInquiryProcess={false}
           processName={processName}
           breakdown={breakdown}
+          speculateInProgress={speculateTransactionInProgress}
           showListingImage={showListingImage}
           intl={intl}
         />
