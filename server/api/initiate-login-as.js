@@ -73,7 +73,8 @@ code_challenge_method=S256`;
 
   res.cookie(stateKey, state, cookieOpts);
   res.cookie(codeVerifierKey, codeVerifier, cookieOpts);
-  if (targetPath) {
+  const isRelativePath = p => typeof p === 'string' && p.startsWith('/') && !p.startsWith('//');
+  if (targetPath && isRelativePath(targetPath)) {
     res.cookie(targetPathKey, targetPath, cookieOpts);
   }
   return res.redirect(location);

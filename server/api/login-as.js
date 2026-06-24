@@ -33,7 +33,11 @@ module.exports = (req, res) => {
   }
 
   const codeVerifier = req.cookies[codeVerifierKey];
-  const targetPath = req.cookies[targetPathKey];
+  const targetPathRaw = req.cookies[targetPathKey];
+  const isRelativePath = p => typeof p === 'string' && p.startsWith('/') && !p.startsWith('//');
+  const targetPath = targetPathRaw && isRelativePath(targetPathRaw) 
+    ? `${ROOT_URL.replace(/\/$/, '')}${targetPathRaw}`
+    : '/';
 
   // clear state and code verifier cookies
   res.clearCookie(stateKey, { secure: USING_SSL });
@@ -49,6 +53,6 @@ module.exports = (req, res) => {
       redirect_uri: loginAsRedirectUri,
       code_verifier: codeVerifier,
     })
-    .then(() => res.redirect(targetPath || '/'))
+    .then(() => res.redirect(targetPath))
     .catch(() => res.status(401).send('Unable to authenticate as a user'));
 };
