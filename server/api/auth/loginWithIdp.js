@@ -3,6 +3,7 @@ const https = require('https');
 const sharetribeSdk = require('sharetribe-flex-sdk');
 const log = require('../../log.js');
 const sdkUtils = require('../../api-util/sdk');
+const { buildMarketplaceRedirectUrl, isRelativePath } = require('../../api-util/url');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
@@ -96,11 +97,8 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
         // We need to add # to the end of the URL because otherwise Facebook
         // login will add their defaul #_#_ which breaks the routing in frontend.
 
-        if (from) {
-          res.redirect(`${rootUrl}${from}#`);
-        } else {
-          res.redirect(`${rootUrl}${defaultReturn}#`);
-        }
+        const redirectUrl = buildMarketplaceRedirectUrl(rootUrl, from, defaultReturn);
+        res.redirect(`${redirectUrl}#`);
       }
     })
     .catch(() => {
@@ -123,7 +121,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           lastName: user.lastName,
           idpToken: user.idpToken,
           idpId,
-          from,
+          from: from && isRelativePath(from) ? from : undefined,
           userType,
         },
         {
@@ -131,6 +129,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
         }
       );
 
-      res.redirect(`${rootUrl}${defaultConfirm}#`);
+      const confirmUrl = buildMarketplaceRedirectUrl(rootUrl, defaultConfirm);
+      res.redirect(`${confirmUrl}#`);
     });
 };
