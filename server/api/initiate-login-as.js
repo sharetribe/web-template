@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 
+const { isRelativePath } = require('../api-util/url');
+
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const CONSOLE_URL = process.env.SERVER_SHARETRIBE_CONSOLE_URL || 'https://console.sharetribe.com';
@@ -75,7 +77,6 @@ module.exports = (req, res) => {
 
   res.cookie(stateKey, state, cookieOpts);
   res.cookie(codeVerifierKey, codeVerifier, cookieOpts);
-  const isRelativePath = p => typeof p === 'string' && p.startsWith('/') && !p.startsWith('//');
   if (targetPath && isRelativePath(targetPath)) {
     res.cookie(targetPathKey, targetPath, cookieOpts);
   }
