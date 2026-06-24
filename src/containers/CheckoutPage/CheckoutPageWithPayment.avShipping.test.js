@@ -43,6 +43,43 @@ describe('getOrderParams avShippingType', () => {
     expect(params.avShippingType).toBeUndefined();
     expect(params.protectedData.avShippingType).toBeUndefined();
   });
+
+  test("defaults deliveryMethod to 'shipping' for a purchase listing when unset", () => {
+    const noDelivery = {
+      listing: {
+        id: { uuid: 'l1' },
+        attributes: { publicData: { transactionProcessAlias: 'default-purchase/release-1' } },
+      },
+      orderData: { quantity: 1 },
+    };
+    const params = getOrderParams(noDelivery, {}, {}, { listing: { listingTypes: [] } });
+    expect(params.deliveryMethod).toBe('shipping');
+    expect(params.protectedData.deliveryMethod).toBe('shipping');
+  });
+
+  test("maps the 'none' deliveryMethod sentinel to 'shipping' for a purchase listing", () => {
+    const noneDelivery = {
+      listing: {
+        id: { uuid: 'l1' },
+        attributes: { publicData: { transactionProcessAlias: 'default-purchase/release-1' } },
+      },
+      orderData: { deliveryMethod: 'none', quantity: 1 },
+    };
+    const params = getOrderParams(noneDelivery, {}, {}, { listing: { listingTypes: [] } });
+    expect(params.deliveryMethod).toBe('shipping');
+  });
+
+  test('keeps an explicit pickup deliveryMethod for a purchase listing', () => {
+    const pickup = {
+      listing: {
+        id: { uuid: 'l1' },
+        attributes: { publicData: { transactionProcessAlias: 'default-purchase/release-1' } },
+      },
+      orderData: { deliveryMethod: 'pickup', quantity: 1 },
+    };
+    const params = getOrderParams(pickup, {}, {}, { listing: { listingTypes: [] } });
+    expect(params.deliveryMethod).toBe('pickup');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -147,6 +184,30 @@ describe('CheckoutPageWithPayment AV shipping selector', () => {
       <CheckoutPageWithPayment
         {...baseProps}
         pageData={shippingPageData}
+        setPageData={noop}
+        fetchSpeculatedTransaction={noop}
+      />
+    );
+    expect(screen.getByText('AVShippingTypeSelector.legend')).toBeInTheDocument();
+  });
+
+  it('renders the selector for a purchase even when deliveryMethod is unset', () => {
+    render(
+      <CheckoutPageWithPayment
+        {...baseProps}
+        pageData={{ orderData: { quantity: 1 }, listing }}
+        setPageData={noop}
+        fetchSpeculatedTransaction={noop}
+      />
+    );
+    expect(screen.getByText('AVShippingTypeSelector.legend')).toBeInTheDocument();
+  });
+
+  it("renders the selector for a purchase when deliveryMethod is the 'none' sentinel", () => {
+    render(
+      <CheckoutPageWithPayment
+        {...baseProps}
+        pageData={{ orderData: { quantity: 1, deliveryMethod: 'none' }, listing }}
         setPageData={noop}
         fetchSpeculatedTransaction={noop}
       />

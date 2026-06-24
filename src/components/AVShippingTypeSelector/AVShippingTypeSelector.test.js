@@ -97,4 +97,42 @@ describe('AVShippingTypeSelector', () => {
     expect(radios[0]).not.toBeChecked();
     expect(radios[1]).toBeChecked();
   });
+
+  test('renders the contact-seller alert and fires onContactSeller when provided', () => {
+    const onContactSeller = jest.fn();
+    render(
+      <AVShippingTypeSelector
+        size="M"
+        availableTypes={['nacionalEstandar']}
+        selectedType={null}
+        onSelect={() => {}}
+        currency="MXN"
+        onContactSeller={onContactSeller}
+      />,
+      {
+        messages: {
+          'AVShippingTypeSelector.confirmAlertTitle': 'Recuerda confirmar la venta',
+          'AVShippingTypeSelector.confirmAlertText':
+            'Contacta al vendedor para confirmar la fecha de envio.',
+          'AVShippingTypeSelector.contactSellerCta': 'Contactar al vendedor',
+        },
+      }
+    );
+    expect(screen.getByText('Recuerda confirmar la venta')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Contactar al vendedor/i }));
+    expect(onContactSeller).toHaveBeenCalledTimes(1);
+  });
+
+  test('omits the contact-seller alert when onContactSeller is not provided', () => {
+    render(
+      <AVShippingTypeSelector
+        size="M"
+        availableTypes={['nacionalEstandar']}
+        selectedType={null}
+        onSelect={() => {}}
+        currency="MXN"
+      />
+    );
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
 });

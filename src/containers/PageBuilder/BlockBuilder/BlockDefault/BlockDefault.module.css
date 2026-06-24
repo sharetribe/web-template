@@ -24,6 +24,13 @@
   margin: auto;
 }
 
+/* "imgTop ::": when the block media is cropped (object-fit: cover, e.g. inside
+   an AvFeature row), anchor it to the top instead of the default center. */
+.imgTop img,
+.imgTop video {
+  object-position: top;
+}
+
 /* ── Text column ──────────────────────────────────────────────────────────── */
 
 .text {
@@ -47,7 +54,7 @@
    at full size rather than being split). Matches the AV heading keep-whole rules.
    word-break: keep-all is supported across all modern desktop + mobile browsers. */
 .fullLinks p a {
-  word-break: keep-all;
+  word-break: normal;
   overflow-wrap: normal;
   hyphens: none;
 }

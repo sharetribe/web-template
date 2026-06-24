@@ -8,8 +8,8 @@
 .videoPane {
   position: relative;
   overflow: hidden;
-  /* 16:9 aspect ratio on mobile for the video pane */
-  min-height: 56vw;
+  /* aspect ratio on mobile for the video pane */
+  min-height: 68vw;
 }
 
 .video {

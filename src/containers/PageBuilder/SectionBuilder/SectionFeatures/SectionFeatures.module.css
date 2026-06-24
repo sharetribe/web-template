@@ -64,10 +64,13 @@
   align-items: stretch;
   gap: 0;
   flex-direction: column;
-  max-height: 780px;
 
   @media (--viewportMedium) {
     flex-direction: row-reverse;
+    /* Cap the side-by-side row height on desktop only. On mobile the media gets
+       an explicit 68vw height (see below) and the stacked text grows freely, so
+       the 780px cap must not constrain the column layout. */
+    max-height: 780px;
   }
 
   &:nth-child(even) {
@@ -88,23 +91,30 @@
     }
   }
 
-  /* Media side: natural height on mobile, fill block height on side-by-side */
+  /* Media side: on mobile match SectionVideoSection's video height (68vw)
+     so the VideoSection video and the AvFeature media line up on screens ≤768px;
+     on side-by-side it fills the block height. */
   > :first-child {
     border-radius: 0;
-    height: auto;
+    height: 68vw;
     overflow: hidden;
 
-    & img {
+    & img,
+    & video,
+    & iframe {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       border-radius: 0;
     }
 
     @media (--viewportMedium) {
       height: 100%;
 
-      & img {
+      & img,
+      & video,
+      & iframe {
         height: 100%;
         object-fit: cover;
       }

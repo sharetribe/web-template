@@ -71,6 +71,7 @@ const BlockDefault = props => {
     hasMediaTitle,
     hasBlueTitle,
     hasFullLinks,
+    hasImgTop,
     sliderImages,
     ctaButtonWrapClass,
     ...customProps
@@ -95,7 +96,11 @@ const BlockDefault = props => {
     hasFullLinks ? css.fullLinks : ''
   );
 
-  const fieldMediaClass = classNames(mediaClassName, hasIconImg ? css.iconImg : '');
+  const fieldMediaClass = classNames(
+    mediaClassName,
+    hasIconImg ? css.iconImg : '',
+    hasImgTop ? css.imgTop : ''
+  );
 
   // The block media. When `hasMediaTitle` is set it is rendered between the
   // title and the rest of the content (see below); otherwise it stays above

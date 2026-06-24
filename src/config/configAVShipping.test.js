@@ -34,26 +34,20 @@ describe('configAVShipping helpers', () => {
     expect(getShippingPrice('Z', 'nacionalEstandar')).toBeNull();
   });
 
-  test('getAvailableDeliveryTypes hides cdmxLocal for non-CDMX destinations', () => {
-    cfg.priceGrid.M.cdmxLocal = 9900;
+  test('getAvailableDeliveryTypes returns both priced national types', () => {
     cfg.priceGrid.M.nacionalEstandar = 12900;
-    const cdmx = cfg.getAvailableDeliveryTypes('M', { state: 'Ciudad de México' });
-    const other = cfg.getAvailableDeliveryTypes('M', { state: 'Jalisco' });
-    expect(cdmx).toContain('cdmxLocal');
-    expect(other).not.toContain('cdmxLocal');
-    expect(other).toContain('nacionalEstandar');
+    cfg.priceGrid.M.nacionalExpress = 18900;
+    expect(getAvailableDeliveryTypes('M')).toEqual(['nacionalExpress', 'nacionalEstandar']);
+  });
+
+  test('getAvailableDeliveryTypes hides unpriced types', () => {
+    cfg.priceGrid.M.nacionalEstandar = 12900;
+    cfg.priceGrid.M.nacionalExpress = null;
+    expect(getAvailableDeliveryTypes('M')).toEqual(['nacionalEstandar']);
   });
 
   test('getAvailableDeliveryTypes returns [] for especial', () => {
-    expect(getAvailableDeliveryTypes('especial', { state: 'Ciudad de México' })).toEqual([]);
-  });
-
-  test('getAvailableDeliveryTypes uses postal code range to detect CDMX (01000-16999)', () => {
-    cfg.priceGrid.M.cdmxLocal = 9900;
-    const cdmxByPostal = cfg.getAvailableDeliveryTypes('M', { postalCode: '14000' }); // Tlalpan, CDMX
-    const nonCdmxByPostal = cfg.getAvailableDeliveryTypes('M', { postalCode: '44100' }); // Guadalajara
-    expect(cdmxByPostal).toContain('cdmxLocal');
-    expect(nonCdmxByPostal).not.toContain('cdmxLocal');
+    expect(getAvailableDeliveryTypes('especial')).toEqual([]);
   });
 });
 

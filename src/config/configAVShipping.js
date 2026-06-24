@@ -13,7 +13,7 @@ const packageSizes = {
   especial: { dimsCm: null, weightMaxKg: null, packaging: 'custom' },
 };
 
-const deliveryTypes = ['cdmxLocal', 'nacionalExpress', 'nacionalEstandar'];
+const deliveryTypes = ['nacionalExpress', 'nacionalEstandar'];
 
 // MXN subunits (centavos), IVA included. null = not yet priced.
 //
@@ -21,13 +21,13 @@ const deliveryTypes = ['cdmxLocal', 'nacionalExpress', 'nacionalEstandar'];
 // Plan A end-to-end (so the checkout selector renders priced options and the
 // breakdown shows a shipping fee). Replace EVERY value below with the
 // Segmail-confirmed prices before launch (see docs/AV Configuracion Envios
-// Jun 2026 §2/§5). Ordering used for the placeholders: cdmxLocal < nacionalEstandar
-// < nacionalExpress, and S < M < L. Set a cell back to `null` to hide that
+// Jun 2026 §2/§5). Ordering used for the placeholders: nacionalEstandar <
+// nacionalExpress, and S < M < L. Set a cell back to `null` to hide that
 // option at checkout.
 const priceGrid = {
-  S: { cdmxLocal: 7900, nacionalEstandar: 9900, nacionalExpress: 14900 }, // TEST ONLY
-  M: { cdmxLocal: 9900, nacionalEstandar: 12900, nacionalExpress: 18900 }, // TEST ONLY
-  L: { cdmxLocal: 12900, nacionalEstandar: 15900, nacionalExpress: 22900 }, // TEST ONLY
+  S: { nacionalEstandar: 9900, nacionalExpress: 14900 }, // TEST ONLY
+  M: { nacionalEstandar: 12900, nacionalExpress: 18900 }, // TEST ONLY
+  L: { nacionalEstandar: 15900, nacionalExpress: 22900 }, // TEST ONLY
 };
 
 // Maps a category id → package size. Only the EXCEPTIONS to the default (`M`)
@@ -111,23 +111,9 @@ function getShippingPrice(size, deliveryType) {
   return typeof price === 'number' ? price : null;
 }
 
-// CDMX detection — match the destination state/postal to Ciudad de México.
-function isCdmxDestination(destinationAddress) {
-  if (!destinationAddress) return false;
-  const state = String(destinationAddress.state || '').toLowerCase();
-  const postal = String(destinationAddress.postalCode || destinationAddress.zip || '');
-  const cdmxStateNames = ['ciudad de méxico', 'ciudad de mexico', 'cdmx', 'distrito federal'];
-  const isCdmxPostal = /^(0[1-9]|1[0-6])\d{3}$/.test(postal); // CDMX postal codes span 01000-16999
-  return cdmxStateNames.includes(state) || isCdmxPostal;
-}
-
-function getAvailableDeliveryTypes(size, destinationAddress) {
+function getAvailableDeliveryTypes(size) {
   if (isEspecialSize(size)) return [];
-  return deliveryTypes.filter(type => {
-    if (getShippingPrice(size, type) === null) return false;
-    if (type === 'cdmxLocal') return isCdmxDestination(destinationAddress);
-    return true;
-  });
+  return deliveryTypes.filter(type => getShippingPrice(size, type) !== null);
 }
 
 module.exports = {

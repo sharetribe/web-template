@@ -110,7 +110,7 @@ describe('BulkImportPage', () => {
     await waitFor(() => {
       const link = screen.getByText('BulkImportPage.downloadTemplate');
       expect(link).toBeInTheDocument();
-      expect(link.closest('a')).toHaveAttribute('href', '/api/bulk-import/template');
+      expect(link.closest('a')).toHaveAttribute('href', '/static/files/PLANTILLA_CARGA_MASIVA.csv');
     });
   });
 
@@ -118,11 +118,14 @@ describe('BulkImportPage', () => {
     render(<BulkImportPage />, { initialState: baseState });
 
     const link = await screen.findByText('BulkImportPage.downloadTemplate');
-    expect(link.closest('a')).toHaveAttribute('href', '/api/bulk-import/template');
+    expect(link.closest('a')).toHaveAttribute('href', '/static/files/PLANTILLA_CARGA_MASIVA.csv');
     expect(link.closest('a')).toHaveAttribute('download');
-    // Template endpoint has no auth — browser navigates directly without fetch
+    // Static file is served directly — browser navigates without a fetch
     fireEvent.click(link);
-    expect(global.fetch).not.toHaveBeenCalledWith('/api/bulk-import/template', expect.anything());
+    expect(global.fetch).not.toHaveBeenCalledWith(
+      '/static/files/PLANTILLA_CARGA_MASIVA.csv',
+      expect.anything()
+    );
   });
 
   it('shows error when submitting without a ZIP file', async () => {

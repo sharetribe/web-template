@@ -192,6 +192,9 @@ export const createBlockCustomProps = (block, intl, css) => {
   // word/URL mid-character; `word-break: keep-all`). A too-long link overflows at
   // full size rather than being split.
   if (block.blockName?.includes('fullLinks ::')) blockCustomProps.hasFullLinks = true;
+  // imgTop :: — anchor cropped block media to the top (object-position: top)
+  // instead of the default center.
+  if (block.blockName?.includes('imgTop ::')) blockCustomProps.hasImgTop = true;
   if (block.blockName?.includes('icon img ::')) blockCustomProps.hasIconImg = true;
   if (block.blockName?.includes('social links ::')) blockCustomProps.hasSocialLinks = true;
   if (block.blockName?.includes('newsletter form ::')) {

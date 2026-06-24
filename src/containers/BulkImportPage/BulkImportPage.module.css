@@ -6,6 +6,13 @@
   padding: 32px 24px 64px;
 }
 
+/* The app applies a global `svg { fill: currentColor }`, which overrides the
+   inline `fill="none"` presentation attribute on our line icons and fills them
+   solid. Restore `fill: none` for the stroke-only icons on this page. */
+.content svg[fill='none'] {
+  fill: none;
+}
+
 /* ---------------------------------------------------------------- Layout */
 .layout {
   display: grid;
@@ -25,13 +32,9 @@
 }
 
 .pageTitle {
-  font-size: 34px;
+  font-size: 30px;
   line-height: 1.1;
   margin: 0 0 12px;
-
-  @media (--viewportMedium) {
-    font-size: 44px;
-  }
 }
 
 .pageSubtitle {
@@ -41,25 +44,15 @@
 }
 
 .templateButton {
+  composes: ctaButtonBlue from '../PageBuilder/SectionBuilder/SectionBuilder.module.css';
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--marketplaceColor);
-  color: #fff;
-  font-weight: var(--fontWeightSemiBold);
-  padding: 12px 22px;
-  border-radius: 999px;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.templateButton:hover {
-  background: var(--marketplaceColorDark);
-  text-decoration: none;
+  margin-top: 0;
 }
 
 .stepsTitle {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: var(--fontWeightBold);
   margin: 36px 0 16px;
   padding-top: 20px;
@@ -122,7 +115,7 @@
 
 .stepText {
   color: var(--colorGrey700);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.45;
   margin: 0;
 }
@@ -157,7 +150,7 @@
 }
 
 .dropTitle {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: var(--fontWeightBold);
   margin: 0 0 8px;
 }
@@ -170,10 +163,10 @@
 }
 
 .selectButton {
-  composes: buttonPrimary from global;
+  composes: ctaButtonBlue from '../PageBuilder/SectionBuilder/SectionBuilder.module.css';
   display: inline-flex;
   width: auto;
-  min-height: 0;
+  margin-top: 0;
   padding: 14px 28px;
 }
 
@@ -238,7 +231,9 @@
 }
 
 .submitButton {
-  composes: buttonPrimary from global;
+  composes: ctaButtonBlue from '../PageBuilder/SectionBuilder/SectionBuilder.module.css';
+  display: block;
+  width: 100%;
   margin-top: 20px;
 }
 
@@ -271,25 +266,57 @@
 
 /* ---------------------------------------------------------------- Help bar */
 .helpBar {
+  /* Mobile: stack vertically so the WhatsApp CTA can sit right under the
+     title (see `order` below). Restored to a wrapping row on desktop. */
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px 40px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
   margin-top: 40px;
   padding: 28px 32px;
   background: var(--avYellowLight, #f5f7d0);
   border-radius: 16px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px 40px;
+  }
 }
 
 .helpTitle {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: var(--fontWeightBold);
 }
 
 .helpDivider {
-  align-self: stretch;
-  width: 1px;
-  background: rgba(0, 0, 0, 0.15);
+  /* Vertical separator only makes sense in the desktop row layout. */
+  display: none;
+
+  @media (--viewportMedium) {
+    display: block;
+    align-self: stretch;
+    width: 1px;
+    background: rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* The two help links are grouped together. They lay out in a wrapping row so
+   they sit side by side when there's room and wrap (stacking the WhatsApp link
+   below the example-ZIP link) on smaller screens. On desktop the group fills
+   the space to the right of the title + divider (which stay on the left); on
+   mobile it spans full width via the bar's column layout. */
+.helpLinks {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+
+  @media (--viewportMedium) {
+    flex: 1;
+  }
 }
 
 .helpItem {
@@ -312,6 +339,13 @@
   align-items: center;
   background: var(--colorGrey100);
   color: var(--marketplaceColor);
+  /* On mobile the WhatsApp CTA sits above the example-ZIP link (directly
+     below the title); on desktop it follows source order (below the ZIP). */
+  order: -1;
+
+  @media (--viewportMedium) {
+    order: 0;
+  }
 }
 
 .helpIcon {
@@ -416,7 +450,7 @@
 
 /* Tables */
 .sectionTitle {
-  font-size: 16px;
+  font-size: 18px;
   margin: 20px 0 8px;
 }
 
@@ -452,9 +486,8 @@
 }
 
 .resetButton {
-  composes: buttonPrimary from global;
+  composes: ctaButtonBlue from '../PageBuilder/SectionBuilder/SectionBuilder.module.css';
   margin-top: 20px;
-  padding: 10px 20px;
 }
 
 .errorBox {

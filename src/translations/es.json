@@ -1437,12 +1437,6 @@
   "UserNav.screenreader.userNav": "Navegación de perfil de usuario",
   "UserNav.yourListings": "Tus anuncios",
 
-  "AVShippingTypeSelector.legend": "Elige una opción de envío",
-  "AVShippingTypeSelector.noOptions": "El envío no está disponible para este artículo — contacta a AV.",
-  "AVShippingTypeSelector.type.cdmxLocal": "CDMX Local",
-  "AVShippingTypeSelector.type.nacionalExpress": "Nacional Express",
-  "AVShippingTypeSelector.type.nacionalEstandar": "Nacional Estándar",
-
   "AVWelcomePopup.vendedor.imageUrl": "",
   "AVWelcomePopup.vendedor.title": "",
   "AVWelcomePopup.vendedor.text": "",

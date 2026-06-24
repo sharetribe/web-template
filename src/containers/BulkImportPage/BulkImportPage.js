@@ -34,40 +34,66 @@ const DownloadIcon = () => (
   </svg>
 );
 
-const TemplateIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
-    <path d="M4 9h16M9 9v12M4 15h16" stroke="currentColor" strokeWidth="1.8" />
-  </svg>
-);
-
-const PhotoIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.8" />
-    <circle cx="8.5" cy="10" r="1.6" stroke="currentColor" strokeWidth="1.6" />
-    <path
-      d="m4 18 5-5 4 4 3-3 4 4"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ZipIcon = ({ size = 28 }) => (
+// Spreadsheet / CSV file: a document with a small data grid.
+const TemplateIcon = ({ size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path
-      d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-    />
-    <path d="M13 3v5h5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-    <path
-      d="M11 9.5h1.5M10.5 12h1.5M11 14.5h1.5"
+      d="M13 2.5H7A2 2 0 0 0 5 4.5v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"
       stroke="currentColor"
       strokeWidth="1.6"
+      strokeLinejoin="round"
+    />
+    <path d="M13 2.5v6h6" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    <rect x="8" y="11.5" width="8" height="6.5" rx="0.8" stroke="currentColor" strokeWidth="1.4" />
+    <path d="M8 14.75h8M11.6 11.5v6.5" stroke="currentColor" strokeWidth="1.4" />
+  </svg>
+);
+
+// Image file: a document with a sun + mountains thumbnail.
+const PhotoIcon = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M13 2.5H7A2 2 0 0 0 5 4.5v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinejoin="round"
+    />
+    <path d="M13 2.5v6h6" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    <circle cx="9.6" cy="13" r="1.15" stroke="currentColor" strokeWidth="1.3" />
+    <path
+      d="M7.5 18.2 11 14.7l1.7 1.7 1.9-2.2 2.2 2.6"
+      stroke="currentColor"
+      strokeWidth="1.5"
       strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// ZIP file: a document with zipper teeth and a pull tab.
+const ZipIcon = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M13 2.5H7A2 2 0 0 0 5 4.5v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinejoin="round"
+    />
+    <path d="M13 2.5v6h6" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    <path
+      d="M11 11h2M11 12.5h2M11 14h2M11 15.5h2"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+    />
+    <rect
+      x="10.5"
+      y="16.7"
+      width="3"
+      height="3.1"
+      rx="0.8"
+      stroke="currentColor"
+      strokeWidth="1.4"
     />
   </svg>
 );
@@ -253,7 +279,7 @@ const BulkImportPageComponent = props => {
     pickFile(file);
   };
 
-  const templateDownloadUrl = '/api/bulk-import/template';
+  const templateDownloadUrl = '/static/files/PLANTILLA_CARGA_MASIVA.csv';
 
   const progressPercent =
     jobData && jobData.total > 0 ? Math.round((jobData.processed / jobData.total) * 100) : 0;
@@ -277,9 +303,9 @@ const BulkImportPageComponent = props => {
         <FormattedMessage id="BulkImportPage.downloadTemplate" />
       </a>
 
-      <h3 className={css.stepsTitle}>
+      <h2 className={css.stepsTitle}>
         <FormattedMessage id="BulkImportPage.stepsTitle" />
-      </h3>
+      </h2>
 
       <ol className={css.steps}>
         {[
@@ -400,36 +426,37 @@ const BulkImportPageComponent = props => {
       </span>
       <span className={css.helpDivider} aria-hidden="true" />
 
-      {/* TODO: wire to a real example ZIP download once the endpoint exists. */}
-      <a href="#" className={css.helpItem} onClick={e => e.preventDefault()}>
-        <span className={css.helpIcon}>
-          <FolderIcon />
-        </span>
-        <span className={css.helpItemBody}>
-          <span className={css.helpItemTitle}>
-            <FormattedMessage id="BulkImportPage.exampleZipTitle" />
+      <div className={css.helpLinks}>
+        <a href="/static/files/ZIP_CARGA_MASIVA.zip" className={css.helpItem} download>
+          <span className={css.helpIcon}>
+            <FolderIcon />
           </span>
-          <span className={css.helpItemText}>
-            <FormattedMessage id="BulkImportPage.exampleZipText" />
+          <span className={css.helpItemBody}>
+            <span className={css.helpItemTitle}>
+              <FormattedMessage id="BulkImportPage.exampleZipTitle" />
+            </span>
+            <span className={css.helpItemText}>
+              <FormattedMessage id="BulkImportPage.exampleZipText" />
+            </span>
           </span>
-        </span>
-      </a>
+        </a>
 
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${css.helpItem} ${css.helpItemWhatsapp}`}
-      >
-        <span className={css.helpIcon}>
-          <FolderIcon />
-        </span>
-        <span className={css.helpItemBody}>
-          <span className={css.helpItemTitle}>
-            <FormattedMessage id="BulkImportPage.whatsappContact" />
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${css.helpItem} ${css.helpItemWhatsapp}`}
+        >
+          <span className={css.helpIcon}>
+            <FolderIcon />
           </span>
-        </span>
-      </a>
+          <span className={css.helpItemBody}>
+            <span className={css.helpItemTitle}>
+              <FormattedMessage id="BulkImportPage.whatsappContact" />
+            </span>
+          </span>
+        </a>
+      </div>
     </div>
   );
 

@@ -19,9 +19,9 @@
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 1px;
-  /* Keep words whole — never break mid-character (auto-phrase was a no-op for
-     Latin text and unsupported on iOS/Firefox). */
   word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 .input {

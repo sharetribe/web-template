@@ -49,6 +49,8 @@ import { defaultCountry } from '../../config/configAV';
 // AV shipping: buyer-facing delivery-type selector + grid-driven availability
 import AVShippingTypeSelector from '../../components/AVShippingTypeSelector';
 import { getAvailableDeliveryTypes, resolvePackageSize } from '../../config/configAVShipping';
+// AV shipping: "contact the seller" reuses the ListingPage inquiry-modal flow
+import { setInitialValues as setListingPageInitialValues } from '../ListingPage/ListingPage.duck';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
 // https://stripe.com/docs/payments/payment-intents/status
@@ -122,7 +124,20 @@ export const getOrderParams = (
   const quantityMaybe = quantity ? { quantity } : {};
   const seats = pageData.orderData?.seats;
   const seatsMaybe = seats ? { seats } : {};
-  const deliveryMethod = pageData.orderData?.deliveryMethod;
+  // AV: every product ships. The Console listingType shipping setting is always
+  // off, so OrderPanel emits deliveryMethod 'none' (or nothing). For purchases,
+  // treat anything that isn't an explicit 'pickup' as 'shipping' so the server
+  // computes the size×type grid shipping fee and the delivery-type selector
+  // engages. Mirrors the checkout component's `effectiveDeliveryMethod`.
+  const transactionProcessAlias =
+    pageData?.listing?.attributes?.publicData?.transactionProcessAlias || '';
+  const isPurchaseProcess = transactionProcessAlias.split('/')[0] === PURCHASE_PROCESS_NAME;
+  const rawDeliveryMethod = pageData.orderData?.deliveryMethod;
+  const deliveryMethod = isPurchaseProcess
+    ? rawDeliveryMethod === 'pickup'
+      ? 'pickup'
+      : 'shipping'
+    : rawDeliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
   // AV shipping: the selected delivery type drives the server-side shipping fee
   // (Task 2) and is persisted into protectedData for later label generation (Spec B).
@@ -453,6 +468,9 @@ export const CheckoutPageWithPayment = props => {
     config,
     setPageData,
     fetchSpeculatedTransaction,
+    history,
+    routeConfiguration,
+    dispatch,
   } = props;
 
   // AV shipping: the buyer must choose a delivery type before paying. The choice
@@ -564,8 +582,18 @@ export const CheckoutPageWithPayment = props => {
     country: defaultCountry,
     recipientCountry: defaultCountry,
   };
+  // AV: every product ships and the Console shipping setting is always off, so
+  // OrderPanel emits deliveryMethod 'none' (or nothing). For purchases, treat
+  // anything that isn't an explicit 'pickup' as 'shipping'. An explicit 'pickup'
+  // is still respected. Mirrors the default applied in getOrderParams.
+  const effectiveDeliveryMethod = isPurchase
+    ? orderData?.deliveryMethod === 'pickup'
+      ? 'pickup'
+      : 'shipping'
+    : orderData?.deliveryMethod;
+
   const askShippingDetails =
-    orderData?.deliveryMethod === 'shipping' &&
+    effectiveDeliveryMethod === 'shipping' &&
     !hasTransactionPassedPendingPayment(existingTransaction, process);
 
   const listingLocation = listing?.attributes?.publicData?.location;
@@ -578,22 +606,10 @@ export const CheckoutPageWithPayment = props => {
   const avPackageSize = resolvePackageSize(listing?.attributes?.publicData);
   const isAvShipping =
     isPurchase &&
-    orderData?.deliveryMethod === 'shipping' &&
+    effectiveDeliveryMethod === 'shipping' &&
     !hasTransactionPassedPendingPayment(existingTransaction, process);
-  // Destination drives CDMX-local availability. The shipping address is collected
-  // inside StripePaymentForm's own Final Form, so it is not observable here; fall back
-  // to any destination persisted in orderData. Non-CDMX types are unaffected.
-  // NOTE: this currently always resolves empty (orderData never carries
-  // shippingDetails/recipientState/recipientPostal here), so `cdmxLocal` gating
-  // is effectively inert today. Making it live is a follow-up that requires
-  // lifting the shipping address state out of StripePaymentForm.
-  const avDestination = {
-    state: orderData?.shippingDetails?.state || orderData?.recipientState,
-    postalCode: orderData?.shippingDetails?.postalCode || orderData?.recipientPostal,
-  };
-  const avAvailableTypes = isAvShipping
-    ? getAvailableDeliveryTypes(avPackageSize, avDestination)
-    : [];
+  // Two national delivery types (Express / Estándar), priced by package size.
+  const avAvailableTypes = isAvShipping ? getAvailableDeliveryTypes(avPackageSize) : [];
   // Only surface the selector / gate payment when there is at least one delivery
   // type to choose from. If the grid is unpriced (or size is `especial`), fall back
   // to the normal flow so the buyer is never blocked from paying.
@@ -619,6 +635,22 @@ export const CheckoutPageWithPayment = props => {
   // Gate the payment form for shipping purchases until a delivery type is chosen
   // (only when there is actually a choice to make).
   const isShippingTypeReady = !hasAvShippingChoice || !!selectedShippingType;
+
+  // AV shipping: let the buyer message the seller to confirm the shipping date.
+  // Reuses the ListingPage inquiry-modal flow — pre-set the modal flag, then
+  // navigate to the listing page where the inquiry modal opens automatically.
+  const listingId = listing?.id?.uuid;
+  const handleContactSeller =
+    listingId && history && routeConfiguration && dispatch
+      ? () => {
+          dispatch(setListingPageInitialValues({ inquiryModalOpenForListingId: listingId }));
+          const listingPath = pathByRouteName('ListingPage', routeConfiguration, {
+            id: listingId,
+            slug: createSlug(listingTitle),
+          });
+          history.push(listingPath);
+        }
+      : null;
 
   const providerDisplayName = isNegotiation
     ? existingTransaction?.provider?.attributes?.profile?.displayName
@@ -693,6 +725,7 @@ export const CheckoutPageWithPayment = props => {
                 selectedType={selectedShippingType}
                 currency={listing?.attributes?.price?.currency}
                 onSelect={handleSelectShippingType}
+                onContactSeller={handleContactSeller}
               />
             ) : null}
 

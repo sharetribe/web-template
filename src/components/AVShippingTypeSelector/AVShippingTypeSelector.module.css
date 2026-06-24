@@ -7,19 +7,59 @@
   font-weight: var(--fontWeightSemiBold);
   margin-bottom: 12px;
 }
+
+/* Card mirrors the text-input look (bg, radius, border) with an accent
+   blue strip down the left edge. */
 .card {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--colorGrey100);
-  border-radius: 8px;
+  padding: 14px 16px;
+  background-color: #fff;
+  border: 1px solid #d8dce6;
+  border-left: 4px solid var(--avBlue);
+  border-radius: 6px;
   margin-bottom: 8px;
   cursor: pointer;
+  transition: all ease-in-out 100ms;
 }
+.card:hover {
+  border-color: #b8bfd1;
+  border-left-color: var(--avBlue);
+}
+.card:has(.radio:checked) {
+  border-color: var(--avBlue);
+  background-color: rgb(15 38 228 / 4%);
+}
+.card:has(.radio:focus-visible) {
+  border-color: var(--avBlue);
+  box-shadow: 0 0 0 0.2rem rgb(15 38 228 / 25%);
+}
+
+/* Custom radio drawn on the native input (appearance: none). The inner
+   dot is an inset box-shadow so checked + border render in one element. */
 .radio {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 20px;
+  height: 20px;
   margin: 0;
+  padding: 0;
+  background-color: #fff;
+  border: 2px solid #d8dce6;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color ease-in-out 100ms, box-shadow ease-in-out 100ms;
 }
+.radio:hover {
+  border-color: var(--avBlue);
+}
+.radio:checked {
+  border-color: var(--avBlue);
+  box-shadow: inset 0 0 0 4px var(--avBlue);
+}
+
 .typeLabel {
   flex: 1;
 }
@@ -28,4 +68,65 @@
 }
 .empty {
   color: var(--colorGrey700);
+}
+
+/* Yellow reminder shown below the cards: prompts the buyer to message the
+   seller to confirm the shipping date. */
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background-color: var(--avYellowLight);
+  border: 1px solid var(--avYellow);
+  border-left: 4px solid var(--avYellow);
+  border-radius: 6px;
+}
+.alertText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 220px;
+}
+.alertTitle {
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorBlack);
+}
+.alertBody {
+  color: var(--colorGrey700);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+/* Chat button: AV ctaButtonYellow theming, icon to the left of the label —
+   mirrors AVListingPageCarousel's chat button. */
+.chatButton {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 0;
+  padding: 0 18px;
+  width: auto;
+
+  background-color: var(--avYellow);
+  color: var(--avBlueLight);
+  border-color: var(--avBlueLight);
+  border-radius: 26px;
+  font-weight: 700;
+}
+.chatButton:hover,
+.chatButton:focus {
+  background-color: #bfbd59;
+  color: var(--avBlueLight);
+  border-color: var(--avBlueLight);
+  box-shadow: none;
+}
+.chatIcon {
+  width: 22px;
+  height: 22px;
 }
