@@ -186,7 +186,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
-      : unitType === 'digital-item'
+      : unitType === 'file'
       ? getDigitalItemQuantityAndLineItems(orderData)
       : unitType === 'fixed'
       ? getFixedQuantityAndLineItems(orderData)

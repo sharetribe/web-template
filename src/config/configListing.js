@@ -290,7 +290,7 @@ export const listingTypes = [
     transactionType: {
       process: 'default-download',
       alias: 'default-download/release-1',
-      unitType: 'digital-item',
+      unitType: 'file',
     },
     transactionFields: [
       {
