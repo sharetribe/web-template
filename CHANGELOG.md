@@ -24,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
   [#863](https://github.com/sharetribe/web-template/pull/863)
 - [fix] Fix file storage domain default value
   [#862](https://github.com/sharetribe/web-template/pull/862)
+- [fix] Fix scrollToMessage and streamline file download behavior
+  [#861](https://github.com/sharetribe/web-template/pull/861)
 - [add] Add currently available translations for DE, ES, FR.
   [#859](https://github.com/sharetribe/web-template/pull/859)
 
