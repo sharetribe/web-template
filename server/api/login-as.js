@@ -1,4 +1,5 @@
 const sdkUtils = require('../api-util/sdk');
+const { buildMarketplaceRedirectUrl } = require('../api-util/url');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
@@ -33,7 +34,8 @@ module.exports = (req, res) => {
   }
 
   const codeVerifier = req.cookies[codeVerifierKey];
-  const targetPath = req.cookies[targetPathKey];
+  const targetPathRaw = req.cookies[targetPathKey];
+  const targetPath = buildMarketplaceRedirectUrl(ROOT_URL, targetPathRaw);
 
   // clear state and code verifier cookies
   res.clearCookie(stateKey, { secure: USING_SSL });
@@ -49,6 +51,6 @@ module.exports = (req, res) => {
       redirect_uri: loginAsRedirectUri,
       code_verifier: codeVerifier,
     })
-    .then(() => res.redirect(targetPath || '/'))
+    .then(() => res.redirect(targetPath))
     .catch(() => res.status(401).send('Unable to authenticate as a user'));
 };

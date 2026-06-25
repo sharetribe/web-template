@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 
+const { isRelativePath } = require('../api-util/url');
+
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const CONSOLE_URL = process.env.SERVER_SHARETRIBE_CONSOLE_URL || 'https://console.sharetribe.com';
@@ -57,14 +59,16 @@ module.exports = (req, res) => {
   const authorizeServerUrl = `${CONSOLE_URL}/api/authorize-as`;
   const { target_path: targetPath } = req.query || {};
 
-  const location = `${authorizeServerUrl}?\
-response_type=code&\
-client_id=${CLIENT_ID}&\
-redirect_uri=${loginAsRedirectUri}&\
-user_id=${userId}&\
-state=${state}&\
-code_challenge=${codeChallenge}&\
-code_challenge_method=S256`;
+  const authorizeParams = new URLSearchParams({
+    response_type: 'code',
+    client_id: CLIENT_ID,
+    redirect_uri: loginAsRedirectUri,
+    user_id: userId,
+    state,
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
+  });
+  const location = `${authorizeServerUrl}?${authorizeParams.toString()}`;
 
   const cookieOpts = {
     maxAge: 1000 * 30, // 30 seconds
@@ -73,7 +77,7 @@ code_challenge_method=S256`;
 
   res.cookie(stateKey, state, cookieOpts);
   res.cookie(codeVerifierKey, codeVerifier, cookieOpts);
-  if (targetPath) {
+  if (targetPath && isRelativePath(targetPath)) {
     res.cookie(targetPathKey, targetPath, cookieOpts);
   }
   return res.redirect(location);
