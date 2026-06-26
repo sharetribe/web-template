@@ -14,16 +14,21 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v11.2.2] 2026-06-26
+
+- [fix] Fix open redirect vulnerabilities that could be abused for phishing attacks.
+  [#869](https://github.com/sharetribe/web-template/pull/869)
+
+[v11.2.2]: https://github.com/sharetribe/web-template/compare/v11.2.1...v11.2.2
+
 ## [v11.2.1] 2026-06-25
 
 - [add] Add currently available translations for ES.
   [#866](https://github.com/sharetribe/web-template/pull/866)
 - [add] Add currently available translations for FR.
   [#865](https://github.com/sharetribe/web-template/pull/865)
-- [fix] Fix a text in EN language
-  [#864](https://github.com/sharetribe/web-template/pull/864)
-- [fix] Fix some texts in EN language
-  [#863](https://github.com/sharetribe/web-template/pull/863)
+- [fix] Fix a text in EN language [#864](https://github.com/sharetribe/web-template/pull/864)
+- [fix] Fix some texts in EN language [#863](https://github.com/sharetribe/web-template/pull/863)
 - [fix] Fix file storage domain default value
   [#862](https://github.com/sharetribe/web-template/pull/862)
 - [fix] Fix scrollToMessage and streamline file download behavior
