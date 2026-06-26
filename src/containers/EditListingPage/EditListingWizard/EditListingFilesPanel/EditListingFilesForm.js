@@ -134,7 +134,7 @@ export const EditListingFilesForm = props => {
         const submitInProgress = updateInProgress;
 
         const submitDisabled = invalid || submitInProgress || filesNotReady;
-        const showFileLink = showAttachFiles && (!files || files?.length < MAX_FILE_UPLOAD_COUNT);
+        const showFileLink = showAttachFiles && (!files || files?.length <= MAX_FILE_UPLOAD_COUNT);
 
         const addFileLabel = (
           <>
