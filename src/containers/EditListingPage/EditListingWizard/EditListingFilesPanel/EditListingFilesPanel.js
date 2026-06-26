@@ -99,7 +99,7 @@ const EditListingFilesPanel = props => {
   // logic, adjust this logic to filter out pending or failed uploads.
   const handleFilesSubmit = () => {
     const protectedFileAttachments = fileUploads
-      .filter(f => f.file)
+      .filter(f => f.file && f.file.attributes?.deleted !== true)
       .map(f => ({ fileId: f.file.id }));
     return onSubmit({ protectedFileAttachments });
   };
@@ -117,6 +117,7 @@ const EditListingFilesPanel = props => {
 
   const showDisabledFilesError = listingTypeHasFileAttachments && !allowFiles;
   const showUploads = showAttachFiles && fileUploads?.length > 0;
+  const visibleFileUploads = fileUploads.filter(f => f.file?.attributes?.deleted !== true);
 
   return (
     <main className={classes}>
@@ -140,7 +141,7 @@ const EditListingFilesPanel = props => {
         <>
           {showUploads && (
             <div className={css.files}>
-              {fileUploads.map(f => (
+              {visibleFileUploads.map(f => (
                 <FileUpload
                   item={f}
                   key={f.tempId}
