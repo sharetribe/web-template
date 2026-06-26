@@ -87,19 +87,7 @@ const EditListingPhotosPanel = props => {
       <H3 as="h1">
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
-      {/* <H3 as="h1">
-        {isPublished ? (
-          <FormattedMessage
-            id="EditListingPhotosPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> }}
-          />
-        ) : (
-          <FormattedMessage
-            id="EditListingPhotosPanel.createListingTitle"
-            values={{ lineBreak: <br /> }}
-          />
-        )}
-      </H3> */}
+
       <EditListingPhotosForm
         className={css.form}
         disabled={disabled}
