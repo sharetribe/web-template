@@ -54,7 +54,7 @@ export const executeFileUpload = ({ file, tempId, sdk, fileUploadCount, onProgre
     if (!file) {
       throw new Error('Missing file, cannot initiate upload.');
     }
-    if (fileUploadCount >= MAX_FILE_UPLOAD_COUNT) {
+    if (fileUploadCount > MAX_FILE_UPLOAD_COUNT) {
       throw new Error('Upload file count exceeded, cannot initiate upload.');
     }
 
