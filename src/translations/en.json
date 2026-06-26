@@ -281,6 +281,7 @@
   "EditListingFilesForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingFilesForm.uploadFile": "Upload a file",
   "EditListingFilesPanel.createListingTitle": "Files",
+  "EditListingFilesPanel.navigationBlockedBeforeFilesSaved": "You have unsaved file uploads. If you leave now, your uploads will be lost.",
   "EditListingFilesPanel.title": "Edit the files of {listingTitle}",
   "EditListingLocationForm.address": "Address",
   "EditListingLocationForm.addressNotRecognized": "We didn't recognize this location. Please try another location.",
