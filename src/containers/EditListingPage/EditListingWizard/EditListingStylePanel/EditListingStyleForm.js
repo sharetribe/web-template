@@ -135,33 +135,35 @@ export const EditListingStyleForm = props => {
               className={css.aspectRatioWrapper}
             ></ListingCardThumbnail>
 
-            <PublishListingError error={publishListingError} />
-            <UpdateListingError error={updateListingError} />
+            <div className={css.submitSection}>
+              <PublishListingError error={publishListingError} />
+              <UpdateListingError error={updateListingError} />
 
-            {filesRequired && !allFilesUploadedAndVerified ? (
-              <p className={css.filesNotReady}>
-                <FormattedMessage
-                  id="EditListingStyleForm.filesNotReady"
-                  values={{
-                    filesTabLink: (
-                      <NamedLink name="EditListingPage" params={filesTabParams}>
-                        <FormattedMessage id="EditListingStyleForm.filesTabLinkText" />
-                      </NamedLink>
-                    ),
-                  }}
-                />
-              </p>
-            ) : null}
+              {filesRequired && !allFilesUploadedAndVerified ? (
+                <p className={css.filesNotReady}>
+                  <FormattedMessage
+                    id="EditListingStyleForm.filesNotReady"
+                    values={{
+                      filesTabLink: (
+                        <NamedLink name="EditListingPage" params={filesTabParams}>
+                          <FormattedMessage id="EditListingStyleForm.filesTabLinkText" />
+                        </NamedLink>
+                      ),
+                    }}
+                  />
+                </p>
+              ) : null}
 
-            <Button
-              className={css.submitButton}
-              inProgress={submitInProgress}
-              ready={submitReady}
-              disabled={submitDisabled}
-              type="submit"
-            >
-              {saveActionMsg}
-            </Button>
+              <Button
+                className={css.submitButton}
+                inProgress={submitInProgress}
+                ready={submitReady}
+                disabled={submitDisabled}
+                type="submit"
+              >
+                {saveActionMsg}
+              </Button>
+            </div>
           </Form>
         );
       }}
