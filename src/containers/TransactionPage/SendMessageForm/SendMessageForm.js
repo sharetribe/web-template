@@ -7,14 +7,14 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { propTypes } from '../../../util/types';
 
 import { Form, FieldTextInput, FileUpload, Button } from '../../../components';
-import { MAX_FILE_UPLOAD_COUNT } from '../TransactionPage.duck';
+import { MAX_FILE_UPLOAD_COUNT } from '../../../util/fileHelpers';
 
 import css from './SendMessageForm.module.css';
 
 const BLUR_TIMEOUT_MS = 100;
 
 const FieldAddFile = props => {
-  const { formApi, onFileUpload, onRemoveFile, showFileLink, fileInputRef, ...rest } = props;
+  const { formApi, onFileUpload, showFileLink, fileInputRef, ...rest } = props;
   if (!showFileLink) {
     return null;
   }

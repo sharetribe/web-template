@@ -13,6 +13,7 @@ import {
   displayPrice,
   requirePayoutDetails,
   requireListingImage,
+  requireListingFiles,
 } from '../../../util/configHelpers';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -54,6 +55,7 @@ import EditListingWizardTab, {
   PRICING,
   PRICING_AND_STOCK,
   DELIVERY,
+  FILES,
   LOCATION,
   AVAILABILITY,
   PHOTOS,
@@ -97,11 +99,14 @@ const tabsForListingType = (processName, listingTypeConfig) => {
   //         and listing publishing happens after last panel.
   // Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
   //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
+  // Note 4: Ensure that the last panel contains the messaging for not-yet-verified files so
+  //         that it is clear to the user why the 'publish' button is disabled during verification
   const tabs = {
     ['default-booking']: [DETAILS, ...locationMaybe, PRICING, AVAILABILITY, ...styleOrPhotosTab],
     ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
     ['default-negotiation']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
     ['default-inquiry']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
+    ['default-download']: [DETAILS, ...locationMaybe, FILES, ...pricingMaybe, ...styleOrPhotosTab],
   };
 
   return tabs[processName] || tabs['default-inquiry'];
@@ -133,6 +138,9 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === DELIVERY) {
     labelKey = 'EditListingWizard.tabLabelDelivery';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
+  } else if (tab === FILES) {
+    labelKey = 'EditListingWizard.tabLabelFiles';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveFiles`;
   } else if (tab === LOCATION) {
     labelKey = 'EditListingWizard.tabLabelLocation';
     submitButtonKey =
@@ -218,7 +226,7 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
  *
  * @return true if tab / step is completed.
  */
-const tabCompleted = (tab, listing, config) => {
+const tabCompleted = (tab, listing, config, options = {}) => {
   const {
     availabilityPlan,
     description,
@@ -246,6 +254,11 @@ const tabCompleted = (tab, listing, config) => {
 
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
+  const filesRequired = requireListingFiles(listingTypeConfig);
+  const hasAttachedFiles = listing.protectedFileAttachments?.some(
+    fileAttachment => !fileAttachment.attributes?.deleted
+  );
+
   switch (tab) {
     case DETAILS:
       return !!(
@@ -262,6 +275,8 @@ const tabCompleted = (tab, listing, config) => {
       return !!price;
     case DELIVERY:
       return !!deliveryOptionPicked;
+    case FILES:
+      return filesRequired && hasAttachedFiles;
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
@@ -285,12 +300,12 @@ const tabCompleted = (tab, listing, config) => {
  *
  * @return object containing activity / editability of different tabs of this wizard
  */
-const tabsActive = (isNew, listing, tabs, config) => {
+const tabsActive = (isNew, listing, tabs, config, options = {}) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const validTab = previousTabIndex >= 0;
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
-    const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
+    const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config, options);
     const isActive =
       validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
@@ -380,7 +395,7 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
  * @param {string} props.params.id - The id of the listing
  * @param {string} props.params.slug - The slug of the listing
  * @param {'new'|'draft'|'edit'} props.params.type - The type of the listing
- * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | LOCATION | AVAILABILITY | PHOTOS} props.params.tab - The name of the tab
+ * @param {DETAILS | PRICING | PRICING_AND_STOCK | DELIVERY | FILES | LOCATION | AVAILABILITY | PHOTOS} props.params.tab - The name of the tab
  * @param {propTypes.ownListing} props.listing - The listing object
  * @param {propTypes.error} [props.errors.createListingDraftError] - The error object for createListingDraft
  * @param {propTypes.error} [props.errors.publishListingError] - The error object for publishListing
@@ -404,6 +419,13 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
  * @param {propTypes.error} [props.stripeAccountError] - The error object for stripeAccount (TODO: errors object contains this)
  * @param {propTypes.error} [props.stripeAccountLinkError] - The error object for stripeAccountLink
  * @param {Function} props.onManageDisableScrolling - The on manage disable scrolling function
+ * @param {Array} props.fileUploads - Array of file upload state objects from redux
+ * @param {boolean} props.fileUploadsDisabled - Whether file uploads were disabled at runtime
+ * @param {boolean} props.hasPendingFileUploads - Whether any file is still uploading
+ * @param {boolean} props.allFilesUploadedAndVerified - Whether all files are fully uploaded and verified
+ * @param {Function} props.onUploadFile - Initiates a file upload and starts verification polling
+ * @param {Function} props.onClearUploadedFiles - Removes file entries from redux state by tempId
+ * @param {Function} props.onDownloadFile - Requests a temporary download URL and opens it
  * @param {intlShape} props.intl - The intl object
  * @returns {JSX.Element} EditListingWizard component
  */
@@ -441,7 +463,15 @@ class EditListingWizard extends Component {
   }
 
   handlePublishListing(id) {
-    const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
+    const {
+      onPublishListingDraft,
+      currentUser,
+      stripeAccount,
+      listing,
+      config,
+      fileUploadsDisabled,
+      allFilesUploadedAndVerified,
+    } = this.props;
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
@@ -450,6 +480,14 @@ class EditListingWizard extends Component {
     // it's possible to publish listing without payout details set by provider.
     // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
     const isPayoutDetailsRequired = requirePayoutDetails(listingTypeConfig);
+    const filesRequired = requireListingFiles(listingTypeConfig);
+
+    // Listing should not be published if files are required and they are not fully
+    // uploaded and verified, or if file uploads have been disabled at the platform level.
+    // This is enforced by the submit on the last EditListingWizard tab; this is added protection.
+    if (filesRequired && (fileUploadsDisabled || !allFilesUploadedAndVerified)) {
+      return;
+    }
 
     const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
@@ -503,6 +541,13 @@ class EditListingWizard extends Component {
       config,
       routeConfiguration,
       authScopes,
+      fileUploads,
+      fileUploadsDisabled,
+      hasPendingFileUploads,
+      allFilesUploadedAndVerified,
+      onUploadFile,
+      onClearUploadedFiles,
+      onDownloadFile,
       ...rest
     } = this.props;
 
@@ -531,6 +576,7 @@ class EditListingWizard extends Component {
     // TODO: displayPrice aka config.defaultListingFields?.price with false value is only available with inquiry process
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
     const isPriceDisabled = !displayPrice(listingTypeConfig);
+    const filesRequired = requireListingFiles(listingTypeConfig);
 
     // Transaction process alias is used here, because the process defineds whether the listing is supported
     // I.e. old listings might not be supported through listing types, but client app might still support those processes.
@@ -696,6 +742,14 @@ class EditListingWizard extends Component {
                 config={config}
                 routeConfiguration={routeConfiguration}
                 intl={intl}
+                fileUploads={fileUploads}
+                fileUploadsDisabled={fileUploadsDisabled}
+                onUploadFile={onUploadFile}
+                onClearUploadedFiles={onClearUploadedFiles}
+                onDownloadFile={onDownloadFile}
+                hasPendingFileUploads={hasPendingFileUploads}
+                allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+                filesRequired={filesRequired}
               />
             );
           })}
