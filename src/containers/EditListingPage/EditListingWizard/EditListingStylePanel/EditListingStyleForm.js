@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 
 // Import shared components
-import { Button, Form, ListingCardThumbnail, H5 } from '../../../../components';
+import { Button, Form, ListingCardThumbnail, H5, NamedLink } from '../../../../components';
 
 import { colorSchemes } from '../../../../util/types';
 
@@ -91,6 +91,7 @@ export const EditListingStyleForm = props => {
           formId = 'EditListingStyleForm',
           form,
           className,
+          disabled,
           fetchErrors,
           handleSubmit,
           ready,
@@ -98,13 +99,16 @@ export const EditListingStyleForm = props => {
           updated,
           updateInProgress,
           values,
+          allFilesUploadedAndVerified,
+          filesTabParams,
+          filesRequired,
         } = formRenderProps;
         const classes = classNames(css.root, className);
         const { publishListingError, updateListingError } = fetchErrors || {};
 
         const submitInProgress = updateInProgress;
         const submitReady = updated || ready;
-        const submitDisabled = submitInProgress;
+        const submitDisabled = disabled || submitInProgress;
 
         const fieldOptions = colorSchemes.map(colorScheme => {
           return (
@@ -131,18 +135,35 @@ export const EditListingStyleForm = props => {
               className={css.aspectRatioWrapper}
             ></ListingCardThumbnail>
 
-            <PublishListingError error={publishListingError} />
-            <UpdateListingError error={updateListingError} />
+            <div className={css.submitSection}>
+              <PublishListingError error={publishListingError} />
+              <UpdateListingError error={updateListingError} />
 
-            <Button
-              className={css.submitButton}
-              inProgress={submitInProgress}
-              ready={submitReady}
-              disabled={submitDisabled}
-              type="submit"
-            >
-              {saveActionMsg}
-            </Button>
+              {filesRequired && !allFilesUploadedAndVerified ? (
+                <p className={css.filesNotReady}>
+                  <FormattedMessage
+                    id="EditListingStyleForm.filesNotReady"
+                    values={{
+                      filesTabLink: (
+                        <NamedLink name="EditListingPage" params={filesTabParams}>
+                          <FormattedMessage id="EditListingStyleForm.filesTabLinkText" />
+                        </NamedLink>
+                      ),
+                    }}
+                  />
+                </p>
+              ) : null}
+
+              <Button
+                className={css.submitButton}
+                inProgress={submitInProgress}
+                ready={submitReady}
+                disabled={submitDisabled}
+                type="submit"
+              >
+                {saveActionMsg}
+              </Button>
+            </div>
           </Form>
         );
       }}

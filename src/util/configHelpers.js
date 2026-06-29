@@ -1093,6 +1093,13 @@ export const displayDeliveryShipping = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.shipping !== false;
 };
 
+export const requireListingFiles = listingTypeConfig => {
+  // Unlike other require helpers, this uses a === true check instead of !== false because files are
+  // opt-in. An undefined value indicates that files are not required and in general, new configs for
+  // established listing types are undefined by default
+  return listingTypeConfig?.defaultListingFields?.files === true;
+};
+
 export const requireListingImage = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.images !== false;
 };
