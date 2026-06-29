@@ -245,7 +245,6 @@ const tabCompleted = (tab, listing, config, options = {}) => {
     pickupEnabled,
     cardStyle,
   } = publicData || {};
-  const { hasPendingFileUploads, hasUploadedFiles } = options;
   const listingTypeConfig = config.listing.listingTypes.find(
     config => config.listingType === listingType
   );
@@ -256,6 +255,9 @@ const tabCompleted = (tab, listing, config, options = {}) => {
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   const filesRequired = requireListingFiles(listingTypeConfig);
+  const hasAttachedFiles = listing.protectedFileAttachments?.some(
+    fileAttachment => !fileAttachment.attributes?.deleted
+  );
 
   switch (tab) {
     case DETAILS:
@@ -274,7 +276,7 @@ const tabCompleted = (tab, listing, config, options = {}) => {
     case DELIVERY:
       return !!deliveryOptionPicked;
     case FILES:
-      return filesRequired && hasUploadedFiles && !hasPendingFileUploads;
+      return filesRequired && hasAttachedFiles;
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
@@ -595,14 +597,7 @@ class EditListingWizard extends Component {
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
-    const hasListingFileAttachments =
-      currentListing?.protectedFileAttachments?.some(
-        fileAttachment => !fileAttachment.attributes?.deleted
-      ) ?? false;
-    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config, {
-      hasPendingFileUploads,
-      hasUploadedFiles: fileUploads.length > 0 || hasListingFileAttachments,
-    });
+    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
 
     // Redirect user to first tab when encoutering outdated draft listings.
     if (invalidExistingListingType && isNewListingFlow && selectedTab !== tabs[0]) {
