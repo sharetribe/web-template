@@ -24,8 +24,8 @@
   {:name :transition/confirm-payment,
    :actor :actor.role/customer,
    :actions
-   ;; One more action to add once it is available in Core: "{:name :action/reveal-protected-files}"
-   [{:name :action/stripe-confirm-payment-intent}
+   [{:name :action/reveal-listing-protected-files}
+    {:name :action/stripe-confirm-payment-intent}
     {:name :action/stripe-capture-payment-intent}],
    :from :state/pending-payment,
    :to :state/purchased}
@@ -33,7 +33,7 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
-     {:fn/period ["PT15M"]}]},
+     {:fn/period ["P1D"]}]},
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}],
@@ -73,13 +73,13 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/reported]}
-     {:fn/period ["P14D"]}]},
+     {:fn/period ["P60D"]}]},
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}],
    :from :state/reported,
    :to :state/canceled}
-  {:name :transition/complete-from-reported,
+  {:name :transition/operator-complete-from-reported,
    :actor :actor.role/operator,
    :actions [{:name :action/stripe-create-payout}],
    :from :state/reported,
@@ -99,4 +99,72 @@
    :actions [],
    :from :state/completed,
    :to :state/reviewed}],
- :notifications []}
+ :notifications
+ [{:name :notification/new-purchase,
+   :on :transition/confirm-payment,
+   :to :actor.role/provider,
+   :template :download-new-purchase}
+  {:name :notification/receipt,
+   :on :transition/confirm-payment,
+   :to :actor.role/customer,
+   :template :download-receipt}
+  {:name :notification/reported,
+   :on :transition/report,
+   :to :actor.role/provider,
+   :template :download-reported}
+  {:name :notification/operator-reported-to-customer,
+   :on :transition/operator-report,
+   :to :actor.role/customer,
+   :template :download-operator-reported}
+  {:name :notification/operator-reported-to-provider,
+   :on :transition/operator-report,
+   :to :actor.role/provider,
+   :template :download-reported}
+  {:name :notification/review-period-started,
+   :on :transition/auto-complete,
+   :to :actor.role/customer,
+   :template :download-review-period-started}
+  {:name :notification/payout-sent,
+   :on :transition/auto-complete,
+   :to :actor.role/provider,
+   :template :download-payout-sent}
+  {:name :notification/review-period-started-from-operator-completed,
+   :on :transition/operator-complete,
+   :to :actor.role/customer,
+   :template :download-review-period-started}
+  {:name :notification/payout-sent-from-operator-completed,
+   :on :transition/operator-complete,
+   :to :actor.role/provider,
+   :template :download-payout-sent}
+  {:name :notification/completed-from-reported-to-customer,
+   :on :transition/operator-complete-from-reported,
+   :to :actor.role/customer,
+   :template :download-completed-from-reported-to-customer}
+  {:name :notification/completed-from-reported-to-provider,
+   :on :transition/operator-complete-from-reported,
+   :to :actor.role/provider,
+   :template :download-completed-from-reported-to-provider}
+  {:name :notification/review-period-started-from-reported,
+   :on :transition/operator-complete-from-reported,
+   :to :actor.role/customer,
+   :template :download-review-period-started}
+  {:name :notification/auto-canceled-from-reported-to-customer,
+   :on :transition/auto-cancel,
+   :to :actor.role/customer,
+   :template :download-canceled-to-customer}
+  {:name :notification/auto-canceled-from-reported-to-provider,
+   :on :transition/auto-cancel,
+   :to :actor.role/provider,
+   :template :download-canceled-to-provider}
+  {:name :notification/operator-canceled-to-customer,
+   :on :transition/operator-cancel,
+   :to :actor.role/provider,
+   :template :download-canceled-to-customer}
+  {:name :notification/operator-canceled-to-provider,
+   :on :transition/operator-cancel,
+   :to :actor.role/provider,
+   :template :download-canceled-to-provider}
+  {:name :notification/new-review,
+   :on :transition/review,
+   :to :actor.role/provider,
+   :template :download-new-review}]}
