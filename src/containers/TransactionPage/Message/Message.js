@@ -2,20 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
-import {
-  calculateFileSize,
-  messageHasPendingFiles,
-  messageHasFailedFiles,
-} from '../../../util/fileHelpers';
+import { messageHasPendingFiles, messageHasFailedFiles } from '../../../util/fileHelpers';
 import { richText } from '../../../util/richText';
 import { propTypes } from '../../../util/types';
 
-import { Avatar, FileName } from '../../../components';
+import { Avatar } from '../../../components';
 
-import { IconDownload } from './IconDownload';
-import { IconUnavailable } from './IconUnavailable';
-import { IconSpinnerSmall } from './IconSpinnerSmall';
-import { IconErrorSmall } from './IconErrorSmall';
+import { FileAttachmentList } from '../FileAttachments/FileAttachments';
 
 import css from './Message.module.css';
 
@@ -49,83 +42,6 @@ const getMessageContent = (message, transaction, intl, richTextOptions = {}) => 
   });
 };
 
-const FileAttachment = props => {
-  const { fileAttachment, downloadFile, intl } = props;
-  const { file } = fileAttachment;
-  const isAvailable = file.attributes.state === 'available' && fileAttachment.file;
-  const isVerifying = file.attributes.state === 'pendingVerification';
-  const isVerificationFailed = file.attributes.state === 'verificationFailed';
-  const isDeleted = !file || file.attributes.deleted;
-
-  const name = file?.attributes?.name;
-
-  if (isAvailable) {
-    const classes = classNames(css.fileAttachment, css.fileAttachmentAvailable);
-    const formattedSize = calculateFileSize(file.attributes.size, intl.locale);
-    return (
-      <button
-        className={classes}
-        aria-label={intl.formatMessage({ id: 'Message.downloadFile' }, { fileName: name })}
-        onClick={() => downloadFile(fileAttachment.id)}
-      >
-        <span className={css.fileAttachmentIcon}>
-          <IconDownload />
-        </span>
-        <FileName name={name} />
-        <span className={css.fileAttachmentStatus}>{formattedSize}</span>
-      </button>
-    );
-  }
-
-  if (isVerifying) {
-    return (
-      <div className={css.fileAttachment}>
-        <span className={css.fileAttachmentIcon}>
-          <IconSpinnerSmall />
-        </span>
-        <FileName name={name} />
-        <span className={css.fileAttachmentStatus}>
-          <FormattedMessage id="Message.fileVerifying" />
-        </span>
-      </div>
-    );
-  }
-
-  if (isVerificationFailed) {
-    return (
-      <div className={css.fileAttachment}>
-        <span className={css.fileAttachmentIcon}>
-          <IconErrorSmall />
-        </span>
-        <FileName name={name} />
-        <span className={css.fileAttachmentStatus}>
-          <FormattedMessage id="Message.fileSecurityCheckFailed" />
-        </span>
-      </div>
-    );
-  }
-
-  if (isDeleted) {
-    return (
-      <div className={css.fileAttachment}>
-        <span className={css.fileAttachmentIcon}>
-          <IconUnavailable />
-        </span>
-        <span className={css.fileAttachmentStatus}>
-          <FormattedMessage id="Message.fileDeleted" />
-        </span>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-const FilesDisabledError = ({ marketplaceName }) => (
-  <div className={css.fileAttachmentError}>
-    <FormattedMessage id="TransactionPage.messageFilesDisabled" values={{ marketplaceName }} />
-  </div>
-);
 /**
  * @component
  * @param {Object} props - The props
@@ -168,18 +84,14 @@ export const Message = props => {
           {content}
           {publicFileAttachments.length > 0 ? (
             <div className={css.fileAttachmentsContainer}>
-              {allowFiles ? (
-                publicFileAttachments.map(f => (
-                  <FileAttachment
-                    fileAttachment={f}
-                    key={f.id.uuid}
-                    downloadFile={downloadFile}
-                    intl={intl}
-                  />
-                ))
-              ) : (
-                <FilesDisabledError marketplaceName={marketplaceName} />
-              )}
+              <FileAttachmentList
+                fileAttachments={publicFileAttachments}
+                allowFiles={allowFiles}
+                onDownloadFile={downloadFile}
+                intl={intl}
+                marketplaceName={marketplaceName}
+                iconClassName={css.fileAttachmentIconMessage}
+              />
             </div>
           ) : null}
         </div>
@@ -235,18 +147,18 @@ export const OwnMessage = props => {
           {content}
           {publicFileAttachments.length > 0 ? (
             <div className={css.fileAttachmentsContainer}>
-              {allowFiles ? (
-                publicFileAttachments.map(f => (
-                  <FileAttachment
-                    fileAttachment={f}
-                    key={f.id.uuid}
-                    downloadFile={downloadFile}
-                    intl={intl}
-                  />
-                ))
-              ) : (
-                <FilesDisabledError marketplaceName={marketplaceName} />
-              )}
+              <FileAttachmentList
+                fileAttachments={publicFileAttachments}
+                allowFiles={allowFiles}
+                onDownloadFile={downloadFile}
+                intl={intl}
+                marketplaceName={marketplaceName}
+                iconClassName={
+                  isUnverified
+                    ? css.fileAttachmentIconOwnMessageUnverified
+                    : css.fileAttachmentIconOwnMessage
+                }
+              />
             </div>
           ) : null}
         </div>

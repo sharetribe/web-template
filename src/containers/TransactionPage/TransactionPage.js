@@ -381,7 +381,7 @@ export const TransactionPageComponent = props => {
     ...restOfProps
   } = props;
 
-  const { listing, provider, customer, booking } = transaction || {};
+  const { listing, provider, customer, booking, protectedFileAttachments } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
   const isProviderRole = transactionRole === PROVIDER;
   const isCustomerRole = transactionRole === CUSTOMER;
@@ -902,8 +902,14 @@ export const TransactionPageComponent = props => {
       fileAttachments={
         <FileAttachments
           isDownloadProcess={isDownloadProcess(processName)}
-          isProblemReported={stateData.processState === 'reported'}
-          isCustomerRole={isCustomerRole}
+          allowFiles={
+            !config.accessControl.marketplace.fileUploadAndDownloadDisabled &&
+            !(stateData.processState === 'reported' && isCustomerRole)
+          }
+          fileAttachments={protectedFileAttachments}
+          onDownloadFile={onDownloadFile}
+          intl={intl}
+          marketplaceName={config.marketplaceName}
         />
       }
       activityFeed={
