@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "DownloadNewReview.Subject" "{customerDisplayName} left {listingTitle} a review" customerDisplayName=transaction.customer.display-name listingTitle=transaction.listing.title }}

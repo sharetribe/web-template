@@ -282,7 +282,38 @@ export const listingFields = [
  *                          configuration may still disable uploading and downloading files, even if enabled in the listing type.
  */
 
+// TODO: Remove before merge
 export const listingTypes = [
+  {
+    label: 'Digital file upload',
+    listingType: 'digital-file',
+    transactionType: {
+      process: 'default-download',
+      alias: 'default-download/release-1',
+      unitType: 'file',
+    },
+    transactionFields: [
+      {
+        label: 'Arbitrary field',
+        key: 'arbitrary',
+        schemaType: 'shortText',
+        showTo: 'customer',
+        helpText: 'A text field with a 70 char limit',
+      },
+    ],
+    defaultListingFields: {
+      description: true,
+      availability: false,
+      payoutDetails: true,
+      images: false,
+      pickup: false,
+      title: true,
+      shipping: false,
+      location: false,
+      price: true,
+      stock: false,
+    },
+  },
   // // Here are some examples of listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   // {

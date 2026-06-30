@@ -40,6 +40,7 @@ const PanelHeading = props => {
     transactionRole,
     providerName,
     customerName,
+    marketplaceName,
     listingId,
     listingTitle,
     listingDeleted,
@@ -83,7 +84,7 @@ const PanelHeading = props => {
         <p className={css.transactionInfoMessage}>
           <FormattedMessage
             id={`TransactionPage.${processName}.${transactionRole}.${processState}.extraInfo`}
-            values={{ customerName, providerName, deliveryMethod, breakline }}
+            values={{ customerName, providerName, marketplaceName, deliveryMethod, breakline }}
           />
         </p>
       ) : null}

@@ -13,6 +13,7 @@ import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
 import { getPropsForCustomTransactionFieldInputs } from '../../../util/fieldHelpers';
 import { STRIPE_JS_LOADED_EVENT } from '../../../util/includeScripts';
+import { isDownloadProcess, isBookingProcess } from '../../../transactions/transaction';
 
 import {
   Heading,
@@ -291,7 +292,7 @@ const initialState = {
  * @param {Object} props.listingLocation - The listing location
  * @param {Object} props.listingLocation.building - The building
  * @param {Object} props.listingLocation.address - The address
- * @param {boolean} props.isBooking - Whether the booking is in progress
+ * @param {string} props.processName - The transaction process name
  * @param {boolean} props.isFuzzyLocation - Whether the location is fuzzy
  * @param {Object} props.intl - The intl object
  */
@@ -493,7 +494,7 @@ class StripePaymentForm extends Component {
       locale,
       stripePublishableKey,
       marketplaceName,
-      isBooking,
+      processName,
       isFuzzyLocation,
       transactionFieldConfigs = [],
       showTransactionFields,
@@ -586,6 +587,9 @@ class StripePaymentForm extends Component {
       const checked = event.target.checked;
       this.updateBillingDetailsToMatchShippingAddress(checked);
     };
+
+    const isBooking = isBookingProcess(processName);
+    const isDownload = isDownloadProcess(processName);
     const isBookingYesNo = isBooking ? 'yes' : 'no';
 
     const showAdditionalInfoHeading =
@@ -727,12 +731,14 @@ class StripePaymentForm extends Component {
               />
             )}
           </PrimaryButton>
-          <p className={css.paymentInfo}>
-            <FormattedMessage
-              id="StripePaymentForm.submitConfirmPaymentFinePrint"
-              values={{ isBooking: isBookingYesNo, name: providerDisplayName }}
-            />
-          </p>
+          {!isDownload && (
+            <p className={css.paymentInfo}>
+              <FormattedMessage
+                id="StripePaymentForm.submitConfirmPaymentFinePrint"
+                values={{ isBooking: isBookingYesNo, name: providerDisplayName }}
+              />
+            </p>
+          )}
         </div>
       </Form>
     ) : (
