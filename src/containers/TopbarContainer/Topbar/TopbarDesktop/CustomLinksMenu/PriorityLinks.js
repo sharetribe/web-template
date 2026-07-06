@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../../util/reactIntl';
@@ -83,7 +82,6 @@ const PriorityLinks = props => {
   }, [containerRef]);
 
   const { links, priorityLinks } = props;
-  const isServer = typeof window === 'undefined';
   const isMeasured = links?.[0]?.width && (priorityLinks.length === 0 || priorityLinks?.[0]?.width);
   const styleWrapper = !!isMeasured
     ? {}
@@ -100,21 +98,14 @@ const PriorityLinks = props => {
       };
   const linkConfigs = isMeasured ? priorityLinks : links;
 
-  return isMeasured || isServer ? (
+  // Always render inline in the Topbar tree so SSR and the initial client render match.
+  // (Portaling to document.body caused hydration mismatches.)
+  return (
     <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
       {linkConfigs.map((linkConfig, index) => {
         return <PriorityLink key={`${linkConfig.text}_${index}`} linkConfig={linkConfig} />;
       })}
     </div>
-  ) : (
-    ReactDOM.createPortal(
-      <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
-        {linkConfigs.map((linkConfig, index) => {
-          return <PriorityLink key={`${linkConfig.text}_${index}`} linkConfig={linkConfig} />;
-        })}
-      </div>,
-      document.body
-    )
   );
 };
 
