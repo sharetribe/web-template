@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update Stripe Connect account requirements for Netherlands. Individual accounts are
+  supported now for users without access to the Stripe dashboard.
+  [#871](https://github.com/sharetribe/web-template/pull/871)
+
 ## [v11.2.2] 2026-06-26
 
 - [fix] Fix open redirect vulnerabilities that could be abused for phishing attacks.
