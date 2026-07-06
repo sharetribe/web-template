@@ -2,6 +2,11 @@ const http = require('http');
 const https = require('https');
 const sharetribeSdk = require('sharetribe-flex-sdk');
 const { handleError, serialize, typeHandlers } = require('../../api-util/sdk');
+const {
+  clearPendingSignupCookieOptions,
+  clearPendingSignupTokenCookieOptions,
+  parseJsonCookie,
+} = require('../../api-util/cookieOptions');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
@@ -24,7 +29,30 @@ const httpsAgent = new https.Agent({ keepAlive: true });
 
 const baseUrl = BASE_URL ? { baseUrl: BASE_URL } : {};
 
+const sendMissingAuthCookiesError = res => {
+  res
+    .status(400)
+    .set('Content-Type', 'application/transit+json')
+    .send(
+      serialize({
+        status: 400,
+        statusText: 'Pending IdP signup session expired or missing.',
+        data: {},
+      })
+    )
+    .end();
+};
+
 module.exports = (req, res) => {
+  const idpToken = req.cookies['st-idp-token'];
+  const authInfo = parseJsonCookie(req.cookies['st-authinfo']);
+  const idpId = authInfo?.idpId;
+
+  if (!idpToken || !idpId) {
+    sendMissingAuthCookiesError(res);
+    return;
+  }
+
   const tokenStore = sharetribeSdk.tokenStore.expressCookieStore({
     clientId: CLIENT_ID,
     req,
@@ -43,7 +71,9 @@ module.exports = (req, res) => {
     ...baseUrl,
   });
 
-  const { idpToken, idpId, ...rest } = req.body || {};
+  // idpToken and idpId are read from cookies above; strip them from the body so a
+  // client cannot substitute a different IdP credential while reusing st-authinfo.
+  const { idpToken: _ignoredToken, idpId: _ignoredIdpId, ...rest } = req.body || {};
 
   // Choose the idpClientId based on which authentication method is used.
   const idpClientId =
@@ -63,7 +93,8 @@ module.exports = (req, res) => {
     .then(apiResponse => {
       const { status, statusText, data } = apiResponse;
       res
-        .clearCookie('st-authinfo')
+        .clearCookie('st-authinfo', clearPendingSignupCookieOptions())
+        .clearCookie('st-idp-token', clearPendingSignupTokenCookieOptions())
         .status(status)
         .set('Content-Type', 'application/transit+json')
         .send(

@@ -97,7 +97,6 @@ const userFields = [
 ];
 
 const authInfo = {
-  idpToken: '123',
   email: 'name@example.com',
   firstName: 'Firstname',
   lastName: 'Lastname',

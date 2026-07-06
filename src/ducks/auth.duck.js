@@ -147,7 +147,7 @@ const signupWithIdpThunk = createAsyncThunk(
         return params;
       })
       .catch(e => {
-        log.error(e, 'create-user-with-idp-failed', { params });
+        log.error(e, 'create-user-with-idp-failed');
         return rejectWithValue(storableError(e));
       });
   },

@@ -118,7 +118,7 @@ export const getHandleSubmitConfirm = ({
   userFields,
   userTypes,
 }) => values => {
-  const { idpToken, email, firstName, lastName, idpId } = authInfo;
+  const { email, firstName, lastName } = authInfo;
 
   const {
     userType,
@@ -149,8 +149,6 @@ export const getHandleSubmitConfirm = ({
   });
 
   submitSingupWithIdp({
-    idpToken,
-    idpId,
     ...authParams,
     ...displayNameMaybe,
     ...extendedDataMaybe,

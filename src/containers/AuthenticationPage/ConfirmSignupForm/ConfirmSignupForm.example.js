@@ -4,7 +4,6 @@ import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 import ConfirmSignupForm from './ConfirmSignupForm';
 
 const authInfo = {
-  idpToken: '123',
   email: 'name@example.com',
   firstName: 'Firstname',
   lastName: 'Lastname',
