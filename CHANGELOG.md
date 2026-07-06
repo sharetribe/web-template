@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] login-as feature: harden error handling.
+  [#873](https://github.com/sharetribe/web-template/pull/873)
 - [change] CustomLinksMenu: refactor rendering order to improve hydration behavior.
   [#872](https://github.com/sharetribe/web-template/pull/872)
 - [change] Update Stripe Connect account requirements for Netherlands. Individual accounts are
