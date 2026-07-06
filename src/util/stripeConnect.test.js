@@ -1,24 +1,17 @@
-import {
-  getDisplayAccountType,
-  getStripeAccountTokenInfo,
-  requiresSoleProprietorshipAccount,
-} from './stripeConnect';
+import { getDisplayAccountType, getStripeAccountTokenInfo } from './stripeConnect';
 
 describe('stripeConnect helpers', () => {
-  it('flags restricted countries that require sole proprietorship onboarding', () => {
-    expect(requiresSoleProprietorshipAccount('NL')).toBe(true);
-    expect(requiresSoleProprietorshipAccount('GB')).toBe(false);
-    expect(requiresSoleProprietorshipAccount('US')).toBe(false);
-  });
-
-  it('maps individual sellers in restricted countries to company sole proprietorship', () => {
-    expect(getStripeAccountTokenInfo({ country: 'NL', accountType: 'individual' })).toEqual({
-      business_type: 'company',
-      company: {
-        structure: 'sole_proprietorship',
-      },
-    });
-  });
+  // NOTE: this test is disabled because the sole proprietorship requirement is not needed for
+  // Template with custom Connect accounts, hiding Stripe dashboard.
+  //
+  // it('maps individual sellers in restricted countries to company sole proprietorship', () => {
+  //   expect(getStripeAccountTokenInfo({ country: 'NL', accountType: 'individual' })).toEqual({
+  //     business_type: 'company',
+  //     company: {
+  //       structure: 'sole_proprietorship',
+  //     },
+  //   });
+  // });
 
   it('keeps company sellers unchanged in restricted countries', () => {
     expect(getStripeAccountTokenInfo({ country: 'NL', accountType: 'company' })).toEqual({

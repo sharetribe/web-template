@@ -1,10 +1,15 @@
-// Netherlands requires a sole proprietorship for individuals.
-// According to Stripe: "we’re enforcing stricter business type requirements for Netherlands (NL)
-// accounts to ensure compliance with Dutch regulations. This specifically affects
-// how we collect the KvK (Kamer van Koophandel), the unique 8-digit company registration number
-// required for businesses in the Netherlands."
+// Netherlands used to require a sole proprietorship for individuals.
+// This code pattern is reflecting that requirement.
+// According to Stripe: "Starting May 14, 2026, connected accounts representing individuals or
+// unincorporated entities that don’t have access to a Stripe-hosted Dashboard are no longer
+// required to provide a KvK number.
+// Connected accounts representing individuals or unincorporated entities that have access to
+// the full Stripe Dashboard or the Express Dashboard must still provide a KvK number."
 // https://docs.stripe.com/connect/upcoming-requirements-updates?program=eu-2025#netherlands-business-registration-requirements
-const countriesRequiringSoleProprietorshipForIndividuals = new Set(['NL']);
+// Note: this code pattern can still be used by changing the set of countries to `new Set(['NL']);`
+// However, since Template works with custom Connect accounts, hiding Stripe dashboard,
+// the sole proprietorship requirement is not needed.
+const countriesRequiringSoleProprietorshipForIndividuals = new Set([]);
 
 /**
  * Whether Connect onboarding for an individual in this country must use a company account with
@@ -13,7 +18,7 @@ const countriesRequiringSoleProprietorshipForIndividuals = new Set(['NL']);
  * @param {string} country - ISO 3166-1 alpha-2 country code
  * @returns {boolean}
  */
-export const requiresSoleProprietorshipAccount = country =>
+const requiresSoleProprietorshipAccount = country =>
   countriesRequiringSoleProprietorshipForIndividuals.has(country);
 
 /**
