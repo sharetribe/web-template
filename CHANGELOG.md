@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] CustomLinksMenu: refactor rendering order to improve hydration behavior.
+  [#872](https://github.com/sharetribe/web-template/pull/872)
 - [change] Update Stripe Connect account requirements for Netherlands. Individual accounts are
   supported now for users without access to the Stripe dashboard.
   [#871](https://github.com/sharetribe/web-template/pull/871)
