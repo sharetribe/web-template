@@ -36,7 +36,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
       const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
+      return { processName, processState, showOrderPanel, showDetailCardHeadings: true };
     })
     .cond([states.INQUIRY, PROVIDER], () => {
       return { processName, processState, showDetailCardHeadings: true };

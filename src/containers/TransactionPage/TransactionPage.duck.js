@@ -264,6 +264,8 @@ const fetchTransactionPayloadCreator = (
           'reviews',
           'reviews.author',
           'reviews.subject',
+          'protectedFileAttachments',
+          'protectedFileAttachments.file',
         ],
         ...getImageVariants(config.layout.listingImage),
       },

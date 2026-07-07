@@ -379,7 +379,7 @@ describe('TransactionPage', () => {
       // Listing's title (side card)
       // NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
 
-      expect(screen.queryAllByText('listing-item title')).toHaveLength(isInquiry ? 0 : 1);
+      expect(screen.queryAllByText('listing-item title')).toHaveLength(1);
 
       // Primary action button
       // E.g.
@@ -716,7 +716,7 @@ describe('TransactionPage', () => {
 
       // Listing's title (side card)
       // NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
-      expect(screen.queryAllByText('listing-item title')).toHaveLength(isInquiry ? 0 : 1);
+      expect(screen.queryAllByText('listing-item title')).toHaveLength(1);
 
       // Primary action button
       // E.g.
@@ -1051,7 +1051,7 @@ describe('TransactionPage', () => {
 
       // Listing's title (side card)
       // NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
-      expect(screen.queryAllByText('listing-item title')).toHaveLength(isInquiry ? 0 : 1);
+      expect(screen.queryAllByText('listing-item title')).toHaveLength(1);
 
       // Primary action button
       // E.g.
@@ -1161,7 +1161,7 @@ describe('TransactionPage', () => {
         expect(screen.getByText('TransactionPanel.activityHeading')).toBeInTheDocument();
 
         // Listing's title (side card)
-        expect(getAllByText('listing-item title')).toHaveLength(2);
+        expect(getAllByText('listing-item title')).toHaveLength(3);
         // Default unit price is $55
         expect(getAllByText('OrderPanel.price')).toHaveLength(1);
         expect(getAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
@@ -1330,7 +1330,7 @@ describe('TransactionPage', () => {
         expect(screen.getByText('TransactionPanel.activityHeading')).toBeInTheDocument();
 
         // Listing's title (side card)
-        expect(getAllByText('listing-item title')).toHaveLength(2);
+        expect(getAllByText('listing-item title')).toHaveLength(3);
         // Default unit price is $55
         expect(getAllByText('OrderPanel.price')).toHaveLength(1);
         expect(getAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
@@ -1497,7 +1497,7 @@ describe('TransactionPage', () => {
         expect(screen.getByText('TransactionPanel.activityHeading')).toBeInTheDocument();
 
         // Listing's title (side card)
-        expect(getAllByText('listing-item title')).toHaveLength(2);
+        expect(getAllByText('listing-item title')).toHaveLength(3);
         // Default unit price is $55
         expect(getAllByText('OrderPanel.price')).toHaveLength(1);
         expect(getAllByText('OrderPanel.priceInMobileCTA')).toHaveLength(1);
