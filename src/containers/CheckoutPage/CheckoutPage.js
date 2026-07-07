@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useIntl } from 'react-intl';
 
-// Import contexts and util modules
+// Import util modules
 import { useConfiguration } from '../../context/configurationContext';
+import { useIntl } from '../../util/reactIntl';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { userDisplayNameAsString } from '../../util/data';
-import {
-  NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
-  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
-} from '../../util/urlHelpers';
-import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
-import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors';
+
+import { isUserAuthorized } from '../../util/userHelpers';
 import {
   INQUIRY_PROCESS_NAME,
-  REQUEST,
   resolveLatestProcessName,
   isNegotiationProcess,
 } from '../../transactions/transaction';
@@ -47,6 +41,7 @@ import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import CheckoutPageAccessWrapper from './CheckoutPageAccessWrapper';
 import css from './CheckoutPage.module.css';
 
 const STORAGE_KEY = 'CheckoutPage';
@@ -65,94 +60,28 @@ const getProcessName = pageData => {
   return resolveLatestProcessName(processName);
 };
 
-const EnhancedCheckoutPage = props => {
-  const [pageData, setPageData] = useState({});
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const config = useConfiguration();
-  const routeConfiguration = useRouteConfiguration();
-  const intl = useIntl();
-  const history = useHistory();
-
-  useEffect(() => {
-    const {
-      currentUser,
-      orderData,
-      listing,
-      transaction,
-      fetchSpeculatedTransaction,
-      fetchStripeCustomer,
-    } = props;
-    const initialData = { orderData, listing, transaction };
-    const data = handlePageData(initialData, STORAGE_KEY, history);
-    setPageData(data || {});
-    setIsDataLoaded(true);
-
-    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
-    if (isUserAuthorized(currentUser)) {
-      // This is for processes using payments with Stripe integration
-      if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
-        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
-        loadInitialDataForStripePayments({
-          pageData: data || {},
-          fetchSpeculatedTransaction,
-          fetchStripeCustomer,
-          config,
-        });
-      }
-    }
-  }, []);
-
+const CheckoutPageComponent = props => {
   const {
+    history,
     currentUser,
     params,
     scrollingDisabled,
     speculateTransactionInProgress,
     onInquiryWithoutPayment,
     initiateOrderError,
+    pageData,
+    setPageData,
+    isDataLoaded,
+    config,
+    processName,
   } = props;
-  const processName = getProcessName(pageData);
+
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
-  // Handle redirection to ListingPage, if this is own listing or if required data is not available
+  // Handle redirection to ListingPage if required data is not available
   const listing = pageData?.listing;
-  const unitType = listing?.attributes?.publicData?.unitType;
-  const isRequest = unitType === REQUEST;
-  const isOwnListing = currentUser?.id && listing?.author?.id?.uuid === currentUser?.id?.uuid;
-  const hasRequiredData = !!(listing?.id && listing?.author?.id && processName);
-  const shouldRedirect = isDataLoaded && !(hasRequiredData && (!isOwnListing || isRequest));
-  const shouldRedirectUnathorizedUser = isDataLoaded && !isUserAuthorized(currentUser);
-  // Redirect if the user has no transaction rights
-  const shouldRedirectNoTransactionRightsUser =
-    isDataLoaded &&
-    // - either when they first arrive on the checkout page
-    (!hasPermissionToInitiateTransactions(currentUser) ||
-      // - or when they are sending the order (if the operator removed transaction rights
-      // when they were already on the checkout page and the user has not refreshed the page)
-      isErrorNoPermissionForInitiateTransactions(initiateOrderError));
-
-  // Redirect back to ListingPage if data is missing.
-  // Redirection must happen before any data format error is thrown (e.g. wrong currency)
-  if (shouldRedirect) {
-    console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
-      listing,
-    });
-    return <NamedRedirect name="ListingPage" params={params} />;
-    // Redirect to NoAccessPage if access rights are missing
-  } else if (shouldRedirectUnathorizedUser) {
-    return (
-      <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
-      />
-    );
-  } else if (shouldRedirectNoTransactionRightsUser) {
-    return (
-      <NamedRedirect
-        name="NoAccessPage"
-        params={{ missingAccessRight: NO_ACCESS_PAGE_INITIATE_TRANSACTIONS }}
-      />
-    );
-  }
 
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(
@@ -216,7 +145,24 @@ const EnhancedCheckoutPage = props => {
   );
 };
 
-const mapStateToProps = state => {
+/**
+ * The CheckoutPage "container" component.
+ * This component handles props (state and dispatch actions) and passes them to the CheckoutPageAccessWrapper.
+ *
+ * @component
+ * @param {Object} props from the router (routeConfiguration.js and Routes.js).
+ * @returns {JSX.Element}
+ */
+const CheckoutPage = props => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const config = useConfiguration();
+
+  const [pageData, setPageData] = useState({});
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  const processName = getProcessName(pageData);
+
   const {
     listing,
     orderData,
@@ -229,62 +175,115 @@ const mapStateToProps = state => {
     initiateInquiryError,
     initiateOrderError,
     confirmPaymentError,
-  } = state.CheckoutPage;
-  const { currentUser } = state.user;
-  const { confirmCardPaymentError, paymentIntent, retrievePaymentIntentError } = state.stripe;
-  return {
-    scrollingDisabled: isScrollingDisabled(state),
-    currentUser,
-    stripeCustomerFetched,
-    orderData,
-    speculateTransactionInProgress,
-    speculateTransactionError,
-    speculatedTransaction,
-    isClockInSync,
-    transaction,
-    listing,
-    initiateInquiryError,
-    initiateOrderError,
-    confirmCardPaymentError,
-    confirmPaymentError,
-    paymentIntent,
-    retrievePaymentIntentError,
-  };
+  } = useSelector(state => state.CheckoutPage);
+
+  const currentUser = useSelector(state => state.user.currentUser);
+  const { confirmCardPaymentError, paymentIntent, retrievePaymentIntentError } = useSelector(
+    state => state.stripe
+  );
+  const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
+
+  const fetchSpeculatedTransaction = useCallback(
+    (params, processAlias, txId, transitionName, isPrivileged) =>
+      dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
+    [dispatch]
+  );
+  const fetchStripeCustomer = useCallback(() => dispatch(stripeCustomer()), [dispatch]);
+  const onInquiryWithoutPayment = useCallback(
+    (params, processAlias, transitionName) =>
+      dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
+    [dispatch]
+  );
+  const onInitiateOrder = useCallback(
+    (params, processAlias, transactionId, transitionName, isPrivileged) =>
+      dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
+    [dispatch]
+  );
+  const onRetrievePaymentIntent = useCallback(params => dispatch(retrievePaymentIntent(params)), [
+    dispatch,
+  ]);
+  const onConfirmCardPayment = useCallback(params => dispatch(confirmCardPayment(params)), [
+    dispatch,
+  ]);
+  const onConfirmPayment = useCallback(
+    (transactionId, transitionName, transitionParams) =>
+      dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
+    [dispatch]
+  );
+  const onSavePaymentMethod = useCallback(
+    (stripeCustomer, stripePaymentMethodId) =>
+      dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
+    [dispatch]
+  );
+
+  useEffect(() => {
+    const initialData = { orderData, listing, transaction };
+    const data = handlePageData(initialData, STORAGE_KEY, history);
+    setPageData(data || {});
+    setIsDataLoaded(true);
+
+    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
+    if (isUserAuthorized(currentUser)) {
+      // This is for processes using payments with Stripe integration
+      if (processName !== INQUIRY_PROCESS_NAME) {
+        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
+        loadInitialDataForStripePayments({
+          pageData: data || {},
+          fetchSpeculatedTransaction,
+          fetchStripeCustomer,
+          config,
+        });
+      }
+    }
+  }, []);
+
+  return (
+    <CheckoutPageAccessWrapper
+      {...props}
+      PageComponent={CheckoutPageComponent}
+      currentUser={currentUser}
+      listing={listing}
+      orderData={orderData}
+      stripeCustomerFetched={stripeCustomerFetched}
+      speculateTransactionInProgress={speculateTransactionInProgress}
+      speculateTransactionError={speculateTransactionError}
+      speculatedTransaction={speculatedTransaction}
+      isClockInSync={isClockInSync}
+      transaction={transaction}
+      initiateInquiryError={initiateInquiryError}
+      initiateOrderError={initiateOrderError}
+      confirmCardPaymentError={confirmCardPaymentError}
+      confirmPaymentError={confirmPaymentError}
+      paymentIntent={paymentIntent}
+      retrievePaymentIntentError={retrievePaymentIntentError}
+      scrollingDisabled={scrollingDisabled}
+      dispatch={dispatch}
+      fetchSpeculatedTransaction={fetchSpeculatedTransaction}
+      fetchStripeCustomer={fetchStripeCustomer}
+      onInquiryWithoutPayment={onInquiryWithoutPayment}
+      onInitiateOrder={onInitiateOrder}
+      onRetrievePaymentIntent={onRetrievePaymentIntent}
+      onConfirmCardPayment={onConfirmCardPayment}
+      onConfirmPayment={onConfirmPayment}
+      onSavePaymentMethod={onSavePaymentMethod}
+      pageData={pageData}
+      setPageData={setPageData}
+      isDataLoaded={isDataLoaded}
+      history={history}
+      processName={processName}
+      config={config}
+    />
+  );
 };
 
-const mapDispatchToProps = dispatch => ({
-  dispatch,
-  fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
-    dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
-  fetchStripeCustomer: () => dispatch(stripeCustomer()),
-  onInquiryWithoutPayment: (params, processAlias, transitionName) =>
-    dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
-  onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
-    dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
-  onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
-  onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
-  onConfirmPayment: (transactionId, transitionName, transitionParams) =>
-    dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
-  onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
-    dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
-});
-
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
-
+// setInitialValues is used to clear redux state and ensure it matches the data
+// of the listing the user is currently viewing
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {
     const { listing, orderData } = initialValues;
     storeData(orderData, listing, null, STORAGE_KEY);
   }
-
   return setInitialValues(initialValues);
 };
-
-CheckoutPage.displayName = 'CheckoutPage';
 
 export default CheckoutPage;
