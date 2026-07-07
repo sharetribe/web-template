@@ -19,6 +19,8 @@ export const REQUEST = 'request'; // The unitType 'request' means that customer 
 export const FILE = 'file';
 
 // Then names of supported processes
+// If you add a new transaction process, remember to also modify delete-account.js. This file takes care of
+// preventing users from deleting their account if a payment is in process.
 export const PURCHASE_PROCESS_NAME = 'default-purchase';
 export const BOOKING_PROCESS_NAME = 'default-booking';
 export const INQUIRY_PROCESS_NAME = 'default-inquiry';
