@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update several dependencies. [#875](https://github.com/sharetribe/web-template/pull/875)
 - [fix] login-as feature: harden error handling.
   [#873](https://github.com/sharetribe/web-template/pull/873)
 - [change] CustomLinksMenu: refactor rendering order to improve hydration behavior.
