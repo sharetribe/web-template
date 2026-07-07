@@ -8310,10 +8310,10 @@ filelist@^1.0.1:
   dependencies:
     minimatch "^5.0.1"
 
-filesize@^11.0.15:
-  version "11.0.15"
-  resolved "https://registry.yarnpkg.com/filesize/-/filesize-11.0.15.tgz#f197b75a869444cb0e00af3a4f9c05e9389ed77e"
-  integrity sha512-30TpbYxQxCpi4XdVjkwXYQ37CzZltV38+P7MYroQ+4NK/Dmx9mxixFNrolzcmEIBsjT/uowC9T7kiy2+C12r1A==
+filesize@^11.0.19:
+  version "11.0.19"
+  resolved "https://registry.yarnpkg.com/filesize/-/filesize-11.0.19.tgz#e7f7b4dd73ffe5e3638c719ec9089bd43e512132"
+  integrity sha512-9Q2itINBvCHwFw9v5X7czZm855yAiFIYlnugrh7+8tYO4ITHZMzV91m35q2FngL9hoZwwjSTQACFF/W52OzJZQ==
 
 fill-range@^7.0.1:
   version "7.0.1"
