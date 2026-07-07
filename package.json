@@ -25,7 +25,7 @@
     "express-enforces-ssl": "^1.1.0",
     "final-form": "4.20.10",
     "final-form-arrays": "3.1.0",
-    "helmet": "^8.1.0",
+    "helmet": "^8.2.0",
     "jose": "5.9.6",
     "lodash": "4.18.1",
     "mapbox-gl-multitouch": "^1.0.3",
