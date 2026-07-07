@@ -755,6 +755,7 @@
   "OrderPanel.ctaButtonMessageMakeOffer": "Submit an offer",
   "OrderPanel.ctaButtonMessageRequestAQuote": "Request a quote",
   "OrderPanel.ctaButtonMessageNoStock": "Out of stock",
+  "OrderPanel.ctaButtonMessageDownload": "Download",
   "OrderPanel.ctaButtonMessagePurchase": "Buy now",
   "OrderPanel.listingCurrencyInvalid": "Oops, listing currency doesn't match the marketplace currency.",
   "OrderPanel.listingPriceMissing": "Oops, this listing has no price!",
