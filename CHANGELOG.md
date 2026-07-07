@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] CreateUserWithIdp: harden data handling of st-authinfo cookie.
+  [#874](https://github.com/sharetribe/web-template/pull/874)
 - [change] Update several dependencies. [#875](https://github.com/sharetribe/web-template/pull/875)
 - [fix] login-as feature: harden error handling.
   [#873](https://github.com/sharetribe/web-template/pull/873)
