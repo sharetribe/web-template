@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "DownloadPayoutSent.Subject" "We've sent you a payment" }}

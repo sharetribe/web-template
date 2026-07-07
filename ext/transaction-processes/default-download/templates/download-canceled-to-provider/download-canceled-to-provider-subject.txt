@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "DownloadCanceledToProvider.Subject" "A purchase of {listingTitle} was refunded" listingTitle=transaction.listing.title }}
