@@ -50,7 +50,7 @@ export const transitions = {
   AUTO_CANCEL: 'transition/auto-cancel',
 
   // Operator can resolve a report by marking the transaction as received
-  COMPLETE_FROM_REPORTED: 'transition/complete-from-reported',
+  OPERATOR_COMPLETE_FROM_REPORTED: 'transition/operator-complete-from-reported',
 
   // Only the customer can leave a review in this process.
   REVIEW: 'transition/review',
@@ -130,7 +130,7 @@ export const graph = {
       on: {
         [transitions.OPERATOR_CANCEL]: states.CANCELED,
         [transitions.AUTO_CANCEL]: states.CANCELED,
-        [transitions.COMPLETE_FROM_REPORTED]: states.COMPLETED,
+        [transitions.OPERATOR_COMPLETE_FROM_REPORTED]: states.COMPLETED,
       },
     },
 
@@ -159,8 +159,9 @@ export const isRelevantPastTransition = transition => {
     transitions.AUTO_CANCEL,
     transitions.AUTO_COMPLETE,
     transitions.OPERATOR_COMPLETE,
-    transitions.COMPLETE_FROM_REPORTED,
+    transitions.OPERATOR_COMPLETE_FROM_REPORTED,
     transitions.REVIEW,
+    transitions.EXPIRE_REVIEW_PERIOD,
   ].includes(transition);
 };
 
@@ -189,7 +190,7 @@ export const isCompleted = transition => {
   const txCompletedTransitions = [
     transitions.AUTO_COMPLETE,
     transitions.OPERATOR_COMPLETE,
-    transitions.COMPLETE_FROM_REPORTED,
+    transitions.OPERATOR_COMPLETE_FROM_REPORTED,
     transitions.REVIEW,
     transitions.EXPIRE_REVIEW_PERIOD,
   ];
