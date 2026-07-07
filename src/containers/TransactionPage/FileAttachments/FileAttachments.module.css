@@ -1,0 +1,67 @@
+@import '../../../styles/customMediaQueries.css';
+
+.container {
+  margin: 42px 24px 0 24px;
+
+  @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
+    margin: 40px 24px 0 24px;
+  }
+  @media (--viewportLarge) {
+    margin: 24px 0 0 0;
+  }
+}
+
+.sectionHeading {
+  composes: p from global;
+  margin: 16px 0 0 0;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 8px 0 0 0;
+  padding: 0;
+}
+
+/* FileAttachmentItem base styles */
+
+.fileAttachment {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  cursor: default;
+
+  /* Reset native button styles when this element is a <button> */
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.fileAttachmentAvailable {
+  cursor: pointer;
+}
+
+.fileAttachmentIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.fileAttachmentIconDefault {
+  color: var(--colorGrey600);
+}
+
+.fileAttachmentStatus {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.fileAttachmentError {
+  color: var(--colorFail);
+}
