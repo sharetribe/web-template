@@ -765,7 +765,7 @@
   "OrderPanel.author": "{name}",
   "OrderPanel.closedListingButtonText": "Sorry, this listing has been closed.",
   "OrderPanel.ctaButtonMessageBooking": "Book now",
-  "OrderPanel.ctaButtonMessageDownload": "Download",
+  "OrderPanel.ctaButtonMessageDownload": "Buy now",
   "OrderPanel.ctaButtonMessageInquiry": "Send an inquiry",
   "OrderPanel.ctaButtonMessageMakeOffer": "Submit an offer",
   "OrderPanel.ctaButtonMessageNoStock": "Out of stock",
