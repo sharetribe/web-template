@@ -39,6 +39,8 @@ export const DOWNLOAD_PROCESS_NAME = 'default-download';
  * - isCustomerReview(transition)
  * - isProviderReview(transition)
  * - statesNeedingCustomerAttention
+ * - supportedPayments
+ * - getCheckoutPaymentTransitions({ paymentProcessor, paymentMethod, state, unsupportedPaymentErrorMessage })
  */
 const PROCESSES = [
   {
@@ -217,6 +219,40 @@ const hasPassedState = process => (stateName, tx) => {
 };
 
 /**
+ * Get transaction state from a tx entity, or 'initial' when tx is null.
+ *
+ * @param {Object} process imported from a separate file
+ * @returns {function} Returns process state name or 'initial'
+ */
+const txStateOrInitial = process => tx => {
+  if (tx == null) {
+    return 'initial';
+  }
+  return getProcessState(process)(tx);
+};
+
+/**
+ * Curried checkout payment transitions: takes tx entity and passes its state.
+ *
+ * @param {Object} process imported from a separate file
+ * @returns {function} (tx, paymentParams) => { requestPaymentTransition, confirmPaymentTransition } | null
+ */
+const getCheckoutPaymentTransitionsForTx = process => (tx, paymentParams = {}) => {
+  if (typeof process.getCheckoutPaymentTransitions !== 'function') {
+    return null;
+  }
+  const state = txStateOrInitial(process)(tx);
+  // create shared error message pattern for unsupported payments
+  const { paymentProcessor, paymentMethod } = paymentParams;
+  const unsupportedPaymentErrorMessage = `Unsupported payment: processor=${paymentProcessor}, method=${paymentMethod}`;
+  return process.getCheckoutPaymentTransitions({
+    ...paymentParams,
+    state,
+    unsupportedPaymentErrorMessage,
+  });
+};
+
+/**
  * If process has been renamed, but the graph itself is the same,
  * this function allows referencing the updated name of the process.
  * ProcessName is used in some translation keys and stateData functions.
@@ -261,6 +297,7 @@ export const getProcess = processName => {
       getStateAfterTransition: getStateAfterTransition(processInfo.process),
       getTransitionsToStates: getTransitionsToStates(processInfo.process),
       hasPassedState: hasPassedState(processInfo.process),
+      getCheckoutPaymentTransitions: getCheckoutPaymentTransitionsForTx(processInfo.process),
     };
   } else {
     const error = new Error(`Unknown transaction process name: ${processName}`);
