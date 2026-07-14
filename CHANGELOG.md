@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+
+- [fix] Fix typo in a default-download email template
+  [#877](https://github.com/sharetribe/web-template/pull/877)
+
 ## [v12.0.0] 2026-07-14
 
 This major release prepares the template for the default-download process. This process is used to
