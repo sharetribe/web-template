@@ -3,6 +3,8 @@
  *   - default-booking
  */
 
+import { PAYMENT_METHOD_CARD, stripePaymentMethodInfo } from './paymentMethods';
+
 /**
  * Transitions
  *
@@ -217,6 +219,63 @@ export const isPrivileged = transition => {
   return [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(
     transition
   );
+};
+
+/**
+ * Client-side map of payment methods this process handles at checkout.
+ *
+ * Structure: supportedPayments[processor][methodId] = { paymentDirection }
+ *
+ * This does not create Stripe/Sharetribe support by itself. Support depends on the
+ * transaction process saved to the Sharetribe backend (CLI): transitions and their
+ * Stripe actions. Only declare methods your backend process is built for
+ * (see default card flow vs push-payment alternatives in test-payments).
+ *
+ * paymentDirection:
+ * - 'pull' — card-style: authorize now, capture later (e.g. when the provider accepts)
+ * - 'push' — customer pays on confirm; funds are pushed (no preauthorization)
+ *
+ * Defaults come from paymentMethods.js via stripePaymentMethodInfo; override only if needed.
+ */
+export const supportedPayments = {
+  stripe: {
+    ...stripePaymentMethodInfo(PAYMENT_METHOD_CARD),
+  },
+};
+
+/**
+ * Resolve checkout transitions for a payment method and transaction state.
+ *
+ * @param {Object} params
+ * @param {string} params.paymentProcessor - e.g. 'stripe'
+ * @param {string} params.paymentMethod - e.g. 'card'
+ * @param {string} [params.state='initial'] - current transaction state (from process.states)
+ * @param {string} [params.unsupportedPaymentErrorMessage] - shared error message from transaction.js wrapper
+ * @returns {{ requestPaymentTransition: string, confirmPaymentTransition: string }}
+ * @throws {Error} when paymentProcessor/paymentMethod is not in supportedPayments
+ */
+export const getCheckoutPaymentTransitions = ({
+  paymentProcessor,
+  paymentMethod,
+  state = 'initial',
+  unsupportedPaymentErrorMessage,
+}) => {
+  const paymentConfig = supportedPayments[paymentProcessor]?.[paymentMethod];
+  if (!paymentConfig) {
+    const errorMessage =
+      unsupportedPaymentErrorMessage ||
+      `Unsupported payment: processor=${paymentProcessor}, method=${paymentMethod}`;
+    throw new Error(errorMessage);
+  }
+
+  const isInquiry = state === states.INQUIRY;
+
+  return {
+    requestPaymentTransition: isInquiry
+      ? transitions.REQUEST_PAYMENT_AFTER_INQUIRY
+      : transitions.REQUEST_PAYMENT,
+    confirmPaymentTransition: transitions.CONFIRM_PAYMENT,
+  };
 };
 
 // Check when transaction is completed (booking over)
