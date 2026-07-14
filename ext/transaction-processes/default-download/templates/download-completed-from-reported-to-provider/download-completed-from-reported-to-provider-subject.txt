@@ -1,1 +1,1 @@
-{{set-translations (asset "content/email-texts.json")}}{{t "DownloadCompletedFromReportedToOrovider.Subject" "We've sent you a payment (report resolved)" }}
+{{set-translations (asset "content/email-texts.json")}}{{t "DownloadCompletedFromReportedToProvider.Subject" "We've sent you a payment (report resolved)" }}
