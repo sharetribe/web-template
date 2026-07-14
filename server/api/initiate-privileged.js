@@ -9,6 +9,7 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
+const { sanitizePushPaymentBodyParams } = require('../api-util/pushPaymentMethodValidation');
 
 const { Money } = sharetribeSdk.types;
 
@@ -50,7 +51,13 @@ const getMetadata = (orderData, transition) => {
 };
 
 module.exports = (req, res) => {
-  const { isSpeculative, orderData, bodyParams, queryParams } = req.body || {};
+  const { isSpeculative, orderData, bodyParams: incomingBodyParams, queryParams } = req.body || {};
+  let bodyParams;
+  try {
+    bodyParams = sanitizePushPaymentBodyParams(incomingBodyParams);
+  } catch (e) {
+    return handleError(res, e, { skipErrorLogging: true });
+  }
   const transitionName = bodyParams.transition;
   // Share one cookie token store so a refresh during listings.show is reused for exchangeToken.
   const tokenStore = createCookieTokenStore(req, res);
