@@ -26,6 +26,11 @@ graph in this directory and take it into use in transaction.js. After that, you 
 all the files that import the transaction.js file and check if those components need to be
 customized to work with your customized process graph.
 
+If your new process involves Stripe payments, you should also update
+server/api/delete-account.js`. Add the relevant states to a new `stripeRelatedStatesFor*`
+array, add a corresponding query function, and include it in the `Promise.all` call. This prevents
+account deletion when the user has transactions with incomplete payment processing.
+
 ## [transaction.js](transaction.js)
 
 This file is the main file and it works as a utility module imported on different presentational and

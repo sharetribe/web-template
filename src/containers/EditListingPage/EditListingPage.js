@@ -1,11 +1,10 @@
 import React from 'react';
-import { bool, func, object, shape, string, oneOf } from 'prop-types';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // Import configs and util modules
-import { intlShape, useIntl } from '../../util/reactIntl';
+import { useIntl } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -44,6 +43,13 @@ import {
   requestImageUpload,
   removeListingImage,
   savePayoutDetails,
+  selectFileUploads,
+  selectFileUploadsDisabled,
+  selectHasPendingFileUploads,
+  selectAllFilesUploadedAndVerified,
+  uploadFile,
+  clearUploadedFiles,
+  downloadFile,
 } from './EditListingPage.duck';
 import EditListingWizard from './EditListingWizard/EditListingWizard';
 import css from './EditListingPage.module.css';
@@ -125,6 +131,13 @@ const pickRenderableImages = (
  * @param {boolean} [props.stripeAccountFetched] - Whether the stripe account is fetched
  * @param {Object} [props.stripeAccount] - The stripe account object
  * @param {Object} [props.updateStripeAccountError] - The update stripe account error
+ * @param {Array} props.fileUploads - Array of file upload state objects from redux
+ * @param {boolean} props.hasPendingFileUploads - Whether any file in redux state is currently uploading
+ * @param {boolean} props.allFilesUploadedAndVerified - Whether all files in redux state have been successfully uploaded and verified
+ * @param {boolean} props.fileUploadsDisabled - Whether file uploads were disabled at runtime
+ * @param {Function} props.onUploadFile - Initiates a file upload and starts verification polling
+ * @param {Function} props.onClearUploadedFiles - Removes file entries from redux state by tempId
+ * @param {Function} props.onDownloadFile - Requests a temporary download URL and opens it
  * @returns {JSX.Element}
  */
 export const EditListingPageComponent = props => {
@@ -158,6 +171,13 @@ export const EditListingPageComponent = props => {
     stripeAccount,
     updateStripeAccountError,
     authScopes,
+    fileUploads,
+    fileUploadsDisabled,
+    hasPendingFileUploads,
+    allFilesUploadedAndVerified,
+    onUploadFile,
+    onClearUploadedFiles,
+    onDownloadFile,
   } = props;
 
   const { id, type, returnURLType } = params;
@@ -311,6 +331,13 @@ export const EditListingPageComponent = props => {
           stripeAccountLinkError={getAccountLinkError}
           authScopes={authScopes}
           titleId={titleId}
+          fileUploads={fileUploads}
+          fileUploadsDisabled={fileUploadsDisabled}
+          hasPendingFileUploads={hasPendingFileUploads}
+          allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+          onUploadFile={onUploadFile}
+          onClearUploadedFiles={onClearUploadedFiles}
+          onDownloadFile={onDownloadFile}
         />
       </Page>
     );
@@ -366,6 +393,10 @@ const mapStateToProps = state => {
     page,
     scrollingDisabled: isScrollingDisabled(state),
     authScopes,
+    fileUploads: selectFileUploads(state),
+    fileUploadsDisabled: selectFileUploadsDisabled(state),
+    hasPendingFileUploads: selectHasPendingFileUploads(state),
+    allFilesUploadedAndVerified: selectAllFilesUploadedAndVerified(state),
   };
 };
 
@@ -386,6 +417,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
   onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
+  onUploadFile: (file, tempId) => dispatch(uploadFile(file, tempId)),
+  onClearUploadedFiles: tempIds => dispatch(clearUploadedFiles(tempIds)),
+  onDownloadFile: fileAttachmentId => dispatch(downloadFile(fileAttachmentId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

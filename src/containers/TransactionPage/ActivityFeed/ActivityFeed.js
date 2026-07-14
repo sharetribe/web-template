@@ -98,6 +98,7 @@ const TransitionMessage = props => {
           deliveryMethod,
           stateStatus,
           negotiationOffer,
+          transactionRole: ownRole,
         }
       )
     : '';
@@ -114,6 +115,7 @@ const TransitionMessage = props => {
       deliveryMethod,
       stateStatus,
       negotiationOffer,
+      transactionRole: ownRole,
     }
   );
 

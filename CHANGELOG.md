@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add support of purchasing digital files (prepare template for default-download process).
+  [#845](https://github.com/sharetribe/web-template/pull/845)
 - [fix] CreateUserWithIdp: harden data handling of st-authinfo cookie.
   [#874](https://github.com/sharetribe/web-template/pull/874)
 - [change] Update several dependencies. [#875](https://github.com/sharetribe/web-template/pull/875)

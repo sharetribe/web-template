@@ -34,6 +34,9 @@ const EditListingStylePanel = props => {
     onSubmit,
     updatePageTitle: UpdatePageTitle,
     intl,
+    allFilesUploadedAndVerified,
+    filesTabParams,
+    filesRequired,
   } = props;
 
   const rootClass = rootClassName || css.root;
@@ -88,6 +91,9 @@ const EditListingStylePanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         listingTitle={listing.attributes.title}
+        allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+        filesTabParams={filesTabParams}
+        filesRequired={filesRequired}
       />
     </main>
   );

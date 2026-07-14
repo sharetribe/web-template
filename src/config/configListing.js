@@ -421,6 +421,36 @@ export const listingTypes = [
   //     location: true,
   //   },
   // },
+  //   {
+  //   label: 'Digital file upload',
+  //   listingType: 'digital-file',
+  //   transactionType: {
+  //     process: 'default-download',
+  //     alias: 'default-download/release-1',
+  //     unitType: 'file',
+  //   },
+  //   transactionFields: [
+  //     {
+  //       label: 'Arbitrary field',
+  //       key: 'arbitrary',
+  //       schemaType: 'shortText',
+  //       showTo: 'customer',
+  //       helpText: 'A text field with a 70 char limit',
+  //     },
+  //   ],
+  //   defaultListingFields: {
+  //     description: true,
+  //     availability: false,
+  //     payoutDetails: true,
+  //     images: false,
+  //     pickup: false,
+  //     title: true,
+  //     shipping: false,
+  //     location: false,
+  //     price: true,
+  //     stock: false,
+  //   },
+  // },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType

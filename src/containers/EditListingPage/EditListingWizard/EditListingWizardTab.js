@@ -13,6 +13,7 @@ import { createResourceLocatorString } from '../../../util/routes';
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
 import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
+import EditListingFilesPanel from './EditListingFilesPanel/EditListingFilesPanel';
 import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
@@ -25,6 +26,7 @@ export const DETAILS = 'details';
 export const PRICING = 'pricing';
 export const PRICING_AND_STOCK = 'pricing-and-stock';
 export const DELIVERY = 'delivery';
+export const FILES = 'files';
 export const LOCATION = 'location';
 export const AVAILABILITY = 'availability';
 export const PHOTOS = 'photos';
@@ -36,6 +38,7 @@ export const SUPPORTED_TABS = [
   PRICING,
   PRICING_AND_STOCK,
   DELIVERY,
+  FILES,
   LOCATION,
   AVAILABILITY,
   PHOTOS,
@@ -113,6 +116,14 @@ const EditListingWizardTab = props => {
     routeConfiguration,
     titleId,
     intl,
+    fileUploads,
+    fileUploadsDisabled,
+    onUploadFile,
+    onClearUploadedFiles,
+    onDownloadFile,
+    hasPendingFileUploads,
+    allFilesUploadedAndVerified,
+    filesRequired,
   } = props;
 
   const { type } = params;
@@ -166,6 +177,9 @@ const EditListingWizardTab = props => {
       });
   };
 
+  const isLastTab = tab => tab === marketplaceTabs[marketplaceTabs.length - 1];
+  const filesTabParams = { ...params, tab: FILES };
+
   const panelProps = tab => {
     return {
       className: css.panel,
@@ -177,7 +191,11 @@ const EditListingWizardTab = props => {
       updateInProgress,
       // newListingPublished and fetchInProgress are flags for the last wizard tab
       ready: newListingPublished,
-      disabled: fetchInProgress,
+      // Files need to be uploaded and verified when publishing the listing
+      // (if specified in the listing type config)
+      disabled:
+        fetchInProgress ||
+        (isLastTab(tab) && filesRequired && (fileUploadsDisabled || !allFilesUploadedAndVerified)),
       submitButtonText: tabSubmitButtonText,
       listingTypes: config.listing.listingTypes,
       onManageDisableScrolling,
@@ -227,6 +245,19 @@ const EditListingWizardTab = props => {
         <EditListingDeliveryPanel {...panelProps(DELIVERY)} marketplaceCurrency={config.currency} />
       );
     }
+    case FILES: {
+      return (
+        <EditListingFilesPanel
+          {...panelProps(FILES)}
+          onUploadFile={onUploadFile}
+          onClearUploadedFiles={onClearUploadedFiles}
+          onDownloadFile={onDownloadFile}
+          fileUploads={fileUploads}
+          fileUploadsDisabled={fileUploadsDisabled}
+          hasPendingFileUploads={hasPendingFileUploads}
+        />
+      );
+    }
     case LOCATION: {
       return <EditListingLocationPanel {...panelProps(LOCATION)} />;
     }
@@ -264,6 +295,9 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+          filesTabParams={filesTabParams}
+          filesRequired={filesRequired}
         />
       );
     }
@@ -273,6 +307,9 @@ const EditListingWizardTab = props => {
           {...panelProps(STYLE)}
           listingImageConfig={config.layout.listingImage}
           images={images}
+          allFilesUploadedAndVerified={allFilesUploadedAndVerified}
+          filesTabParams={filesTabParams}
+          filesRequired={filesRequired}
         />
       );
     }

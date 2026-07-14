@@ -159,14 +159,23 @@
   }
 }
 
-.submitButton {
+.submitSection {
   flex-shrink: 0;
   margin-top: auto;
   margin-bottom: 24px;
 
   @media (--viewportLarge) {
+    margin-top: 100px;
+  }
+}
+
+.filesNotReady {
+  margin: 0 0 24px 0;
+}
+
+.submitButton {
+  @media (--viewportLarge) {
     display: inline-block;
     width: 241px;
-    margin-top: 100px;
   }
 }

@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
   align-self: stretch;
   display: flex;
@@ -68,6 +70,7 @@
 
 .error .statusText {
   color: var(--colorFail);
+  white-space: normal;
 }
 
 .removeButton {
