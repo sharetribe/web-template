@@ -22,7 +22,7 @@ import {
   FieldCheckbox,
   FieldTextInput,
   IconSpinner,
-  SavedCardDetails,
+  PaymentMethodPicker,
   StripePaymentAddress,
   CustomExtendedDataField,
 } from '../../../components';
@@ -159,7 +159,7 @@ const PaymentMethodSelector = props => {
       <Heading as="h3" rootClassName={css.heading}>
         <FormattedMessage id="StripePaymentForm.payWithHeading" />
       </Heading>
-      <SavedCardDetails
+      <PaymentMethodPicker
         className={css.paymentMethodSelector}
         card={defaultPaymentMethod.attributes.card}
         onChange={changePaymentMethod}
@@ -253,7 +253,7 @@ const initialState = {
   error: null,
   cardValueValid: false,
   // The mode can be 'onetimePayment', 'defaultCard', or 'replaceCard'
-  // Check SavedCardDetails component for more information
+  // Check PaymentMethodPicker component for more information
   paymentMethod: null,
 };
 
