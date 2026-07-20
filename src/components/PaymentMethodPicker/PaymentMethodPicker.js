@@ -14,7 +14,7 @@ import {
 } from '../../components';
 
 import IconCard from './IconCard/IconCard';
-import css from './SavedCardDetails.module.css';
+import css from './PaymentMethodPicker.module.css';
 
 const DEFAULT_CARD = 'defaultCard';
 const REPLACE_CARD = 'replaceCard';
@@ -22,7 +22,7 @@ const ONETIME_CARD_PAYMENT = 'onetimeCardPayment';
 const DELETE_CARD_BUTTON_ID = 'deleteCardButton';
 
 /**
- * A component that renders a saved card details.
+ * Payment method dropdown: saved card, new card, and optional extra options.
  *
  * @component
  * @param {Object} props
@@ -33,7 +33,7 @@ const DELETE_CARD_BUTTON_ID = 'deleteCardButton';
  * @param {number} props.card.expirationMonth - The expiration month of the card
  * @param {number} props.card.expirationYear - The expiration year of the card
  * @param {string} props.card.last4Digits - The last 4 digits of the card
- * @param {function} [props.onChange] - The function to call when the card is changed
+ * @param {function} [props.onChange] - Called when the selected payment method changes
  * @param {function} [props.onDeleteCard] - The function to call when the card is deleted
  * @param {function} [props.onManageDisableScrolling] - The function to call when the modal is opened
  * @param {boolean} [props.deletePaymentMethodInProgress] - Whether the delete payment method is in progress
@@ -41,7 +41,7 @@ const DELETE_CARD_BUTTON_ID = 'deleteCardButton';
  * @param {string} [props.selectedValue] - Controlled selected menu value
  * @returns {JSX.Element}
  */
-const SavedCardDetails = props => {
+const PaymentMethodPicker = props => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
@@ -75,12 +75,12 @@ const SavedCardDetails = props => {
   }, [selectedValue]);
 
   const paymentMethodPlaceholderDesktop = intl.formatMessage(
-    { id: 'SavedCardDetails.savedPaymentMethodPlaceholderDesktop' },
+    { id: 'PaymentMethodPicker.savedPaymentMethodPlaceholderDesktop' },
     { last4Digits }
   );
 
   const paymentMethodPlaceholderMobile = intl.formatMessage(
-    { id: 'SavedCardDetails.savedPaymentMethodPlaceholderMobile' },
+    { id: 'PaymentMethodPicker.savedPaymentMethodPlaceholderMobile' },
     { last4Digits }
   );
 
@@ -92,7 +92,7 @@ const SavedCardDetails = props => {
   );
 
   const replaceCardText = intl.formatMessage({
-    id: 'SavedCardDetails.replaceCardText',
+    id: 'PaymentMethodPicker.replaceCardText',
   });
   const replaceCard = (
     <span>
@@ -101,7 +101,7 @@ const SavedCardDetails = props => {
   );
 
   const expiredCardText = intl.formatMessage(
-    { id: 'SavedCardDetails.expiredCardText' },
+    { id: 'PaymentMethodPicker.expiredCardText' },
     { last4Digits }
   );
   const expiredText = <div className={css.cardExpiredText}>{expiredCardText}</div>;
@@ -157,16 +157,18 @@ const SavedCardDetails = props => {
   };
 
   const replaceCardTitle = intl.formatMessage({
-    id: 'SavedCardDetails.replaceCardTitle',
+    id: 'PaymentMethodPicker.replaceCardTitle',
   });
-  const removeCardModalTitle = intl.formatMessage({ id: 'SavedCardDetails.removeCardModalTitle' });
+  const removeCardModalTitle = intl.formatMessage({
+    id: 'PaymentMethodPicker.removeCardModalTitle',
+  });
   const removeCardModalContent = intl.formatMessage(
-    { id: 'SavedCardDetails.removeCardModalContent' },
+    { id: 'PaymentMethodPicker.removeCardModalContent' },
     { last4Digits }
   );
-  const cancel = intl.formatMessage({ id: 'SavedCardDetails.cancel' });
-  const removeCard = intl.formatMessage({ id: 'SavedCardDetails.removeCard' });
-  const deletePaymentMethod = intl.formatMessage({ id: 'SavedCardDetails.deletePaymentMethod' });
+  const cancel = intl.formatMessage({ id: 'PaymentMethodPicker.cancel' });
+  const removeCard = intl.formatMessage({ id: 'PaymentMethodPicker.removeCard' });
+  const deletePaymentMethod = intl.formatMessage({ id: 'PaymentMethodPicker.deletePaymentMethod' });
 
   const selectedAdditionalOption = additionalPaymentOptions.find(option => option.value === active);
   const isNewCardSelected = active === REPLACE_CARD || active === ONETIME_CARD_PAYMENT;
@@ -291,4 +293,4 @@ const SavedCardDetails = props => {
   );
 };
 
-export default SavedCardDetails;
+export default PaymentMethodPicker;
