@@ -320,6 +320,11 @@ export const timeOfDayFromTimeZoneToLocal = (date, timeZone) => {
 /**
  * Get start of time unit (e.g. start of day)
  *
+ * Note: Do not use unit "week" here. Moment's startOf('week') depends on the
+ * locale set for the moment library, which the Webpack build strips out.
+ * ../../config/webpack.config.js (Line ~641).
+ * Use getStartOfWeek(date, timeZone, firstDayOfWeek) instead.
+ *
  * @param {Date} date date instance to be converted
  * @param {String} unit time-unit (e.g. "day")
  * @param {String} timeZone time zone id
