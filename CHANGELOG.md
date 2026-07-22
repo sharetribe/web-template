@@ -14,10 +14,11 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] server/log.js: omit not-found listings from Sentry errors
+  [#881](https://github.com/sharetribe/web-template/pull/881)
 - [fix] Catch auth thunk rejections to avoid React development overlay.
   [#882](https://github.com/sharetribe/web-template/pull/882)
-- [fix] Fix negotiation email templates
-  [#878](https://github.com/sharetribe/web-template/pull/878)
+- [fix] Fix negotiation email templates [#878](https://github.com/sharetribe/web-template/pull/878)
 - [fix] Fix typo in a default-download email template
   [#877](https://github.com/sharetribe/web-template/pull/877)
 

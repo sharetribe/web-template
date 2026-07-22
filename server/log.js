@@ -60,9 +60,12 @@ const responseApiErrorInfo = err =>
  * @param {Error} e Error that occurred
  * @param {String} code Error code
  * @param {Object} data Additional data to be sent to Sentry
+ * @param {Object} [options]
+ * @param {boolean} [options.skipSentry] If true, skip Sentry and only log to stdout
  */
-exports.error = (e, code, data) => {
-  if (SENTRY_DSN) {
+exports.error = (e, code, data, options = {}) => {
+  const { skipSentry = false } = options;
+  if (SENTRY_DSN && !skipSentry) {
     const extra = { ...data, apiErrorData: responseApiErrorInfo(e) };
 
     Sentry.withScope(scope => {

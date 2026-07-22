@@ -72,7 +72,13 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
       return { preloadedState: store.getState(), translations, hostedConfig };
     })
     .catch(e => {
-      log.error(e, 'server-side-data-load-failed');
+      // Listing entity pages often fail for missing/closed listings; skip Sentry noise.
+      const matchedRoutes = matchPathname(pathname, routeConfiguration(defaultConfig.layout));
+      const isListingPage = matchedRoutes.some(
+        ({ route }) => route.name === 'ListingPage' || route.name === 'ListingPageCanonical'
+      );
+
+      log.error(e, 'server-side-data-load-failed', { pathname }, { skipSentry: isListingPage });
 
       // Call to loadData failed, let client handle the data loading errors.
       // (It might be recoverable error like lost connection.)
