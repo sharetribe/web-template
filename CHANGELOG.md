@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Catch auth thunk rejections to avoid React development overlay.
+  [#882](https://github.com/sharetribe/web-template/pull/882)
 - [fix] Fix negotiation email templates
   [#878](https://github.com/sharetribe/web-template/pull/878)
 - [fix] Fix typo in a default-download email template
