@@ -535,14 +535,22 @@ const AuthenticationPage = props => {
     [entities]
   );
 
-  const submitLogin = useCallback(({ email, password }) => dispatch(login(email, password)), [
-    dispatch,
-  ]);
-  const submitSignup = useCallback(params => dispatch(signup(params)), [dispatch]);
-  const submitSingupWithIdp = useCallback(params => dispatch(signupWithIdp(params)), [dispatch]);
-  const onResendVerificationEmail = useCallback(() => dispatch(sendVerificationEmail()), [
-    dispatch,
-  ]);
+  // Auth thunks use .unwrap(), so failures reject. Swallow those here: the forms
+  // already render loginError / signupError / confirmError from Redux (same as
+  // pre-RTK thunks, which caught inside the duck and did not reject).
+  const submitLogin = useCallback(
+    ({ email, password }) => dispatch(login(email, password)).catch(() => {}),
+    [dispatch]
+  );
+  const submitSignup = useCallback(params => dispatch(signup(params)).catch(() => {}), [dispatch]);
+  const submitSingupWithIdp = useCallback(
+    params => dispatch(signupWithIdp(params)).catch(() => {}),
+    [dispatch]
+  );
+  const onResendVerificationEmail = useCallback(
+    () => dispatch(sendVerificationEmail()).catch(() => {}),
+    [dispatch]
+  );
   const onManageDisableScrolling = useCallback(
     (componentId, disableScrolling) =>
       dispatch(manageDisableScrolling(componentId, disableScrolling)),
