@@ -45,7 +45,7 @@ const FileAttachmentItem = props => {
           <IconUnavailable />
         </span>
         <span className={css.fileAttachmentStatus}>
-          <FormattedMessage id="Message.fileDeleted" />
+          <FormattedMessage id="FileAttachments.fileDeleted" />
         </span>
       </div>
     );
@@ -59,7 +59,10 @@ const FileAttachmentItem = props => {
       <div className={css.fileAttachmentItem}>
         <button
           className={classNames(css.fileAttachment, css.fileAttachmentAvailable)}
-          aria-label={intl.formatMessage({ id: 'Message.downloadFile' }, { fileName: name })}
+          aria-label={intl.formatMessage(
+            { id: 'FileAttachments.downloadFile' },
+            { fileName: name }
+          )}
           onClick={() => onDownloadFile(fileAttachment.id)}
         >
           <span className={iconClasses}>
@@ -71,7 +74,7 @@ const FileAttachmentItem = props => {
         {downloadUrl ? (
           <p className={css.downloadFallback}>
             <FormattedMessage
-              id="Message.downloadFallback"
+              id="FileAttachments.downloadFileFallback"
               values={{
                 link: (
                   <a
@@ -81,7 +84,7 @@ const FileAttachmentItem = props => {
                     rel="noopener noreferrer"
                   >
                     <FormattedMessage
-                      id="Message.downloadFallbackLink"
+                      id="FileAttachments.downloadFileFallbackLink"
                       values={{ fileName: name }}
                     />
                   </a>
@@ -102,7 +105,7 @@ const FileAttachmentItem = props => {
         </span>
         <FileName name={name} />
         <span className={css.fileAttachmentStatus}>
-          <FormattedMessage id="Message.fileVerifying" />
+          <FormattedMessage id="FileAttachments.fileVerifying" />
         </span>
       </div>
     );
@@ -116,7 +119,7 @@ const FileAttachmentItem = props => {
         </span>
         <FileName name={name} />
         <span className={css.fileAttachmentStatus}>
-          <FormattedMessage id="Message.fileSecurityCheckFailed" />
+          <FormattedMessage id="FileAttachments.fileSecurityCheckFailed" />
         </span>
       </div>
     );
