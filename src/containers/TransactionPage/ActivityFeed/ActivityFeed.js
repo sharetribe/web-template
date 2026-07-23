@@ -202,6 +202,9 @@ const organizedItems = (messages, transitions, hideOldTransitions) => {
  * @param {boolean} props.fetchMessagesInProgress - Whether the fetch messages is in progress
  * @param {Function} props.onOpenReviewModal - The on open review modal function
  * @param {Function} props.onShowOlderMessages - The on show older messages function
+ * @param {boolean} [props.allowFiles] - Whether file downloads are allowed
+ * @param {Function} [props.onDownloadFile] - Download handler for message file attachments
+ * @param {Object} [props.fileDownloads] - Map of file attachment uuid to download state
  * @returns {JSX.Element} The ActivityFeed component
  */
 export const ActivityFeed = props => {
@@ -220,6 +223,7 @@ export const ActivityFeed = props => {
     onShowOlderMessages,
     allowFiles,
     onDownloadFile,
+    fileDownloads,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const processName = stateData.processName;
@@ -261,6 +265,7 @@ export const ActivityFeed = props => {
         intl={intl}
         allowFiles={allowFiles}
         downloadFile={onDownloadFile}
+        fileDownloads={fileDownloads}
         marketplaceName={config.marketplaceName}
       />
     ) : (
@@ -271,6 +276,7 @@ export const ActivityFeed = props => {
         intl={intl}
         allowFiles={allowFiles}
         downloadFile={onDownloadFile}
+        fileDownloads={fileDownloads}
         marketplaceName={config.marketplaceName}
       />
     );

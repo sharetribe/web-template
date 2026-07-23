@@ -22,9 +22,10 @@ import css from './FileAttachments.module.css';
  * @param {Function} props.onDownloadFile - Download handler
  * @param {Object} props.intl - Intl object
  * @param {string} [props.iconClassName] - Additional CSS class for the icon element
+ * @param {string} [props.downloadUrl] - Temporary download URL for manual fallback link
  */
 const FileAttachmentItem = props => {
-  const { fileAttachment, onDownloadFile, intl, iconClassName } = props;
+  const { fileAttachment, onDownloadFile, intl, iconClassName, downloadUrl } = props;
   const { file } = fileAttachment;
   const isDeleted = !file || file.attributes?.deleted;
 
@@ -55,17 +56,41 @@ const FileAttachmentItem = props => {
   if (isAvailable) {
     const formattedSize = calculateFileSize(file.attributes.size, intl.locale);
     return (
-      <button
-        className={classNames(css.fileAttachment, css.fileAttachmentAvailable)}
-        aria-label={intl.formatMessage({ id: 'Message.downloadFile' }, { fileName: name })}
-        onClick={() => onDownloadFile(fileAttachment.id)}
-      >
-        <span className={iconClasses}>
-          <IconDownload />
-        </span>
-        <FileName name={name} />
-        <span className={css.fileAttachmentStatus}>{formattedSize}</span>
-      </button>
+      <div className={css.fileAttachmentItem}>
+        <button
+          className={classNames(css.fileAttachment, css.fileAttachmentAvailable)}
+          aria-label={intl.formatMessage({ id: 'Message.downloadFile' }, { fileName: name })}
+          onClick={() => onDownloadFile(fileAttachment.id)}
+        >
+          <span className={iconClasses}>
+            <IconDownload />
+          </span>
+          <FileName name={name} />
+          <span className={css.fileAttachmentStatus}>{formattedSize}</span>
+        </button>
+        {downloadUrl ? (
+          <p className={css.downloadFallback}>
+            <FormattedMessage
+              id="Message.downloadFallback"
+              values={{
+                link: (
+                  <a
+                    className={css.downloadFallbackLink}
+                    href={downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id="Message.downloadFallbackLink"
+                      values={{ fileName: name }}
+                    />
+                  </a>
+                ),
+              }}
+            />
+          </p>
+        ) : null}
+      </div>
     );
   }
 
@@ -117,6 +142,7 @@ const FilesDisabledError = props => {
  * @param {Array} props.fileAttachments - The file attachment entities
  * @param {boolean} props.allowFiles - Whether file downloads are allowed
  * @param {Function} props.onDownloadFile - Download handler
+ * @param {Object} [props.fileDownloads] - Map of file attachment uuid to download state
  * @param {Object} props.intl - Intl object
  * @param {string} props.marketplaceName - Marketplace name for disabled-files error
  * @param {string} [props.iconClassName] - Additional CSS class for the icon element
@@ -126,6 +152,7 @@ export const FileAttachmentList = props => {
     fileAttachments,
     allowFiles,
     onDownloadFile,
+    fileDownloads,
     intl,
     marketplaceName,
     iconClassName,
@@ -145,6 +172,7 @@ export const FileAttachmentList = props => {
       onDownloadFile={onDownloadFile}
       intl={intl}
       iconClassName={iconClassName}
+      downloadUrl={fileDownloads?.[f.id.uuid]?.downloadUrl}
     />
   ));
 };
@@ -162,6 +190,7 @@ const FileAttachments = props => {
     allowFiles,
     fileAttachments,
     onDownloadFile,
+    fileDownloads,
     intl,
     marketplaceName,
   } = props;
@@ -186,6 +215,7 @@ const FileAttachments = props => {
           fileAttachments={fileAttachments}
           allowFiles={allowFiles}
           onDownloadFile={onDownloadFile}
+          fileDownloads={fileDownloads}
           intl={intl}
           marketplaceName={marketplaceName}
         />

@@ -696,6 +696,8 @@
   "ManageListingsPage.title": "Manage your listings",
   "ManageListingsPage.youHaveListings": "You have {count} {count, plural, one {listing} other {listings}}",
   "Message.downloadFile": "Download file {fileName}",
+  "Message.downloadFallback": "If the download didn't start automatically, try again by clicking {link}.",
+  "Message.downloadFallbackLink": "this link",
   "Message.fileDeleted": "Deleted file.",
   "Message.fileSecurityCheckFailed": "Security check failed. Please contact support.",
   "Message.fileVerifying": "Scanning the file…",
