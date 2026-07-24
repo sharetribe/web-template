@@ -251,7 +251,9 @@ export const ActivityFeed = props => {
   const items = organizedItems(messages, relevantTransitions, hideOldTransitions);
 
   const messageListItem = message => {
-    const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString);
+    const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString, {
+      firstDayOfWeek: config.localization.firstDayOfWeek,
+    });
     const isOwnMessage = currentUser?.id && message?.sender?.id?.uuid === currentUser.id?.uuid;
     const messageComponent = isOwnMessage ? (
       <OwnMessage
@@ -283,7 +285,9 @@ export const ActivityFeed = props => {
   };
 
   const transitionListItem = transition => {
-    const formattedDate = formatDateWithProximity(transition.createdAt, intl, todayString);
+    const formattedDate = formatDateWithProximity(transition.createdAt, intl, todayString, {
+      firstDayOfWeek: config.localization.firstDayOfWeek,
+    });
     const { customer, provider, listing } = transaction || {};
 
     // Initially transition component is empty;
