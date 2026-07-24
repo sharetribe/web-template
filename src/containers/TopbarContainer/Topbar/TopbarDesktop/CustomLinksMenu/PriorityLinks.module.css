@@ -6,6 +6,17 @@
   display: flex;
   flex-direction: row;
   justify-content: right;
+  margin: 0;
+}
+
+.priorityLinkItem {
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  padding: 0;
+  @media (--viewportMedium) {
+    padding: 0;
+  }
 }
 
 .priorityLink {
