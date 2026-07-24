@@ -377,6 +377,7 @@ export const TransactionPageComponent = props => {
     fileUploads,
     onClearUploadedFiles,
     onDownloadFile,
+    fileDownloads,
     fileUploadsDisabled,
     ...restOfProps
   } = props;
@@ -906,6 +907,7 @@ export const TransactionPageComponent = props => {
           hideFiles={stateData.processState === 'canceled'}
           fileAttachments={protectedFileAttachments}
           onDownloadFile={onDownloadFile}
+          fileDownloads={fileDownloads}
           intl={intl}
           marketplaceName={config.marketplaceName}
         />
@@ -925,6 +927,7 @@ export const TransactionPageComponent = props => {
           fetchMessagesInProgress={fetchMessagesInProgress}
           allowFiles={allowFiles}
           onDownloadFile={onDownloadFile}
+          fileDownloads={fileDownloads}
         />
       }
       transactionFieldsComponent={
@@ -1171,6 +1174,7 @@ const TransactionPage = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     fileUploadsDisabled,
+    fileDownloads,
   } = useSelector(state => state.TransactionPage, shallowEqual);
 
   const currentUser = useSelector(state => state.user?.currentUser);
@@ -1273,6 +1277,7 @@ const TransactionPage = props => {
       onUploadFile={onUploadFile}
       onClearUploadedFiles={onClearUploadedFiles}
       onDownloadFile={onDownloadFile}
+      fileDownloads={fileDownloads}
       history={history}
     />
   );
