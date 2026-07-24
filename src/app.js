@@ -35,7 +35,7 @@ import defaultMessages from './translations/en.json';
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
 //
-//   1) Change the language in the config.js file!
+//   1) Change the language in Console (/general/localization) and the fallback in configDefault.js
 //   2) Use the `messagesInLocale` import to add the correct translation file.
 //   3) (optionally) To support older browsers you need add the intl-relativetimeformat npm packages
 //      and take it into use in `util/polyfills.js`
@@ -47,8 +47,7 @@ import defaultMessages from './translations/en.json';
 // Step 2:
 // The "./translations/en.json" has generic English translations
 // that should work as a default translation if some translation keys are missing
-// from the hosted translation.json (which can be edited in Console). The other files
-// (e.g. en.json) in that directory has Biketribe themed translations.
+// from the hosted translation.json (which can be edited in Console).
 //
 // If you are using a non-english locale, point `messagesInLocale` to correct <lang>.json file.
 // That way the priority order would be:
