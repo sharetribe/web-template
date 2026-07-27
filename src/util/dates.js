@@ -320,6 +320,11 @@ export const timeOfDayFromTimeZoneToLocal = (date, timeZone) => {
 /**
  * Get start of time unit (e.g. start of day)
  *
+ * Note: Do not use unit "week" here. Moment's startOf('week') depends on the
+ * locale set for the moment library, which the Webpack build strips out.
+ * ../../config/webpack.config.js (Line ~641).
+ * Use getStartOfWeek(date, timeZone, firstDayOfWeek) instead.
+ *
  * @param {Date} date date instance to be converted
  * @param {String} unit time-unit (e.g. "day")
  * @param {String} timeZone time zone id
@@ -481,7 +486,9 @@ const getTimeZoneMaybe = timeZone => {
  * @param {Date} date Date to be formatted
  * @param {Object} intl Intl object from react-intl
  * @param {String} todayString translation for the current day
- * @param {Object} [opts] options. Can be used to pass in timeZone. It should represent IANA time zone key.
+ * @param {Object} [opts] options. Can be used to pass in timeZone and firstDayOfWeek.
+ * @param {String} [opts.timeZone] IANA time zone key
+ * @param {0|1|2|3|4|5|6} [opts.firstDayOfWeek] first day of week (0=Sun ... 6=Sat). Defaults to 0.
  *
  * @returns {String} formatted date
  */
@@ -492,7 +499,7 @@ export const formatDateWithProximity = (date, intl, todayString, opts = {}) => {
   }
 
   // If timeZone parameter is set, use it as formatting option
-  const { timeZone } = opts;
+  const { timeZone, firstDayOfWeek = 0 } = opts;
   const timeZoneMaybe = getTimeZoneMaybe(timeZone);
 
   // By default we can use moment() directly but in tests we need to use a specific dates.
@@ -501,6 +508,12 @@ export const formatDateWithProximity = (date, intl, todayString, opts = {}) => {
 
   // isSame: if the two moments have different time zones, the time zone of the first moment will be used for the comparison.
   const localizedNow = timeZoneMaybe.timeZone ? now.tz(timeZone) : now;
+  const nowDate = localizedNow.toDate();
+
+  // Same calendar week using marketplace firstDayOfWeek (not Moment's locale week).
+  const isSameWeek =
+    getStartOfWeek(nowDate, timeZone, firstDayOfWeek).getTime() ===
+    getStartOfWeek(date, timeZone, firstDayOfWeek).getTime();
 
   if (localizedNow.isSame(date, 'day')) {
     // e.g. "Today, 9:10 PM"
@@ -510,7 +523,7 @@ export const formatDateWithProximity = (date, intl, todayString, opts = {}) => {
       ...timeZoneMaybe,
     });
     return `${todayString}, ${formattedTime}`;
-  } else if (localizedNow.isSame(date, 'week')) {
+  } else if (isSameWeek) {
     // e.g.
     // en-US: "Sun 6:02 PM"
     // en-GB: "Sun 18:02"

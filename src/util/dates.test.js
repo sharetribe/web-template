@@ -222,6 +222,16 @@ describe('date utils', () => {
         'Wed 1:51 PM'
       );
     });
+    it('uses firstDayOfWeek when deciding same week vs same year', () => {
+      // intl.now is Thu 2017-11-23; 2017-11-19 is the previous Sunday
+      const d = new Date(Date.UTC(2017, 10, 19, 13, 51));
+      expect(
+        formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC', firstDayOfWeek: 0 })
+      ).toEqual('Sun 1:51 PM');
+      expect(
+        formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC', firstDayOfWeek: 1 })
+      ).toEqual('Nov 19, 1:51 PM');
+    });
     it('formats a date on same year', () => {
       const d = new Date(Date.UTC(2017, 10, 2, 13, 51));
       expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
