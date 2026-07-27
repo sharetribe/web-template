@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Remove locales used by Moment.js. Those files were originally used by react-dates
+  dependency library, which is no longer used.
+  [#879](https://github.com/sharetribe/web-template/pull/879)
 - [change] Update sharetribe-flex-sdk to v1.24.1.
   [#886](https://github.com/sharetribe/web-template/pull/886)
 - [add] Add currently available translations for DE, ES, FR.
