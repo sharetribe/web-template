@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations for DE, ES, FR.
+  [#884](https://github.com/sharetribe/web-template/pull/884)
 - [add] Add manual download link option to files.
   [#883](https://github.com/sharetribe/web-template/pull/883)
 - [change] server/log.js: omit not-found listings from Sentry errors
