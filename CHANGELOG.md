@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v12.1.0] 2026-07-27
+
 - [change] Remove locales used by Moment.js. Those files were originally used by react-dates
   dependency library, which is no longer used.
   [#879](https://github.com/sharetribe/web-template/pull/879)
@@ -30,6 +32,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Fix negotiation email templates [#878](https://github.com/sharetribe/web-template/pull/878)
 - [fix] Fix typo in a default-download email template
   [#877](https://github.com/sharetribe/web-template/pull/877)
+
+  [v12.1.0]: https://github.com/sharetribe/web-template/compare/v12.0.0...v12.1.0
 
 ## [v12.0.0] 2026-07-14
 
