@@ -51,6 +51,7 @@ const getMessageContent = (message, transaction, intl, richTextOptions = {}) => 
  * @param {Object} props.intl - The intl object
  * @param {boolean} props.allowFiles - Whether file downloads are allowed at the marketplace level
  * @param {Function} props.downloadFile - The download file handler
+ * @param {Object} [props.fileDownloads] - Map of file attachment uuid to download state
  * @param {string} props.marketplaceName - The marketplace name used in the disabled-files error
  * @returns {JSX.Element} The Message component
  */
@@ -62,6 +63,7 @@ export const Message = props => {
     intl,
     allowFiles,
     downloadFile,
+    fileDownloads,
     marketplaceName,
   } = props;
 
@@ -91,6 +93,7 @@ export const Message = props => {
                 intl={intl}
                 marketplaceName={marketplaceName}
                 iconClassName={css.fileAttachmentIconMessage}
+                fileDownloads={fileDownloads}
               />
             </div>
           ) : null}
@@ -110,6 +113,7 @@ export const Message = props => {
  * @param {Object} props.intl - The intl object
  * @param {boolean} props.allowFiles - Whether file downloads are allowed at the marketplace level
  * @param {Function} props.downloadFile - The download file handler
+ * @param {Object} [props.fileDownloads] - Map of file attachment uuid to download state
  * @param {string} props.marketplaceName - The marketplace name used in the disabled-files error
  * @returns {JSX.Element} The OwnMessage component
  */
@@ -121,6 +125,7 @@ export const OwnMessage = props => {
     intl,
     allowFiles,
     downloadFile,
+    fileDownloads,
     marketplaceName,
   } = props;
 
@@ -158,6 +163,7 @@ export const OwnMessage = props => {
                     ? css.fileAttachmentIconOwnMessageUnverified
                     : css.fileAttachmentIconOwnMessage
                 }
+                fileDownloads={fileDownloads}
               />
             </div>
           ) : null}

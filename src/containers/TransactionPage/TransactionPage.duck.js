@@ -659,7 +659,7 @@ const downloadFilePayloadCreator = (
       }
 
       window.open(url, '_blank', 'noopener,noreferrer');
-      return fileId;
+      return { fileAttachmentId: fileId, downloadUrl: url };
     })
     .catch(e => {
       return rejectWithValue({ fileAttachmentId: fileId, error: storableError(e) });
@@ -877,7 +877,7 @@ const initialState = {
   // if the configuration still has old access details.
   fileUploadsDisabled: false,
   fileDownloads: {
-    // [fileId.uuid]: { inProgress: bool, error: null | storable-error }
+    // [fileId.uuid]: { inProgress: bool, error: null | storable-error, downloadUrl: null | string }
   },
   messageFilePolling: {
     // [messageId]: { inProgress: bool, error: null | storable-error }
@@ -1100,15 +1100,17 @@ const transactionPageSlice = createSlice({
           state.fileDownloads[fileAttachmentId.uuid] = {
             inProgress: true,
             error: null,
+            downloadUrl: null,
           };
         }
       })
       .addCase(downloadFileThunk.fulfilled, (state, action) => {
-        const fileAttachmentId = action.payload;
+        const { fileAttachmentId, downloadUrl } = action.payload || {};
         if (fileAttachmentId) {
           state.fileDownloads[fileAttachmentId.uuid] = {
             inProgress: false,
             error: null,
+            downloadUrl,
           };
         }
       })
@@ -1121,6 +1123,7 @@ const transactionPageSlice = createSlice({
           state.fileDownloads[fileAttachmentId.uuid] = {
             inProgress: false,
             error,
+            downloadUrl: null,
           };
         }
       })

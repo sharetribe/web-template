@@ -248,7 +248,9 @@ describe('ActivityFeed file display and download', () => {
 
     expect(screen.getByText('invoice')).toBeInTheDocument();
     expect(screen.getByText('.pdf')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Message.downloadFile' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'FileAttachments.downloadFile' })
+    ).toBeInTheDocument();
   });
   it('own message with one attached file renders an error instead of file links when files are not allowed', () => {
     const customer = createUser('user1');
@@ -286,7 +288,9 @@ describe('ActivityFeed file display and download', () => {
 
     expect(screen.queryByText('invoice')).not.toBeInTheDocument();
     expect(screen.queryByText('.pdf')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'FileAttachments.downloadFile' })
+    ).not.toBeInTheDocument();
     expect(screen.getByText('TransactionPage.messageFilesDisabled')).toBeInTheDocument();
   });
 
@@ -323,7 +327,9 @@ describe('ActivityFeed file display and download', () => {
 
     render(<ActivityFeed {...props} />);
 
-    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'FileAttachments.downloadFile' })
+    ).not.toBeInTheDocument();
   });
 
   it('own message with multiple attached files renders all file names and icons', () => {
@@ -370,7 +376,7 @@ describe('ActivityFeed file display and download', () => {
     expect(screen.getByText('.pdf')).toBeInTheDocument();
     expect(screen.getByText('photo')).toBeInTheDocument();
     expect(screen.getByText('.jpg')).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'Message.downloadFile' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'FileAttachments.downloadFile' })).toHaveLength(2);
   });
 
   it('message from another user renders file links when publicFileAttachments is present', () => {
@@ -544,7 +550,9 @@ describe('ActivityFeed file verification states', () => {
 
     expect(screen.getByText('contract')).toBeInTheDocument();
     expect(screen.getByText('Message.pendingVerificationNote')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'FileAttachments.downloadFile' })
+    ).not.toBeInTheDocument();
     expect(screen.queryByText('Message.securityCheckFailedNote')).not.toBeInTheDocument();
   });
 
@@ -564,7 +572,9 @@ describe('ActivityFeed file verification states', () => {
 
     expect(screen.getByText('suspicious')).toBeInTheDocument();
     expect(screen.getByText('Message.securityCheckFailedNote')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Message.downloadFile' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'FileAttachments.downloadFile' })
+    ).not.toBeInTheDocument();
     expect(screen.queryByText('Message.pendingVerificationNote')).not.toBeInTheDocument();
   });
 
