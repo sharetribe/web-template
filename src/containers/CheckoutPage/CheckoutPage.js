@@ -68,6 +68,7 @@ const CheckoutPageComponent = props => {
     params,
     scrollingDisabled,
     speculateTransactionInProgress,
+    speculatedTransaction,
     onInquiryWithoutPayment,
     initiateOrderError,
     pageData,
@@ -80,6 +81,8 @@ const CheckoutPageComponent = props => {
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
+  const hasSpeculatedTransactionForRender =
+    !speculateTransactionInProgress || speculatedTransaction?.id;
 
   // Handle redirection to ListingPage if required data is not available
   const listing = pageData?.listing;
@@ -120,7 +123,7 @@ const CheckoutPageComponent = props => {
       transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
-  ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
+  ) : processName && !isInquiryProcess && hasSpeculatedTransactionForRender ? (
     <CheckoutPageWithPayment
       config={config}
       routeConfiguration={routeConfiguration}
