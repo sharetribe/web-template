@@ -12,33 +12,88 @@
   position: relative;
 }
 
-.removeImage {
+.controlsGroup {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  z-index: 1;
+}
+
+.controlButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 33px;
   height: 33px;
   padding: 0;
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.5);
   border: none;
   border-radius: 0;
-  border-bottom-left-radius: 2px;
   cursor: pointer;
 
   & svg {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 10px;
-    height: 10px;
-    fill: var(--colorGrey300);
-    stroke: var(--colorGrey300);
-  }
-
-  &:hover svg {
     fill: var(--colorWhite);
     stroke: var(--colorWhite);
   }
+
+  &:hover svg {
+    opacity: 0.5;
+  }
+
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+
+    & svg {
+      opacity: 0.2;
+    }
+  }
+}
+
+/* These three are positional modifiers, not tied to a specific button - if a
+   button is added to or reordered within this row, move these classes to
+   whichever buttons actually end up first/middle/last. */
+.controlButtonFirst {
+  border-top-left-radius: var(--medium, 4px);
+  border-bottom-left-radius: var(--medium, 4px);
+}
+
+.controlButtonLast {
+  border-top-right-radius: var(--medium, 4px);
+  border-bottom-right-radius: var(--medium, 4px);
+}
+
+.controlButtonMiddle {
+  border-radius: 0;
+}
+
+.removeImage {
+  /* Centered in the 33px button box: (33 - 13) / 2 = 10. */
+  & svg {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.coverBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  background-color: var(--colorGrey900);
+  color: var(--colorWhite);
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: var(--medium, 4px);
 }
 
 .rootForImage {
@@ -51,7 +106,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--borderRadius);
+  border-radius: var(--medium, 4px);
 }
 
 .thumbnailLoading {

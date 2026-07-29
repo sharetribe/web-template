@@ -8,6 +8,7 @@ import {
   ImageFromFile,
   ResponsiveImage,
   IconSpinner,
+  IconArrowHead,
 } from '../../../../components';
 
 // Import modules from this directory
@@ -17,7 +18,12 @@ import css from './ListingImage.module.css';
 const RemoveImageButton = props => {
   const { className, rootClassName, onClick, buttonRef } = props;
   const intl = useIntl();
-  const classes = classNames(rootClassName || css.removeImage, className);
+  const classes = classNames(
+    css.controlButton,
+    css.controlButtonLast,
+    rootClassName || css.removeImage,
+    className
+  );
   return (
     <button
       className={classes}
@@ -25,13 +31,7 @@ const RemoveImageButton = props => {
       ref={buttonRef}
       aria-label={intl.formatMessage({ id: 'EditListingPage.screenreader.removeImage' })}
     >
-      <svg
-        width="10px"
-        height="10px"
-        viewBox="0 0 10 10"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <g strokeWidth="1" fillRule="evenodd">
           <g transform="translate(-821.000000, -311.000000)">
             <g transform="translate(809.000000, 299.000000)">
@@ -59,26 +59,28 @@ const MoveImageButtons = props => {
     downButtonRef,
   } = props;
   return (
-    <div>
+    <>
       <button
         type="button"
         ref={upButtonRef}
-        onClick={onMoveUp}
-        disabled={disableMoveUp}
-        aria-label="Move image up"
+        onClick={disableMoveUp ? undefined : onMoveUp}
+        aria-disabled={disableMoveUp}
+        aria-label={disableMoveUp ? 'Move image up, disabled — first image' : 'Move image up'}
+        className={classNames(css.controlButton, css.controlButtonFirst)}
       >
-        Up
+        <IconArrowHead direction="up" size="small" />
       </button>
       <button
         type="button"
         ref={downButtonRef}
-        onClick={onMoveDown}
-        disabled={disableMoveDown}
-        aria-label="Move image down"
+        onClick={disableMoveDown ? undefined : onMoveDown}
+        aria-disabled={disableMoveDown}
+        aria-label={disableMoveDown ? 'Move image down, disabled — last image' : 'Move image down'}
+        className={classNames(css.controlButton, css.controlButtonMiddle)}
       >
-        Down
+        <IconArrowHead direction="down" size="small" />
       </button>
-    </div>
+    </>
   );
 };
 
@@ -86,8 +88,28 @@ const MoveImageButtons = props => {
 const DragHandleButton = props => {
   const { buttonRef } = props;
   return (
-    <button type="button" ref={buttonRef} data-drag-handle aria-label="Drag to reorder">
-      Handle
+    <button
+      type="button"
+      ref={buttonRef}
+      data-drag-handle
+      aria-label="Drag to reorder"
+      className={classNames(css.controlButton, css.controlButtonFirst)}
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        role="none"
+      >
+        <path d="M5.33333 11.3333C6.07 11.3333 6.66667 11.93 6.66667 12.6667C6.66667 13.4033 6.07 14 5.33333 14C4.59667 14 4 13.4033 4 12.6667C4 11.93 4.59667 11.3333 5.33333 11.3333Z" />
+        <path d="M10.6667 11.3333C11.4033 11.3333 12 11.93 12 12.6667C12 13.4033 11.4033 14 10.6667 14C9.93 14 9.33333 13.4033 9.33333 12.6667C9.33333 11.93 9.93 11.3333 10.6667 11.3333Z" />
+        <path d="M5.33333 6.66667C6.07 6.66667 6.66667 7.26333 6.66667 8C6.66667 8.73667 6.07 9.33333 5.33333 9.33333C4.59667 9.33333 4 8.73667 4 8C4 7.26333 4.59667 6.66667 5.33333 6.66667Z" />
+        <path d="M10.6667 6.66667C11.4033 6.66667 12 7.26333 12 8C12 8.73667 11.4033 9.33333 10.6667 9.33333C9.93 9.33333 9.33333 8.73667 9.33333 8C9.33333 7.26333 9.93 6.66667 10.6667 6.66667Z" />
+        <path d="M5.33333 2C6.07 2 6.66667 2.59667 6.66667 3.33333C6.66667 4.07 6.07 4.66667 5.33333 4.66667C4.59667 4.66667 4 4.07 4 3.33333C4 2.59667 4.59667 2 5.33333 2Z" />
+        <path d="M10.6667 2C11.4033 2 12 2.59667 12 3.33333C12 4.07 11.4033 4.66667 10.6667 4.66667C9.93 4.66667 9.33333 4.07 9.33333 3.33333C9.33333 2.59667 9.93 2 10.6667 2Z" />
+      </svg>
     </button>
   );
 };
@@ -216,9 +238,11 @@ const ListingImage = props => {
 
   const imageControls =
     hideMoveControls || !canReorder ? (
-      <RemoveImageButton onClick={handleRemoveClick} />
+      <div className={css.controlsGroup}>
+        <RemoveImageButton className={css.controlButtonFirst} onClick={handleRemoveClick} />
+      </div>
     ) : (
-      <div onFocus={handleControlsFocus} onBlur={handleControlsBlur}>
+      <div className={css.controlsGroup} onFocus={handleControlsFocus} onBlur={handleControlsBlur}>
         {isControlsFocused ? (
           <MoveImageButtons
             upButtonRef={upButtonRef}
@@ -235,8 +259,7 @@ const ListingImage = props => {
       </div>
     );
 
-  // Plain marker for now - Step 9 gives this its final badge styling/placement.
-  const coverBadge = isCoverImage ? <span>Cover</span> : null;
+  const coverBadge = isCoverImage ? <span className={css.coverBadge}>Cover</span> : null;
 
   if (image.file && !image.attributes) {
     // While image is uploading we show overlay on top of thumbnail
