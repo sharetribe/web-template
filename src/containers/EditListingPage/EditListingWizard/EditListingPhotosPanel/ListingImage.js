@@ -58,6 +58,7 @@ const MoveImageButtons = props => {
     upButtonRef,
     downButtonRef,
   } = props;
+  const intl = useIntl();
   return (
     <>
       <button
@@ -65,7 +66,11 @@ const MoveImageButtons = props => {
         ref={upButtonRef}
         onClick={disableMoveUp ? undefined : onMoveUp}
         aria-disabled={disableMoveUp}
-        aria-label={disableMoveUp ? 'Move image up, disabled — first image' : 'Move image up'}
+        aria-label={intl.formatMessage({
+          id: disableMoveUp
+            ? 'ListingImage.screenreader.moveImageUpDisabled'
+            : 'ListingImage.screenreader.moveImageUp',
+        })}
         className={classNames(css.controlButton, css.controlButtonFirst)}
       >
         <IconArrowHead direction="up" size="small" />
@@ -75,7 +80,11 @@ const MoveImageButtons = props => {
         ref={downButtonRef}
         onClick={disableMoveDown ? undefined : onMoveDown}
         aria-disabled={disableMoveDown}
-        aria-label={disableMoveDown ? 'Move image down, disabled — last image' : 'Move image down'}
+        aria-label={intl.formatMessage({
+          id: disableMoveDown
+            ? 'ListingImage.screenreader.moveImageDownDisabled'
+            : 'ListingImage.screenreader.moveImageDown',
+        })}
         className={classNames(css.controlButton, css.controlButtonMiddle)}
       >
         <IconArrowHead direction="down" size="small" />
@@ -87,12 +96,13 @@ const MoveImageButtons = props => {
 // Drag handle shown by default
 const DragHandleButton = props => {
   const { buttonRef } = props;
+  const intl = useIntl();
   return (
     <button
       type="button"
       ref={buttonRef}
       data-drag-handle
-      aria-label="Drag to reorder"
+      aria-label={intl.formatMessage({ id: 'ListingImage.screenreader.dragToReorderImage' })}
       className={classNames(css.controlButton, css.controlButtonFirst)}
     >
       <svg
@@ -148,6 +158,7 @@ const ListingImage = props => {
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = props;
+  const intl = useIntl();
 
   // Whether focus is currently somewhere inside this image's control group
   // (handle-or-arrows + remove button). While true, arrows are shown instead
@@ -240,7 +251,11 @@ const ListingImage = props => {
       </div>
     );
 
-  const coverBadge = isCoverImage ? <span className={css.coverBadge}>Cover</span> : null;
+  const coverBadge = isCoverImage ? (
+    <span className={css.coverBadge}>
+      {intl.formatMessage({ id: 'EditListingPhotosForm.coverImageBadge' })}
+    </span>
+  ) : null;
 
   if (image.file && !image.attributes) {
     // While image is uploading we show overlay on top of thumbnail
