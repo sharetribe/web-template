@@ -22,6 +22,13 @@
   background-color: var(--colorGrey50);
 }
 
+/* Sortable needs a real DOM container to attach to, but its children must
+   still be direct grid items of .imagesFieldArray, not grid items of this
+   wrapper - display: contents removes this element from layout entirely. */
+.sortableImages {
+  display: contents;
+}
+
 .addImageWrapper {
   float: left;
   position: relative;

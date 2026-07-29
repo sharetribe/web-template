@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ARRAY_ERROR } from 'final-form';
 import { Form as FinalForm, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
+import loadable from '@loadable/component';
 
 // Import configs and util modules
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
@@ -20,6 +21,37 @@ import ListingImage from './ListingImage';
 import css from './EditListingPhotosForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
+
+// Split out of the main bundle - only fetched once this form actually mounts.
+const Sortable = loadable.lib(() => import(/* webpackChunkName: "sortablejs" */ 'sortablejs'));
+
+const SortableController = props => {
+  const { sortableModule, containerRef, moveImageRef } = props;
+  const { default: SortableLib } = sortableModule;
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return undefined;
+    }
+    const sortable = SortableLib.create(container, {
+      animation: 150,
+      forceFallback: true,
+      handle: '[data-drag-handle]',
+      onEnd: event => {
+        const { oldIndex, newIndex } = event;
+        if (oldIndex !== newIndex) {
+          moveImageRef.current(oldIndex, newIndex);
+        }
+      },
+    });
+    return () => {
+      sortable.destroy();
+    };
+  }, [SortableLib, containerRef, moveImageRef]);
+
+  return null;
+};
 
 const ImageUploadError = props => {
   return props.uploadOverLimit ? (
@@ -84,7 +116,22 @@ export const FieldAddImage = props => {
 
 // Component that shows listing images from "images" field array
 const FieldListingImage = props => {
-  const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix } = props;
+  const {
+    name,
+    index,
+    intl,
+    onRemoveImage,
+    onMoveImage,
+    disableMoveUp,
+    disableMoveDown,
+    hideMoveControls,
+    pendingFocusDirection,
+    onFocusRequestHandled,
+    isCoverImage,
+    aspectWidth,
+    aspectHeight,
+    variantPrefix,
+  } = props;
   return (
     <Field name={name}>
       {fieldProps => {
@@ -99,6 +146,14 @@ const FieldListingImage = props => {
               id: 'EditListingPhotosForm.savedImageAltText',
             })}
             onRemoveImage={() => onRemoveImage(image?.id)}
+            onMoveUp={() => onMoveImage(index, index - 1)}
+            onMoveDown={() => onMoveImage(index, index + 1)}
+            disableMoveUp={disableMoveUp}
+            disableMoveDown={disableMoveDown}
+            hideMoveControls={hideMoveControls}
+            pendingFocusDirection={pendingFocusDirection}
+            onFocusRequestHandled={onFocusRequestHandled}
+            isCoverImage={isCoverImage}
             aspectWidth={aspectWidth}
             aspectHeight={aspectHeight}
             variantPrefix={variantPrefix}
@@ -139,6 +194,15 @@ export const EditListingPhotosForm = props => {
   const [state, setState] = useState({ imageUploadRequested: false });
   const [submittedImages, setSubmittedImages] = useState([]);
 
+  // Determins which image (by new index) and direction should get focus after an arrow move.
+  const [focusRequest, setFocusRequest] = useState(null);
+  const clearFocusRequest = useCallback(() => setFocusRequest(null), []);
+
+  const sortableContainerRef = useRef(null);
+  // Always points at the latest move function, so the Sortable instance
+  // (created once it mounts) never calls a stale closure.
+  const moveImageRef = useRef(() => {});
+
   const onImageUploadHandler = file => {
     const { listingImageConfig, onImageUpload } = props;
     if (file) {
@@ -158,6 +222,10 @@ export const EditListingPhotosForm = props => {
   return (
     <FinalForm
       {...props}
+      // Without this, reordering gets silently reverted when initialValues
+      // recomputes (e.g. another photo finishing upload). Applies to the whole
+      // form, not just "images" - a future field here inherits this too.
+      keepDirtyOnReinitialize
       mutators={{ ...arrayMutators }}
       render={formRenderProps => {
         const {
@@ -229,23 +297,67 @@ export const EditListingPhotosForm = props => {
                   )
                 )}
               >
-                {({ fields }) =>
-                  fields.map((name, index) => (
-                    <FieldListingImage
-                      key={name}
-                      name={name}
-                      onRemoveImage={imageId => {
-                        fields.remove(index);
-                        onRemoveImage(imageId);
-                      }}
-                      intl={intl}
-                      aspectWidth={aspectWidth}
-                      aspectHeight={aspectHeight}
-                      variantPrefix={variantPrefix}
-                    />
-                  ))
-                }
+                {({ fields }) => {
+                  // Bounds-checked move, shared by both arrows and Sortable's drag.
+                  const moveImage = (fromIndex, toIndex) => {
+                    if (toIndex < 0 || toIndex >= fields.length) {
+                      return false;
+                    }
+                    fields.move(fromIndex, toIndex);
+                    return true;
+                  };
+                  moveImageRef.current = moveImage;
+
+                  return (
+                    <div className={css.sortableImages} ref={sortableContainerRef}>
+                      {fields.map((name, index) => (
+                        <FieldListingImage
+                          key={name}
+                          name={name}
+                          index={index}
+                          disableMoveUp={index === 0}
+                          disableMoveDown={index === fields.length - 1}
+                          hideMoveControls={fields.length === 1}
+                          isCoverImage={index === 0}
+                          onRemoveImage={imageId => {
+                            fields.remove(index);
+                            onRemoveImage(imageId);
+                          }}
+                          onMoveImage={(fromIndex, toIndex) => {
+                            // Only arrows request focus-follow; drag skips this.
+                            if (moveImage(fromIndex, toIndex)) {
+                              setFocusRequest({
+                                index: toIndex,
+                                direction: toIndex < fromIndex ? 'up' : 'down',
+                              });
+                            }
+                          }}
+                          pendingFocusDirection={
+                            focusRequest?.index === index ? focusRequest.direction : null
+                          }
+                          onFocusRequestHandled={clearFocusRequest}
+                          intl={intl}
+                          aspectWidth={aspectWidth}
+                          aspectHeight={aspectHeight}
+                          variantPrefix={variantPrefix}
+                        />
+                      ))}
+                    </div>
+                  );
+                }}
               </FieldArray>
+
+              {images.length > 1 ? (
+                <Sortable>
+                  {sortableModule => (
+                    <SortableController
+                      sortableModule={sortableModule}
+                      containerRef={sortableContainerRef}
+                      moveImageRef={moveImageRef}
+                    />
+                  )}
+                </Sortable>
+              ) : null}
 
               <FieldAddImage
                 id="addImage"

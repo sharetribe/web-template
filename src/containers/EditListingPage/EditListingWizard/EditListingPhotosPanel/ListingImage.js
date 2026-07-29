@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useIntl } from 'react-intl';
 
@@ -15,13 +15,14 @@ import css from './ListingImage.module.css';
 
 // Cross shaped button on the top-right corner of the image thumbnail
 const RemoveImageButton = props => {
-  const { className, rootClassName, onClick } = props;
+  const { className, rootClassName, onClick, buttonRef } = props;
   const intl = useIntl();
   const classes = classNames(rootClassName || css.removeImage, className);
   return (
     <button
       className={classes}
       onClick={onClick}
+      ref={buttonRef}
       aria-label={intl.formatMessage({ id: 'EditListingPage.screenreader.removeImage' })}
     >
       <svg
@@ -42,6 +43,51 @@ const RemoveImageButton = props => {
           </g>
         </g>
       </svg>
+    </button>
+  );
+};
+
+// Up/down arrows shown instead of the drag handle while it (or one of these buttons)
+// has focus. Disabled at the array's edges.
+const MoveImageButtons = props => {
+  const {
+    onMoveUp,
+    onMoveDown,
+    disableMoveUp,
+    disableMoveDown,
+    upButtonRef,
+    downButtonRef,
+  } = props;
+  return (
+    <div>
+      <button
+        type="button"
+        ref={upButtonRef}
+        onClick={onMoveUp}
+        disabled={disableMoveUp}
+        aria-label="Move image up"
+      >
+        Up
+      </button>
+      <button
+        type="button"
+        ref={downButtonRef}
+        onClick={onMoveDown}
+        disabled={disableMoveDown}
+        aria-label="Move image down"
+      >
+        Down
+      </button>
+    </div>
+  );
+};
+
+// Drag handle shown by default
+const DragHandleButton = props => {
+  const { buttonRef } = props;
+  return (
+    <button type="button" ref={buttonRef} data-drag-handle aria-label="Drag to reorder">
+      Handle
     </button>
   );
 };
@@ -68,19 +114,131 @@ const ListingImage = props => {
     image,
     savedImageAltText,
     onRemoveImage,
+    onMoveUp,
+    onMoveDown,
+    disableMoveUp,
+    disableMoveDown,
+    hideMoveControls,
+    pendingFocusDirection,
+    onFocusRequestHandled,
+    isCoverImage,
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = props;
+
+  // Whether focus is currently somewhere inside this image's control group
+  // (handle-or-arrows + remove button). While true, arrows are shown instead
+  // of the handle.
+  const [isControlsFocused, setIsControlsFocused] = useState(false);
+  const handleButtonRef = useRef(null);
+  const upButtonRef = useRef(null);
+  const downButtonRef = useRef(null);
+  const removeButtonRef = useRef(null);
+
   const handleRemoveClick = e => {
     e.stopPropagation();
     onRemoveImage(image.id);
   };
+  const handleMoveUpClick = e => {
+    e.stopPropagation();
+    onMoveUp();
+  };
+  const handleMoveDownClick = e => {
+    e.stopPropagation();
+    onMoveDown();
+  };
+  const handleControlsFocus = e => {
+    // :focus-visible excludes focus from a mouse click/drag, so dragging the
+    // handle doesn't swap it for the arrows - only real keyboard nav does.
+    if (e.target.matches(':focus-visible')) {
+      setIsControlsFocused(true);
+    }
+  };
+  const handleControlsBlur = e => {
+    // Only revert to the handle once focus has left the whole control group,
+    // not when it just moved from one button to another inside it.
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsControlsFocused(false);
+    }
+  };
+
+  // When the handle gets focused and swaps for the arrows, move focus onto
+  // one of them so keyboard users don't lose focus to the removed handle.
+  const wasControlsFocusedRef = useRef(false);
+  useEffect(() => {
+    const justFocused = isControlsFocused && !wasControlsFocusedRef.current;
+    wasControlsFocusedRef.current = isControlsFocused;
+    if (justFocused) {
+      const nextFocusTarget = !disableMoveUp
+        ? upButtonRef.current
+        : !disableMoveDown
+        ? downButtonRef.current
+        : removeButtonRef.current;
+      nextFocusTarget?.focus();
+    }
+  }, [isControlsFocused, disableMoveUp, disableMoveDown]);
+
+  // After this image was moved by an arrow press, land focus back on the
+  // pressed direction's button at its new position (falling back to whichever
+  // arrow is enabled if that direction is no longer valid there), so repeated
+  // presses keep working on the same logical image without re-tabbing.
+  useEffect(() => {
+    if (!pendingFocusDirection) {
+      return;
+    }
+    if (!isControlsFocused) {
+      // Arrows aren't rendered yet; this effect runs again once they are.
+      setIsControlsFocused(true);
+      return;
+    }
+    const upTarget = { enabled: !disableMoveUp, ref: upButtonRef };
+    const downTarget = { enabled: !disableMoveDown, ref: downButtonRef };
+    // Keep focus on the direction just pressed (e.g. stay on "Down" so repeated
+    // presses keep working), unless the move puts the image at the list's
+    // start/end, where that arrow is now disabled — then move focus to the other arrow.
+    const targetsInPriorityOrder =
+      pendingFocusDirection === 'up' ? [upTarget, downTarget] : [downTarget, upTarget];
+
+    const focusTarget =
+      targetsInPriorityOrder.find(target => target.enabled)?.ref.current ?? removeButtonRef.current;
+    focusTarget?.focus();
+    onFocusRequestHandled();
+  }, [
+    pendingFocusDirection,
+    isControlsFocused,
+    disableMoveUp,
+    disableMoveDown,
+    onFocusRequestHandled,
+  ]);
+
+  const canReorder = onMoveUp && onMoveDown;
+
+  const imageControls =
+    hideMoveControls || !canReorder ? (
+      <RemoveImageButton onClick={handleRemoveClick} />
+    ) : (
+      <div onFocus={handleControlsFocus} onBlur={handleControlsBlur}>
+        {isControlsFocused ? (
+          <MoveImageButtons
+            upButtonRef={upButtonRef}
+            downButtonRef={downButtonRef}
+            onMoveUp={handleMoveUpClick}
+            onMoveDown={handleMoveDownClick}
+            disableMoveUp={disableMoveUp}
+            disableMoveDown={disableMoveDown}
+          />
+        ) : (
+          <DragHandleButton buttonRef={handleButtonRef} />
+        )}
+        <RemoveImageButton buttonRef={removeButtonRef} onClick={handleRemoveClick} />
+      </div>
+    );
+
+  // Plain marker for now - Step 9 gives this its final badge styling/placement.
+  const coverBadge = isCoverImage ? <span>Cover</span> : null;
 
   if (image.file && !image.attributes) {
-    // Add remove button only when the image has been uploaded and can be removed
-    const removeButton = image.imageId ? <RemoveImageButton onClick={handleRemoveClick} /> : null;
-
     // While image is uploading we show overlay on top of thumbnail
     const uploadingOverlay = !image.imageId ? (
       <div className={css.thumbnailLoading}>
@@ -96,7 +254,8 @@ const ListingImage = props => {
         aspectWidth={aspectWidth}
         aspectHeight={aspectHeight}
       >
-        {removeButton}
+        {image.imageId ? imageControls : null}
+        {coverBadge}
         {uploadingOverlay}
       </ImageFromFile>
     );
@@ -137,7 +296,8 @@ const ListingImage = props => {
               variants={variants}
             />
           </AspectRatioWrapper>
-          <RemoveImageButton onClick={handleRemoveClick} />
+          {imageControls}
+          {coverBadge}
         </div>
       </div>
     );
