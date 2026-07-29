@@ -3,7 +3,14 @@ import { findRouteByRouteName } from '../../util/routes';
 import { ensureStripeCustomer, ensureTransaction } from '../../util/data';
 import { formatMoney } from '../../util/currency';
 import { NEGOTIATION_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
+import { PAYMENT_METHOD_CARD } from '../../transactions/paymentMethods';
 import { storeData } from './CheckoutPageSessionHelpers';
+
+const getCheckoutTransitions = (process, tx, checkoutPaymentMethod) =>
+  process.getCheckoutPaymentTransitions(tx, {
+    paymentProcessor: 'stripe',
+    paymentMethod: checkoutPaymentMethod,
+  });
 
 /**
  * Extract relevant transaction type data from listing type
@@ -186,8 +193,14 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     sessionStorageKey,
     stripeCustomer,
     stripePaymentMethodId,
+    checkoutPaymentMethod = PAYMENT_METHOD_CARD,
   } = extraPaymentParams;
   const storedTx = ensureTransaction(pageData.transaction);
+  const { requestPaymentTransition, confirmPaymentTransition } = getCheckoutTransitions(
+    process,
+    storedTx,
+    checkoutPaymentMethod
+  );
 
   const ensuredStripeCustomer = ensureStripeCustomer(stripeCustomer);
   const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
@@ -202,22 +215,18 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     // fnParams should be { listingId, deliveryMethod?, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
     const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
 
-    const isOfferPendingInNegotiationProcess =
-      resolveLatestProcessName(processAlias.split('/')[0]) === NEGOTIATION_PROCESS_NAME &&
-      storedTx.attributes.state === `state/${process.states.OFFER_PENDING}`;
-
-    const requestTransition =
-      storedTx?.attributes?.lastTransition === process.transitions.INQUIRE
-        ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
-        : isOfferPendingInNegotiationProcess
-        ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
-        : process.transitions.REQUEST_PAYMENT;
-    const isPrivileged = process.isPrivileged(requestTransition);
+    const isPrivileged = process.isPrivileged(requestPaymentTransition);
 
     // If paymentIntent exists, order has been initiated previously.
     const orderPromise = hasPaymentIntents
       ? Promise.resolve(storedTx)
-      : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
+      : onInitiateOrder(
+          fnParams,
+          processAlias,
+          storedTx.id,
+          requestPaymentTransition,
+          isPrivileged
+        );
 
     return orderPromise.then(order => {
       // Store the returned transaction (order)
@@ -280,11 +289,10 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     // Remember the created PaymentIntent for step 5
     createdPaymentIntent = fnParams.paymentIntent;
     const transactionId = fnParams.transactionId;
-    const transitionName = process.transitions.CONFIRM_PAYMENT;
-    const isTransitionedAlready = storedTx?.attributes?.lastTransition === transitionName;
+    const isTransitionedAlready = storedTx?.attributes?.lastTransition === confirmPaymentTransition;
     const orderPromise = isTransitionedAlready
       ? Promise.resolve(storedTx)
-      : onConfirmPayment(transactionId, transitionName, {});
+      : onConfirmPayment(transactionId, confirmPaymentTransition, {});
 
     return orderPromise.then(order => {
       // Store the returned transaction (order)
