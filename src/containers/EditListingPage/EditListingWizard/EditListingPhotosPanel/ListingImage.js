@@ -185,26 +185,21 @@ const ListingImage = props => {
     }
   };
 
-  // When the handle gets focused and swaps for the arrows, move focus onto
-  // one of them so keyboard users don't lose focus to the removed handle.
+  // The handle is about to unmount and get replaced by the arrows, so move
+  // focus onto Up (the first button in the row) instead of losing it. Up is
+  // a valid target even when aria-disabled - it's still focusable, just
+  // inactive - so there's no need to skip to Down.
   const wasControlsFocusedRef = useRef(false);
   useEffect(() => {
     const justFocused = isControlsFocused && !wasControlsFocusedRef.current;
     wasControlsFocusedRef.current = isControlsFocused;
     if (justFocused) {
-      const nextFocusTarget = !disableMoveUp
-        ? upButtonRef.current
-        : !disableMoveDown
-        ? downButtonRef.current
-        : removeButtonRef.current;
-      nextFocusTarget?.focus();
+      upButtonRef.current?.focus();
     }
-  }, [isControlsFocused, disableMoveUp, disableMoveDown]);
+  }, [isControlsFocused]);
 
   // After this image was moved by an arrow press, land focus back on the
-  // pressed direction's button at its new position (falling back to whichever
-  // arrow is enabled if that direction is no longer valid there), so repeated
-  // presses keep working on the same logical image without re-tabbing.
+  // pressed direction's button at its new position
   useEffect(() => {
     if (!pendingFocusDirection) {
       return;
@@ -214,25 +209,11 @@ const ListingImage = props => {
       setIsControlsFocused(true);
       return;
     }
-    const upTarget = { enabled: !disableMoveUp, ref: upButtonRef };
-    const downTarget = { enabled: !disableMoveDown, ref: downButtonRef };
-    // Keep focus on the direction just pressed (e.g. stay on "Down" so repeated
-    // presses keep working), unless the move puts the image at the list's
-    // start/end, where that arrow is now disabled — then move focus to the other arrow.
-    const targetsInPriorityOrder =
-      pendingFocusDirection === 'up' ? [upTarget, downTarget] : [downTarget, upTarget];
-
     const focusTarget =
-      targetsInPriorityOrder.find(target => target.enabled)?.ref.current ?? removeButtonRef.current;
+      pendingFocusDirection === 'up' ? upButtonRef.current : downButtonRef.current;
     focusTarget?.focus();
     onFocusRequestHandled();
-  }, [
-    pendingFocusDirection,
-    isControlsFocused,
-    disableMoveUp,
-    disableMoveDown,
-    onFocusRequestHandled,
-  ]);
+  }, [pendingFocusDirection, isControlsFocused, onFocusRequestHandled]);
 
   const canReorder = onMoveUp && onMoveDown;
 
