@@ -31,7 +31,7 @@ const RemoveImageButton = props => {
       ref={buttonRef}
       aria-label={intl.formatMessage({ id: 'EditListingPage.screenreader.removeImage' })}
     >
-      <svg viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" role="none">
         <g strokeWidth="1" fillRule="evenodd">
           <g transform="translate(-821.000000, -311.000000)">
             <g transform="translate(809.000000, 299.000000)">
