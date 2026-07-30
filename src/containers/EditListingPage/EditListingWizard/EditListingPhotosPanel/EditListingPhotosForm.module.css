@@ -12,9 +12,13 @@
 .imagesFieldArray {
   flex-shrink: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 24px;
   margin: 0 0 24px 0;
+
+  @media (--viewportMedium) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .thumbnail {
