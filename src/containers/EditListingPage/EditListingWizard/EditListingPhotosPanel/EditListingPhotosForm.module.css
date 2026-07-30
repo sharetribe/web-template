@@ -30,6 +30,32 @@
   display: contents;
 }
 
+/* Sortable's ghostClass - the placeholder left behind at an item's original
+   slot while it's being dragged elsewhere. */
+.sortableGhost {
+  opacity: 0;
+}
+
+/* Scale the inner content, never the sortable item itself - Sortable owns
+   transform on the item for positioning and animation, so a scale/transition
+   there fights drag. overflow:visible so the scaled child isn't clipped. */
+.sortableChosen {
+  overflow: visible;
+  z-index: 2;
+}
+
+.sortableChosen > * {
+  transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
+  transform: scale(1.03);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 20px 40px;
+}
+
+.sortableDrag {
+  overflow: visible;
+  user-select: none;
+  opacity: 1 !important;
+}
+
 .addImageWrapper {
   float: left;
   position: relative;

@@ -38,6 +38,9 @@ const SortableController = props => {
       animation: 150,
       forceFallback: true,
       handle: '[data-drag-handle]',
+      ghostClass: css.sortableGhost,
+      chosenClass: css.sortableChosen,
+      dragClass: css.sortableDrag,
       onEnd: event => {
         const { oldIndex, newIndex } = event;
         if (oldIndex !== newIndex) {
