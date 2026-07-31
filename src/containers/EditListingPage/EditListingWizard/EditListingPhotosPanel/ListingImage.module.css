@@ -39,8 +39,10 @@
     stroke: var(--colorWhite);
   }
 
-  &:hover svg {
-    opacity: 0.5;
+  @media (hover: hover) {
+    &:hover svg {
+      opacity: 0.5;
+    }
   }
 
   &[aria-disabled='true'] {
