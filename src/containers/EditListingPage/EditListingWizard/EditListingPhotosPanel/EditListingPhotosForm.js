@@ -36,6 +36,7 @@ const SortableController = props => {
     }
     const sortable = SortableLib.create(container, {
       animation: 150,
+      delay: 150,
       forceFallback: true,
       handle: '[data-drag-handle]',
       ghostClass: css.sortableGhost,
