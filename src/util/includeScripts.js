@@ -245,6 +245,42 @@ export const IncludeScripts = props => {
     };
   }, [stripe?.publishableKey]);
 
+  // The render-time assignment above (isMapboxLoaded check) and onChangeClientState's
+  // 'load' listener both miss one case: on a server-rendered page, the mapbox-gl.js
+  // script tag already exists in the initial HTML with the same Helmet-managed
+  // attributes React would render on hydration, so React Helmet Async treats it as
+  // unchanged and never reports it through onChangeClientState's addedTags - the
+  // 'load' listener above is never attached to it. This effect closes that gap by
+  // checking directly against the DOM/window on mount, independent of Helmet's
+  // added/removed tag diffing.
+  useEffect(() => {
+    if (!isMapboxInUse || typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const assignAccessToken = () => {
+      if (window.mapboxgl && !window.mapboxgl.accessToken) {
+        window.mapboxgl.accessToken = mapboxAccessToken;
+      }
+    };
+
+    assignAccessToken();
+
+    if (window.mapboxgl) {
+      return undefined;
+    }
+
+    const script = document.getElementById(MAPBOX_SCRIPT_ID);
+    if (!script) {
+      return undefined;
+    }
+
+    script.addEventListener('load', assignAccessToken, { once: true });
+    return () => {
+      script.removeEventListener('load', assignAccessToken);
+    };
+  }, [isMapboxInUse, mapboxAccessToken]);
+
   const allScripts = [...stripeLibrary, ...analyticsLibraries, ...mapLibraries];
   return <Helmet onChangeClientState={onChangeClientState}>{allScripts}</Helmet>;
 };
