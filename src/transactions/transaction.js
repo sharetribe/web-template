@@ -450,6 +450,17 @@ export const isStripeRelatedProcessAlias = processAlias => {
 };
 
 /**
+ * Whether the given Stripe payment method is a push payment for this process.
+ * Push = no preauthorization; charge on customer confirmation.
+ *
+ * @param {Object} process from getProcess()
+ * @param {string} paymentMethod e.g. 'ideal', 'card'
+ * @returns {boolean}
+ */
+export const isStripePushPaymentMethod = (process, paymentMethod) =>
+  process?.supportedPayments?.stripe?.[paymentMethod]?.paymentDirection === 'push';
+
+/**
  * Check from unit type if full days should be used.
  * E.g. unit type is day or night
  * This is mainly used for availability management.
