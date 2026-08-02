@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
+import { getPaymentMethodConfig } from '../transactions/paymentMethods';
 
 // https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
 const STRIPE_PI_HAS_PASSED_CONFIRM = ['processing', 'requires_capture', 'canceled', 'succeeded'];
@@ -145,6 +146,70 @@ export const confirmCardPayment = params => dispatch => {
   return dispatch(confirmCardPaymentThunk(params)).unwrap();
 };
 
+//////////////////////////////////////
+// Confirm redirect payment methods //
+//////////////////////////////////////
+const confirmRedirectPaymentPayloadCreator = (params, { rejectWithValue }) => {
+  const {
+    stripe,
+    stripePaymentIntentClientSecret,
+    billingDetails,
+    returnUrl,
+    orderId,
+    checkoutPaymentMethod,
+  } = params;
+
+  if (!checkoutPaymentMethod) {
+    const e = storableError(
+      new Error('checkoutPaymentMethod is required to confirm a redirect payment')
+    );
+    log.error(e, 'stripe-handle-redirect-payment-failed', {
+      stripeMessage: e.message,
+    });
+    return rejectWithValue(e);
+  }
+
+  const transactionId = orderId;
+  const { paymentMethodType } = getPaymentMethodConfig(checkoutPaymentMethod).stripe;
+
+  // Note 1: not in use yet. Code is here for reference.
+  // Note 2: The Stripe.js page emphasizes Payment Element + merge.
+  // Manual payment_method_data.type without Elements is less shown there,
+  // but docs say confirmParams accepts Payment Intents confirm params,
+  // and the REST confirm API documents type / ideal / mobilepay exactly this way.
+  const confirmRedirectPaymentWithStripe = () => {
+    return stripe.confirmPayment({
+      clientSecret: stripePaymentIntentClientSecret,
+      confirmParams: {
+        return_url: returnUrl,
+        payment_method_data: {
+          type: paymentMethodType,
+          billing_details: billingDetails,
+        },
+      },
+    });
+  };
+
+  return confirmPaymentIntentIfNeeded({
+    stripe,
+    stripePaymentIntentClientSecret,
+    transactionId,
+    errorEventName: 'stripe-handle-redirect-payment-failed',
+    errorEventDetails: { checkoutPaymentMethod },
+    confirmPayment: confirmRedirectPaymentWithStripe,
+    rejectWithValue,
+  });
+};
+
+export const confirmRedirectPaymentThunk = createAsyncThunk(
+  'stripe/confirmRedirectPayment',
+  confirmRedirectPaymentPayloadCreator
+);
+
+export const confirmRedirectPayment = params => dispatch => {
+  return dispatch(confirmRedirectPaymentThunk(params)).unwrap();
+};
+
 ///////////////////////
 // Handle Card Setup //
 ///////////////////////
@@ -251,6 +316,20 @@ const stripeSlice = createSlice({
         state.confirmCardPaymentInProgress = false;
       })
       .addCase(confirmCardPaymentThunk.rejected, (state, action) => {
+        console.error(action.payload);
+        state.confirmCardPaymentError = action.payload;
+        state.confirmCardPaymentInProgress = false;
+      })
+      // Confirm redirect payment (shares confirmCardPayment* UI state)
+      .addCase(confirmRedirectPaymentThunk.pending, state => {
+        state.confirmCardPaymentError = null;
+        state.confirmCardPaymentInProgress = true;
+      })
+      .addCase(confirmRedirectPaymentThunk.fulfilled, (state, action) => {
+        state.paymentIntent = action.payload.paymentIntent;
+        state.confirmCardPaymentInProgress = false;
+      })
+      .addCase(confirmRedirectPaymentThunk.rejected, (state, action) => {
         console.error(action.payload);
         state.confirmCardPaymentError = action.payload;
         state.confirmCardPaymentInProgress = false;
