@@ -18,7 +18,11 @@ import { requireListingImage } from '../../util/configHelpers';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import {
+  confirmCardPayment,
+  confirmRedirectPayment,
+  retrievePaymentIntent,
+} from '../../ducks/stripe.duck';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
 // Import shared components
@@ -208,6 +212,10 @@ const CheckoutPage = props => {
   const onConfirmCardPayment = useCallback(params => dispatch(confirmCardPayment(params)), [
     dispatch,
   ]);
+  const onConfirmRedirectPayment = useCallback(params => dispatch(confirmRedirectPayment(params)), [
+    dispatch,
+  ]);
+
   const onConfirmPayment = useCallback(
     (transactionId, transitionName, transitionParams) =>
       dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
@@ -267,6 +275,7 @@ const CheckoutPage = props => {
       onInitiateOrder={onInitiateOrder}
       onRetrievePaymentIntent={onRetrievePaymentIntent}
       onConfirmCardPayment={onConfirmCardPayment}
+      onConfirmRedirectPayment={onConfirmRedirectPayment}
       onConfirmPayment={onConfirmPayment}
       onFetchTransaction={onFetchTransaction}
       onSavePaymentMethod={onSavePaymentMethod}
