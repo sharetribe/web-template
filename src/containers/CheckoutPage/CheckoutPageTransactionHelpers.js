@@ -2,9 +2,13 @@
 import { findRouteByRouteName } from '../../util/routes';
 import { ensureStripeCustomer, ensureTransaction } from '../../util/data';
 import { formatMoney } from '../../util/currency';
-import { NEGOTIATION_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 import { PAYMENT_METHOD_CARD } from '../../transactions/paymentMethods';
+import { isStripePushPaymentMethod } from '../../transactions/transaction';
 import { storeData } from './CheckoutPageSessionHelpers';
+
+// Stripe PaymentIntent statuses where customer actions are already completed
+// https://stripe.com/docs/payments/payment-intents/status
+export const STRIPE_PI_USER_ACTIONS_DONE_STATUSES = ['processing', 'requires_capture', 'succeeded'];
 
 const getCheckoutTransitions = (process, tx, checkoutPaymentMethod) =>
   process.getCheckoutPaymentTransitions(tx, {
@@ -171,7 +175,53 @@ const persistTransaction = (order, pageData, storeData, setPageData, sessionStor
 };
 
 /**
+ * Stripe appends these query params when the customer returns from a bank/wallet redirect
+ * (e.g. iDEAL). Absent params mean this is a normal checkout page load.
+ *
+ * @param {string} search - `location.search`
+ * @returns {{ redirectStatus: string|null, paymentIntentClientSecret: string|null }}
+ */
+export const getStripeRedirectReturnParams = search => {
+  const searchParams = new URLSearchParams(search);
+  return {
+    redirectStatus: searchParams.get('redirect_status'),
+    paymentIntentClientSecret: searchParams.get('payment_intent_client_secret'),
+  };
+};
+
+/**
+ * Map an unexpected PaymentIntent status to a redirect payment status for checkout UI.
+ * `requires_payment_method` / `canceled` are recoverable (customer can retry).
+ * Other incomplete statuses surface as `pending`.
+ *
+ * @param {string|undefined} paymentIntentStatus
+ * @returns {string} redirect payment status (`requires_payment_method` | `canceled` | `pending`)
+ */
+const toRedirectPaymentStatus = paymentIntentStatus => {
+  const isRecoverableFailure = ['requires_payment_method', 'canceled'].includes(
+    paymentIntentStatus
+  );
+  return isRecoverableFailure ? paymentIntentStatus : 'pending';
+};
+
+const getCompletedPaymentIntentOrReject = (paymentIntent, fallbackStatus) => {
+  if (paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status)) {
+    return paymentIntent;
+  }
+
+  const error = new Error(
+    `Unexpected PaymentIntent status after redirect return: ${paymentIntent?.status ||
+      fallbackStatus}`
+  );
+  // Attached for the redirect-return hook → checkout error UI (via redirectPaymentStatusError).
+  error.redirectPaymentStatus = toRedirectPaymentStatus(paymentIntent?.status || fallbackStatus);
+  throw error;
+};
+
+/**
  * Create call sequence for checkout with Stripe PaymentIntents.
+ *
+ * Submit path for checkout with Stripe PaymentIntents.
  *
  * @param {Object} orderParams contains params for the initial order itself
  * @param {Object} extraPaymentParams contains extra params needed by one of the following calls in the checkout sequence
@@ -183,8 +233,10 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     isPaymentFlowUseSavedCard,
     isPaymentFlowPayAndSaveCard,
     onConfirmCardPayment,
+    onConfirmRedirectPayment,
     onConfirmPayment,
     onInitiateOrder,
+    onRetrievePaymentIntent,
     onSavePaymentMethod,
     pageData,
     paymentIntent,
@@ -194,7 +246,10 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     stripeCustomer,
     stripePaymentMethodId,
     checkoutPaymentMethod = PAYMENT_METHOD_CARD,
+    checkoutPageUrl,
+    stripePaymentIntentClientSecretFromRedirect,
   } = extraPaymentParams;
+  const isStripePushPayment = isStripePushPaymentMethod(process, checkoutPaymentMethod);
   const storedTx = ensureTransaction(pageData.transaction);
   const { requestPaymentTransition, confirmPaymentTransition } = getCheckoutTransitions(
     process,
@@ -206,6 +261,17 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
 
   let createdPaymentIntent = null;
+
+  const getStripePaymentIntentClientSecret = order => {
+    const hasPaymentIntents = order?.attributes?.protectedData?.stripePaymentIntents;
+    if (!hasPaymentIntents) {
+      throw new Error(
+        `Missing StripePaymentIntents key in transaction's protectedData. Check that your transaction process is configured to use payment intents.`
+      );
+    }
+    return order.attributes.protectedData.stripePaymentIntents.default
+      .stripePaymentIntentClientSecret;
+  };
 
   ////////////////////////////////////////////////
   // Step 1: initiate order                     //
@@ -235,25 +301,15 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     });
   };
 
-  //////////////////////////////////
-  // Step 2: pay using Stripe SDK //
-  //////////////////////////////////
+  ////////////////////////////////////////////////////////
+  // Step 2 (card): confirm card payment via Stripe SDK //
+  ////////////////////////////////////////////////////////
   const fnConfirmCardPayment = fnParams => {
     // fnParams should be returned transaction entity
     const order = fnParams;
+    const stripePaymentIntentClientSecret = getStripePaymentIntentClientSecret(order);
+    const { stripe, card, billingDetails, paymentIntent: paymentIntentState } = extraPaymentParams;
 
-    const hasPaymentIntents = order?.attributes?.protectedData?.stripePaymentIntents;
-    if (!hasPaymentIntents) {
-      throw new Error(
-        `Missing StripePaymentIntents key in transaction's protectedData. Check that your transaction process is configured to use payment intents.`
-      );
-    }
-
-    const { stripePaymentIntentClientSecret } = hasPaymentIntents
-      ? order.attributes.protectedData.stripePaymentIntents.default
-      : null;
-
-    const { stripe, card, billingDetails, paymentIntent } = extraPaymentParams;
     const stripeElementMaybe = !isPaymentFlowUseSavedCard ? { card } : {};
 
     // Note: For basic USE_SAVED_CARD scenario, we have set it already on API side, when PaymentIntent was created.
@@ -276,8 +332,78 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     };
 
     return hasPaymentIntentUserActionsDone
-      ? Promise.resolve({ transactionId: order?.id, paymentIntent })
+      ? Promise.resolve({ transactionId: order?.id, paymentIntent: paymentIntentState })
       : onConfirmCardPayment(params);
+  };
+
+  ///////////////////////////////////////////////////////////////////
+  // Step 2 (push): confirm redirect payment method via Stripe SDK //
+  ///////////////////////////////////////////////////////////////////
+  const fnConfirmRedirectPayment = fnParams => {
+    // fnParams should be returned transaction entity
+    const order = fnParams;
+    const { stripe, billingDetails, paymentIntent: paymentIntentState } = extraPaymentParams;
+
+    // Skip Stripe confirm when PI user actions are already done.
+    if (hasPaymentIntentUserActionsDone) {
+      return Promise.resolve({
+        transactionId: order?.id,
+        paymentIntent: paymentIntentState || null,
+      });
+    }
+
+    if (!checkoutPageUrl) {
+      throw new Error('Return URL is required for redirect payment methods');
+    }
+
+    const stripePaymentIntentClientSecret = getStripePaymentIntentClientSecret(order);
+    const params = {
+      stripe,
+      stripePaymentIntentClientSecret,
+      orderId: order?.id,
+      billingDetails,
+      returnUrl: checkoutPageUrl,
+      checkoutPaymentMethod,
+    };
+
+    return onConfirmRedirectPayment(params);
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Step 2.5 (push): retrieve PaymentIntent after redirect / confirm         //
+  // Pass-through when confirm already returned a ready PaymentIntent.        //
+  //////////////////////////////////////////////////////////////////////////////
+  const fnRetrievePaymentIntentAfterRedirect = fnParams => {
+    // fnParams should contain { paymentIntent, transactionId } from step 2
+    const { transactionId, paymentIntent: paymentIntentFromConfirm } = fnParams;
+    const { stripe, paymentIntent: paymentIntentState } = extraPaymentParams;
+    const existingPaymentIntent = paymentIntentFromConfirm || paymentIntentState;
+
+    if (
+      existingPaymentIntent &&
+      STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(existingPaymentIntent.status)
+    ) {
+      return Promise.resolve({ transactionId, paymentIntent: existingPaymentIntent });
+    }
+
+    const clientSecret =
+      stripePaymentIntentClientSecretFromRedirect ||
+      storedTx?.attributes?.protectedData?.stripePaymentIntents?.default
+        ?.stripePaymentIntentClientSecret;
+
+    if (!clientSecret || !onRetrievePaymentIntent) {
+      return Promise.reject(getCompletedPaymentIntentOrReject(null, existingPaymentIntent?.status));
+    }
+
+    return onRetrievePaymentIntent({
+      stripe,
+      stripePaymentIntentClientSecret: clientSecret,
+    }).then(retrieveResponse => {
+      const retrievedPaymentIntent = getCompletedPaymentIntentOrReject(
+        retrieveResponse?.paymentIntent
+      );
+      return { transactionId, paymentIntent: retrievedPaymentIntent };
+    });
   };
 
   ///////////////////////////////////////////////////
@@ -332,14 +458,37 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   //   .then(result => fnConfirmPayment({...result}))
   const applyAsync = (acc, val) => acc.then(val);
   const composeAsync = (...funcs) => x => funcs.reduce(applyAsync, Promise.resolve(x));
-  const handlePaymentIntentCreation = composeAsync(
+
+  // Card flow may optionally save the payment method; push/redirect methods cannot.
+  const handlePaymentIntentCreationWithCard = composeAsync(
     fnRequestPayment,
     fnConfirmCardPayment,
     fnConfirmPayment,
     fnSavePaymentMethod
   );
 
-  return handlePaymentIntentCreation(orderParams);
+  // TODO: this is not in use by template.
+  // Test carefully before taking it into use!
+  //
+  // Normal push/redirect path: fnConfirmRedirectPayment calls stripe.confirmPayment with
+  // return_url and the browser navigates away, so the steps below never run in that session.
+  // After return, useStripeRedirectPaymentReturn → resumeCheckoutAfterStripeRedirect does
+  // retrieve + confirm-payment instead.
+  //
+  // These two steps still matter for a narrow retry edge case: Stripe already finished
+  // (PI in processing/succeeded) but Marketplace confirm-payment failed (or resume never
+  // completed). On re-submit, step 2 skips Stripe / does not redirect, then
+  // fnRetrievePaymentIntentAfterRedirect + fnConfirmPayment finish the order in-page.
+  const handlePaymentIntentCreationWithPushPayment = composeAsync(
+    fnRequestPayment,
+    fnConfirmRedirectPayment,
+    fnRetrievePaymentIntentAfterRedirect,
+    fnConfirmPayment
+  );
+
+  return isStripePushPayment
+    ? handlePaymentIntentCreationWithPushPayment(orderParams)
+    : handlePaymentIntentCreationWithCard(orderParams);
 };
 
 /**
