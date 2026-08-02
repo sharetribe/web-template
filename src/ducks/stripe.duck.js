@@ -5,6 +5,64 @@ import { storableError } from '../util/errors';
 // https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
 const STRIPE_PI_HAS_PASSED_CONFIRM = ['processing', 'requires_capture', 'canceled', 'succeeded'];
 
+/**
+ * Retrieve PaymentIntent; if already past confirm, return { paymentIntent, transactionId }.
+ * Otherwise run confirmPayment and return the same shape. Shared by card and redirect confirms.
+ *
+ * @param {Object} params
+ * @param {Object} params.stripe Stripe.js instance
+ * @param {string} params.stripePaymentIntentClientSecret
+ * @param {*} params.transactionId order / transaction id attached to the result
+ * @param {string} params.errorEventName log.error event id on failure
+ * @param {Object} [params.errorEventDetails] extra fields for log.error
+ * @param {Function} params.confirmPayment () => Promise<Stripe response>
+ * @param {Function} params.rejectWithValue
+ */
+const confirmPaymentIntentIfNeeded = ({
+  stripe,
+  stripePaymentIntentClientSecret,
+  transactionId,
+  errorEventName,
+  errorEventDetails = {},
+  confirmPayment,
+  rejectWithValue,
+}) => {
+  return stripe
+    .retrievePaymentIntent(stripePaymentIntentClientSecret)
+    .then(response => {
+      if (response.error) {
+        return Promise.reject(response);
+      }
+      if (STRIPE_PI_HAS_PASSED_CONFIRM.includes(response?.paymentIntent?.status)) {
+        return { paymentIntent: response.paymentIntent, transactionId };
+      }
+      return confirmPayment().then(confirmResponse => {
+        if (confirmResponse.error) {
+          return Promise.reject(confirmResponse);
+        }
+        return { paymentIntent: confirmResponse.paymentIntent, transactionId };
+      });
+    })
+    .catch(err => {
+      const e = err.error || storableError(err);
+      const containsPaymentIntent = err.error && err.error.payment_intent;
+      const { code, doc_url, message, payment_intent } = containsPaymentIntent ? err.error : {};
+      const loggableError = containsPaymentIntent
+        ? {
+            code,
+            message,
+            doc_url,
+            paymentIntentStatus: payment_intent.status,
+          }
+        : e;
+      log.error(loggableError, errorEventName, {
+        stripeMessage: loggableError.message,
+        ...errorEventDetails,
+      });
+      return rejectWithValue(e);
+    });
+};
+
 // ================ Async thunks ================ //
 
 /////////////////////////////
@@ -69,50 +127,14 @@ const confirmCardPaymentPayloadCreator = (params, { rejectWithValue }) => {
     ? [stripePaymentIntentClientSecret, paymentParams]
     : [stripePaymentIntentClientSecret];
 
-  const doConfirmCardPayment = () =>
-    stripe.confirmCardPayment(...args).then(response => {
-      if (response.error) {
-        return Promise.reject(response);
-      } else {
-        return { ...response, transactionId };
-      }
-    });
-
-  // First, check if the payment intent has already been confirmed and it just requires capture.
-  return stripe
-    .retrievePaymentIntent(stripePaymentIntentClientSecret)
-    .then(response => {
-      // Handle response.error or response.paymentIntent
-      if (response.error) {
-        return Promise.reject(response);
-      } else if (STRIPE_PI_HAS_PASSED_CONFIRM.includes(response?.paymentIntent?.status)) {
-        // Payment Intent has been confirmed already, move forward.
-        return { ...response, transactionId };
-      } else {
-        // If payment intent has not been confirmed yet, confirm it.
-        return doConfirmCardPayment();
-      }
-    })
-    .catch(err => {
-      // Unwrap Stripe error.
-      const e = err.error || storableError(err);
-
-      // Log error
-      const containsPaymentIntent = err.error && err.error.payment_intent;
-      const { code, doc_url, message, payment_intent } = containsPaymentIntent ? err.error : {};
-      const loggableError = containsPaymentIntent
-        ? {
-            code,
-            message,
-            doc_url,
-            paymentIntentStatus: payment_intent.status,
-          }
-        : e;
-      log.error(loggableError, 'stripe-handle-card-payment-failed', {
-        stripeMessage: loggableError.message,
-      });
-      return rejectWithValue(e);
-    });
+  return confirmPaymentIntentIfNeeded({
+    stripe,
+    stripePaymentIntentClientSecret,
+    transactionId,
+    errorEventName: 'stripe-handle-card-payment-failed',
+    confirmPayment: () => stripe.confirmCardPayment(...args),
+    rejectWithValue,
+  });
 };
 export const confirmCardPaymentThunk = createAsyncThunk(
   'stripe/confirmCardPayment',
@@ -225,7 +247,7 @@ const stripeSlice = createSlice({
         state.confirmCardPaymentInProgress = true;
       })
       .addCase(confirmCardPaymentThunk.fulfilled, (state, action) => {
-        state.paymentIntent = action.payload;
+        state.paymentIntent = action.payload.paymentIntent;
         state.confirmCardPaymentInProgress = false;
       })
       .addCase(confirmCardPaymentThunk.rejected, (state, action) => {
