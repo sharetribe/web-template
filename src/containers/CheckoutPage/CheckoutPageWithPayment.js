@@ -14,6 +14,7 @@ import {
   isTransactionInitiateListingNotFoundError,
   isTransactionsTransitionInvalidTransition,
 } from '../../util/errors';
+import { PAYMENT_METHOD_CARD, getCheckoutPaymentOptions } from '../../transactions/paymentMethods';
 import {
   getProcess,
   resolveLatestProcessName,
@@ -600,6 +601,11 @@ export const CheckoutPageWithPayment = props => {
     'stripe'
   );
 
+  const checkoutPaymentOptions = getCheckoutPaymentOptions({
+    process,
+    currency,
+  });
+
   // Render an error message if the listing is using a non Stripe supported currency
   // and is using a transaction process with Stripe actions (default-booking or default-purchase)
   if (!isStripeCompatibleCurrency) {
@@ -687,6 +693,7 @@ export const CheckoutPageWithPayment = props => {
                 isFuzzyLocation={config.maps.fuzzy.enabled}
                 transactionFieldConfigs={transactionFieldConfigs}
                 showTransactionFields={showTransactionFields}
+                checkoutPaymentOptions={checkoutPaymentOptions}
               />
             ) : null}
           </section>
