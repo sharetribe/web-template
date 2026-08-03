@@ -429,6 +429,27 @@ export const isDownloadProcessAlias = processAlias => {
 };
 
 /**
+ * Whether the process declares Stripe checkout payment methods.
+ * Uses process.supportedPayments.stripe as the source of truth (includes
+ * default-booking, default-purchase, negotiation, download, test-payments, etc.).
+ *
+ * @param {String} processAlias e.g. 'test-payments/release-1'
+ * @returns {boolean}
+ */
+export const isStripeRelatedProcessAlias = processAlias => {
+  const processName = processAlias ? processAlias.split('/')[0] : null;
+  if (!processName) {
+    return false;
+  }
+  try {
+    const process = getProcess(processName);
+    return Object.keys(process?.supportedPayments?.stripe || {}).length > 0;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
  * Check from unit type if full days should be used.
  * E.g. unit type is day or night
  * This is mainly used for availability management.
