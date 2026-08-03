@@ -16,7 +16,7 @@ import css from './ListingImage.module.css';
 
 // Cross shaped button on the top-right corner of the image thumbnail
 const RemoveImageButton = props => {
-  const { className, rootClassName, onClick, buttonRef } = props;
+  const { className, rootClassName, onClick, buttonRef, currentPositionMessage } = props;
   const intl = useIntl();
   const classes = classNames(
     css.controlButton,
@@ -29,7 +29,10 @@ const RemoveImageButton = props => {
       className={classes}
       onClick={onClick}
       ref={buttonRef}
-      aria-label={intl.formatMessage({ id: 'EditListingPage.screenreader.removeImage' })}
+      aria-label={intl.formatMessage(
+        { id: 'EditListingPage.screenreader.removeImage' },
+        { currentPosition: currentPositionMessage }
+      )}
     >
       <svg viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" role="none">
         <g strokeWidth="1" fillRule="evenodd">
@@ -57,6 +60,7 @@ const MoveImageButtons = props => {
     disableMoveDown,
     upButtonRef,
     downButtonRef,
+    currentPositionMessage,
   } = props;
   const intl = useIntl();
   return (
@@ -66,11 +70,14 @@ const MoveImageButtons = props => {
         ref={upButtonRef}
         onClick={disableMoveUp ? undefined : onMoveUp}
         aria-disabled={disableMoveUp}
-        aria-label={intl.formatMessage({
-          id: disableMoveUp
-            ? 'ListingImage.screenreader.moveImageUpDisabled'
-            : 'ListingImage.screenreader.moveImageUp',
-        })}
+        aria-label={
+          disableMoveUp
+            ? intl.formatMessage({ id: 'ListingImage.screenreader.moveImageUpDisabled' })
+            : intl.formatMessage(
+                { id: 'ListingImage.screenreader.moveImageUp' },
+                { currentPosition: currentPositionMessage }
+              )
+        }
         className={classNames(css.controlButton, css.controlButtonFirst)}
       >
         <IconArrowHead direction="up" size="small" />
@@ -80,11 +87,14 @@ const MoveImageButtons = props => {
         ref={downButtonRef}
         onClick={disableMoveDown ? undefined : onMoveDown}
         aria-disabled={disableMoveDown}
-        aria-label={intl.formatMessage({
-          id: disableMoveDown
-            ? 'ListingImage.screenreader.moveImageDownDisabled'
-            : 'ListingImage.screenreader.moveImageDown',
-        })}
+        aria-label={
+          disableMoveDown
+            ? intl.formatMessage({ id: 'ListingImage.screenreader.moveImageDownDisabled' })
+            : intl.formatMessage(
+                { id: 'ListingImage.screenreader.moveImageDown' },
+                { currentPosition: currentPositionMessage }
+              )
+        }
         className={classNames(css.controlButton, css.controlButtonMiddle)}
       >
         <IconArrowHead direction="down" size="small" />
@@ -135,6 +145,7 @@ const DragHandleButton = props => {
  * @param {Object} props.image - The image object
  * @param {string} props.savedImageAltText - The saved image alt text
  * @param {Function} props.onRemoveImage - The remove image function
+ * @param {string} [props.currentPositionMessage] - This image's position, e.g. "3 of 10", read out by the move up/down buttons
  * @param {number} [props.aspectWidth] - The aspect width
  * @param {number} [props.aspectHeight] - The aspect height
  * @param {string} [props.variantPrefix] - The variant prefix
@@ -154,6 +165,7 @@ const ListingImage = props => {
     pendingFocusDirection,
     onFocusRequestHandled,
     isCoverImage,
+    currentPositionMessage,
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
@@ -231,7 +243,11 @@ const ListingImage = props => {
   const imageControls =
     hideMoveControls || !canReorder ? (
       <div className={css.controlsGroup}>
-        <RemoveImageButton className={css.controlButtonFirst} onClick={handleRemoveClick} />
+        <RemoveImageButton
+          className={css.controlButtonFirst}
+          onClick={handleRemoveClick}
+          currentPositionMessage={currentPositionMessage}
+        />
       </div>
     ) : (
       <div className={css.controlsGroup} onFocus={handleControlsFocus} onBlur={handleControlsBlur}>
@@ -243,11 +259,16 @@ const ListingImage = props => {
             onMoveDown={handleMoveDownClick}
             disableMoveUp={disableMoveUp}
             disableMoveDown={disableMoveDown}
+            currentPositionMessage={currentPositionMessage}
           />
         ) : (
           <DragHandleButton buttonRef={handleButtonRef} />
         )}
-        <RemoveImageButton buttonRef={removeButtonRef} onClick={handleRemoveClick} />
+        <RemoveImageButton
+          buttonRef={removeButtonRef}
+          onClick={handleRemoveClick}
+          currentPositionMessage={currentPositionMessage}
+        />
       </div>
     );
 

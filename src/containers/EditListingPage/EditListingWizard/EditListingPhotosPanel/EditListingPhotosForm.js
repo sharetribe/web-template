@@ -125,6 +125,7 @@ const FieldListingImage = props => {
   const {
     name,
     index,
+    count,
     intl,
     onRemoveImage,
     onMoveImage,
@@ -138,6 +139,12 @@ const FieldListingImage = props => {
     aspectHeight,
     variantPrefix,
   } = props;
+
+  const currentPositionMessage = intl.formatMessage(
+    { id: 'ListingImage.screenreader.currentPosition' },
+    { index: index + 1, count }
+  );
+
   return (
     <Field name={name}>
       {fieldProps => {
@@ -160,6 +167,7 @@ const FieldListingImage = props => {
             pendingFocusDirection={pendingFocusDirection}
             onFocusRequestHandled={onFocusRequestHandled}
             isCoverImage={isCoverImage}
+            currentPositionMessage={currentPositionMessage}
             aspectWidth={aspectWidth}
             aspectHeight={aspectHeight}
             variantPrefix={variantPrefix}
@@ -321,6 +329,7 @@ export const EditListingPhotosForm = props => {
                           key={name}
                           name={name}
                           index={index}
+                          count={fields.length}
                           disableMoveUp={index === 0}
                           disableMoveDown={index === fields.length - 1}
                           hideMoveControls={fields.length === 1}
