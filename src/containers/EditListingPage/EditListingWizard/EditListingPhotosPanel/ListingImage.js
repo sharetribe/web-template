@@ -134,28 +134,11 @@ const DragHandleButton = props => {
   );
 };
 
-/**
- * Cropped "thumbnail" of given listing image.
- * The image might be one already uploaded and attached to listing entity
- * or representing local image file (before it's uploaded & attached to listing).
- *
- * @component
- * @param {Object} props
- * @param {string} [props.className] - Custom class that extends the default class for the root element
- * @param {Object} props.image - The image object
- * @param {string} props.savedImageAltText - The saved image alt text
- * @param {Function} props.onRemoveImage - The remove image function
- * @param {string} [props.currentPositionMessage] - This image's position, e.g. "3 of 10", read out by the move up/down buttons
- * @param {number} [props.aspectWidth] - The aspect width
- * @param {number} [props.aspectHeight] - The aspect height
- * @param {string} [props.variantPrefix] - The variant prefix
- * @returns {JSX.Element}
- */
-const ListingImage = props => {
+// Combined remove/re-order controls shown on top of an image thumbnail. Handles
+// adjusting buttons based on focus - drag handle for drag-and-drop and up/down
+// arrows for keyboard control.
+const ControlButtons = props => {
   const {
-    className,
-    image,
-    savedImageAltText,
     onRemoveImage,
     onMoveUp,
     onMoveDown,
@@ -164,13 +147,11 @@ const ListingImage = props => {
     hideMoveControls,
     pendingFocusDirection,
     onFocusRequestHandled,
-    isCoverImage,
     currentPositionMessage,
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
+    moveImageButtons: MoveImageButtonsComponent,
+    dragHandleButton: DragHandleButtonComponent,
+    removeImageButton: RemoveImageButtonComponent,
   } = props;
-  const intl = useIntl();
 
   // Whether focus is currently somewhere inside this image's control group
   // (handle-or-arrows + remove button). While true, arrows are shown instead
@@ -183,7 +164,7 @@ const ListingImage = props => {
 
   const handleRemoveClick = e => {
     e.stopPropagation();
-    onRemoveImage(image.id);
+    onRemoveImage();
   };
   const handleMoveUpClick = e => {
     e.stopPropagation();
@@ -238,39 +219,98 @@ const ListingImage = props => {
     onFocusRequestHandled();
   }, [pendingFocusDirection, isControlsFocused, onFocusRequestHandled]);
 
-  const canReorder = onMoveUp && onMoveDown;
-
-  const imageControls =
-    hideMoveControls || !canReorder ? (
+  if (hideMoveControls) {
+    return (
       <div className={css.controlsGroup}>
-        <RemoveImageButton
+        <RemoveImageButtonComponent
           className={css.controlButtonFirst}
           onClick={handleRemoveClick}
           currentPositionMessage={currentPositionMessage}
         />
       </div>
-    ) : (
-      <div className={css.controlsGroup} onFocus={handleControlsFocus} onBlur={handleControlsBlur}>
-        {isControlsFocused ? (
-          <MoveImageButtons
-            upButtonRef={upButtonRef}
-            downButtonRef={downButtonRef}
-            onMoveUp={handleMoveUpClick}
-            onMoveDown={handleMoveDownClick}
-            disableMoveUp={disableMoveUp}
-            disableMoveDown={disableMoveDown}
-            currentPositionMessage={currentPositionMessage}
-          />
-        ) : (
-          <DragHandleButton buttonRef={handleButtonRef} />
-        )}
-        <RemoveImageButton
-          buttonRef={removeButtonRef}
-          onClick={handleRemoveClick}
+    );
+  }
+
+  return (
+    <div className={css.controlsGroup} onFocus={handleControlsFocus} onBlur={handleControlsBlur}>
+      {isControlsFocused ? (
+        <MoveImageButtonsComponent
+          upButtonRef={upButtonRef}
+          downButtonRef={downButtonRef}
+          onMoveUp={handleMoveUpClick}
+          onMoveDown={handleMoveDownClick}
+          disableMoveUp={disableMoveUp}
+          disableMoveDown={disableMoveDown}
           currentPositionMessage={currentPositionMessage}
         />
-      </div>
-    );
+      ) : (
+        <DragHandleButtonComponent buttonRef={handleButtonRef} />
+      )}
+      <RemoveImageButtonComponent
+        buttonRef={removeButtonRef}
+        onClick={handleRemoveClick}
+        currentPositionMessage={currentPositionMessage}
+      />
+    </div>
+  );
+};
+
+/**
+ * Cropped "thumbnail" of given listing image.
+ * The image might be one already uploaded and attached to listing entity
+ * or representing local image file (before it's uploaded & attached to listing).
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} [props.className] - Custom class that extends the default class for the root element
+ * @param {Object} props.image - The image object
+ * @param {string} props.savedImageAltText - The saved image alt text
+ * @param {Function} props.onRemoveImage - The remove image function
+ * @param {string} [props.currentPositionMessage] - This image's position, e.g. "3 of 10", read out by the move up/down buttons
+ * @param {number} [props.aspectWidth] - The aspect width
+ * @param {number} [props.aspectHeight] - The aspect height
+ * @param {string} [props.variantPrefix] - The variant prefix
+ * @returns {JSX.Element}
+ */
+const ListingImage = props => {
+  const {
+    className,
+    image,
+    savedImageAltText,
+    onRemoveImage,
+    onMoveUp,
+    onMoveDown,
+    disableMoveUp,
+    disableMoveDown,
+    hideMoveControls,
+    pendingFocusDirection,
+    onFocusRequestHandled,
+    isCoverImage,
+    currentPositionMessage,
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = props;
+  const intl = useIntl();
+
+  const canReorder = onMoveUp && onMoveDown;
+
+  const imageControls = (
+    <ControlButtons
+      onRemoveImage={() => onRemoveImage(image.id)}
+      onMoveUp={onMoveUp}
+      onMoveDown={onMoveDown}
+      disableMoveUp={disableMoveUp}
+      disableMoveDown={disableMoveDown}
+      hideMoveControls={hideMoveControls || !canReorder}
+      pendingFocusDirection={pendingFocusDirection}
+      onFocusRequestHandled={onFocusRequestHandled}
+      currentPositionMessage={currentPositionMessage}
+      moveImageButtons={MoveImageButtons}
+      dragHandleButton={DragHandleButton}
+      removeImageButton={RemoveImageButton}
+    />
+  );
 
   const coverBadge = isCoverImage ? (
     <span className={css.coverBadge}>
