@@ -57,6 +57,8 @@
 .sortableDrag {
   overflow: visible;
   user-select: none;
+  /* Overwrites the Sortable.js lib which sets opacity to 0.8 through 
+  inline-styles. */
   opacity: 1 !important;
 }
 
