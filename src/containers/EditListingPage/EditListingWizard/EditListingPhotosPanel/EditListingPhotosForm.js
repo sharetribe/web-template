@@ -28,7 +28,7 @@ const Sortable = loadable.lib(() => import(/* webpackChunkName: "sortablejs" */ 
 // Attaches SortableJS to the FieldArray's container and reorders the images
 // FieldArray via moveImageRef.current() on drag end
 const SortableController = props => {
-  const { sortableModule, containerRef, moveImageRef } = props;
+  const { sortableModule, containerRef, moveImageRef, onDragStateChange } = props;
   const { default: SortableLib } = sortableModule;
 
   useEffect(() => {
@@ -45,7 +45,9 @@ const SortableController = props => {
       chosenClass: css.sortableChosen,
       dragClass: css.sortableDrag,
       delayOnTouchOnly: true,
+      onStart: () => onDragStateChange(true),
       onEnd: event => {
+        onDragStateChange(false);
         const { oldIndex, newIndex } = event;
         if (oldIndex !== newIndex) {
           moveImageRef.current(oldIndex, newIndex);
@@ -55,7 +57,7 @@ const SortableController = props => {
     return () => {
       sortable.destroy();
     };
-  }, [SortableLib, containerRef, moveImageRef]);
+  }, [SortableLib, containerRef, moveImageRef, onDragStateChange]);
 
   return null;
 };
@@ -93,7 +95,14 @@ const ShowListingsError = props => {
 
 // Field component that uses file-input to allow user to select images.
 export const FieldAddImage = props => {
-  const { formApi, onImageUploadHandler, aspectWidth = 1, aspectHeight = 1, ...rest } = props;
+  const {
+    formApi,
+    onImageUploadHandler,
+    aspectWidth = 1,
+    aspectHeight = 1,
+    className,
+    ...rest
+  } = props;
   return (
     <Field form={null} {...rest}>
       {fieldprops => {
@@ -107,7 +116,7 @@ export const FieldAddImage = props => {
         };
         const inputProps = { accept, id: name, name, onChange, type };
         return (
-          <div className={css.addImageWrapper}>
+          <div className={classNames(css.addImageWrapper, className)}>
             <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
               {fieldDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
               <label htmlFor={name} className={css.addImage}>
@@ -217,6 +226,8 @@ export const EditListingPhotosForm = props => {
   // Always points at the latest move function, so the Sortable instance
   // (created once it mounts) never calls a stale closure.
   const moveImageRef = useRef(() => {});
+  // Monitor dragging state to prevent pointer-events on add photo tile
+  const [isDragging, setIsDragging] = useState(false);
 
   const onImageUploadHandler = file => {
     const { listingImageConfig, onImageUpload } = props;
@@ -370,6 +381,7 @@ export const EditListingPhotosForm = props => {
                       sortableModule={sortableModule}
                       containerRef={sortableContainerRef}
                       moveImageRef={moveImageRef}
+                      onDragStateChange={setIsDragging}
                     />
                   )}
                 </Sortable>
@@ -379,6 +391,7 @@ export const EditListingPhotosForm = props => {
                 id="addImage"
                 name="addImage"
                 accept={ACCEPT_IMAGES}
+                className={isDragging ? css.addImageWrapperDragging : null}
                 label={
                   <span className={css.chooseImageText}>
                     <span className={css.chooseImage}>

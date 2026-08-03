@@ -77,6 +77,11 @@
   }
 }
 
+/* Remove pointer-events while an image is being dragged. */
+.addImageWrapperDragging {
+  pointer-events: none;
+}
+
 .addImage {
   /* Layout */
   /* Maintain aspect ratio */
