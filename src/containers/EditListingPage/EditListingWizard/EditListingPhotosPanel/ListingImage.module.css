@@ -58,13 +58,13 @@
    button is added to or reordered within this row, move these classes to
    whichever buttons actually end up first/middle/last. */
 .controlButtonFirst {
-  border-top-left-radius: var(--medium, 4px);
-  border-bottom-left-radius: var(--medium, 4px);
+  border-top-left-radius: var(--borderRadiusMedium);
+  border-bottom-left-radius: var(--borderRadiusMedium);
 }
 
 .controlButtonLast {
-  border-top-right-radius: var(--medium, 4px);
-  border-bottom-right-radius: var(--medium, 4px);
+  border-top-right-radius: var(--borderRadiusMedium);
+  border-bottom-right-radius: var(--borderRadiusMedium);
 }
 
 .controlButtonMiddle {
@@ -90,12 +90,12 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  padding: 6px 8px;
   background-color: var(--colorGrey900);
   color: var(--colorWhite);
   font-size: 12px;
   line-height: 16px;
-  border-radius: var(--medium, 4px);
+  border-radius: var(--borderRadiusMedium);
 }
 
 .rootForImage {
@@ -108,7 +108,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--medium, 4px);
+  border-radius: var(--borderRadiusMedium);
   pointer-events: none;
 }
 

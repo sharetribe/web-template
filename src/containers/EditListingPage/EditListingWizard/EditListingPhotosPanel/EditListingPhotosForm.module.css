@@ -24,7 +24,7 @@
 .thumbnail {
   width: 100%;
   background-color: var(--colorGrey50);
-  border-radius: var(--medium, 4px);
+  border-radius: var(--borderRadiusMedium);
 }
 
 /* Sortable needs a real DOM container to attach to, but its children must
@@ -102,7 +102,7 @@
   border-style: dashed;
   border-color: var(--colorGrey100);
   border-width: 2px;
-  border-radius: var(--medium, 4px);
+  border-radius: var(--borderRadiusMedium);
 
   /* Behaviour */
   cursor: pointer;
