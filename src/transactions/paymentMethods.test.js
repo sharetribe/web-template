@@ -35,7 +35,7 @@ describe('paymentMethods helpers', () => {
     // expect(isPaymentMethodSupportedForCurrency(PAYMENT_METHOD_IDEAL, 'USD')).toBe(false);
   });
 
-  it('checks checkout availability against process, currency, and stripe config', () => {
+  it('checks checkout availability against process and currency', () => {
     const process = {
       supportedPayments: {
         stripe: {
