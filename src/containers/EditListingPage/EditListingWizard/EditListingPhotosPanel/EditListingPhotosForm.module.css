@@ -16,6 +16,10 @@
   gap: 24px;
   margin: 0 0 24px 0;
 
+  /* Prevents iOS Safari's long-press-to-select-text while Sortable's own drag
+  recognition is setting up. */
+  user-select: none;
+
   @media (--viewportMedium) {
     grid-template-columns: 1fr 1fr;
   }
