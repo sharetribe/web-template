@@ -25,6 +25,8 @@ const ACCEPT_IMAGES = 'image/*';
 // Split out of the main bundle - only fetched once this form actually mounts.
 const Sortable = loadable.lib(() => import(/* webpackChunkName: "sortablejs" */ 'sortablejs'));
 
+// Attaches SortableJS to the FieldArray's container and reorders the images
+// FieldArray via moveImageRef.current() on drag end
 const SortableController = props => {
   const { sortableModule, containerRef, moveImageRef } = props;
   const { default: SortableLib } = sortableModule;
