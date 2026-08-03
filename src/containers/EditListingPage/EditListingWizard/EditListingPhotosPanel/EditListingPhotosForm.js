@@ -44,6 +44,7 @@ const SortableController = props => {
       ghostClass: css.sortableGhost,
       chosenClass: css.sortableChosen,
       dragClass: css.sortableDrag,
+      delayOnTouchOnly: true,
       onEnd: event => {
         const { oldIndex, newIndex } = event;
         if (oldIndex !== newIndex) {
