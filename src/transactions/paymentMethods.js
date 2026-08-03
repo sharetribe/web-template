@@ -98,15 +98,9 @@ export const isPaymentMethodSupportedForCurrency = (paymentMethodId, currency) =
  * @param {Object} params.process from getProcess()
  * @param {string} params.paymentMethodId
  * @param {string} params.currency ISO 4217 currency code
- * @param {Object} [params.stripeConfig] config.stripe from useConfiguration()
  * @returns {boolean}
  */
-export const isCheckoutPaymentMethodAvailable = ({
-  process,
-  paymentMethodId,
-  currency,
-  stripeConfig,
-}) => {
+export const isCheckoutPaymentMethodAvailable = ({ process, paymentMethodId, currency }) => {
   const supportedByProcess = process?.supportedPayments?.stripe?.[paymentMethodId];
   if (!supportedByProcess) {
     return false;
@@ -115,4 +109,35 @@ export const isCheckoutPaymentMethodAvailable = ({
     return false;
   }
   return true;
+};
+
+/**
+ * Build checkout payment method options from the process graph (source of truth).
+ *
+ * Only methods declared in process.supportedPayments.stripe and allowed for the
+ * listing currency are included. Card is listed first when available.
+ * UI labels/hints are resolved in StripePaymentForm, not here.
+ *
+ * @param {Object} params
+ * @param {Object} params.process from getProcess()
+ * @param {string} params.currency ISO 4217 currency code
+ * @returns {Array<{ value: string }>}
+ */
+export const getCheckoutPaymentOptions = ({ process, currency }) => {
+  const stripeMethods = process?.supportedPayments?.stripe || {};
+  const methodIds = Object.keys(stripeMethods);
+  const orderedMethodIds = [
+    ...(methodIds.includes(PAYMENT_METHOD_CARD) ? [PAYMENT_METHOD_CARD] : []),
+    ...methodIds.filter(id => id !== PAYMENT_METHOD_CARD),
+  ];
+
+  return orderedMethodIds
+    .filter(paymentMethodId =>
+      isCheckoutPaymentMethodAvailable({
+        process,
+        paymentMethodId,
+        currency,
+      })
+    )
+    .map(paymentMethodId => ({ value: paymentMethodId }));
 };
