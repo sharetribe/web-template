@@ -40,6 +40,7 @@ import {
   hasTransactionPassedPendingPayment,
   processCheckoutWithPayment,
   setOrderPageInitialValues,
+  STRIPE_PI_USER_ACTIONS_DONE_STATUSES,
 } from './CheckoutPageTransactionHelpers.js';
 import { getErrorMessages } from './ErrorMessages';
 
@@ -50,9 +51,6 @@ import MobileOrderBreakdown from './MobileOrderBreakdown';
 
 import css from './CheckoutPage.module.css';
 
-// Stripe PaymentIntent statuses, where user actions are already completed
-// https://stripe.com/docs/payments/payment-intents/status
-const STRIPE_PI_USER_ACTIONS_DONE_STATUSES = ['processing', 'requires_capture', 'succeeded'];
 
 // Payment charge options
 const ONETIME_PAYMENT = 'ONETIME_PAYMENT';
@@ -108,6 +106,8 @@ const prefixPriceVariantProperties = priceVariant => {
  * @param {Object} shippingDetails shipping address if applicable.
  * @param {Object} optionalPaymentParams (E.g. paymentMethod or setupPaymentMethodForSaving)
  * @param {Object} config app-wide configs. This contains hosted configs too.
+ * @param {Object} transactionFieldProtectedData protectedData from transaction field configs
+ * @param {string} [customerDefaultMessage] optional message saved to protectedData
  * @returns orderParams.
  */
 const getOrderParams = (
@@ -315,7 +315,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   };
 
   const shippingDetails = getShippingDetailsMaybe(formValues);
-  // Note: optionalPaymentParams contains Stripe paymentMethod,
+  // Note: optionalPaymentParams contains Stripe paymentMethod ('pm_…'),
   // but that can also be passed on Step 2
   // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
   const optionalPaymentParams =
@@ -521,7 +521,7 @@ export const CheckoutPageWithPayment = props => {
     tx?.attributes?.lineItems?.length > 0 ? getFormattedTotalPrice(tx, intl) : null;
 
   const process = processName ? getProcess(processName) : null;
-  const transitions = process.transitions;
+  const transitions = process?.transitions;
   const isPaymentExpired = hasPaymentExpired(existingTransaction, process);
 
   // Allow showing page when currentUser is still being downloaded,
@@ -560,7 +560,7 @@ export const CheckoutPageWithPayment = props => {
   const isNegotiation = processName === NEGOTIATION_PROCESS_NAME;
 
   const txTransitions = existingTransaction?.attributes?.transitions || [];
-  const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
+  const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions?.INQUIRE);
   const showInitialMessageInput = !hasInquireTransition && !isNegotiation;
 
   // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
@@ -594,7 +594,7 @@ export const CheckoutPageWithPayment = props => {
   // ensures it is supported by Stripe, as indicated by the 'stripe' parameter.
   // If using a transaction process without any stripe actions, leave out the 'stripe' parameter.
   const currency =
-    existingTransaction?.attributes?.payinTotal?.currency || listing.attributes.price?.currency;
+    existingTransaction?.attributes?.payinTotal?.currency || listing?.attributes?.price?.currency;
   const isStripeCompatibleCurrency = isValidCurrencyForTransactionProcess(
     transactionProcessAlias,
     currency,
