@@ -187,12 +187,12 @@ const PaymentMethodSelector = props => {
   const {
     cardClasses,
     formId,
-    changePaymentMethod,
+    changeCardPaymentMode,
     defaultPaymentMethod,
     handleStripeElementRef,
     hasCardError,
     error,
-    paymentMethod,
+    cardPaymentMode,
     intl,
     marketplaceName,
     checkoutPaymentOptions = [],
@@ -212,14 +212,14 @@ const PaymentMethodSelector = props => {
       if (onCheckoutPaymentMethodChange) {
         onCheckoutPaymentMethodChange(PAYMENT_METHOD_CARD);
       }
-      changePaymentMethod(value);
+      changeCardPaymentMode(value);
       return;
     }
 
     if (onCheckoutPaymentMethodChange) {
       onCheckoutPaymentMethodChange(value);
     }
-    changePaymentMethod('onetimeCardPayment');
+    changeCardPaymentMode('onetimeCardPayment');
   };
 
   const selectedValue = (() => {
@@ -229,7 +229,7 @@ const PaymentMethodSelector = props => {
     if (!hasDefaultPaymentMethod) {
       return 'onetimeCardPayment';
     }
-    if (paymentMethod === 'replaceCard') {
+    if (cardPaymentMode === 'replaceCard') {
       return 'replaceCard';
     }
     return 'defaultCard';
@@ -237,8 +237,8 @@ const PaymentMethodSelector = props => {
 
   const showCardElement =
     usesCardPayment &&
-    (paymentMethod === 'replaceCard' ||
-      paymentMethod === 'onetimeCardPayment' ||
+    (cardPaymentMode === 'replaceCard' ||
+      cardPaymentMode === 'onetimeCardPayment' ||
       !hasDefaultPaymentMethod);
 
   const last4Digits = defaultPaymentMethod?.attributes?.card?.last4Digits;
@@ -276,18 +276,18 @@ const PaymentMethodSelector = props => {
   );
 };
 
-const getPaymentMethod = (selectedPaymentMethod, hasDefaultPaymentMethod) => {
-  return selectedPaymentMethod == null && hasDefaultPaymentMethod
+const getCardPaymentMode = (cardPaymentMode, hasDefaultPaymentMethod) => {
+  return cardPaymentMode == null && hasDefaultPaymentMethod
     ? 'defaultCard'
-    : selectedPaymentMethod == null
+    : cardPaymentMode == null
     ? 'onetimeCardPayment'
-    : selectedPaymentMethod;
+    : cardPaymentMode;
 };
 
 // Should we show onetime payment fields and does StripeElements card need attention
 const checkOnetimePaymentFields = (
   cardValueValid,
-  selectedPaymentMethod,
+  cardPaymentMode,
   hasDefaultPaymentMethod,
   hasHandledCardPayment,
   isStripePushPayment = false
@@ -299,20 +299,19 @@ const checkOnetimePaymentFields = (
     };
   }
 
-  const useDefaultPaymentMethod =
-    selectedPaymentMethod === 'defaultCard' && hasDefaultPaymentMethod;
+  const useDefaultPaymentMethod = cardPaymentMode === 'defaultCard' && hasDefaultPaymentMethod;
   // Billing details are known if we have already handled card payment or existing default payment method is used.
   const billingDetailsKnown = hasHandledCardPayment || useDefaultPaymentMethod;
 
   // If onetime payment is used, check that the StripeElements card has valid value.
-  const oneTimePaymentMethods = ['onetimeCardPayment', 'replaceCard'];
-  const useOnetimePaymentMethod = oneTimePaymentMethods.includes(selectedPaymentMethod);
+  const oneTimePaymentModes = ['onetimeCardPayment', 'replaceCard'];
+  const useOnetimePaymentMode = oneTimePaymentModes.includes(cardPaymentMode);
   const onetimePaymentNeedsAttention =
-    !billingDetailsKnown && !(useOnetimePaymentMethod && cardValueValid);
+    !billingDetailsKnown && !(useOnetimePaymentMode && cardValueValid);
 
   return {
     onetimePaymentNeedsAttention,
-    showOnetimePaymentFields: useOnetimePaymentMethod,
+    showOnetimePaymentFields: useOnetimePaymentMode,
   };
 };
 
@@ -356,9 +355,9 @@ const LocationOrShippingDetails = props => {
 const initialState = {
   error: null,
   cardValueValid: false,
-  // The mode can be 'onetimePayment', 'defaultCard', or 'replaceCard'
+  // Card UX mode: 'onetimeCardPayment', 'defaultCard', or 'replaceCard'
   // Check PaymentMethodPicker component for more information
-  paymentMethod: null,
+  cardPaymentMode: null,
 };
 
 /**
@@ -412,7 +411,7 @@ class StripePaymentForm extends Component {
     this.paymentForm = this.paymentForm.bind(this);
     this.initializeStripeElement = this.initializeStripeElement.bind(this);
     this.handleStripeElementRef = this.handleStripeElementRef.bind(this);
-    this.changePaymentMethod = this.changePaymentMethod.bind(this);
+    this.changeCardPaymentMode = this.changeCardPaymentMode.bind(this);
     this.handleStripeJsLoadedEvent = this.handleStripeJsLoadedEvent.bind(this);
     this.finalFormAPI = null;
     this.cardContainer = null;
@@ -528,14 +527,14 @@ class StripePaymentForm extends Component {
     });
   }
 
-  changePaymentMethod(changedTo) {
+  changeCardPaymentMode(changedTo) {
     if (this.card && changedTo === 'defaultCard') {
       this.card.removeEventListener('change', this.handleCardValueChange);
       this.card.unmount();
       this.card = null;
       this.setState({ cardValueValid: false });
     }
-    this.setState({ paymentMethod: changedTo });
+    this.setState({ cardPaymentMode: changedTo });
     if (changedTo === 'defaultCard' && this.finalFormAPI) {
       this.finalFormAPI.change('sameAddressCheckbox', undefined);
     } else if (
@@ -581,13 +580,13 @@ class StripePaymentForm extends Component {
       processName,
     } = this.props;
     const { initialMessage } = values;
-    const { cardValueValid, paymentMethod } = this.state;
+    const { cardValueValid, cardPaymentMode } = this.state;
     const hasDefaultPaymentMethod = defaultPaymentMethod?.id;
-    const selectedPaymentMethod = getPaymentMethod(paymentMethod, hasDefaultPaymentMethod);
+    const selectedCardPaymentMode = getCardPaymentMode(cardPaymentMode, hasDefaultPaymentMethod);
     const isStripePushPayment = isStripePushPaymentForProcess(processName, checkoutPaymentMethod);
     const { onetimePaymentNeedsAttention } = checkOnetimePaymentFields(
       isStripePushPayment ? true : cardValueValid,
-      selectedPaymentMethod,
+      selectedCardPaymentMode,
       hasDefaultPaymentMethod,
       hasHandledCardPayment,
       isStripePushPayment
@@ -603,8 +602,8 @@ class StripePaymentForm extends Component {
       card: this.card,
       formId,
       formValues: values,
-      paymentMethod: getPaymentMethod(
-        paymentMethod,
+      cardPaymentMode: getCardPaymentMode(
+        cardPaymentMode,
         ensurePaymentMethodCard(defaultPaymentMethod).id
       ),
       checkoutPaymentMethod: this.props.checkoutPaymentMethod || PAYMENT_METHOD_CARD,
@@ -658,13 +657,13 @@ class StripePaymentForm extends Component {
     const ensuredDefaultPaymentMethod = ensurePaymentMethodCard(defaultPaymentMethod);
     const billingDetailsNeeded = !(hasHandledCardPayment || confirmPaymentError);
 
-    const { cardValueValid, paymentMethod } = this.state;
+    const { cardValueValid, cardPaymentMode } = this.state;
     const hasDefaultPaymentMethod = ensuredDefaultPaymentMethod.id;
-    const selectedPaymentMethod = getPaymentMethod(paymentMethod, hasDefaultPaymentMethod);
+    const selectedCardPaymentMode = getCardPaymentMode(cardPaymentMode, hasDefaultPaymentMethod);
     const isStripePushPayment = isStripePushPaymentForProcess(processName, checkoutPaymentMethod);
     const { onetimePaymentNeedsAttention, showOnetimePaymentFields } = checkOnetimePaymentFields(
       cardValueValid,
-      selectedPaymentMethod,
+      selectedCardPaymentMode,
       hasDefaultPaymentMethod,
       hasHandledCardPayment,
       isStripePushPayment
@@ -778,11 +777,11 @@ class StripePaymentForm extends Component {
                 cardClasses={cardClasses}
                 formId={formId}
                 defaultPaymentMethod={hasDefaultPaymentMethod ? ensuredDefaultPaymentMethod : null}
-                changePaymentMethod={this.changePaymentMethod}
+                changeCardPaymentMode={this.changeCardPaymentMode}
                 handleStripeElementRef={this.handleStripeElementRef}
                 hasCardError={hasCardError}
                 error={this.state.error}
-                paymentMethod={selectedPaymentMethod}
+                cardPaymentMode={selectedCardPaymentMode}
                 intl={intl}
                 marketplaceName={marketplaceName}
                 checkoutPaymentOptions={availableCheckoutPaymentOptions}
