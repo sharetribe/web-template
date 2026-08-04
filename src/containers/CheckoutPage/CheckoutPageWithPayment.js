@@ -24,7 +24,15 @@ import {
 } from '../../transactions/transaction';
 
 // Import shared components
-import { H3, H4, NamedLink, OrderBreakdown, Page, TopbarSimplified } from '../../components';
+import {
+  H3,
+  H4,
+  IconSpinner,
+  NamedLink,
+  OrderBreakdown,
+  Page,
+  TopbarSimplified,
+} from '../../components';
 
 // Session helpers file needs to be imported before other CheckoutPage modules that use it
 import { clearData } from './CheckoutPageSessionHelpers';
@@ -41,7 +49,9 @@ import {
   processCheckoutWithPayment,
   setOrderPageInitialValues,
   STRIPE_PI_USER_ACTIONS_DONE_STATUSES,
+  getStripeRedirectReturnParams,
 } from './CheckoutPageTransactionHelpers.js';
+import { useStripeRedirectPaymentReturn } from './CheckoutPageWithPayment.hook.js';
 import { getErrorMessages } from './ErrorMessages';
 
 import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
@@ -373,6 +383,14 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     ? currentUser?.stripeCustomer?.defaultPaymentMethod?.attributes?.stripePaymentMethodId
     : null;
 
+  if (
+    isStripePushPaymentMethod(process, checkoutPaymentMethod) &&
+    selectedPaymentFlow === USE_SAVED_CARD
+  ) {
+    setSubmitting(false);
+    return;
+  }
+
   // If paymentIntent status is not waiting user action,
   // confirmCardPayment has been called previously.
   const hasPaymentIntentUserActionsDone =
@@ -568,6 +586,14 @@ export const CheckoutPageWithPayment = props => {
     showTransactionFields,
     config,
     fetchSpeculatedTransaction,
+    onRetrievePaymentIntent,
+    onConfirmPayment,
+    routeConfiguration,
+    dispatch,
+    onSubmitCallback,
+    sessionStorageKey,
+    history,
+    setPageData,
   } = props;
 
   // Since the listing data is already given from the ListingPage
@@ -617,15 +643,41 @@ export const CheckoutPageWithPayment = props => {
   const transitions = process?.transitions;
   const isPaymentExpired = hasPaymentExpired(existingTransaction, process);
 
+  // Push/redirect return path (isolated; not used by the default card checkout flow).
+  const redirectPaymentStatusError = useStripeRedirectPaymentReturn({
+    pageData,
+    processName,
+    stripe,
+    onConfirmPayment,
+    onRetrievePaymentIntent,
+    sessionStorageKey,
+    setPageData,
+    dispatch,
+    onSubmitCallback,
+    completeCheckoutNavigation,
+  });
+
+  // Stripe return params mean resume is in progress — show spinner instead of the payment form.
+  const { redirectStatus, paymentIntentClientSecret } = getStripeRedirectReturnParams(
+    history.location.search
+  );
+  const isStripeRedirectReturn = !!(
+    redirectStatus &&
+    paymentIntentClientSecret &&
+    redirectStatus !== 'failed'
+  );
+
   // Allow showing page when currentUser is still being downloaded,
   // but show payment form only when user info is loaded.
+  // During Stripe redirect return, show a spinner instead (hook initializes Stripe.js itself).
   const showPaymentForm = !!(
     currentUser &&
     !listingNotFound &&
     !initiateOrderError &&
     !speculateTransactionError &&
     !retrievePaymentIntentError &&
-    !isPaymentExpired
+    !isPaymentExpired &&
+    !isStripeRedirectReturn
   );
 
   const firstImage = listing?.images?.length > 0 ? listing.images[0] : null;
@@ -645,7 +697,8 @@ export const CheckoutPageWithPayment = props => {
     isPaymentExpired,
     retrievePaymentIntentError,
     speculateTransactionError,
-    listingLink
+    listingLink,
+    redirectPaymentStatusError
   );
 
   const isBooking = processName === BOOKING_PROCESS_NAME;
@@ -782,7 +835,9 @@ export const CheckoutPageWithPayment = props => {
             {errorMessages.retrievePaymentIntentErrorMessage}
             {errorMessages.paymentExpiredMessage}
 
-            {showPaymentForm ? (
+            {isStripeRedirectReturn ? (
+              <IconSpinner className={css.spinner} />
+            ) : showPaymentForm ? (
               <StripePaymentForm
                 className={css.paymentForm}
                 onSubmit={values =>

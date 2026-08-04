@@ -23,7 +23,8 @@ export const getErrorMessages = (
   isPaymentExpired,
   retrievePaymentIntentError,
   speculateTransactionError,
-  listingLink
+  listingLink,
+  redirectPaymentStatusError
 ) => {
   let listingNotFoundErrorMessage = null;
   let initiateOrderErrorMessage = null;
@@ -125,15 +126,20 @@ export const getErrorMessages = (
       </p>
     ) : null;
 
-  // Stripe might throw error when retrieving payment intent
-  const retrievePaymentIntentErrorMessageParagraph = retrievePaymentIntentError ? (
-    <p className={css.orderError}>
-      <FormattedMessage
-        id="CheckoutPage.retrievingStripePaymentIntentFailed"
-        values={{ listingLink }}
-      />
-    </p>
-  ) : null;
+  // Stripe retrieve failures, or non-recoverable redirect resume failures.
+  // Canceled / requires_payment_method are recoverable (customer backed out or can retry) — no error UI.
+  const isRecoverableRedirectReturn = ['canceled', 'requires_payment_method'].includes(
+    redirectPaymentStatusError
+  );
+  const retrievePaymentIntentErrorMessageParagraph =
+    retrievePaymentIntentError || (redirectPaymentStatusError && !isRecoverableRedirectReturn) ? (
+      <p className={css.orderError}>
+        <FormattedMessage
+          id="CheckoutPage.retrievingStripePaymentIntentFailed"
+          values={{ listingLink }}
+        />
+      </p>
+    ) : null;
 
   // Stripe related processes expire unpaid checkouts via the transaction process
   const paymentExpiredMessageParagraph = isPaymentExpired ? (
