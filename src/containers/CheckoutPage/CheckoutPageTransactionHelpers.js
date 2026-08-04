@@ -1,5 +1,5 @@
 // Import contexts and util modules
-import { findRouteByRouteName } from '../../util/routes';
+import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
 import { ensureStripeCustomer, ensureTransaction } from '../../util/data';
 import { formatMoney } from '../../util/currency';
 import { PAYMENT_METHOD_CARD } from '../../transactions/paymentMethods';
@@ -448,4 +448,34 @@ export const setOrderPageInitialValues = (initialValues, routes, dispatch) => {
 
   // Transaction is already created
   dispatch(OrderPage.setInitialValues(initialValues));
+};
+
+/**
+ * Shared post-checkout navigation used by card submit and Stripe redirect return.
+ *
+ * @param {Object} params
+ * @param {Object} params.response - checkout sequence result (`{ orderId }` or transaction entity)
+ * @param {Object} params.history
+ * @param {Object} params.routeConfiguration
+ * @param {Function} params.dispatch
+ * @param {Function} params.onSubmitCallback
+ */
+export const completeCheckoutNavigation = ({
+  response,
+  history,
+  routeConfiguration,
+  dispatch,
+  onSubmitCallback,
+}) => {
+  const orderId = response.orderId || response.id;
+  const savePaymentMethodFailed =
+    typeof response.paymentMethodSaved === 'boolean' ? !response.paymentMethodSaved : false;
+
+  setOrderPageInitialValues({ savePaymentMethodFailed }, routeConfiguration, dispatch);
+  onSubmitCallback();
+
+  const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
+    id: orderId.uuid,
+  });
+  history.push(orderDetailsPath);
 };

@@ -40,6 +40,7 @@ import {
   hasTransactionPassedPendingPayment,
   processCheckoutWithPayment,
   setOrderPageInitialValues,
+  completeCheckoutNavigation,
   STRIPE_PI_USER_ACTIONS_DONE_STATUSES,
 } from './CheckoutPageTransactionHelpers.js';
 import { getErrorMessages } from './ErrorMessages';
@@ -341,19 +342,15 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
-      const { orderId, paymentMethodSaved } = response;
       setSubmitting(false);
-
-      const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
-        id: orderId.uuid,
+      // Navigate to the TransactionPage to show the order details
+      completeCheckoutNavigation({
+        response,
+        history,
+        routeConfiguration,
+        dispatch,
+        onSubmitCallback,
       });
-      const initialValues = {
-        savePaymentMethodFailed: !paymentMethodSaved,
-      };
-
-      setOrderPageInitialValues(initialValues, routeConfiguration, dispatch);
-      onSubmitCallback();
-      history.push(orderDetailsPath);
     })
     .catch(err => {
       console.error(err);
