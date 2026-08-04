@@ -6,6 +6,14 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../../../util/reactIntl';
 
 import {
+  compareEntriesByStartTime,
+  getParsedHourMinutes,
+  getTotalMinutesFromTime,
+} from '../availability.helpers';
+
+import { bookingTimeUnits } from '../../../../../util/dates';
+
+import {
   InlineTextButton,
   FieldSelect,
   FieldCheckbox,
@@ -15,6 +23,8 @@ import {
 import FieldSeatsInput from '../FieldSeatsInput/FieldSeatsInput';
 
 import css from './AvailabilityPlanEntries.module.css';
+
+const HOUR_MINUTES = bookingTimeUnits.hour.timeUnitInMinutes;
 
 const HOURS = Array(24).fill();
 
@@ -27,40 +37,41 @@ const printHourStrings = h => (h > 9 ? `${h}:00` : `0${h}:00`);
 const ALL_START_HOURS = HOURS.map((v, i) => printHourStrings(i));
 const ALL_END_HOURS = HOURS.map((v, i) => printHourStrings(i + 1));
 
+// Formats a total-minutes-since-midnight value as a zero-padded 'HH:MM' string.
+const printMinuteString = totalMinutes => {
+  const hour = Math.floor(totalMinutes / HOUR_MINUTES);
+  const minutes = totalMinutes % HOUR_MINUTES;
+  const paddedHour = hour > 9 ? `${hour}` : `0${hour}`;
+  const paddedMinutes = minutes > 9 ? `${minutes}` : `0${minutes}`;
+  return `${paddedHour}:${paddedMinutes}`;
+};
+
+const STEP_MINUTES = bookingTimeUnits.quarterHour.timeUnitInMinutes;
+const MINUTES_PER_DAY = 24 * HOUR_MINUTES;
+const QUARTERS = Array(MINUTES_PER_DAY / STEP_MINUTES).fill();
+
+const ALL_START_QUARTERS = QUARTERS.map((v, i) => printMinuteString(i * STEP_MINUTES));
+const ALL_END_QUARTERS = QUARTERS.map((v, i) => printMinuteString(i * STEP_MINUTES + STEP_MINUTES));
+
 /**
  * Localize UI time for hours.
  *
- * @param {string} hour24 hour string in the following format: 00:00 ... 24:00
+ * @param {string} timepoint hour string in the following format: 00:00 ... 24:00
  * @param {*} intl React Intl
  * @returns localized time format (e.g. '9:00 AM')
  */
-const localizedHourStrings = (hour24, intl) => {
-  const hour = Number.parseInt(hour24.split(':')[0]);
+const localizedTimeStrings = (timepoint, intl) => {
+  const { hour, minutes } = getParsedHourMinutes(timepoint);
   // We use UTC (Jan 1) to generate hour strings
   const date = new Date(`${new Date().getUTCFullYear()}-01-01T00:00:00.000Z`);
   date.setUTCHours(hour);
-  const formattedHour = intl.formatTime(date, {
+  date.setUTCMinutes(minutes);
+  const formattedTime = intl.formatTime(date, {
     hour: 'numeric',
     minute: 'numeric',
     timeZone: 'Etc/UTC',
   });
-  return formattedHour;
-};
-
-/**
- * User might create entries inside the day of week in what ever order.
- * We need to sort them before they can be compared with available hours.
- *
- * @param {Integer} defaultCompareReturn if startTime is null, negative value pushes the entry to the beginning
- * @returns
- */
-const sortEntries = (defaultCompareReturn = 0) => (a, b) => {
-  if (a.startTime && b.startTime) {
-    const aStart = Number.parseInt(a.startTime.split(':')[0]);
-    const bStart = Number.parseInt(b.startTime.split(':')[0]);
-    return aStart - bStart;
-  }
-  return defaultCompareReturn;
+  return formattedTime;
 };
 
 // Curried: find entry by comparing start time and end time
@@ -71,33 +82,33 @@ const findEntryFn = entry => e => e.startTime === entry.startTime && e.endTime =
  *
  * @typedef {Object} AvailabilityPlanEntry
  * @property {String} dayOfWeek - the day of week shorthand. E.g. 'Mon'.
- * @property {String} startTime - start hour. E.g. '09:00'.
- * @property {String} endTime - end hour. E.g. '17:00'.
+ * @property {String} startTime - start time. E.g. '09:00' or '09:15'.
+ * @property {String} endTime - end time. E.g. '17:00' or '16:45'.
  * @property {Number} seats - the number of available seats 0...Number.MAX_SAFE_INTEGER
  */
 
 /**
- * From all the available start hours, filter only those start hours that can be used
+ * From all the available start times, filter only those start times that can be used
  * in the current entry creation.
  *
- * For start hours this mainly means situation where end hours is set first.
+ * For start times this mainly means a situation where end time is set first.
  *
- * @param {Array<string>} availableStartHours (hours are in format: '13:00')
+ * @param {Array<string>} availableStartTimes (times are in format: '13:00')
  * @param {Array<AvailabilityPlanEntry>} entries created entries: [{ startTime: '13:00', endTime: '17:00' }]
  * @param {Number} index index in the Final Form Array: current dayOfWeek
- * @returns returns only those start hours that are allowed to be selected.
+ * @returns returns only those start times that are allowed to be selected.
  */
-const filterStartHours = (availableStartHours, entries, index) => {
+const filterStartTimes = (availableStartTimes, entries, index) => {
   const currentEntry = entries[index];
 
   // If there is no end time selected, return all the available start times
   if (!currentEntry.endTime) {
-    return availableStartHours;
+    return availableStartTimes;
   }
 
   // By default the entries are not in order so we need to sort the entries by startTime
   // in order to find out the previous entry
-  const sortedEntries = [...entries].sort(sortEntries());
+  const sortedEntries = [...entries].sort(compareEntriesByStartTime());
 
   // Find the index of the current entry from sorted entries
   const currentIndex = sortedEntries.findIndex(findEntryFn(currentEntry));
@@ -110,22 +121,22 @@ const filterStartHours = (availableStartHours, entries, index) => {
   const pickBetween = (start, end) => h => h >= start && h < end;
 
   return !prevEntry || !prevEntry.endTime
-    ? availableStartHours.filter(pickBefore(currentEntry.endTime))
-    : availableStartHours.filter(pickBetween(prevEntry.endTime, currentEntry.endTime));
+    ? availableStartTimes.filter(pickBefore(currentEntry.endTime))
+    : availableStartTimes.filter(pickBetween(prevEntry.endTime, currentEntry.endTime));
 };
 
 /**
- * From all the available end hours, filter only those end hours that can be used
+ * From all the available end times, filter only those end times that can be used
  * in the current entry creation.
  *
- * For end hour this only means a situation where start hour is set first.
+ * For end times this only means a situation where start time is set first.
  *
- * @param {Array<string>} availableEndHours (hours are in format: '13:00')
+ * @param {Array<string>} availableEndTimes (hours are in format: '13:00')
  * @param {Array<AvailabilityPlanEntry>} entries created entries: [{ startTime: '13:00', endTime: '17:00' }]
  * @param {Number} index index in the Final Form Array: current dayOfWeek
  * @returns returns only those end hours that are allowed to be selected.
  */
-const filterEndHours = (availableEndHours, entries, index) => {
+const filterEndTimes = (availableEndTimes, entries, index) => {
   const currentEntry = entries[index];
 
   // If there is no start time selected, return an empty array;
@@ -136,65 +147,90 @@ const filterEndHours = (availableEndHours, entries, index) => {
   // By default the entries are not in order so we need to sort the entries by startTime
   // in order to find out the allowed start times
   // Undefined entry ({ startTime: null, endTime: null }) is pushed to the beginning with '-1'.
-  const sortedEntries = [...entries].sort(sortEntries(-1));
+  const sortedEntries = [...entries].sort(compareEntriesByStartTime(-1));
 
   // Find the index of the current entry from sorted entries
   const currentIndex = sortedEntries.findIndex(findEntryFn(currentEntry));
 
   // If there is no next entry,
   // return all the available end times that are after the start of current entry.
-  // Otherwise return all the available end hours between current start time and next entry.
+  // Otherwise return all the available end times between current start time and next entry.
   const nextEntry = sortedEntries[currentIndex + 1];
   const pickAfter = time => h => h > time;
   const pickBetween = (start, end) => h => h > start && h <= end;
 
   return !nextEntry || !nextEntry.startTime
-    ? availableEndHours.filter(pickAfter(currentEntry.startTime))
-    : availableEndHours.filter(pickBetween(currentEntry.startTime, nextEntry.startTime));
+    ? availableEndTimes.filter(pickAfter(currentEntry.startTime))
+    : availableEndTimes.filter(pickBetween(currentEntry.startTime, nextEntry.startTime));
 };
 
 /**
  * Find all the entries that boundaries are already reserved.
  *
  * @param {Array<AvailabilityPlanEntry>} entries look like this [{ startTime: '13:00', endTime: '17:00' }]
- * @param {Boolean} findStartHours find start hours (00:00 ... 23:00) or else (01:00 ... 24:00)
- * @returns array of reserved sharp hours. E.g. ['13:00', '14:00', '15:00', '16:00']
+ * @param {Boolean} options.findStartTimes find start times (00:00 ... 23:00) or else (01:00 ... 24:00)
+ * @param {Boolean} options.useIncrementalBoundaries return boundaries in 15 minute increments (00:15 ... 23:45) or in full hours (00:00 ... 23:00)
+ * @returns array of reserved sharp hours (e.g. ['13:00', '14:00', '15:00', '16:00']) or quarter hours (e.g. ['13:00', '13:15', '13:30']).
  */
-const getEntryBoundaries = (entries, findStartHours) => index => {
-  const boundaryDiff = findStartHours ? 0 : 1;
+const getEntryBoundaries = (entries, options) => index => {
+  const { findStartTimes, useIncrementalBoundaries } = options;
+  if (useIncrementalBoundaries) {
+    return entries.reduce((allIncrements, entry, i) => {
+      const { startTime, endTime } = entry || {};
+      const boundaryDiffMinutes = findStartTimes ? 0 : STEP_MINUTES;
 
-  return entries.reduce((allHours, entry, i) => {
-    const { startTime, endTime } = entry || {};
+      if (i !== index && startTime && endTime) {
+        const startTotal = getTotalMinutesFromTime(startTime);
+        const endTotal = getTotalMinutesFromTime(endTime);
 
-    if (i !== index && startTime && endTime) {
-      const startHour = Number.parseInt(startTime.split(':')[0]);
-      const endHour = Number.parseInt(endTime.split(':')[0]);
-      const hoursBetween = Array(endHour - startHour)
-        .fill()
-        .map((v, i) => printHourStrings(startHour + i + boundaryDiff));
+        // Calculate the possible booking boundaries that fall between the end and start times:
+        // - determine how many 15 minute increments fall between the start and the end
+        // - create an array for that length
+        // - map the array to printed boundaries
+        const quartersBetween = Array((endTotal - startTotal) / STEP_MINUTES)
+          .fill()
+          .map((v, i) => printMinuteString(startTotal + i * STEP_MINUTES + boundaryDiffMinutes));
 
-      return allHours.concat(hoursBetween);
-    }
+        return allIncrements.concat(quartersBetween);
+      }
 
-    return allHours;
-  }, []);
+      return allIncrements;
+    }, []);
+  } else {
+    return entries.reduce((allHours, entry, i) => {
+      const { startTime, endTime } = entry || {};
+      const boundaryDiff = findStartTimes ? 0 : 1;
+
+      if (i !== index && startTime && endTime) {
+        const startHour = Number.parseInt(startTime.split(':')[0]);
+        const endHour = Number.parseInt(endTime.split(':')[0]);
+        const hoursBetween = Array(endHour - startHour)
+          .fill()
+          .map((v, i) => printHourStrings(startHour + i + boundaryDiff));
+
+        return allHours.concat(hoursBetween);
+      }
+
+      return allHours;
+    }, []);
+  }
 };
 
 /**
- * Date pickers that create time range inside the day: start hour - end hour
+ * Date pickers that create time range inside the day: start time - end time
  *
  * @component
  * @param {Object} props - The component props
  * @param {string} props.name - the name of the form field/input
  * @param {string} props.dayOfWeek - the shorthand for the day of week. E.g. 'mon'
  * @param {Number} props.index - the index in the Final Form Array for the current dayOfWeek
- * @param {Array<String>} props.availableStartHours - array of strings represeting start hours: '00:00', '01:00', etc.
- * @param {Array<String>} props.availableEndHours - array of strings represeting end hours: '01:00', '02:00', etc.
+ * @param {Array<String>} props.availableStartTimes - array of strings represeting start times: '00:00', '01:00', etc.
+ * @param {Array<String>} props.availableEndTimes - array of strings represeting end times: '01:00', '02:00', etc.
  * @param {Function} props.isTimeSetFn - Check if 'startTime' or 'endTime' is set for the form
  * @param {Boolean} props.isNextDay - flag if the selected 'endTime' is the next day aka (24:00)
  * @param {Array<AvailabilityPlanEntry>} props.entries - AvailabilityPlan entries: [['Mon[0]']: ]]
  * @param {Function} props.onRemove - a function to remove plan entry
- * @param {String} props.unitType - 'hour', 'day', 'night'
+ * @param {String} props.unitType - 'hour', 'day', 'night', 'fixed'
  * @param {Boolean} props.useMultipleSeats - true if availabilityType is 'multipleSeats'
  * @param {ReactIntl} props.intl - React Intl instance
  * @returns {JSX.Element} The component that allows selecting plan entries
@@ -204,8 +240,8 @@ const TimeRangeSelects = props => {
     name,
     dayOfWeek,
     index,
-    availableStartHours,
-    availableEndHours,
+    availableStartTimes,
+    availableEndTimes,
     isTimeSetFn,
     isNextDay,
     entries,
@@ -224,8 +260,8 @@ const TimeRangeSelects = props => {
     {
       dayOfWeek: dayLabel,
       hasTimeRange: hasTimeRange ? 'yes' : 'no',
-      startTime: hasTimeRange ? localizedHourStrings(entry.startTime, intl) : null,
-      endTime: hasTimeRange ? localizedHourStrings(entry.endTime, intl) : null,
+      startTime: hasTimeRange ? localizedTimeStrings(entry.startTime, intl) : null,
+      endTime: hasTimeRange ? localizedTimeStrings(entry.endTime, intl) : null,
     }
   );
   return (
@@ -248,9 +284,9 @@ const TimeRangeSelects = props => {
                 id: 'EditListingAvailabilityPlanForm.startTimePlaceholder',
               })}
             </option>
-            {filterStartHours(availableStartHours, entries, index).map(s => (
+            {filterStartTimes(availableStartTimes, entries, index).map(s => (
               <option value={s} key={s}>
-                {localizedHourStrings(s, intl)}
+                {localizedTimeStrings(s, intl)}
               </option>
             ))}
           </FieldSelect>
@@ -272,9 +308,9 @@ const TimeRangeSelects = props => {
                 id: 'EditListingAvailabilityPlanForm.endTimePlaceholder',
               })}
             </option>
-            {filterEndHours(availableEndHours, entries, index).map(s => (
+            {filterEndTimes(availableEndTimes, entries, index).map(s => (
               <option value={s} key={s}>
-                {localizedHourStrings(s, intl)}
+                {localizedTimeStrings(s, intl)}
               </option>
             ))}
           </FieldSelect>
@@ -351,7 +387,7 @@ const TimeRangeHidden = props => {
  * @component
  * @param {Object} props - The component props
  * @param {string} props.name - the name of the form field/input. E.g. 'Mon[0]'
- * @param {String} props.unitType - 'hour', 'day', 'night'
+ * @param {String} props.unitType - 'hour', 'day', 'night', 'fixed'
  * @param {ReactIntl} props.intl - React Intl instance
  * @returns {JSX.Element} component rendering an input field for seats count and hidden form fields for 'startTime' and 'endTime'.
  */
@@ -381,18 +417,33 @@ const SeatsWithTimeRangeHidden = props => {
  * @param {string} props.dayOfWeek - the shorthand for the day of week. E.g. 'Mon'.
  * @param {Boolean} props.useFullDays - enforce full days (used with 'day' and 'night' unit types).
  * @param {Boolean} props.useMultipleSeats - true if availabilityType is 'multipleSeats'.
- * @param {String} props.unitType - 'hour', 'day', 'night'.
+ * @param {String} props.unitType - 'hour', 'day', 'night', 'fixed'.
  * @param {Object} props.values - form values for the availability plan entries.
  * @param {*} props.formApi - React Final Form api ('form').
  * @param {ReactIntl} props.intl - React Intl instance.
  * @returns {JSX.Element} The field elements for the form.
  */
 const AvailabilityPlanEntries = props => {
-  const { dayOfWeek, useFullDays, useMultipleSeats, unitType, values, formApi, intl } = props;
+  const {
+    dayOfWeek,
+    useFullDays,
+    useIncrementalBoundaries,
+    useMultipleSeats,
+    unitType,
+    values,
+    formApi,
+    intl,
+  } = props;
   const entries = values[dayOfWeek];
   const hasEntries = entries && entries[0];
-  const getEntryStartTimes = getEntryBoundaries(entries, true);
-  const getEntryEndTimes = getEntryBoundaries(entries, false);
+  const getEntryStartTimes = getEntryBoundaries(entries, {
+    findStartTimes: true,
+    useIncrementalBoundaries,
+  });
+  const getEntryEndTimes = getEntryBoundaries(entries, {
+    findStartTimes: false,
+    useIncrementalBoundaries,
+  });
 
   const checkboxName = `checkbox_${dayOfWeek}`;
   return (
@@ -427,8 +478,8 @@ const AvailabilityPlanEntries = props => {
               const shouldAddEntry = isChecked && !hasEntries;
               if (shouldAddEntry) {
                 const seats = useMultipleSeats ? { seats: 1 } : { seats: 1 };
-                // The 'hour' unit is not initialized with any value,
-                // because user need to pick them themselves.
+                // The 'hour' and 'fixed' units are not initialized with any value,
+                // because user needs to pick them themselves.
                 formApi.mutators.push(dayOfWeek, { startTime: null, endTime: null, ...seats });
               } else if (!isChecked) {
                 // If day of week checkbox is unchecked,
@@ -446,12 +497,16 @@ const AvailabilityPlanEntries = props => {
             <div className={classNames(css.planEntriesForDay, css.planEntryFields)}>
               {fields.map((name, index) => {
                 // Pick available start hours
-                const pickUnreservedStartHours = h => !getEntryStartTimes(index).includes(h);
-                const availableStartHours = ALL_START_HOURS.filter(pickUnreservedStartHours);
+                const pickUnreservedStartTimes = h => !getEntryStartTimes(index).includes(h);
+                const startPointsList = useIncrementalBoundaries
+                  ? ALL_START_QUARTERS
+                  : ALL_START_HOURS;
+                const availableStartTimes = startPointsList.filter(pickUnreservedStartTimes);
 
                 // Pick available end hours
-                const pickUnreservedEndHours = h => !getEntryEndTimes(index).includes(h);
-                const availableEndHours = ALL_END_HOURS.filter(pickUnreservedEndHours);
+                const pickUnreservedEndTimes = h => !getEntryEndTimes(index).includes(h);
+                const endPointsList = useIncrementalBoundaries ? ALL_END_QUARTERS : ALL_END_HOURS;
+                const availableEndTimes = endPointsList.filter(pickUnreservedEndTimes);
                 const isTimeSetFn = time => fields.value?.[index]?.[time];
                 const isNextDay = entries[index]?.endTime === '24:00';
 
@@ -473,8 +528,8 @@ const AvailabilityPlanEntries = props => {
                     dayOfWeek={dayOfWeek}
                     index={index}
                     useMultipleSeats={useMultipleSeats}
-                    availableStartHours={availableStartHours}
-                    availableEndHours={availableEndHours}
+                    availableStartTimes={availableStartTimes}
+                    availableEndTimes={availableEndTimes}
                     isTimeSetFn={isTimeSetFn}
                     entries={entries}
                     isNextDay={isNextDay}
