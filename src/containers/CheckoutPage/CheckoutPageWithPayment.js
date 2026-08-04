@@ -17,7 +17,7 @@ import {
 import { PAYMENT_METHOD_CARD, getCheckoutPaymentOptions } from '../../transactions/paymentMethods';
 import {
   getProcess,
-  resolveLatestProcessName,
+  isStripePushPaymentMethod,
   BOOKING_PROCESS_NAME,
   NEGOTIATION_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
@@ -158,6 +158,10 @@ const getOrderParams = (
     },
   };
 
+  const pushPaymentMaybe = isStripePushPaymentMethod(process, checkoutPaymentMethod)
+    ? { paymentMethodTypes: [checkoutPaymentMethod] }
+    : {};
+
   // Note: Avoid misinterpreting the following logic as allowing arbitrary mixing of `quantity` and `seats`.
   // You can only pass either quantity OR seats and units to the orderParams object
   // Quantity represents the total booked units for the line item (e.g. days, hours).
@@ -175,6 +179,7 @@ const getOrderParams = (
     ...bookingDatesMaybe(pageData.orderData?.bookingDates),
     ...priceVariantNameMaybe,
     ...protectedDataMaybe,
+    ...pushPaymentMaybe,
     ...optionalPaymentParams,
   };
   return orderParams;
@@ -399,12 +404,13 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // Note: optionalPaymentParams contains Stripe paymentMethod ('pm_…'),
   // but that can also be passed on Step 2
   // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
-  const optionalPaymentParams =
-    selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
-      ? { paymentMethod: stripePaymentMethodId }
-      : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
-      ? { setupPaymentMethodForSaving: true }
-      : {};
+  const optionalPaymentParams = isStripePushPaymentMethod(process, checkoutPaymentMethod)
+    ? {}
+    : selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
+    ? { paymentMethod: stripePaymentMethodId }
+    : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
+    ? { setupPaymentMethodForSaving: true }
+    : {};
 
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
