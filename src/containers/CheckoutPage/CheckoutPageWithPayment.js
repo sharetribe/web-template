@@ -51,16 +51,22 @@ import MobileOrderBreakdown from './MobileOrderBreakdown';
 
 import css from './CheckoutPage.module.css';
 
+/**
+ * Payment naming in checkout (three different concepts):
+ * - checkoutPaymentMethod — catalog id from paymentMethods.js ('card', 'ideal', …)
+ * - cardPaymentMode — card UX ('defaultCard' | 'replaceCard' | 'onetimeCardPayment')
+ * - orderParams.paymentMethod — saved Stripe payment method id ('pm_…'), when using a saved card
+ */
 
 // Payment charge options
 const ONETIME_PAYMENT = 'ONETIME_PAYMENT';
 const PAY_AND_SAVE_FOR_LATER_USE = 'PAY_AND_SAVE_FOR_LATER_USE';
 const USE_SAVED_CARD = 'USE_SAVED_CARD';
 
-const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
+const paymentFlow = (cardPaymentMode, saveAfterOnetimePayment) => {
   // Payment mode could be 'replaceCard', but without explicit saveAfterOnetimePayment flag,
   // we'll handle it as one-time payment
-  return selectedPaymentMethod === 'defaultCard'
+  return cardPaymentMode === 'defaultCard'
     ? USE_SAVED_CARD
     : saveAfterOnetimePayment
     ? PAY_AND_SAVE_FOR_LATER_USE
@@ -349,7 +355,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const {
     card,
     message,
-    paymentMethod: selectedPaymentMethod,
+    cardPaymentMode,
     formValues,
     checkoutPaymentMethod = PAYMENT_METHOD_CARD,
   } = values;
@@ -361,7 +367,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   const saveAfterOnetimePayment =
     Array.isArray(saveAfterOnetimePaymentRaw) && saveAfterOnetimePaymentRaw.length > 0;
-  const selectedPaymentFlow = paymentFlow(selectedPaymentMethod, saveAfterOnetimePayment);
+  const selectedPaymentFlow = paymentFlow(cardPaymentMode, saveAfterOnetimePayment);
   const hasDefaultPaymentMethodSaved = hasDefaultPaymentMethod(stripeCustomerFetched, currentUser);
   const stripePaymentMethodId = hasDefaultPaymentMethodSaved
     ? currentUser?.stripeCustomer?.defaultPaymentMethod?.attributes?.stripePaymentMethodId
