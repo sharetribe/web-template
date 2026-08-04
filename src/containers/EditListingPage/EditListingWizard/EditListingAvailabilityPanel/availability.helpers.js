@@ -170,3 +170,34 @@ export const getMonthlyFetchRange = (monthlyExceptionQueries, timeZone) => {
   const exclusiveEndMonth = getStartOfNextMonth(lastMonth, timeZone);
   return [firstMonth, exclusiveEndMonth];
 };
+
+/**
+ * Parse a 'HH:MM' time string into its hour/minute number parts.
+ */
+export const getParsedHourMinutes = time => {
+  const [hourRaw, minutesRaw] = time.split(':');
+  return { hour: Number.parseInt(hourRaw), minutes: Number.parseInt(minutesRaw) };
+};
+
+/**
+ * Total minutes since midnight for a 'HH:MM' time string.
+ */
+export const getTotalMinutesFromTime = time => {
+  const { hour, minutes } = getParsedHourMinutes(time);
+  return hour * 60 + minutes;
+};
+
+/**
+ * Comparator (curried, for Array.prototype.sort) for AvailabilityPlan entries,
+ * ordered by startTime.
+ *
+ * @param {Number} defaultCompareReturn value used when either entry is missing a startTime.
+ *   UI filtering in AvailabilityPlanEntries.js uses -1 to push an unset entry to the front
+ *   (see filterEndHours); submit-time sorting and the default case use 0 (no-op ordering).
+ */
+export const compareEntriesByStartTime = (defaultCompareReturn = 0) => (a, b) => {
+  if (a.startTime && b.startTime) {
+    return getTotalMinutesFromTime(a.startTime) - getTotalMinutesFromTime(b.startTime);
+  }
+  return defaultCompareReturn;
+};

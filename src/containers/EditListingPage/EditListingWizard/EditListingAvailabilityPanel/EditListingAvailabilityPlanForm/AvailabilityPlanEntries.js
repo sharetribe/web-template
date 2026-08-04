@@ -6,6 +6,14 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../../../../util/reactIntl';
 
 import {
+  compareEntriesByStartTime,
+  getParsedHourMinutes,
+  getTotalMinutesFromTime,
+} from '../availability.helpers';
+
+import { bookingTimeUnits } from '../../../../../util/dates';
+
+import {
   InlineTextButton,
   FieldSelect,
   FieldCheckbox,
@@ -15,6 +23,8 @@ import {
 import FieldSeatsInput from '../FieldSeatsInput/FieldSeatsInput';
 
 import css from './AvailabilityPlanEntries.module.css';
+
+const HOUR_MINUTES = bookingTimeUnits.hour.timeUnitInMinutes;
 
 const HOURS = Array(24).fill();
 
@@ -27,6 +37,22 @@ const printHourStrings = h => (h > 9 ? `${h}:00` : `0${h}:00`);
 const ALL_START_HOURS = HOURS.map((v, i) => printHourStrings(i));
 const ALL_END_HOURS = HOURS.map((v, i) => printHourStrings(i + 1));
 
+// Formats a total-minutes-since-midnight value as a zero-padded 'HH:MM' string.
+const printMinuteString = totalMinutes => {
+  const hour = Math.floor(totalMinutes / HOUR_MINUTES);
+  const minutes = totalMinutes % HOUR_MINUTES;
+  const paddedHour = hour > 9 ? `${hour}` : `0${hour}`;
+  const paddedMinutes = minutes > 9 ? `${minutes}` : `0${minutes}`;
+  return `${paddedHour}:${paddedMinutes}`;
+};
+
+const STEP_MINUTES = bookingTimeUnits.quarterHour.timeUnitInMinutes;
+const MINUTES_PER_DAY = 24 * HOUR_MINUTES;
+const QUARTERS = Array(MINUTES_PER_DAY / STEP_MINUTES).fill();
+
+const ALL_START_QUARTERS = QUARTERS.map((v, i) => printMinuteString(i * STEP_MINUTES));
+const ALL_END_QUARTERS = QUARTERS.map((v, i) => printMinuteString(i * STEP_MINUTES + STEP_MINUTES));
+
 /**
  * Localize UI time for hours.
  *
@@ -35,32 +61,17 @@ const ALL_END_HOURS = HOURS.map((v, i) => printHourStrings(i + 1));
  * @returns localized time format (e.g. '9:00 AM')
  */
 const localizedHourStrings = (hour24, intl) => {
-  const hour = Number.parseInt(hour24.split(':')[0]);
+  const { hour, minutes } = getParsedHourMinutes(hour24);
   // We use UTC (Jan 1) to generate hour strings
   const date = new Date(`${new Date().getUTCFullYear()}-01-01T00:00:00.000Z`);
   date.setUTCHours(hour);
+  date.setUTCMinutes(minutes);
   const formattedHour = intl.formatTime(date, {
     hour: 'numeric',
     minute: 'numeric',
     timeZone: 'Etc/UTC',
   });
   return formattedHour;
-};
-
-/**
- * User might create entries inside the day of week in what ever order.
- * We need to sort them before they can be compared with available hours.
- *
- * @param {Integer} defaultCompareReturn if startTime is null, negative value pushes the entry to the beginning
- * @returns
- */
-const sortEntries = (defaultCompareReturn = 0) => (a, b) => {
-  if (a.startTime && b.startTime) {
-    const aStart = Number.parseInt(a.startTime.split(':')[0]);
-    const bStart = Number.parseInt(b.startTime.split(':')[0]);
-    return aStart - bStart;
-  }
-  return defaultCompareReturn;
 };
 
 // Curried: find entry by comparing start time and end time
@@ -97,7 +108,7 @@ const filterStartHours = (availableStartHours, entries, index) => {
 
   // By default the entries are not in order so we need to sort the entries by startTime
   // in order to find out the previous entry
-  const sortedEntries = [...entries].sort(sortEntries());
+  const sortedEntries = [...entries].sort(compareEntriesByStartTime());
 
   // Find the index of the current entry from sorted entries
   const currentIndex = sortedEntries.findIndex(findEntryFn(currentEntry));
@@ -136,7 +147,7 @@ const filterEndHours = (availableEndHours, entries, index) => {
   // By default the entries are not in order so we need to sort the entries by startTime
   // in order to find out the allowed start times
   // Undefined entry ({ startTime: null, endTime: null }) is pushed to the beginning with '-1'.
-  const sortedEntries = [...entries].sort(sortEntries(-1));
+  const sortedEntries = [...entries].sort(compareEntriesByStartTime(-1));
 
   // Find the index of the current entry from sorted entries
   const currentIndex = sortedEntries.findIndex(findEntryFn(currentEntry));
@@ -157,27 +168,52 @@ const filterEndHours = (availableEndHours, entries, index) => {
  * Find all the entries that boundaries are already reserved.
  *
  * @param {Array<AvailabilityPlanEntry>} entries look like this [{ startTime: '13:00', endTime: '17:00' }]
- * @param {Boolean} findStartHours find start hours (00:00 ... 23:00) or else (01:00 ... 24:00)
- * @returns array of reserved sharp hours. E.g. ['13:00', '14:00', '15:00', '16:00']
+ * @param {Boolean} options.findStartHours find start hours (00:00 ... 23:00) or else (01:00 ... 24:00)
+ * @param {Boolean} options.useIncrementalBoundaries return boundaries in 15 minute increments (00:15 ... 23:45) or in full hours (00:00 ... 23:00)
+ * @returns array of reserved sharp hours (e.g. ['13:00', '14:00', '15:00', '16:00']) or quarter hours (e.g. ['13:00', '13:15', '13:30']).
  */
-const getEntryBoundaries = (entries, findStartHours) => index => {
-  const boundaryDiff = findStartHours ? 0 : 1;
+const getEntryBoundaries = (entries, options) => index => {
+  const { findStartHours, useIncrementalBoundaries } = options;
+  if (useIncrementalBoundaries) {
+    return entries.reduce((allIncrements, entry, i) => {
+      const { startTime, endTime } = entry || {};
+      const boundaryDiffMinutes = findStartHours ? 0 : STEP_MINUTES;
 
-  return entries.reduce((allHours, entry, i) => {
-    const { startTime, endTime } = entry || {};
+      if (i !== index && startTime && endTime) {
+        const startTotal = getTotalMinutesFromTime(startTime);
+        const endTotal = getTotalMinutesFromTime(endTime);
 
-    if (i !== index && startTime && endTime) {
-      const startHour = Number.parseInt(startTime.split(':')[0]);
-      const endHour = Number.parseInt(endTime.split(':')[0]);
-      const hoursBetween = Array(endHour - startHour)
-        .fill()
-        .map((v, i) => printHourStrings(startHour + i + boundaryDiff));
+        // Calculate the possible booking boundaries that fall between the end and start times:
+        // - determine how many 15 minute increments fall between the start and the end
+        // - create an array for that length
+        // - map the array to printed boundaries
+        const quartersBetween = Array((endTotal - startTotal) / STEP_MINUTES)
+          .fill()
+          .map((v, i) => printMinuteString(startTotal + i * STEP_MINUTES + boundaryDiffMinutes));
 
-      return allHours.concat(hoursBetween);
-    }
+        return allIncrements.concat(quartersBetween);
+      }
 
-    return allHours;
-  }, []);
+      return allIncrements;
+    }, []);
+  } else {
+    return entries.reduce((allHours, entry, i) => {
+      const { startTime, endTime } = entry || {};
+      const boundaryDiff = findStartHours ? 0 : 1;
+
+      if (i !== index && startTime && endTime) {
+        const startHour = Number.parseInt(startTime.split(':')[0]);
+        const endHour = Number.parseInt(endTime.split(':')[0]);
+        const hoursBetween = Array(endHour - startHour)
+          .fill()
+          .map((v, i) => printHourStrings(startHour + i + boundaryDiff));
+
+        return allHours.concat(hoursBetween);
+      }
+
+      return allHours;
+    }, []);
+  }
 };
 
 /**
@@ -193,7 +229,7 @@ const getEntryBoundaries = (entries, findStartHours) => index => {
  * @param {Boolean} props.isNextDay - flag if the selected 'endTime' is the next day aka (24:00)
  * @param {Array<AvailabilityPlanEntry>} props.entries - AvailabilityPlan entries: [['Mon[0]']: ]]
  * @param {Function} props.onRemove - a function to remove plan entry
- * @param {String} props.unitType - 'hour', 'day', 'night'
+ * @param {String} props.unitType - 'hour', 'day', 'night', 'fixed'
  * @param {Boolean} props.useMultipleSeats - true if availabilityType is 'multipleSeats'
  * @param {ReactIntl} props.intl - React Intl instance
  * @returns {JSX.Element} The component that allows selecting plan entries
@@ -367,11 +403,26 @@ const SeatsWithTimeRangeHidden = props => {
  * @returns {JSX.Element} The field elements for the form.
  */
 const AvailabilityPlanEntries = props => {
-  const { dayOfWeek, useFullDays, useMultipleSeats, unitType, values, formApi, intl } = props;
+  const {
+    dayOfWeek,
+    useFullDays,
+    useIncrementalBoundaries,
+    useMultipleSeats,
+    unitType,
+    values,
+    formApi,
+    intl,
+  } = props;
   const entries = values[dayOfWeek];
   const hasEntries = entries && entries[0];
-  const getEntryStartTimes = getEntryBoundaries(entries, true);
-  const getEntryEndTimes = getEntryBoundaries(entries, false);
+  const getEntryStartTimes = getEntryBoundaries(entries, {
+    findStartHours: true,
+    useIncrementalBoundaries,
+  });
+  const getEntryEndTimes = getEntryBoundaries(entries, {
+    findStartHours: false,
+    useIncrementalBoundaries,
+  });
 
   const checkboxName = `checkbox_${dayOfWeek}`;
   return (
@@ -426,11 +477,15 @@ const AvailabilityPlanEntries = props => {
               {fields.map((name, index) => {
                 // Pick available start hours
                 const pickUnreservedStartHours = h => !getEntryStartTimes(index).includes(h);
-                const availableStartHours = ALL_START_HOURS.filter(pickUnreservedStartHours);
+                const startPointsList = useIncrementalBoundaries
+                  ? ALL_START_QUARTERS
+                  : ALL_START_HOURS;
+                const availableStartHours = startPointsList.filter(pickUnreservedStartHours);
 
                 // Pick available end hours
                 const pickUnreservedEndHours = h => !getEntryEndTimes(index).includes(h);
-                const availableEndHours = ALL_END_HOURS.filter(pickUnreservedEndHours);
+                const endPointsList = useIncrementalBoundaries ? ALL_END_QUARTERS : ALL_END_HOURS;
+                const availableEndHours = endPointsList.filter(pickUnreservedEndHours);
                 const isTimeSetFn = time => fields.value?.[index]?.[time];
                 const isNextDay = entries[index]?.endTime === '24:00';
 

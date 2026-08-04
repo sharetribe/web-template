@@ -4,24 +4,13 @@ import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../../../util/reactIntl';
+import { FIXED } from '../../../../../transactions/transaction';
+import { compareEntriesByStartTime } from '../availability.helpers';
 import { Form, Heading, H3, PrimaryButton } from '../../../../../components';
 import FieldTimeZoneSelect from '../FieldTimeZoneSelect';
 import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
 import css from './EditListingAvailabilityPlanForm.module.css';
-
-/**
- * User might create entries inside the day of week in what ever order.
- * We sort them before submitting to Marketplace API
- */
-const sortEntries = () => (a, b) => {
-  if (a.startTime && b.startTime) {
-    const aStart = Number.parseInt(a.startTime.split(':')[0]);
-    const bStart = Number.parseInt(b.startTime.split(':')[0]);
-    return aStart - bStart;
-  }
-  return 0;
-};
 
 /**
  * Handle submitted values: sort entries within the day of week
@@ -34,7 +23,7 @@ const submit = (onSubmit, weekdays) => values => {
       return submitValues[day]
         ? {
             ...submitValues,
-            [day]: submitValues[day].sort(sortEntries()),
+            [day]: submitValues[day].sort(compareEntriesByStartTime()),
           }
         : submitValues;
     },
@@ -64,7 +53,7 @@ const submit = (onSubmit, weekdays) => values => {
  * @param {Array<Weekday>} props.weekdays
  * @param {boolean} props.useFullDays
  * @param {boolean} props.useMultipleSeats
- * @param {'hour'|'day'|'night'} props.unitType
+ * @param {'hour'|'day'|'night'|'fixed'} props.unitType
  * @param {boolean} props.fetchErrors
  * @param {Object|null} props.fetchErrors.updateListingError
  * @param {Object} props.values form's values
@@ -138,6 +127,7 @@ const EditListingAvailabilityPlanForm = props => {
                   <AvailabilityPlanEntries
                     dayOfWeek={w}
                     useFullDays={useFullDays}
+                    useIncrementalBoundaries={unitType === FIXED}
                     useMultipleSeats={useMultipleSeats}
                     unitType={unitType}
                     key={w}
