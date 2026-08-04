@@ -167,7 +167,12 @@ const getOrderParams = (
   return orderParams;
 };
 
-const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculatedTransaction) => {
+const fetchSpeculatedTransactionIfNeeded = (
+  orderParams,
+  pageData,
+  fetchSpeculatedTransaction,
+  checkoutPaymentMethod = PAYMENT_METHOD_CARD
+) => {
   const tx = pageData ? pageData.transaction : null;
   const pageDataListing = pageData.listing;
   const processName =
@@ -185,25 +190,17 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
   if (shouldFetchSpeculatedTransaction) {
     const processAlias = pageData.listing.attributes.publicData?.transactionProcessAlias;
     const transactionId = tx ? tx.id : null;
-    const isInquiryInPaymentProcess =
-      tx?.attributes?.lastTransition === process.transitions.INQUIRE;
-    const resolvedProcessName = resolveLatestProcessName(processName);
-    const isOfferPendingInNegotiationProcess =
-      resolvedProcessName === NEGOTIATION_PROCESS_NAME &&
-      tx.attributes.state === `state/${process.states.OFFER_PENDING}`;
-
-    const requestTransition = isInquiryInPaymentProcess
-      ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
-      : isOfferPendingInNegotiationProcess
-      ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
-      : process.transitions.REQUEST_PAYMENT;
-    const isPrivileged = process.isPrivileged(requestTransition);
+    const { requestPaymentTransition } = process.getCheckoutPaymentTransitions(tx, {
+      paymentProcessor: 'stripe',
+      paymentMethod: checkoutPaymentMethod,
+    });
+    const isPrivileged = process.isPrivileged(requestPaymentTransition);
 
     fetchSpeculatedTransaction(
       orderParams,
       processAlias,
       transactionId,
-      requestTransition,
+      requestPaymentTransition,
       isPrivileged
     );
   }
@@ -243,7 +240,12 @@ export const loadInitialDataForStripePayments = ({
   const optionalPaymentParams = {};
   const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
 
-  fetchSpeculatedTransactionIfNeeded(orderParams, pageData, fetchSpeculatedTransaction);
+  fetchSpeculatedTransactionIfNeeded(
+    orderParams,
+    pageData,
+    fetchSpeculatedTransaction,
+    PAYMENT_METHOD_CARD
+  );
 };
 
 const handleSubmit = (values, process, props, stripe, submitting, setSubmitting) => {
