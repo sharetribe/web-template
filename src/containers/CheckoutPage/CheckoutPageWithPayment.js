@@ -248,6 +248,44 @@ export const loadInitialDataForStripePayments = ({
   );
 };
 
+/**
+ * Shared post-checkout navigation used by card submit and Stripe redirect return.
+ *
+ * @param {Object} params
+ * @param {Object} params.response - checkout sequence result (`{ orderId }` or transaction entity)
+ * @param {Object} params.history
+ * @param {Object} params.routeConfiguration
+ * @param {Function} params.dispatch
+ * @param {Function} params.onSubmitCallback
+ * @param {boolean} [params.clearRedirectQueryParams] - clear Stripe return query params before push
+ * @param {string} [params.pathname] - required when clearing redirect query params
+ */
+const completeCheckoutNavigation = ({
+  response,
+  history,
+  routeConfiguration,
+  dispatch,
+  onSubmitCallback,
+  clearRedirectQueryParams = false,
+  pathname,
+}) => {
+  const orderId = response.orderId || response.id;
+  const savePaymentMethodFailed =
+    typeof response.paymentMethodSaved === 'boolean' ? !response.paymentMethodSaved : false;
+
+  setOrderPageInitialValues({ savePaymentMethodFailed }, routeConfiguration, dispatch);
+  onSubmitCallback();
+
+  if (clearRedirectQueryParams && pathname) {
+    history.replace({ pathname, search: '' });
+  }
+
+  const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
+    id: orderId.uuid,
+  });
+  history.push(orderDetailsPath);
+};
+
 const handleSubmit = (values, process, props, stripe, submitting, setSubmitting) => {
   if (submitting) {
     return;
@@ -341,19 +379,14 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
-      const { orderId, paymentMethodSaved } = response;
       setSubmitting(false);
-
-      const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
-        id: orderId.uuid,
+      completeCheckoutNavigation({
+        response,
+        history,
+        routeConfiguration,
+        dispatch,
+        onSubmitCallback,
       });
-      const initialValues = {
-        savePaymentMethodFailed: !paymentMethodSaved,
-      };
-
-      setOrderPageInitialValues(initialValues, routeConfiguration, dispatch);
-      onSubmitCallback();
-      history.push(orderDetailsPath);
     })
     .catch(err => {
       console.error(err);
