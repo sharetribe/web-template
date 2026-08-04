@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
@@ -108,6 +108,8 @@ const prefixPriceVariantProperties = priceVariant => {
  * @param {Object} config app-wide configs. This contains hosted configs too.
  * @param {Object} transactionFieldProtectedData protectedData from transaction field configs
  * @param {string} [customerDefaultMessage] optional message saved to protectedData
+ * @param {Object} [process] from getProcess()
+ * @param {string} [checkoutPaymentMethod]
  * @returns orderParams.
  */
 const getOrderParams = (
@@ -116,7 +118,9 @@ const getOrderParams = (
   optionalPaymentParams,
   config,
   transactionFieldProtectedData,
-  customerDefaultMessage
+  customerDefaultMessage,
+  process,
+  checkoutPaymentMethod = PAYMENT_METHOD_CARD
 ) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
@@ -134,9 +138,18 @@ const getOrderParams = (
 
   const customerDefaultMessageMaybe = customerDefaultMessage ? { customerDefaultMessage } : {};
 
+  // Persist checkoutPaymentMethod only when more than one Stripe method is offered.
+  // Card-only checkouts omit the field; readers fall back to card.
+  const currency =
+    pageData?.transaction?.attributes?.payinTotal?.currency ||
+    pageData?.listing?.attributes?.price?.currency;
+  const checkoutPaymentMethodMaybe =
+    getCheckoutPaymentOptions({ process, currency }).length > 1 ? { checkoutPaymentMethod } : {};
+
   const protectedDataMaybe = {
     protectedData: {
       ...getTransactionTypeData(listingType, unitType, config),
+      ...checkoutPaymentMethodMaybe,
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...priceVariantMaybe,
@@ -238,7 +251,20 @@ export const loadInitialDataForStripePayments = ({
   // The way to pass it to checkout page is through pageData.orderData
   const shippingDetails = {};
   const optionalPaymentParams = {};
-  const orderParams = getOrderParams(pageData, shippingDetails, optionalPaymentParams, config);
+  const processName =
+    pageData?.transaction?.attributes?.processName ||
+    pageData?.listing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0];
+  const process = processName ? getProcess(processName) : null;
+  const orderParams = getOrderParams(
+    pageData,
+    shippingDetails,
+    optionalPaymentParams,
+    config,
+    {},
+    undefined,
+    process,
+    PAYMENT_METHOD_CARD
+  );
 
   fetchSpeculatedTransactionIfNeeded(
     orderParams,
@@ -313,7 +339,13 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     transaction: reduxTransaction,
     transactionFieldConfigs = [],
   } = props;
-  const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
+  const {
+    card,
+    message,
+    paymentMethod: selectedPaymentMethod,
+    formValues,
+    checkoutPaymentMethod = PAYMENT_METHOD_CARD,
+  } = values;
   const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
 
   const transactionFieldsProtectedData = {
@@ -352,6 +384,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     isPaymentFlowUseSavedCard: selectedPaymentFlow === USE_SAVED_CARD,
     isPaymentFlowPayAndSaveCard: selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE,
     setPageData,
+    checkoutPaymentMethod,
   };
 
   const shippingDetails = getShippingDetailsMaybe(formValues);
@@ -373,7 +406,9 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     optionalPaymentParams,
     config,
     transactionFieldsProtectedData,
-    message
+    message,
+    process,
+    checkoutPaymentMethod
   );
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
@@ -489,6 +524,8 @@ export const CheckoutPageWithPayment = props => {
   const [submitting, setSubmitting] = useState(false);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
   const [stripe, setStripe] = useState(null);
+  const [checkoutPaymentMethod, setCheckoutPaymentMethod] = useState(PAYMENT_METHOD_CARD);
+  const prevCheckoutPaymentMethodRef = useRef(checkoutPaymentMethod);
 
   const {
     scrollingDisabled,
@@ -510,6 +547,7 @@ export const CheckoutPageWithPayment = props => {
     transactionFieldConfigs = [],
     showTransactionFields,
     config,
+    fetchSpeculatedTransaction,
   } = props;
 
   // Since the listing data is already given from the ListingPage
@@ -641,6 +679,40 @@ export const CheckoutPageWithPayment = props => {
     currency,
   });
 
+  // When the customer switches checkout payment method (e.g. card → iDEAL), re-speculate
+  // so the order breakdown / line items stay aligned with that method's transitions.
+  // Skip the initial render — speculation for the default method already ran in loadInitialData.
+  // Only depend on checkoutPaymentMethod: `process` / `pageData` / `config` change identity often
+  // and would re-fire speculative initiate-privileged calls.
+  useEffect(() => {
+    if (prevCheckoutPaymentMethodRef.current === checkoutPaymentMethod) {
+      return;
+    }
+    prevCheckoutPaymentMethodRef.current = checkoutPaymentMethod;
+
+    if (!process) {
+      return;
+    }
+    const shippingDetails = {};
+    const optionalPaymentParams = {};
+    const orderParams = getOrderParams(
+      pageData,
+      shippingDetails,
+      optionalPaymentParams,
+      config,
+      {},
+      undefined,
+      process,
+      checkoutPaymentMethod
+    );
+    fetchSpeculatedTransactionIfNeeded(
+      orderParams,
+      pageData,
+      fetchSpeculatedTransaction,
+      checkoutPaymentMethod
+    );
+  }, [checkoutPaymentMethod]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Render an error message if the listing is using a non Stripe supported currency
   // and is using a transaction process with Stripe actions (default-booking or default-purchase)
   if (!isStripeCompatibleCurrency) {
@@ -729,6 +801,8 @@ export const CheckoutPageWithPayment = props => {
                 transactionFieldConfigs={transactionFieldConfigs}
                 showTransactionFields={showTransactionFields}
                 checkoutPaymentOptions={checkoutPaymentOptions}
+                checkoutPaymentMethod={checkoutPaymentMethod}
+                onCheckoutPaymentMethodChange={setCheckoutPaymentMethod}
               />
             ) : null}
           </section>
