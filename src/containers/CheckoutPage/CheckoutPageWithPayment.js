@@ -329,6 +329,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     dispatch,
     onInitiateOrder,
     onConfirmCardPayment,
+    onConfirmRedirectPayment,
     onConfirmPayment,
     onSavePaymentMethod,
     onFetchTransaction,
@@ -338,6 +339,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     sessionStorageKey,
     transaction: reduxTransaction,
     transactionFieldConfigs = [],
+    params: pathParams,
   } = props;
   const {
     card,
@@ -365,6 +367,10 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
+  const listingSlug = pathParams?.slug || createSlug(pageData?.listing?.attributes?.title || '');
+  const listingUuid = pageData?.listing?.id?.uuid;
+  const checkoutPageReturnUrl = `${config.marketplaceRootURL}/l/${listingSlug}/${listingUuid}/checkout`;
+
   const requestPaymentParams = {
     pageData,
     speculatedTransaction,
@@ -377,6 +383,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     process,
     onInitiateOrder,
     onConfirmCardPayment,
+    onConfirmRedirectPayment,
     onConfirmPayment,
     onSavePaymentMethod,
     sessionStorageKey,
@@ -385,6 +392,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     isPaymentFlowPayAndSaveCard: selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE,
     setPageData,
     checkoutPaymentMethod,
+    checkoutPageReturnUrl,
   };
 
   const shippingDetails = getShippingDetailsMaybe(formValues);
