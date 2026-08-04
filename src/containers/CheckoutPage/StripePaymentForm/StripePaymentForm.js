@@ -284,21 +284,14 @@ const getCardPaymentMode = (cardPaymentMode, hasDefaultPaymentMethod) => {
     : cardPaymentMode;
 };
 
-// Should we show onetime payment fields and does StripeElements card need attention
+// Should we show onetime payment fields and does StripeElements card need attention.
+// Card-only — callers handle push methods separately (no card element).
 const checkOnetimePaymentFields = (
   cardValueValid,
   cardPaymentMode,
   hasDefaultPaymentMethod,
-  hasHandledCardPayment,
-  isStripePushPayment = false
+  hasHandledCardPayment
 ) => {
-  if (isStripePushPayment) {
-    return {
-      onetimePaymentNeedsAttention: false,
-      showOnetimePaymentFields: true,
-    };
-  }
-
   const useDefaultPaymentMethod = cardPaymentMode === 'defaultCard' && hasDefaultPaymentMethod;
   // Billing details are known if we have already handled card payment or existing default payment method is used.
   const billingDetailsKnown = hasHandledCardPayment || useDefaultPaymentMethod;
@@ -579,36 +572,41 @@ class StripePaymentForm extends Component {
       checkoutPaymentMethod = PAYMENT_METHOD_CARD,
       processName,
     } = this.props;
-    const { initialMessage } = values;
-    const { cardValueValid, cardPaymentMode } = this.state;
-    const hasDefaultPaymentMethod = defaultPaymentMethod?.id;
-    const selectedCardPaymentMode = getCardPaymentMode(cardPaymentMode, hasDefaultPaymentMethod);
-    const isStripePushPayment = isStripePushPaymentForProcess(processName, checkoutPaymentMethod);
-    const { onetimePaymentNeedsAttention } = checkOnetimePaymentFields(
-      isStripePushPayment ? true : cardValueValid,
-      selectedCardPaymentMode,
-      hasDefaultPaymentMethod,
-      hasHandledCardPayment,
-      isStripePushPayment
-    );
 
-    if (inProgress || onetimePaymentNeedsAttention) {
-      // Already submitting or card value incomplete/invalid
+    if (inProgress) {
       return;
     }
 
-    const params = {
+    const isStripePushPayment = isStripePushPaymentForProcess(processName, checkoutPaymentMethod);
+    const hasDefaultPaymentMethod = !!defaultPaymentMethod?.id;
+    const selectedCardPaymentMode = getCardPaymentMode(
+      this.state.cardPaymentMode,
+      hasDefaultPaymentMethod
+    );
+
+    // Push methods collect payment on Stripe's redirect — no card element to validate.
+    // Card payments need a valid Elements value, or a saved default card.
+    if (!isStripePushPayment) {
+      const { onetimePaymentNeedsAttention } = checkOnetimePaymentFields(
+        this.state.cardValueValid,
+        selectedCardPaymentMode,
+        hasDefaultPaymentMethod,
+        hasHandledCardPayment
+      );
+      if (onetimePaymentNeedsAttention) {
+        return;
+      }
+    }
+
+    const { initialMessage } = values;
+    onSubmit({
       message: initialMessage ? initialMessage.trim() : null,
       card: this.card,
       formId,
       formValues: values,
-      cardPaymentMode: getCardPaymentMode(
-        cardPaymentMode,
-        ensurePaymentMethodCard(defaultPaymentMethod).id
-      ),
-      checkoutPaymentMethod: this.props.checkoutPaymentMethod || PAYMENT_METHOD_CARD,
-    };
-    onSubmit(params);
+      cardPaymentMode: selectedCardPaymentMode,
+      checkoutPaymentMethod,
+    });
   }
 
   paymentForm(formRenderProps) {
@@ -661,13 +659,16 @@ class StripePaymentForm extends Component {
     const hasDefaultPaymentMethod = ensuredDefaultPaymentMethod.id;
     const selectedCardPaymentMode = getCardPaymentMode(cardPaymentMode, hasDefaultPaymentMethod);
     const isStripePushPayment = isStripePushPaymentForProcess(processName, checkoutPaymentMethod);
-    const { onetimePaymentNeedsAttention, showOnetimePaymentFields } = checkOnetimePaymentFields(
-      cardValueValid,
-      selectedCardPaymentMode,
-      hasDefaultPaymentMethod,
-      hasHandledCardPayment,
-      isStripePushPayment
-    );
+    // Push: no card element; still collect billing details for the PaymentIntent.
+    // Card: validate Elements / saved-card mode via checkOnetimePaymentFields.
+    const { onetimePaymentNeedsAttention, showOnetimePaymentFields } = isStripePushPayment
+      ? { onetimePaymentNeedsAttention: false, showOnetimePaymentFields: true }
+      : checkOnetimePaymentFields(
+          cardValueValid,
+          selectedCardPaymentMode,
+          hasDefaultPaymentMethod,
+          hasHandledCardPayment
+        );
 
     const submitDisabled = invalid || onetimePaymentNeedsAttention || submitInProgress;
     const hasCardError = this.state.error && !submitInProgress;
