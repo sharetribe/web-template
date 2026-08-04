@@ -245,7 +245,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     stripeCustomer,
     stripePaymentMethodId,
     checkoutPaymentMethod = PAYMENT_METHOD_CARD,
-    checkoutPageUrl,
+    checkoutPageReturnUrl,
   } = extraPaymentParams;
   const isStripePushPayment = isStripePushPaymentMethod(process, checkoutPaymentMethod);
   const storedTx = ensureTransaction(pageData.transaction);
@@ -345,7 +345,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     const order = fnParams;
     const { stripe, billingDetails } = extraPaymentParams;
 
-    if (!checkoutPageUrl) {
+    if (!checkoutPageReturnUrl) {
       throw new Error('Return URL is required for redirect payment methods');
     }
 
@@ -355,7 +355,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       stripePaymentIntentClientSecret,
       orderId: order?.id,
       billingDetails,
-      returnUrl: checkoutPageUrl,
+      returnUrl: checkoutPageReturnUrl,
       checkoutPaymentMethod,
     };
 
