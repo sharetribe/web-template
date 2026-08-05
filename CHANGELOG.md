@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] EditListingPricingPanel: initialValues.price was not there with priceVariants.
+  [#892](https://github.com/sharetribe/web-template/pull/893)
 - [change] Update CircleCI config to v2.1.
   [#894](https://github.com/sharetribe/web-template/pull/894)
 - [change] PaginationLinks: turn the container into a list to improve accessibility.

@@ -127,10 +127,11 @@ const EditListingPricingPanel = props => {
     marketplaceCurrency
   );
 
+  const initialValuesPrice = initialValues.price || initialValues.priceVariants?.[0]?.price;
   const priceCurrencyValid = !isCompatibleCurrency
     ? false
-    : marketplaceCurrency && initialValues.price instanceof Money
-    ? initialValues.price.currency === marketplaceCurrency
+    : marketplaceCurrency && initialValuesPrice instanceof Money
+    ? initialValuesPrice.currency === marketplaceCurrency
     : !!marketplaceCurrency;
   const unitType = listing?.attributes?.publicData?.unitType;
 
