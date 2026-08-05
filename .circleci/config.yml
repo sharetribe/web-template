@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   format:
     docker:
@@ -93,7 +93,6 @@ jobs:
           name: Audit dependencies
           command: yarn run audit
 workflows:
-  version: 2
   format_test_build_audit:
     jobs:
       - format
