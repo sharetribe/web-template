@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update CircleCI config to v2.1.
+  [#894](https://github.com/sharetribe/web-template/pull/894)
 - [change] PaginationLinks: turn the container into a list to improve accessibility.
   [#891](https://github.com/sharetribe/web-template/pull/891)
 - [change] Topbar/PriorityLinks: turn the container into a list to improve accessibility.
