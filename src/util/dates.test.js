@@ -18,6 +18,9 @@ import {
   getSharpHours,
   getStartHours,
   getEndHours,
+  getSharpBoundaries,
+  getStartBoundaries,
+  getEndBoundaries,
   monthIdString,
   getStartOfWeek,
 } from './dates';
@@ -422,6 +425,117 @@ describe('date utils', () => {
       const startHour = new Date('2019-09-18T08:30:00.000Z');
       const endHour = new Date('2019-09-18T09:30:00.000Z');
       expect(getEndHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([]);
+    });
+  });
+
+  describe('getSharpBoundaries()', () => {
+    // Custom time unit: quarterHour
+    it('should return quarter-hour boundaries for a full-hour window', () => {
+      const startTime = new Date('2019-09-18T08:00:00.000Z');
+      const endTime = new Date('2019-09-18T09:00:00.000Z');
+      expect(
+        getSharpBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([
+        { timestamp: 1568793600000, timeOfDay: '11:00 AM' },
+        { timestamp: 1568794500000, timeOfDay: '11:15 AM' },
+        { timestamp: 1568795400000, timeOfDay: '11:30 AM' },
+        { timestamp: 1568796300000, timeOfDay: '11:45 AM' },
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+    it('should round quarter-hour boundaries forward when startTime and endTime are not on the grid', () => {
+      const startTime = new Date('2019-09-18T08:05:00.000Z');
+      const endTime = new Date('2019-09-18T08:50:00.000Z');
+      expect(
+        getSharpBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([
+        { timestamp: 1568794500000, timeOfDay: '11:15 AM' },
+        { timestamp: 1568795400000, timeOfDay: '11:30 AM' },
+        { timestamp: 1568796300000, timeOfDay: '11:45 AM' },
+      ]);
+    });
+    it('should return an empty array when the window is narrower than one quarter-hour step', () => {
+      const startTime = new Date('2019-09-18T08:01:00.000Z');
+      const endTime = new Date('2019-09-18T08:10:00.000Z');
+      expect(
+        getSharpBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([]);
+    });
+    it('should return a single boundary when only one quarter-hour boundary falls in the window', () => {
+      const startTime = new Date('2019-09-18T08:01:00.000Z');
+      const endTime = new Date('2019-09-18T08:20:00.000Z');
+      expect(
+        getSharpBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([{ timestamp: 1568794500000, timeOfDay: '11:15 AM' }]);
+    });
+
+    // Custom time unit: halfHour
+    it('should return half-hour boundaries for a full-hour window (guards against quarterHour-only handling)', () => {
+      const startTime = new Date('2019-09-18T08:00:00.000Z');
+      const endTime = new Date('2019-09-18T09:00:00.000Z');
+      expect(getSharpBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'halfHour')).toEqual([
+        { timestamp: 1568793600000, timeOfDay: '11:00 AM' },
+        { timestamp: 1568795400000, timeOfDay: '11:30 AM' },
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+  });
+
+  describe('getStartBoundaries()', () => {
+    // Custom time unit: quarterHour
+    it('should drop only the last quarter-hour boundary', () => {
+      const startTime = new Date('2019-09-18T08:00:00.000Z');
+      const endTime = new Date('2019-09-18T09:00:00.000Z');
+      expect(
+        getStartBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([
+        { timestamp: 1568793600000, timeOfDay: '11:00 AM' },
+        { timestamp: 1568794500000, timeOfDay: '11:15 AM' },
+        { timestamp: 1568795400000, timeOfDay: '11:30 AM' },
+        { timestamp: 1568796300000, timeOfDay: '11:45 AM' },
+      ]);
+    });
+    it('should return an empty array when there are fewer than two quarter-hour boundaries', () => {
+      const startTime = new Date('2019-09-18T08:01:00.000Z');
+      const endTime = new Date('2019-09-18T08:10:00.000Z');
+      expect(
+        getStartBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([]);
+    });
+    it('should return the single quarter-hour boundary as-is when there is only one', () => {
+      const startTime = new Date('2019-09-18T08:01:00.000Z');
+      const endTime = new Date('2019-09-18T08:20:00.000Z');
+      expect(
+        getStartBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')
+      ).toEqual([{ timestamp: 1568794500000, timeOfDay: '11:15 AM' }]);
+    });
+  });
+
+  describe('getEndBoundaries()', () => {
+    // Custom time unit: quarterHour
+    it('should drop only the first quarter-hour boundary', () => {
+      const startTime = new Date('2019-09-18T08:00:00.000Z');
+      const endTime = new Date('2019-09-18T09:00:00.000Z');
+      expect(getEndBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')).toEqual([
+        { timestamp: 1568794500000, timeOfDay: '11:15 AM' },
+        { timestamp: 1568795400000, timeOfDay: '11:30 AM' },
+        { timestamp: 1568796300000, timeOfDay: '11:45 AM' },
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+    it('should return an empty array when there are fewer than two quarter-hour boundaries', () => {
+      const startTime = new Date('2019-09-18T08:01:00.000Z');
+      const endTime = new Date('2019-09-18T08:10:00.000Z');
+      expect(getEndBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')).toEqual(
+        []
+      );
+    });
+    it('should return an empty array (not the item) when there is only one quarter-hour boundary', () => {
+      const startTime = new Date('2019-09-18T08:01:00.000Z');
+      const endTime = new Date('2019-09-18T08:20:00.000Z');
+      expect(getEndBoundaries(startTime, endTime, 'Europe/Helsinki', intl, 'quarterHour')).toEqual(
+        []
+      );
     });
   });
 
