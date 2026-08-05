@@ -133,21 +133,26 @@ export const PaginationLinks = props => {
     const isCurrentPage = v === page;
     const pageClassNames = classNames(css.toPageLink, { [css.currentPage]: isCurrentPage });
     return typeof v === 'number' ? (
-      <NamedLink
-        key={v}
-        className={pageClassNames}
-        name={pageName}
-        params={pagePathParams}
-        to={{ search: stringify({ ...pageSearchParams, page: v }) }}
-        title={intl.formatMessage({ id: 'PaginationLinks.toPage' }, { page: v })}
-        ariaLabel={intl.formatMessage({ id: 'PaginationLinks.toPage' }, { page: v })}
+      <li key={v} className={css.pageNumberListItem}>
+        <NamedLink
+          className={pageClassNames}
+          name={pageName}
+          params={pagePathParams}
+          to={{ search: stringify({ ...pageSearchParams, page: v }) }}
+          title={intl.formatMessage({ id: 'PaginationLinks.toPage' }, { page: v })}
+          ariaLabel={intl.formatMessage({ id: 'PaginationLinks.toPage' }, { page: v })}
+        >
+          {v}
+        </NamedLink>
+      </li>
+    ) : (
+      <li
+        key={`pagination_gap_${paginationGapKey()}`}
+        className={classNames(css.pageNumberListItem, css.paginationGap)}
+        aria-hidden="true"
       >
         {v}
-      </NamedLink>
-    ) : (
-      <span key={`pagination_gap_${paginationGapKey()}`} className={css.paginationGap}>
-        {v}
-      </span>
+      </li>
     );
   });
 
@@ -163,7 +168,7 @@ export const PaginationLinks = props => {
   return (
     <nav className={classes}>
       {prevPage ? prevLinkEnabled : prevLinkDisabled}
-      <div className={pageNumberListClassNames}>{pageNumbersNavLinks}</div>
+      <ul className={pageNumberListClassNames}>{pageNumbersNavLinks}</ul>
       {nextPage ? nextLinkEnabled : nextLinkDisabled}
     </nav>
   );
