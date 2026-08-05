@@ -21,18 +21,22 @@ exports[`PaginationLinks should match snapshot with both links disabled 1`] = `
       />
     </svg>
   </div>
-  <div
+  <ul
     class="pageNumberList pageNumberList1Items"
   >
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink currentPage"
-      href="/s?page=1&param=foobar"
-      title="PaginationLinks.toPage"
+    <li
+      class="pageNumberListItem"
     >
-      1
-    </a>
-  </div>
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink currentPage"
+        href="/s?page=1&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        1
+      </a>
+    </li>
+  </ul>
   <div
     class="next"
   >
@@ -77,34 +81,46 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
       />
     </svg>
   </a>
-  <div
+  <ul
     class="pageNumberList pageNumberList3Items"
   >
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink"
-      href="/s?page=1&param=foobar"
-      title="PaginationLinks.toPage"
+    <li
+      class="pageNumberListItem"
     >
-      1
-    </a>
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink currentPage"
-      href="/s?page=2&param=foobar"
-      title="PaginationLinks.toPage"
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink"
+        href="/s?page=1&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        1
+      </a>
+    </li>
+    <li
+      class="pageNumberListItem"
     >
-      2
-    </a>
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink"
-      href="/s?page=3&param=foobar"
-      title="PaginationLinks.toPage"
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink currentPage"
+        href="/s?page=2&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        2
+      </a>
+    </li>
+    <li
+      class="pageNumberListItem"
     >
-      3
-    </a>
-  </div>
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink"
+        href="/s?page=3&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        3
+      </a>
+    </li>
+  </ul>
   <a
     aria-label="PaginationLinks.next"
     class="next"
@@ -149,34 +165,46 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
       />
     </svg>
   </div>
-  <div
+  <ul
     class="pageNumberList pageNumberList3Items"
   >
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink currentPage"
-      href="/s?page=1&param=foobar"
-      title="PaginationLinks.toPage"
+    <li
+      class="pageNumberListItem"
     >
-      1
-    </a>
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink"
-      href="/s?page=2&param=foobar"
-      title="PaginationLinks.toPage"
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink currentPage"
+        href="/s?page=1&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        1
+      </a>
+    </li>
+    <li
+      class="pageNumberListItem"
     >
-      2
-    </a>
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink"
-      href="/s?page=3&param=foobar"
-      title="PaginationLinks.toPage"
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink"
+        href="/s?page=2&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        2
+      </a>
+    </li>
+    <li
+      class="pageNumberListItem"
     >
-      3
-    </a>
-  </div>
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink"
+        href="/s?page=3&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        3
+      </a>
+    </li>
+  </ul>
   <a
     aria-label="PaginationLinks.next"
     class="next"
@@ -224,34 +252,46 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
       />
     </svg>
   </a>
-  <div
+  <ul
     class="pageNumberList pageNumberList3Items"
   >
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink"
-      href="/s?page=1&param=foobar"
-      title="PaginationLinks.toPage"
+    <li
+      class="pageNumberListItem"
     >
-      1
-    </a>
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink"
-      href="/s?page=2&param=foobar"
-      title="PaginationLinks.toPage"
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink"
+        href="/s?page=1&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        1
+      </a>
+    </li>
+    <li
+      class="pageNumberListItem"
     >
-      2
-    </a>
-    <a
-      aria-label="PaginationLinks.toPage"
-      class="toPageLink currentPage"
-      href="/s?page=3&param=foobar"
-      title="PaginationLinks.toPage"
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink"
+        href="/s?page=2&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        2
+      </a>
+    </li>
+    <li
+      class="pageNumberListItem"
     >
-      3
-    </a>
-  </div>
+      <a
+        aria-label="PaginationLinks.toPage"
+        class="toPageLink currentPage"
+        href="/s?page=3&param=foobar"
+        title="PaginationLinks.toPage"
+      >
+        3
+      </a>
+    </li>
+  </ul>
   <div
     class="next"
   >
