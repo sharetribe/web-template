@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Topbar/PriorityLinks: turn the container into a list to improve accessibility.
+  [#888](https://github.com/sharetribe/web-template/pull/888)
 - [fix] Harden Mapbox loading [#890](https://github.com/sharetribe/web-template/pull/890)
 
 ## [v12.1.0] 2026-07-27
