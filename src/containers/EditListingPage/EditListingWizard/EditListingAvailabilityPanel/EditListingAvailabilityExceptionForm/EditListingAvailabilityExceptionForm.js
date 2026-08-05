@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../../../../util/reactIntl';
 import { AVAILABILITY_MULTIPLE_SEATS } from '../../../../../util/types';
-import { DAY } from '../../../../../transactions/transaction';
+import { DAY, FIXED } from '../../../../../transactions/transaction';
 
 import { Form, H3, PrimaryButton } from '../../../../../components';
 
@@ -164,6 +164,7 @@ const EditListingAvailabilityExceptionForm = props => {
                   onFetchExceptions={onFetchExceptions}
                   onMonthChanged={onMonthChanged}
                   timeZone={timeZone}
+                  useIncrementalBoundaries={unitType === FIXED}
                   values={values}
                 />
               )}

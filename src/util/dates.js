@@ -821,8 +821,8 @@ export const getBoundaries = (startTime, endTime, unitCount, timeUnit, timeZone,
  *
  * @returns {Array} an array of objects with keys timestamp and timeOfDay.
  */
-export const getSharpHours = (startTime, endTime, timeZone, intl) => {
-  return getBoundaries(startTime, endTime, 1, 'hour', timeZone, intl);
+export const getSharpHours = (startTime, endTime, timeZone, intl, timeUnit = 'hour') => {
+  return getBoundaries(startTime, endTime, 1, timeUnit, timeZone, intl);
 };
 
 /**
@@ -852,8 +852,8 @@ export const getSharpHours = (startTime, endTime, timeZone, intl) => {
  *
  * @returns {Array} an array of objects with keys timestamp and timeOfDay.
  */
-export const getStartHours = (startTime, endTime, timeZone, intl) => {
-  const hours = getSharpHours(startTime, endTime, timeZone, intl);
+export const getStartHours = (startTime, endTime, timeZone, intl, timeUnit = 'hour') => {
+  const hours = getSharpHours(startTime, endTime, timeZone, intl, timeUnit);
   return hours.length < 2 ? hours : hours.slice(0, -1);
 };
 
@@ -884,8 +884,8 @@ export const getStartHours = (startTime, endTime, timeZone, intl) => {
  *
  * @returns {Array} an array of objects with keys timestamp and timeOfDay.
  */
-export const getEndHours = (startTime, endTime, timeZone, intl) => {
-  const hours = getSharpHours(startTime, endTime, timeZone, intl);
+export const getEndHours = (startTime, endTime, timeZone, intl, timeUnit = 'hour') => {
+  const hours = getSharpHours(startTime, endTime, timeZone, intl, timeUnit);
   return hours.length < 2 ? [] : hours.slice(1);
 };
 

@@ -18,6 +18,7 @@ import {
   getEndHours,
   formatDateIntoPartials,
   monthIdString,
+  bookingTimeUnits,
 } from '../../../../../util/dates';
 import { exceptionFreeSlotsPerDate } from '../../../../../util/generators';
 import { bookingDateRequired } from '../../../../../util/validators';
@@ -49,6 +50,11 @@ const formatFieldDateInput = timeZone => v =>
 const parseFieldDateInput = timeZone => v =>
   v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v;
 
+// Pick the moment.js-recognized time unit to find boundaries with: 15-minute increments
+// for 'fixed' unitType listings, sharp hours otherwise.
+const getTimeUnit = useIncrementalBoundaries =>
+  useIncrementalBoundaries ? bookingTimeUnits.quarterHour.timeUnit : bookingTimeUnits.hour.timeUnit;
+
 const showNextMonthStepper = (currentMonth, timeZone) => {
   const nextMonthDate = getStartOfNextMonth(currentMonth, timeZone);
   const endOfRange = endOfAvailabilityExceptionRange(timeZone, TODAY);
@@ -63,7 +69,7 @@ const showPreviousMonthStepper = (currentMonth, timeZone) => {
 };
 
 // Get available start times for new exceptions on given date.
-const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZone }) => {
+const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZone, timeUnit }) => {
   if (availableSlots.length === 0 || !availableSlots[0] || !selectedStartDate) {
     return [];
   }
@@ -84,7 +90,7 @@ const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZ
     // Otherwise use the end of the timeslot.
     const endLimit = isDateSameOrAfter(end, nextDay) ? nextDay : end;
 
-    const hours = getStartHours(startLimit, endLimit, timeZone, intl);
+    const hours = getStartHours(startLimit, endLimit, timeZone, intl, timeUnit);
     return availableHours.concat(hours);
   }, []);
   return allHours;
@@ -97,6 +103,7 @@ const getAvailableEndTimes = ({
   selectedSlot,
   selectedStartTime,
   selectedEndDate,
+  timeUnit,
 }) => {
   if (!selectedSlot || !selectedEndDate || !selectedStartTime) {
     return [];
@@ -124,8 +131,8 @@ const getAvailableEndTimes = ({
     : dayAfterSelectedEndDate;
 
   const selectableHours = isSingleDayRange
-    ? getEndHours(limitStart, limitEnd, timeZone, intl)
-    : getSharpHours(limitStart, limitEnd, timeZone, intl);
+    ? getEndHours(limitStart, limitEnd, timeZone, intl, timeUnit)
+    : getSharpHours(limitStart, limitEnd, timeZone, intl, timeUnit);
 
   const lastSelectableTimestamp = selectableHours[selectableHours.length - 1]?.timestamp;
   // If the selectable hour is "00:00" of the next day, we discard it to avoid confusion.
@@ -142,8 +149,15 @@ const getAllTimeValues = ({
   selectedStartDate,
   selectedStartTime,
   selectedEndDate,
+  timeUnit,
 }) => {
-  const startTimes = getAvailableStartTimes({ selectedStartDate, availableSlots, intl, timeZone });
+  const startTimes = getAvailableStartTimes({
+    selectedStartDate,
+    availableSlots,
+    intl,
+    timeZone,
+    timeUnit,
+  });
   const startTime = selectedStartTime ? selectedStartTime : startTimes?.[0]?.timestamp;
   const startTimeAsDate = startTime ? timestampToDate(startTime) : null;
   const selectedSlot = availableSlots.find(t => isInRange(startTimeAsDate, t.start, t.end));
@@ -155,7 +169,7 @@ const getAllTimeValues = ({
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, 1, 'hour', timeZone).getTime() - 1)
+    ? new Date(findNextBoundary(startTimeAsDate, 1, timeUnit, timeZone).getTime() - 1)
     : null;
 
   const params = {
@@ -164,6 +178,7 @@ const getAllTimeValues = ({
     selectedSlot,
     selectedStartTime: startTime,
     selectedEndDate: endDate,
+    timeUnit,
   };
   const endTimes = getAvailableEndTimes(params);
   const endTime = endTimes?.[0]?.timestamp || null;
@@ -217,7 +232,7 @@ const isOutsideRange = timeZone => day => {
 
 // Helper function, which changes form's state when exceptionStartDate input has been changed
 const onExceptionStartDateChange = (value, availableDates, props) => {
-  const { timeZone, intl, formApi } = props;
+  const { timeZone, intl, formApi, useIncrementalBoundaries } = props;
 
   if (!value || !value.date) {
     formApi.batch(() => {
@@ -233,7 +248,8 @@ const onExceptionStartDateChange = (value, availableDates, props) => {
   const selectedStartDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
   const dayData = availableDates[stringifyDateToISO8601(selectedStartDate, timeZone)];
   const availableSlots = dayData.slots || [];
-  const params = { intl, timeZone, availableSlots, selectedStartDate };
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
+  const params = { intl, timeZone, availableSlots, selectedStartDate, timeUnit };
   const { startTime, endDate, endTime } = getAllTimeValues(params);
 
   formApi.batch(() => {
@@ -245,9 +261,17 @@ const onExceptionStartDateChange = (value, availableDates, props) => {
 
 // Helper function, which changes form's state when exceptionStartTime select has been changed
 const onExceptionStartTimeChange = (value, availableSlots, props) => {
-  const { timeZone, intl, formApi, values } = props;
+  const { timeZone, intl, formApi, values, useIncrementalBoundaries } = props;
   const selectedStartDate = values.exceptionStartDate.date;
-  const params = { intl, timeZone, availableSlots, selectedStartDate, selectedStartTime: value };
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
+  const params = {
+    intl,
+    timeZone,
+    availableSlots,
+    selectedStartDate,
+    selectedStartTime: value,
+    timeUnit,
+  };
   const { endDate, endTime } = getAllTimeValues(params);
 
   formApi.batch(() => {
@@ -258,7 +282,7 @@ const onExceptionStartTimeChange = (value, availableSlots, props) => {
 
 // Helper function, which changes form's state when exceptionEndDate input has been changed
 const onExceptionEndDateChange = (value, availableSlots, props) => {
-  const { timeZone, intl, formApi, values } = props;
+  const { timeZone, intl, formApi, values, useIncrementalBoundaries } = props;
   if (!value || !value.date) {
     formApi.change('exceptionEndDate', null);
     return;
@@ -270,6 +294,7 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
   // This callback function is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
   const selectedEndDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
   const params = {
     intl,
     timeZone,
@@ -277,6 +302,7 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
     selectedStartDate,
     selectedStartTime,
     selectedEndDate,
+    timeUnit,
   };
   const { endTime } = getAllTimeValues(params);
 
@@ -328,6 +354,7 @@ const ExceptionDateTimeRange = props => {
     monthlyExceptionQueries,
     allExceptions,
     timeZone,
+    useIncrementalBoundaries,
     values,
   } = props;
 
@@ -357,12 +384,14 @@ const ExceptionDateTimeRange = props => {
     ? availableDates[stringifyDateToISO8601(exceptionStartDay, timeZone)]
     : null;
   const availableSlotsOnSelectedDate = dayData?.slots || [];
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
 
   const startTimeParams = {
     intl,
     timeZone,
     availableSlots: availableSlotsOnSelectedDate,
     selectedStartDate: exceptionStartDay,
+    timeUnit,
   };
   const availableStartTimes = getAvailableStartTimes(startTimeParams);
   // Get selected (or suggested) startTime, endDate, and slot (aka available time range)
@@ -394,7 +423,7 @@ const ExceptionDateTimeRange = props => {
   const startTimeDisabled = !exceptionStartDate;
   const endDateDisabled = !exceptionStartDate || !exceptionStartTime;
   const endTimeDisabled = !exceptionStartDate || !exceptionStartTime || !exceptionEndDate;
-  const nextBoundary = findNextBoundary(TODAY, 1, 'hour', timeZone);
+  const nextBoundary = findNextBoundary(TODAY, 1, timeUnit, timeZone);
   let placeholderTime = '08:00';
   try {
     placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
