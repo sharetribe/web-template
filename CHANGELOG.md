@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] InboxSortForm does not have submit button so we warn the user about immediate change of
+  content after sort input has been changed.
+  [#892](https://github.com/sharetribe/web-template/pull/892)
 - [fix] EditListingPricingPanel: initialValues.price was not there with priceVariants.
   [#892](https://github.com/sharetribe/web-template/pull/893)
 - [change] Update CircleCI config to v2.1.
