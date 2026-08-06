@@ -8,7 +8,7 @@ import {
   ImageFromFile,
   ResponsiveImage,
   IconSpinner,
-  IconArrowHead,
+  IconArrow,
 } from '../../../../components';
 
 // Import modules from this directory
@@ -80,7 +80,7 @@ const MoveImageButtons = props => {
         }
         className={classNames(css.controlButton, css.controlButtonFirst)}
       >
-        <IconArrowHead direction="up" size="small" />
+        <IconArrow direction="up" />
       </button>
       <button
         type="button"
@@ -97,7 +97,7 @@ const MoveImageButtons = props => {
         }
         className={classNames(css.controlButton, css.controlButtonMiddle)}
       >
-        <IconArrowHead direction="down" size="small" />
+        <IconArrow direction="down" />
       </button>
     </>
   );
