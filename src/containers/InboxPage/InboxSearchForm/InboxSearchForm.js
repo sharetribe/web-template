@@ -41,7 +41,12 @@ const InboxSearchForm = props => {
         const classes = classNames(rootClassName || css.root, className);
 
         return (
-          <Form onSubmit={handleSubmit} className={classes}>
+          <Form
+            onSubmit={handleSubmit}
+            className={classes}
+            role="search"
+            aria-label={intl.formatMessage({ id: 'InboxSearchForm.screenreader.label' })}
+          >
             <div className={css.sortyByWrapper}>
               <span className={css.sortyBy}>
                 <FormattedMessage id="InboxSearchForm.sortLabel" />
