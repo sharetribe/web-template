@@ -146,6 +146,16 @@
 }
 
 .fieldArrayDelete {
+  /* Reset <button> defaults; keep appearance of the previous non-button control */
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: none;
   cursor: pointer;
 
   &:hover {

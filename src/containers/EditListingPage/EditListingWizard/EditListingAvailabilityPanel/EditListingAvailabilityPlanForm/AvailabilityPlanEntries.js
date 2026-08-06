@@ -281,10 +281,10 @@ const TimeRangeSelects = props => {
       ) : (
         <FieldHidden name={`${name}.seats`} value={1} />
       )}
-      <div className={css.fieldArrayDelete} onClick={onRemove} style={{ cursor: 'pointer' }}>
+      <InlineTextButton rootClassName={css.fieldArrayDelete} type="button" onClick={onRemove}>
         <IconDelete rootClassName={css.deleteIcon} />
         <FormattedMessage id="EditListingAvailabilityPlanForm.delete" />
-      </div>
+      </InlineTextButton>
     </div>
   );
 };
