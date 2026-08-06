@@ -22,6 +22,12 @@ import css from './EditListingPhotosForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
 
+// Matches an image across id/imageId as since which one is set changes over its lifecycle
+const imageIdentifiers = image =>
+  [image?.id, image?.imageId]
+    .map(idValue => (typeof idValue === 'string' ? idValue : idValue?.uuid))
+    .filter(Boolean);
+
 // Split out of the main bundle - only fetched once this form actually mounts.
 const Sortable = loadable.lib(() => import(/* webpackChunkName: "sortablejs" */ 'sortablejs'));
 
@@ -228,6 +234,38 @@ export const EditListingPhotosForm = props => {
   const moveImageRef = useRef(() => {});
   // Monitor dragging state to prevent pointer-events on add photo tile
   const [isDragging, setIsDragging] = useState(false);
+  // Points at the current FinalForm API so uploads can be synced in from
+  // an effect (below), outside of the FinalForm render callback.
+  const formApiRef = useRef(null);
+
+  // keepDirtyOnReinitialize freezes images once dirty, so new uploads via
+  // initialValues get dropped after a reorder/removal - push them in directly.
+  const syncImagesFromProps = useCallback(() => {
+    const form = formApiRef.current;
+    const propsImages = props.initialValues?.images || [];
+    if (!form || propsImages.length === 0) {
+      return;
+    }
+    const currentImages = form.getState().values.images || [];
+    propsImages.forEach(image => {
+      const ids = imageIdentifiers(image);
+      // Find index of this image in the form's current images if it exists
+      const index = currentImages.findIndex(existing =>
+        imageIdentifiers(existing).some(id => ids.includes(id))
+      );
+      if (index === -1) {
+        // New upload, not in the form yet
+        form.mutators.push('images', image);
+      } else if (!isEqual(currentImages[index], image)) {
+        // Already in the form, but stale (e.g. upload just finished)
+        form.mutators.update('images', index, image);
+      }
+    });
+  }, [props.initialValues.images]);
+
+  useEffect(() => {
+    syncImagesFromProps();
+  }, [syncImagesFromProps]);
 
   const onImageUploadHandler = file => {
     const { listingImageConfig, onImageUpload } = props;
@@ -274,6 +312,8 @@ export const EditListingPhotosForm = props => {
           filesTabParams,
           filesRequired,
         } = formRenderProps;
+
+        formApiRef.current = form;
 
         const images = values.images || [];
         const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
