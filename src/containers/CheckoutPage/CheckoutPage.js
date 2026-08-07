@@ -34,6 +34,7 @@ import {
   speculateTransaction,
   stripeCustomer,
   confirmPayment,
+  fetchTransaction,
   initiateInquiryWithoutPayment,
 } from './CheckoutPage.duck';
 
@@ -210,6 +211,7 @@ const CheckoutPage = props => {
       dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
     [dispatch]
   );
+  const onFetchTransaction = useCallback(id => dispatch(fetchTransaction(id)), [dispatch]);
   const onSavePaymentMethod = useCallback(
     (stripeCustomer, stripePaymentMethodId) =>
       dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
@@ -265,6 +267,7 @@ const CheckoutPage = props => {
       onRetrievePaymentIntent={onRetrievePaymentIntent}
       onConfirmCardPayment={onConfirmCardPayment}
       onConfirmPayment={onConfirmPayment}
+      onFetchTransaction={onFetchTransaction}
       onSavePaymentMethod={onSavePaymentMethod}
       pageData={pageData}
       setPageData={setPageData}

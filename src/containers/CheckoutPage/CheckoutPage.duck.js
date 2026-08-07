@@ -169,6 +169,36 @@ export const confirmPayment = (
 };
 
 //////////////////////
+// Fetch Transaction //
+//////////////////////
+const fetchTransactionPayloadCreator = ({ id }, { extra: sdk, rejectWithValue }) => {
+  return sdk.transactions
+    .show({ id }, { expand: true })
+    .then(response => {
+      const entities = denormalisedResponseEntities(response);
+      return entities[0];
+    })
+    .catch(e => {
+      return rejectWithValue(storableError(e));
+    });
+};
+
+export const fetchTransactionThunk = createAsyncThunk(
+  'CheckoutPage/fetchTransaction',
+  fetchTransactionPayloadCreator
+);
+
+/**
+ * Fetch an up-to-date transaction entity from Marketplace API.
+ *
+ * @param {UUID} id transaction id
+ * @returns {Promise} transaction entity
+ */
+export const fetchTransaction = id => dispatch => {
+  return dispatch(fetchTransactionThunk({ id })).unwrap();
+};
+
+//////////////////////
 // Initiate Inquiry //
 //////////////////////
 
