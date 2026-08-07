@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] EditListingAvailabilityPlanForm: add screenreader text for delete button and make it a
+  semantic button. [#901](https://github.com/sharetribe/web-template/pull/901)
 - [change] Update moment-timezone: 0.6.2. > 0.6.3 (also dependabot were earlier updating lodash and
   tmp) [#900](https://github.com/sharetribe/web-template/pull/900)
 - [fix] InboxSortForm does not have submit button so we warn the user about immediate change of
