@@ -186,6 +186,7 @@ const getEntryBoundaries = (entries, findStartHours) => index => {
  * @component
  * @param {Object} props - The component props
  * @param {string} props.name - the name of the form field/input
+ * @param {string} props.dayOfWeek - the shorthand for the day of week. E.g. 'mon'
  * @param {Number} props.index - the index in the Final Form Array for the current dayOfWeek
  * @param {Array<String>} props.availableStartHours - array of strings represeting start hours: '00:00', '01:00', etc.
  * @param {Array<String>} props.availableEndHours - array of strings represeting end hours: '01:00', '02:00', etc.
@@ -201,6 +202,7 @@ const getEntryBoundaries = (entries, findStartHours) => index => {
 const TimeRangeSelects = props => {
   const {
     name,
+    dayOfWeek,
     index,
     availableStartHours,
     availableEndHours,
@@ -212,6 +214,20 @@ const TimeRangeSelects = props => {
     useMultipleSeats,
     intl,
   } = props;
+  const entry = entries[index];
+  const dayLabel = intl.formatMessage({
+    id: `EditListingAvailabilityPlanForm.dayOfWeek.${dayOfWeek}`,
+  });
+  const hasTimeRange = Boolean(entry?.startTime && entry?.endTime);
+  const deleteAriaLabel = intl.formatMessage(
+    { id: 'EditListingAvailabilityPlanForm.screenreader.deleteEntry' },
+    {
+      dayOfWeek: dayLabel,
+      hasTimeRange: hasTimeRange ? 'yes' : 'no',
+      startTime: hasTimeRange ? localizedHourStrings(entry.startTime, intl) : null,
+      endTime: hasTimeRange ? localizedHourStrings(entry.endTime, intl) : null,
+    }
+  );
   return (
     <div className={css.segmentWrapper} key={name}>
       <div className={css.segment}>
@@ -281,10 +297,15 @@ const TimeRangeSelects = props => {
       ) : (
         <FieldHidden name={`${name}.seats`} value={1} />
       )}
-      <div className={css.fieldArrayDelete} onClick={onRemove} style={{ cursor: 'pointer' }}>
+      <InlineTextButton
+        rootClassName={css.fieldArrayDelete}
+        type="button"
+        onClick={onRemove}
+        aria-label={deleteAriaLabel}
+      >
         <IconDelete rootClassName={css.deleteIcon} />
         <FormattedMessage id="EditListingAvailabilityPlanForm.delete" />
-      </div>
+      </InlineTextButton>
     </div>
   );
 };
@@ -449,6 +470,7 @@ const AvailabilityPlanEntries = props => {
                   <TimeRangeSelects
                     key={name}
                     name={name}
+                    dayOfWeek={dayOfWeek}
                     index={index}
                     useMultipleSeats={useMultipleSeats}
                     availableStartHours={availableStartHours}
