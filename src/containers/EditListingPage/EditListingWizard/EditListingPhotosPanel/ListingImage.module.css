@@ -35,7 +35,6 @@
 
   & svg {
     fill: var(--colorWhite);
-    stroke: var(--colorWhite);
   }
 
   &:focus {
