@@ -171,7 +171,6 @@ const CheckoutPage = props => {
     speculateTransactionInProgress,
     speculateTransactionError,
     speculatedTransaction,
-    isClockInSync,
     transaction,
     initiateInquiryError,
     initiateOrderError,
@@ -250,7 +249,6 @@ const CheckoutPage = props => {
       speculateTransactionInProgress={speculateTransactionInProgress}
       speculateTransactionError={speculateTransactionError}
       speculatedTransaction={speculatedTransaction}
-      isClockInSync={isClockInSync}
       transaction={transaction}
       initiateInquiryError={initiateInquiryError}
       initiateOrderError={initiateOrderError}

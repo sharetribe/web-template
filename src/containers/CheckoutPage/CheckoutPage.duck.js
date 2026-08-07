@@ -435,7 +435,6 @@ const initialState = {
   speculateTransactionInProgress: false,
   speculateTransactionError: null,
   speculatedTransaction: null,
-  isClockInSync: false,
   transaction: null,
   initiateOrderError: null,
   confirmPaymentError: null,
@@ -484,14 +483,8 @@ const checkoutPageSlice = createSlice({
         state.speculatedTransaction = null;
       })
       .addCase(speculateTransactionThunk.fulfilled, (state, action) => {
-        // Check that the local devices clock is within a minute from the server
-        const lastTransitionedAt = action.payload?.attributes?.lastTransitionedAt;
-        const localTime = new Date();
-        const minute = 60000;
         state.speculateTransactionInProgress = false;
         state.speculatedTransaction = action.payload;
-        state.isClockInSync =
-          Math.abs(lastTransitionedAt?.getTime() - localTime.getTime()) < minute;
       })
       .addCase(speculateTransactionThunk.rejected, (state, action) => {
         console.error(action.payload);

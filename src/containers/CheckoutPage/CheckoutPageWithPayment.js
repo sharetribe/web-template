@@ -417,7 +417,6 @@ const onStripeInitialized = (stripe, process, props) => {
  * @param {boolean} props.scrollingDisabled - Whether the page should scroll
  * @param {string} props.speculateTransactionError - The error message for the speculate transaction
  * @param {propTypes.transaction} props.speculatedTransaction - The speculated transaction
- * @param {boolean} props.isClockInSync - Whether the clock is in sync
  * @param {string} props.initiateOrderError - The error message for the initiate order
  * @param {string} props.confirmPaymentError - The error message for the confirm payment
  * @param {intlShape} props.intl - The intl object
@@ -459,7 +458,6 @@ export const CheckoutPageWithPayment = props => {
     scrollingDisabled,
     speculateTransactionError,
     speculatedTransaction: speculatedTransactionMaybe,
-    isClockInSync,
     initiateOrderError,
     confirmPaymentError,
     intl,
@@ -523,7 +521,7 @@ export const CheckoutPageWithPayment = props => {
 
   const process = processName ? getProcess(processName) : null;
   const transitions = process.transitions;
-  const isPaymentExpired = hasPaymentExpired(existingTransaction, process, isClockInSync);
+  const isPaymentExpired = hasPaymentExpired(existingTransaction, process);
 
   // Allow showing page when currentUser is still being downloaded,
   // but show payment form only when user info is loaded.

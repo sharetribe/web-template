@@ -135,7 +135,7 @@ export const getErrorMessages = (
     </p>
   ) : null;
 
-  // Stripe related processes have payment expiration (15 min time-window to confirm the payment)
+  // Stripe related processes expire unpaid checkouts via the transaction process
   const paymentExpiredMessageParagraph = isPaymentExpired ? (
     <p className={css.orderError}>
       <FormattedMessage id="CheckoutPage.paymentExpiredMessage" values={{ listingLink }} />
