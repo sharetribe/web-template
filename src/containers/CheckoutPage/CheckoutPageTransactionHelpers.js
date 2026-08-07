@@ -219,12 +219,11 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       ? Promise.resolve(storedTx)
       : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
 
-    orderPromise.then(order => {
+    return orderPromise.then(order => {
       // Store the returned transaction (order)
       persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+      return order;
     });
-
-    return orderPromise;
   };
 
   //////////////////////////////////
@@ -287,12 +286,11 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       ? Promise.resolve(storedTx)
       : onConfirmPayment(transactionId, transitionName, {});
 
-    orderPromise.then(order => {
+    return orderPromise.then(order => {
       // Store the returned transaction (order)
       persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+      return order;
     });
-
-    return orderPromise;
   };
 
   //////////////////////////////////////////////////////////
