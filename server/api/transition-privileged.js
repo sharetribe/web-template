@@ -10,6 +10,7 @@ const {
   throwErrorIfNegotiationOfferHasInvalidHistory,
 } = require('../api-util/negotiation');
 const {
+  createCookieTokenStore,
   getSdk,
   getTrustedSdk,
   handleError,
@@ -116,7 +117,9 @@ const getUpdatedMetadata = (orderData, transition, existingMetadata) => {
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body || {};
 
-  const sdk = getSdk(req, res);
+  // Share one cookie token store so a refresh during transactions.show is reused for exchangeToken.
+  const tokenStore = createCookieTokenStore(req, res);
+  const sdk = getSdk(req, res, tokenStore);
   const transitionName = bodyParams.transition;
   let lineItems = null;
   let metadataMaybe = {};
@@ -151,7 +154,7 @@ module.exports = (req, res) => {
 
       metadataMaybe = getUpdatedMetadata(orderData, transitionName, existingMetadata);
 
-      return getTrustedSdk(req);
+      return getTrustedSdk(req, res, tokenStore);
     })
     .then(trustedSdk => {
       // Pass role based params to make sure that protectedData only contains protected data

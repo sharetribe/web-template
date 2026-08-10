@@ -1,4 +1,10 @@
-const { getSdk, getTrustedSdk, handleError, serialize } = require('../api-util/sdk');
+const {
+  createCookieTokenStore,
+  getSdk,
+  getTrustedSdk,
+  handleError,
+  serialize,
+} = require('../api-util/sdk');
 
 const stripeRelatedStatesForBookings = [
   'state/pending-payment',
@@ -32,7 +38,9 @@ const HAS_INCOMPLETE_TRANSACTIONS =
 module.exports = (req, res) => {
   const { currentPassword } = req.body || {};
 
-  const sdk = getSdk(req, res);
+  // Share one cookie token store so a refresh during transactions.query is reused for exchangeToken.
+  const tokenStore = createCookieTokenStore(req, res);
+  const sdk = getSdk(req, res, tokenStore);
 
   // Booking states that contain Stripe payment processing
   const ongoingBookingsWithIncompletePaymentProcessing = () =>
@@ -72,7 +80,7 @@ module.exports = (req, res) => {
       if (hasOngoingTransactionsWithIncompletePaymentProcessing(responses)) {
         throw new Error(HAS_INCOMPLETE_TRANSACTIONS);
       }
-      return getTrustedSdk(req);
+      return getTrustedSdk(req, res, tokenStore);
     })
     .then(trustedSdk => {
       return trustedSdk.currentUser.delete({ currentPassword, deleteFromStripe: true });
