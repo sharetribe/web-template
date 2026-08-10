@@ -397,16 +397,27 @@ Core SDK utilities for interacting with the Sharetribe APIs.
 
 **Main Functions:**
 
-#### `getSdk(req, res)`
+#### `createCookieTokenStore(req, res)`
+
+Creates an Express cookie token store for the current request/response. Use the same store with both
+`getSdk` and `getTrustedSdk` in one request so a mid-request access-token refresh is visible to
+token exchange (the store keeps the refreshed token in memory; `req.cookies` is not mutated).
+
+#### `getSdk(req, res, tokenStore?)`
 
 Creates an SDK instance that calls Sharetribe APIs (authentication API, Marketplace API and Content
 Delivery API). If the authenticated user's session token is found in cookies, the SDK takes it into
-account.
+account. Pass an optional `tokenStore` from `createCookieTokenStore` when the same request will also
+call `getTrustedSdk`.
 
-#### `getTrustedSdk(req)`
+#### `getTrustedSdk(req, res, tokenStore?)`
 
 Creates a trusted SDK instance with elevated privileges by exchanging the user's token for a trusted
-token using the client secret.
+token using the client secret. Pass the same `tokenStore` used with `getSdk` in this request when
+available so `exchangeToken` uses that live store (including any mid-request refresh). If omitted, a
+new cookie store is created with `req`/`res` so a refresh during exchange can still update
+`Set-Cookie`. The resulting trusted SDK always keeps the trusted token in a memory store so it is
+never written to the browser cookie.
 
 **Additional Utilities:**
 

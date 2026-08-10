@@ -49,15 +49,18 @@ const memoryStore = token => {
   return store;
 };
 
-// Read the user token from the request cookie
-const getUserToken = req => {
-  const cookieTokenStore = sharetribeSdk.tokenStore.expressCookieStore({
+// Cookie token store shared between getSdk and getTrustedSdk in the same request.
+// Important: expressCookieStore keeps a refreshed token in memory (and Set-Cookie on res),
+// but does not mutate req.cookies. To avoid multiple retries of outdated access token,
+// callers must pass this same store into getTrustedSdk.
+const createCookieTokenStore = (req, res) =>
+  sharetribeSdk.tokenStore.expressCookieStore({
     clientId: CLIENT_ID,
     req,
+    res,
     secure: USING_SSL,
   });
-  return cookieTokenStore.getToken();
-};
+exports.createCookieTokenStore = createCookieTokenStore;
 
 exports.serialize = data => {
   return sharetribeSdk.transit.write(data, { typeHandlers, verbose: TRANSIT_VERBOSE });
@@ -120,18 +123,15 @@ exports.handleError = (res, error, options = {}) => {
 
 // The access token is read from cookie (request) and potentially saved into the cookie (response).
 // This keeps session updated between server and browser even if the token is re-issued.
-exports.getSdk = (req, res) => {
+// Pass an optional tokenStore (from createCookieTokenStore) when the same request later calls
+// getTrustedSdk, so a mid-request refresh is visible to token exchange.
+exports.getSdk = (req, res, tokenStore) => {
   return sharetribeSdk.createInstance({
     transitVerbose: TRANSIT_VERBOSE,
     clientId: CLIENT_ID,
     httpAgent,
     httpsAgent,
-    tokenStore: sharetribeSdk.tokenStore.expressCookieStore({
-      clientId: CLIENT_ID,
-      req,
-      res,
-      secure: USING_SSL,
-    }),
+    tokenStore: tokenStore || createCookieTokenStore(req, res),
     typeHandlers,
     ...baseUrlMaybe,
     ...assetCdnBaseUrlMaybe,
@@ -139,8 +139,13 @@ exports.getSdk = (req, res) => {
 };
 
 // Trusted token is powerful, it should not be passed away from the server.
-exports.getTrustedSdk = req => {
-  const userToken = getUserToken(req);
+// When this request already used getSdk and may have refreshed the session, pass the same
+// cookie tokenStore so exchangeToken uses the current access/refresh token pair.
+exports.getTrustedSdk = (req, res, tokenStore) => {
+  // Prefer the shared cookie store when available so exchangeToken (and any refresh it
+  // triggers) reads/writes the live session token. Otherwise create a cookie store with
+  // res so a refresh during exchange can still update Set-Cookie.
+  const exchangeTokenStore = tokenStore || createCookieTokenStore(req, res);
 
   // Initiate an SDK instance for token exchange
   const sdk = sharetribeSdk.createInstance({
@@ -149,7 +154,7 @@ exports.getTrustedSdk = req => {
     clientSecret: CLIENT_SECRET,
     httpAgent,
     httpsAgent,
-    tokenStore: memoryStore(userToken),
+    tokenStore: exchangeTokenStore,
     typeHandlers,
     ...baseUrlMaybe,
   });
@@ -166,7 +171,7 @@ exports.getTrustedSdk = req => {
       clientId: CLIENT_ID,
 
       // Important! Do not use a cookieTokenStore here but a memoryStore
-      // instead so that we don't leak the token back to browser client.
+      // instead so that we don't leak the trusted token back to browser client.
       tokenStore: memoryStore(trustedToken),
 
       httpAgent,
