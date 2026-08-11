@@ -1,7 +1,6 @@
 // Import contexts and util modules
 import { findRouteByRouteName } from '../../util/routes';
 import { ensureStripeCustomer, ensureTransaction } from '../../util/data';
-import { minutesBetween } from '../../util/dates';
 import { formatMoney } from '../../util/currency';
 import { NEGOTIATION_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 import { storeData } from './CheckoutPageSessionHelpers';
@@ -134,19 +133,14 @@ export const hasDefaultPaymentMethod = (stripeCustomerFetched, currentUser) =>
   );
 
 /**
- * Check if payment is expired (PAYMENT_EXPIRED state) or if payment has passed 15 minute treshold from PENDING_PAYMENT
+ * Check if payment is expired (PAYMENT_EXPIRED state).
  *
  * @param {Object} existingTransaction
  * @param {Object} process
  * @returns true if payment has expired.
  */
-export const hasPaymentExpired = (existingTransaction, process, isClockInSync) => {
-  const state = process.getState(existingTransaction);
-  return state === process.states.PAYMENT_EXPIRED
-    ? true
-    : state === process.states.PENDING_PAYMENT && isClockInSync
-    ? minutesBetween(existingTransaction.attributes.lastTransitionedAt, new Date()) >= 15
-    : false;
+export const hasPaymentExpired = (existingTransaction, process) => {
+  return process.getState(existingTransaction) === process.states.PAYMENT_EXPIRED;
 };
 
 /**
@@ -225,12 +219,11 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       ? Promise.resolve(storedTx)
       : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
 
-    orderPromise.then(order => {
+    return orderPromise.then(order => {
       // Store the returned transaction (order)
       persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+      return order;
     });
-
-    return orderPromise;
   };
 
   //////////////////////////////////
@@ -293,12 +286,11 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
       ? Promise.resolve(storedTx)
       : onConfirmPayment(transactionId, transitionName, {});
 
-    orderPromise.then(order => {
+    return orderPromise.then(order => {
       // Store the returned transaction (order)
       persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+      return order;
     });
-
-    return orderPromise;
   };
 
   //////////////////////////////////////////////////////////
