@@ -95,6 +95,20 @@ const listingTypesBookingHourly = [
     },
   },
 ];
+const listingTypesBookingFixed = [
+  {
+    id: 'rent-bicycles-fixed',
+    transactionProcess: {
+      name: 'default-booking',
+      alias: 'default-booking/release-1',
+    },
+    unitType: 'fixed',
+    availabilityType: 'oneSeat',
+    defaultListingFields: {
+      description: true,
+    },
+  },
+];
 const listingTypesPurchase = [
   {
     id: 'sell-bicycles',
@@ -2228,6 +2242,117 @@ describe('EditListingPage', () => {
     expect(
       getByRole('button', { name: 'EditListingAvailabilityExceptionForm.addException' })
     ).toBeInTheDocument();
+  }, 10000);
+
+  // 'fixed' unit type renders FieldSelectPopup instead of the native <select> the 'hour' test
+  // above exercises, so this parallels that test's shape but swaps its `.selected`/
+  // native-<option> assertions for the custom popup's own open/select/update interaction.
+  it('Booking (fixed): edit flow on availability tab', async () => {
+    const user = userEvent.setup();
+    const config = getConfig(listingTypesBookingFixed, listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-fixed', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '09:00', endTime: '09:15', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '09:00', endTime: '09:15', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '09:00', endTime: '09:15', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '09:00', endTime: '09:15', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '09:00', endTime: '09:15', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '09:00', endTime: '09:15', seats: 1 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-fixed',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'fixed',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: AVAILABILITY,
+      },
+    };
+
+    const { getByText, getByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+      withPortals: true,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelAvailability';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingAvailabilityPanel.title')).toBeInTheDocument();
+
+      // Tab/form: edit availability
+      expect(
+        getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+      ).toBeInTheDocument();
+    });
+
+    // Test intercation: open plan modal
+    await user.click(
+      getByRole('button', { name: /EditListingAvailabilityPanel.editAvailabilityPlan/i })
+    );
+
+    expect(getByText('EditListingAvailabilityPlanForm.title')).toBeInTheDocument();
+
+    // Monday is checked and already has a start/end time selected. Its triggers show the
+    // selected values' localized labels, same underlying data the 'hour' test above asserts via
+    // `.selected`, but read here off the custom popup's own trigger button.
+    const monday = getByRole('checkbox', {
+      name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i,
+    });
+    expect(monday).toBeChecked();
+    const monDataContainer = within(monday.parentNode.parentNode.nextElementSibling);
+
+    const startTimeTrigger = monDataContainer.getByRole('button', { name: /9:00 AM/ });
+    expect(monDataContainer.getByRole('button', { name: /9:15 AM/ })).toBeInTheDocument();
+
+    // Popup starts closed: no option list is rendered yet, only the trigger's own value.
+    expect(monDataContainer.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(monDataContainer.queryByText('8:45 AM')).not.toBeInTheDocument();
+
+    // Test interaction: clicking the trigger opens the popup and renders the full option list
+    // directly below it. Start-time options are capped below the entry's own endTime (09:15,
+    // per `filterStartTimes`), so 8:45 AM (not 9:15/9:30) is the nearby valid alternative here.
+    await user.click(startTimeTrigger);
+    expect(monDataContainer.getByRole('listbox')).toBeInTheDocument();
+    expect(monDataContainer.getByRole('option', { name: '9:00 AM' })).toBeInTheDocument();
+    expect(monDataContainer.getByRole('option', { name: '8:45 AM' })).toBeInTheDocument();
+
+    // Test interaction: clicking an option selects it, updates what's shown on the trigger, and
+    // closes the list again.
+    await user.click(monDataContainer.getByRole('option', { name: '8:45 AM' }));
+    expect(startTimeTrigger).toHaveTextContent('8:45 AM');
+    expect(monDataContainer.queryByRole('listbox')).not.toBeInTheDocument();
+
+    // The selected value is saved correctly when the form is submitted: the plan modal's own
+    // Save button stays enabled.
+    expect(
+      getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' })
+    ).toBeEnabled();
   }, 10000);
 
   it('Booking (day): edit flow on photos tab', async () => {
