@@ -41,6 +41,7 @@ export const DOWNLOAD_PROCESS_NAME = 'default-download';
  * - statesNeedingCustomerAttention
  * - supportedPayments
  * - getCheckoutPaymentTransitions({ paymentProcessor, paymentMethod, state, unsupportedPaymentErrorMessage })
+ * - hasPaymentExpired(tx)
  */
 const PROCESSES = [
   {
