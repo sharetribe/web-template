@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
 }
 
@@ -9,10 +11,8 @@
   border: var(--borderErrorField);
 }
 
-/* Trigger button. Reproduces the chrome the global `select` selector in
- * marketplaceDefaults.css normally provides for free, since a `<button>` 
- * doesn't match that selector, so the border/chevron/hover/focus states 
- * are recreated here. */
+/* Trigger button. Reproduces the chrome the global `select` selector in marketplaceDefaults.css
+ * provides for free, since a `<button>` doesn't match that selector. */
 .trigger {
   /* Dimensions */
   display: block;
@@ -52,9 +52,19 @@
   border-color: #80bdff;
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   transition: all ease-in-out 100ms;
+
+  /* .trigger's own `outline: none` removes the native focus ring, and box-shadow/border-color are
+   * author colors that forced-colors mode flattens, so a focused trigger needs this override to
+   * stay visible. `Highlight` is a system color keyword mapped to the user's high-contrast theme.
+   * Positive `outline-offset` keeps the ring outside the existing 1px border so they don't merge. */
+  @media (forced-colors: active) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }
 .trigger:disabled {
   opacity: 0.5;
+  color: var(--colorGrey300);
 
   &:hover {
     cursor: not-allowed;
@@ -71,21 +81,28 @@
   white-space: nowrap;
   font-family: var(--fontFamily);
   font-size: 16px;
+  font-weight: var(--fontWeightMedium);
 }
 
-/* `position: relative` so `.popup` below can anchor to this wrapper, and therefore to the
- * trigger button, via plain in-flow `position: absolute`. */
+/* `position: relative` so `.popup` below can anchor to this wrapper (and therefore to the
+ * trigger button) via plain in-flow `position: absolute`. */
 .popupWrapper {
   position: relative;
 }
 
-/* Plain in-flow positioning, anchored to `.popupWrapper` above. */
+/* Stays a plain in-flow child. Clipping by a sibling row's own stacking context
+ * (AvailabilityPlanEntries.module.css's `.timeRangeRow`: `position: relative` + `z-index: 1`) is
+ * fixed by the caller raising that row's own z-index above its siblings while this popup is open
+ * (see FieldSelectPopup.js's `onToggleActive` prop), not by escaping the DOM subtree via a portal:
+ * a portal's reach also means competing with unrelated ancestors' z-index (e.g. a wrapping
+ * Modal's), which an in-flow popup never has to do. `--zIndexPopup` per marketplaceDefaults.css's
+ * convention for small on-page popups; only needs to out-rank this popup's own local siblings. */
 .popup {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
-  z-index: 1;
+  z-index: var(--zIndexPopup);
 
   background-color: var(--colorWhite);
   border: 1px solid var(--colorGrey100);
@@ -93,10 +110,23 @@
   border-radius: var(--borderRadiusMedium);
 }
 
+/* Opens above the trigger instead of below it, per FieldSelectPopup.js's edge-flip check. */
+.popupOpenAbove {
+  top: auto;
+  bottom: 100%;
+}
+
+/* Capped so roughly 8 options are visible before scrolling. */
 .popupList {
+  max-height: 272px;
+  overflow-y: auto;
   margin: 0;
   padding: 4px 0;
   list-style: none;
+
+  @media (--viewportMedium) {
+    max-height: 320px;
+  }
 }
 
 .popupOption {
@@ -107,9 +137,25 @@
 }
 .popupOption:hover,
 .popupOptionHighlighted {
-  background-color: var(--colorGrey50);
+  background-color: var(--colorGrey100);
 }
 .popupOptionDisabled {
   color: var(--colorGrey300);
   cursor: not-allowed;
+}
+.popupOptionSelected {
+  background-color: var(--colorGrey200);
+}
+
+/* Under forced-colors mode, the background-color signals above flatten away, leaving the
+ * highlighted/selected option indistinguishable from any other. `outline` survives forced-colors
+ * when authored inside this media query using a system color keyword. Negative `outline-offset`
+ * keeps the ring inside the option row instead of extending into a neighboring row or the popup's
+ * own border. */
+@media (forced-colors: active) {
+  .popupOptionHighlighted,
+  .popupOptionSelected {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
 }

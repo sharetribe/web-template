@@ -8,6 +8,7 @@ exports[`FieldSelectPopup matches snapshot (closed, no value selected) 1`] = `
     <label
       class=""
       for="test.startTime"
+      id="test.startTime-label"
     >
       Start time
     </label>
@@ -15,12 +16,17 @@ exports[`FieldSelectPopup matches snapshot (closed, no value selected) 1`] = `
       class="popupWrapper"
     >
       <button
+        aria-controls="test.startTime-listbox"
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-labelledby="test.startTime-label test.startTime-value"
         class="trigger"
         id="test.startTime"
         type="button"
       >
         <span
           class="triggerLabel"
+          id="test.startTime-value"
         >
           Choose start time
         </span>
