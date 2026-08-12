@@ -4,6 +4,7 @@ import { FieldArray } from 'react-final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../../util/reactIntl';
+import { FIXED } from '../../../../../transactions/transaction';
 
 import {
   compareEntriesByStartTime,
@@ -16,6 +17,7 @@ import { bookingTimeUnits } from '../../../../../util/dates';
 import {
   InlineTextButton,
   FieldSelect,
+  FieldSelectPopup,
   FieldCheckbox,
   IconDelete,
 } from '../../../../../components';
@@ -250,11 +252,26 @@ const TimeRangeSelects = props => {
     useMultipleSeats,
     intl,
   } = props;
+  // Only 'fixed' unit type's quarter-hour list (up to 96 options) needs the custom popup;
+  // 'hour' keeps the plain native FieldSelect it already had.
+  const isFixedUnitType = unitType === FIXED;
+  const TimeSelectField = isFixedUnitType ? FieldSelectPopup : FieldSelect;
   const entry = entries[index];
   const dayLabel = intl.formatMessage({
     id: `EditListingAvailabilityPlanForm.dayOfWeek.${dayOfWeek}`,
   });
   const hasTimeRange = Boolean(entry?.startTime && entry?.endTime);
+  // Informative accessible names for the start/end fields. Neither component gets one from the
+  // shared, sighted-only "Select time" <label> below, since it has no `htmlFor` and so isn't
+  // programmatically associated with either field.
+  const startTimeAriaLabel = intl.formatMessage(
+    { id: 'EditListingAvailabilityPlanForm.screenreader.startTimeLabel' },
+    { dayOfWeek: dayLabel }
+  );
+  const endTimeAriaLabel = intl.formatMessage(
+    { id: 'EditListingAvailabilityPlanForm.screenreader.endTimeLabel' },
+    { dayOfWeek: dayLabel }
+  );
   const deleteAriaLabel = intl.formatMessage(
     { id: 'EditListingAvailabilityPlanForm.screenreader.deleteEntry' },
     {
@@ -271,10 +288,12 @@ const TimeRangeSelects = props => {
           <FormattedMessage id="EditListingAvailabilityPlanForm.selectTime" />
         </label>
         <div className={css.timeRangeRow}>
-          <FieldSelect
+          <TimeSelectField
             id={`${name}.startTime`}
             name={`${name}.startTime`}
             rootClassName={css.hourField}
+            label={startTimeAriaLabel}
+            labelClassName={css.srOnlyLabel}
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('startTime'),
             })}
@@ -289,16 +308,18 @@ const TimeRangeSelects = props => {
                 {localizedTimeStrings(s, intl)}
               </option>
             ))}
-          </FieldSelect>
+          </TimeSelectField>
           <span className={css.dashBetweenTimes}>
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none">
               <path d="M3.5 8h10" strokeWidth="1.333" strokeLinecap="round" />
             </svg>
           </span>
-          <FieldSelect
+          <TimeSelectField
             id={`${name}.endTime`}
             name={`${name}.endTime`}
             rootClassName={css.hourField}
+            label={endTimeAriaLabel}
+            labelClassName={css.srOnlyLabel}
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('endTime'),
             })}
@@ -313,7 +334,7 @@ const TimeRangeSelects = props => {
                 {localizedTimeStrings(s, intl)}
               </option>
             ))}
-          </FieldSelect>
+          </TimeSelectField>
           <div className={classNames(css.plus1Day, { [css.showPlus1Day]: isNextDay })}>
             <FormattedMessage id="EditListingAvailabilityPlanForm.plus1Day" />
           </div>
