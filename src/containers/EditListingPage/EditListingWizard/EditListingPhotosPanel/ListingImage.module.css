@@ -56,6 +56,26 @@
   }
 }
 
+.controlButton[data-drag-handle] {
+  /* Use move as a fallback if grab is unsupported */
+  cursor: move;
+  cursor: grab;
+}
+
+.grabbingCursor {
+  /* Use move as a fallback if grab is unsupported */
+  cursor: move;
+  cursor: grabbing;
+}
+
+/* Beats .controlButton[data-drag-handle] above on specificity (two classes
+   + an attribute selector outweighs one class + an attribute selector), so
+   this reliably wins regardless of source order - no !important needed. */
+.controlButton[data-drag-handle].grabbingCursor {
+  cursor: move;
+  cursor: grabbing;
+}
+
 /* These three are positional modifiers, not tied to a specific button - if a
    button is added to or reordered within this row, move these classes to
    whichever buttons actually end up first/middle/last. */

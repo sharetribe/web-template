@@ -16,12 +16,20 @@ import css from './ListingImage.module.css';
 
 // Cross shaped button on the top-right corner of the image thumbnail
 const RemoveImageButton = props => {
-  const { className, rootClassName, onClick, buttonRef, currentPositionMessage } = props;
+  const {
+    className,
+    rootClassName,
+    onClick,
+    buttonRef,
+    currentPositionMessage,
+    isChoosing,
+  } = props;
   const intl = useIntl();
   const classes = classNames(
     css.controlButton,
     css.controlButtonLast,
     rootClassName || css.removeImage,
+    { [css.grabbingCursor]: isChoosing },
     className
   );
   return (
@@ -61,6 +69,7 @@ const MoveImageButtons = props => {
     upButtonRef,
     downButtonRef,
     currentPositionMessage,
+    isChoosing,
   } = props;
   const intl = useIntl();
   return (
@@ -78,7 +87,9 @@ const MoveImageButtons = props => {
                 { currentPosition: currentPositionMessage }
               )
         }
-        className={classNames(css.controlButton, css.controlButtonFirst)}
+        className={classNames(css.controlButton, css.controlButtonFirst, {
+          [css.grabbingCursor]: isChoosing,
+        })}
       >
         <IconArrow direction="up" />
       </button>
@@ -95,7 +106,9 @@ const MoveImageButtons = props => {
                 { currentPosition: currentPositionMessage }
               )
         }
-        className={classNames(css.controlButton, css.controlButtonMiddle)}
+        className={classNames(css.controlButton, css.controlButtonMiddle, {
+          [css.grabbingCursor]: isChoosing,
+        })}
       >
         <IconArrow direction="down" />
       </button>
@@ -105,7 +118,7 @@ const MoveImageButtons = props => {
 
 // Drag handle shown by default
 const DragHandleButton = props => {
-  const { buttonRef } = props;
+  const { buttonRef, isChoosing } = props;
   const intl = useIntl();
   return (
     <button
@@ -113,7 +126,9 @@ const DragHandleButton = props => {
       ref={buttonRef}
       data-drag-handle
       aria-label={intl.formatMessage({ id: 'ListingImage.screenreader.dragToReorderImage' })}
-      className={classNames(css.controlButton, css.controlButtonFirst)}
+      className={classNames(css.controlButton, css.controlButtonFirst, {
+        [css.grabbingCursor]: isChoosing,
+      })}
     >
       <svg
         width="16"
@@ -148,6 +163,7 @@ const ControlButtons = props => {
     pendingFocusDirection,
     onFocusRequestHandled,
     currentPositionMessage,
+    isChoosing,
     moveImageButtons: MoveImageButtonsComponent,
     dragHandleButton: DragHandleButtonComponent,
     removeImageButton: RemoveImageButtonComponent,
@@ -226,6 +242,7 @@ const ControlButtons = props => {
           className={css.controlButtonFirst}
           onClick={handleRemoveClick}
           currentPositionMessage={currentPositionMessage}
+          isChoosing={isChoosing}
         />
       </div>
     );
@@ -242,14 +259,16 @@ const ControlButtons = props => {
           disableMoveUp={disableMoveUp}
           disableMoveDown={disableMoveDown}
           currentPositionMessage={currentPositionMessage}
+          isChoosing={isChoosing}
         />
       ) : (
-        <DragHandleButtonComponent buttonRef={handleButtonRef} />
+        <DragHandleButtonComponent buttonRef={handleButtonRef} isChoosing={isChoosing} />
       )}
       <RemoveImageButtonComponent
         buttonRef={removeButtonRef}
         onClick={handleRemoveClick}
         currentPositionMessage={currentPositionMessage}
+        isChoosing={isChoosing}
       />
     </div>
   );
@@ -286,6 +305,7 @@ const ListingImage = props => {
     pendingFocusDirection,
     onFocusRequestHandled,
     isCoverImage,
+    isChoosing,
     currentPositionMessage,
     aspectWidth = 1,
     aspectHeight = 1,
@@ -306,6 +326,7 @@ const ListingImage = props => {
       pendingFocusDirection={pendingFocusDirection}
       onFocusRequestHandled={onFocusRequestHandled}
       currentPositionMessage={currentPositionMessage}
+      isChoosing={isChoosing}
       moveImageButtons={MoveImageButtons}
       dragHandleButton={DragHandleButton}
       removeImageButton={RemoveImageButton}

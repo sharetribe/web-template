@@ -34,7 +34,13 @@ const Sortable = loadable.lib(() => import(/* webpackChunkName: "sortablejs" */ 
 // Attaches SortableJS to the FieldArray's container and reorders the images
 // FieldArray via moveImageRef.current() on drag end
 const SortableController = props => {
-  const { sortableModule, containerRef, moveImageRef, onDragStateChange } = props;
+  const {
+    sortableModule,
+    containerRef,
+    moveImageRef,
+    onDragStateChange,
+    onChooseStateChange,
+  } = props;
   const { default: SortableLib } = sortableModule;
 
   useEffect(() => {
@@ -51,6 +57,8 @@ const SortableController = props => {
       chosenClass: css.sortableChosen,
       dragClass: css.sortableDrag,
       delayOnTouchOnly: true,
+      onChoose: () => onChooseStateChange(true),
+      onUnchoose: () => onChooseStateChange(false),
       onStart: () => onDragStateChange(true),
       onEnd: event => {
         onDragStateChange(false);
@@ -63,7 +71,7 @@ const SortableController = props => {
     return () => {
       sortable.destroy();
     };
-  }, [SortableLib, containerRef, moveImageRef, onDragStateChange]);
+  }, [SortableLib, containerRef, moveImageRef, onDragStateChange, onChooseStateChange]);
 
   return null;
 };
@@ -107,6 +115,7 @@ export const FieldAddImage = props => {
     aspectWidth = 1,
     aspectHeight = 1,
     className,
+    isChoosing,
     ...rest
   } = props;
   return (
@@ -125,7 +134,10 @@ export const FieldAddImage = props => {
           <div className={classNames(css.addImageWrapper, className)}>
             <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
               {fieldDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
-              <label htmlFor={name} className={css.addImage}>
+              <label
+                htmlFor={name}
+                className={classNames(css.addImage, { [css.grabbingCursor]: isChoosing })}
+              >
                 {label}
               </label>
             </AspectRatioWrapper>
@@ -151,6 +163,7 @@ const FieldListingImage = props => {
     pendingFocusDirection,
     onFocusRequestHandled,
     isCoverImage,
+    isChoosing,
     aspectWidth,
     aspectHeight,
     variantPrefix,
@@ -183,6 +196,7 @@ const FieldListingImage = props => {
             pendingFocusDirection={pendingFocusDirection}
             onFocusRequestHandled={onFocusRequestHandled}
             isCoverImage={isCoverImage}
+            isChoosing={isChoosing}
             currentPositionMessage={currentPositionMessage}
             aspectWidth={aspectWidth}
             aspectHeight={aspectHeight}
@@ -234,6 +248,8 @@ export const EditListingPhotosForm = props => {
   const moveImageRef = useRef(() => {});
   // Monitor dragging state to prevent pointer-events on add photo tile
   const [isDragging, setIsDragging] = useState(false);
+  // Monitor choosing state to update pointer UI
+  const [isChoosing, setIsChoosing] = useState(false);
   // Points at the current FinalForm API so uploads can be synced in from
   // an effect (below), outside of the FinalForm render callback.
   const formApiRef = useRef(null);
@@ -352,7 +368,7 @@ export const EditListingPhotosForm = props => {
               </p>
             ) : null}
 
-            <div className={css.imagesFieldArray}>
+            <div className={classNames(css.imagesFieldArray, { [css.grabbingCursor]: isChoosing })}>
               <FieldArray
                 name="images"
                 validate={composeValidators(
@@ -386,6 +402,7 @@ export const EditListingPhotosForm = props => {
                           disableMoveDown={index === fields.length - 1}
                           hideMoveControls={fields.length === 1}
                           isCoverImage={index === 0}
+                          isChoosing={isChoosing}
                           onRemoveImage={imageId => {
                             fields.remove(index);
                             onRemoveImage(imageId);
@@ -422,6 +439,7 @@ export const EditListingPhotosForm = props => {
                       containerRef={sortableContainerRef}
                       moveImageRef={moveImageRef}
                       onDragStateChange={setIsDragging}
+                      onChooseStateChange={setIsChoosing}
                     />
                   )}
                 </Sortable>
@@ -432,6 +450,7 @@ export const EditListingPhotosForm = props => {
                 name="addImage"
                 accept={ACCEPT_IMAGES}
                 className={isDragging ? css.addImageWrapperDragging : null}
+                isChoosing={isChoosing}
                 label={
                   <span className={css.chooseImageText}>
                     <span className={css.chooseImage}>

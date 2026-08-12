@@ -122,6 +122,12 @@
   }
 }
 
+.grabbingCursor {
+  /* Use move as a fallback if grab is unsupported */
+  cursor: move;
+  cursor: grabbing;
+}
+
 .chooseImageText {
   display: flex;
   flex-direction: column;
