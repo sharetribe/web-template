@@ -124,6 +124,9 @@ export const getCheckoutPaymentTransitions = ({
   };
 };
 
+// Inquiry process has no payment checkout or expiration
+export const hasPaymentExpired = () => false;
+
 // Check when transaction is completed (booking over)
 // NOTE: this functions is added just for the sake of consistency
 export const isCompleted = transition => {
