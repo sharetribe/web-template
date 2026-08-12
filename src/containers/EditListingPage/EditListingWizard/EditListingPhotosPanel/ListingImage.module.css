@@ -12,33 +12,112 @@
   position: relative;
 }
 
-.removeImage {
+.controlsGroup {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 8px;
+  right: 8px;
+  display: flex;
+}
+
+.controlButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 33px;
   height: 33px;
   padding: 0;
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.5);
   border: none;
   border-radius: 0;
-  border-bottom-left-radius: 2px;
   cursor: pointer;
 
   & svg {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 10px;
-    height: 10px;
-    fill: var(--colorGrey300);
-    stroke: var(--colorGrey300);
+    fill: var(--colorWhite);
   }
 
-  &:hover svg {
-    fill: var(--colorWhite);
-    stroke: var(--colorWhite);
+  &:focus {
+    z-index: 1;
   }
+
+  @media (hover: hover) {
+    &:hover svg {
+      opacity: 0.5;
+    }
+  }
+
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+
+    & svg {
+      opacity: 0.2;
+    }
+  }
+}
+
+.controlButton[data-drag-handle] {
+  /* Use move as a fallback if grab is unsupported */
+  cursor: move;
+  cursor: grab;
+}
+
+.grabbingCursor {
+  /* Use move as a fallback if grab is unsupported */
+  cursor: move;
+  cursor: grabbing;
+}
+
+/* Beats .controlButton[data-drag-handle] above on specificity (two classes
+   + an attribute selector outweighs one class + an attribute selector), so
+   this reliably wins regardless of source order - no !important needed. */
+.controlButton[data-drag-handle].grabbingCursor {
+  cursor: move;
+  cursor: grabbing;
+}
+
+/* These three are positional modifiers, not tied to a specific button - if a
+   button is added to or reordered within this row, move these classes to
+   whichever buttons actually end up first/middle/last. */
+.controlButtonFirst {
+  border-top-left-radius: var(--borderRadiusMedium);
+  border-bottom-left-radius: var(--borderRadiusMedium);
+}
+
+.controlButtonLast {
+  border-top-right-radius: var(--borderRadiusMedium);
+  border-bottom-right-radius: var(--borderRadiusMedium);
+}
+
+.controlButtonMiddle {
+  border-radius: 0;
+}
+
+.removeImage {
+  /* Centered in the 33px button box: (33 - 13) / 2 = 10. */
+  & svg {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.coverBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background-color: var(--colorGrey900);
+  color: var(--colorWhite);
+  font-size: 14px;
+  line-height: 16px;
+  border-radius: var(--borderRadiusMedium);
 }
 
 .rootForImage {
@@ -51,7 +130,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--borderRadius);
+  border-radius: var(--borderRadiusMedium);
+  pointer-events: none;
 }
 
 .thumbnailLoading {

@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Listing images can now be re-ordered while editing/creating a listing. Default behaviour
+  uses a handle for drag-and-drop functionality, and there is also keyboard support for
+  accessibility. [#889](https://github.com/sharetribe/web-template/pull/889)
 - [change] When access token expires, we have not shared the token store between sdk.listings.show
   and sdk.exchangeToken calls. This has caused unnecessary retries against those API endpoints.
   [#901](https://github.com/sharetribe/web-template/pull/901)

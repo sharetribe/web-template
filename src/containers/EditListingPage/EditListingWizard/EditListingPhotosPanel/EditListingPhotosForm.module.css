@@ -12,14 +12,58 @@
 .imagesFieldArray {
   flex-shrink: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 24px;
   margin: 0 0 24px 0;
+
+  /* Prevents iOS Safari's long-press-to-select-text while Sortable's own drag
+  recognition is setting up. */
+  user-select: none;
+
+  @media (--viewportMedium) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .thumbnail {
   width: 100%;
   background-color: var(--colorGrey50);
+  border-radius: var(--borderRadiusMedium);
+}
+
+/* Sortable needs a real DOM container to attach to, but its children must
+   still be direct grid items of .imagesFieldArray, not grid items of this
+   wrapper - display: contents removes this element from layout entirely. */
+.sortableImages {
+  display: contents;
+}
+
+/* Sortable's ghostClass - the placeholder left behind at an item's original
+   slot while it's being dragged elsewhere. */
+.sortableGhost {
+  opacity: 0;
+}
+
+/* Scale the inner content, never the sortable item itself - Sortable owns
+   transform on the item for positioning and animation, so a scale/transition
+   there fights drag. overflow:visible so the scaled child isn't clipped. */
+.sortableChosen {
+  overflow: visible;
+  z-index: 2;
+}
+
+.sortableChosen > * {
+  transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
+  transform: scale(1.03);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 20px 40px;
+}
+
+.sortableDrag {
+  overflow: visible;
+  user-select: none;
+  /* Overwrites the Sortable.js lib which sets opacity to 0.8 through 
+  inline-styles. */
+  opacity: 1 !important;
 }
 
 .addImageWrapper {
@@ -35,6 +79,11 @@
     height: 0;
     clear: both;
   }
+}
+
+/* Remove pointer-events while an image is being dragged. */
+.addImageWrapperDragging {
+  pointer-events: none;
 }
 
 .addImage {
@@ -62,7 +111,7 @@
   border-style: dashed;
   border-color: var(--colorGrey100);
   border-width: 2px;
-  border-radius: 2px;
+  border-radius: var(--borderRadiusMedium);
 
   /* Behaviour */
   cursor: pointer;
@@ -71,6 +120,12 @@
   &:hover {
     border-color: var(--colorGrey300);
   }
+}
+
+.grabbingCursor {
+  /* Use move as a fallback if grab is unsupported */
+  cursor: move;
+  cursor: grabbing;
 }
 
 .chooseImageText {

@@ -57,6 +57,7 @@
     "sharetribe-flex-sdk": "^1.24.1",
     "sitemap": "^9.0.1",
     "smoothscroll-polyfill": "^0.4.0",
+    "sortablejs": "^1.15.6",
     "source-map-support": "^0.5.21",
     "unified": "^9.2.2"
   },

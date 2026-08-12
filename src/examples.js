@@ -37,6 +37,7 @@ import * as FieldSelectTree from './components/FieldSelectTree/FieldSelectTree.e
 import * as FieldTextInput from './components/FieldTextInput/FieldTextInput.example';
 import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconAlert from './components/IconAlert/IconAlert.example';
+import * as IconArrow from './components/IconArrow/IconArrow.example';
 import * as IconArrowHead from './components/IconArrowHead/IconArrowHead.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
 import * as IconCheckmark from './components/IconCheckmark/IconCheckmark.example';
@@ -182,6 +183,7 @@ export {
   FilterPopup,
   IconAdd,
   IconAlert,
+  IconArrow,
   IconArrowHead,
   IconBannedUser,
   IconCheckmark,
