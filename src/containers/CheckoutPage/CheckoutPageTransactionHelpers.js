@@ -144,17 +144,6 @@ export const hasDefaultPaymentMethod = (stripeCustomerFetched, currentUser) =>
   );
 
 /**
- * Check if payment is expired (PAYMENT_EXPIRED state).
- *
- * @param {Object} existingTransaction
- * @param {Object} process
- * @returns true if payment has expired.
- */
-export const hasPaymentExpired = (existingTransaction, process) => {
-  return process.getState(existingTransaction) === process.states.PAYMENT_EXPIRED;
-};
-
-/**
  * Check if the transaction has passed PENDING_PAYMENT state (assumes that process has that state)
  * @param {Object} tx
  * @param {Object} process
