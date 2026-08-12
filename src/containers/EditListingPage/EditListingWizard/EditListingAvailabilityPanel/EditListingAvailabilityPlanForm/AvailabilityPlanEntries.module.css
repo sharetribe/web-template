@@ -226,3 +226,16 @@
 .notSelected {
   color: var(--colorGrey300);
 }
+
+/* Visually hidden but still reachable by assistive tech, unlike `visibility: hidden`, which
+ * hides from screen readers too. */
+.srOnlyLabel {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+}

@@ -233,6 +233,8 @@
   "EditListingAvailabilityPlanForm.plus1Day": "+1 day",
   "EditListingAvailabilityPlanForm.saveSchedule": "Save schedule",
   "EditListingAvailabilityPlanForm.screenreader.deleteEntry": "{hasTimeRange, select, yes {Delete {startTime} to {endTime} from {dayOfWeek} availability} other {Delete {dayOfWeek} availability entry}}",
+  "EditListingAvailabilityPlanForm.screenreader.endTimeLabel": "{dayOfWeek} end time",
+  "EditListingAvailabilityPlanForm.screenreader.startTimeLabel": "{dayOfWeek} start time",
   "EditListingAvailabilityPlanForm.selectTime": "Select time",
   "EditListingAvailabilityPlanForm.startTimePlaceholder": "Start",
   "EditListingAvailabilityPlanForm.timezonePickerTitle": "Select a time zone",
