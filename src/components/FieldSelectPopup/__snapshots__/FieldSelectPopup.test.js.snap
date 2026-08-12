@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`FieldSelectPopup matches snapshot (closed, no value selected) 1`] = `
+<form>
+  <div
+    class="root"
+  >
+    <label
+      class=""
+      for="test.startTime"
+    >
+      Start time
+    </label>
+    <div
+      class="popupWrapper"
+    >
+      <button
+        class="trigger"
+        id="test.startTime"
+        type="button"
+      >
+        <span
+          class="triggerLabel"
+        >
+          Choose start time
+        </span>
+      </button>
+    </div>
+  </div>
+  <button
+    disabled=""
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
