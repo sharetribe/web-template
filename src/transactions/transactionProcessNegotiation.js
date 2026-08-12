@@ -548,6 +548,17 @@ export const isCompleted = transition => {
   return txCompletedTransitions.includes(transition);
 };
 
+/**
+ * Check if payment has expired (PAYMENT_EXPIRED state).
+ * Payment expires automatically from PENDING_PAYMENT via EXPIRE_PAYMENT transition.
+ *
+ * @param {Object} tx transaction entity
+ * @returns {boolean}
+ */
+export const hasPaymentExpired = tx => {
+  return tx?.attributes?.lastTransition === transitions.EXPIRE_PAYMENT;
+};
+
 // Check when transaction is refunded (booking did not happen)
 // In these transitions action/stripe-refund-payment is called
 // NOTE: this functions is added just for the sake of consistency
