@@ -44,7 +44,6 @@ import {
   getShippingDetailsMaybe,
   getTransactionTypeData,
   hasDefaultPaymentMethod,
-  hasPaymentExpired,
   hasTransactionPassedPendingPayment,
   processCheckoutWithPayment,
   setOrderPageInitialValues,
@@ -478,7 +477,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
       onFetchTransaction(txId)
         .then(tx => {
-          if (process.getState(tx) === process.states.PAYMENT_EXPIRED) {
+          if (process.hasPaymentExpired(tx)) {
             setPageData({ ...pageData, transaction: tx });
             clearData(sessionStorageKey);
           } else if (process.hasPassedState(process.states.PENDING_PAYMENT, tx)) {
@@ -507,7 +506,7 @@ const onStripeInitialized = (stripe, process, props) => {
     !paymentIntent &&
     tx?.id &&
     process?.getState(tx) === process?.states.PENDING_PAYMENT &&
-    !hasPaymentExpired(tx, process);
+    !process.hasPaymentExpired(tx);
 
   if (shouldFetchPaymentIntent) {
     const { stripePaymentIntentClientSecret } =
@@ -641,7 +640,7 @@ export const CheckoutPageWithPayment = props => {
 
   const process = processName ? getProcess(processName) : null;
   const transitions = process?.transitions;
-  const isPaymentExpired = hasPaymentExpired(existingTransaction, process);
+  const isPaymentExpired = process?.hasPaymentExpired(existingTransaction);
 
   // Push/redirect return path (isolated; not used by the default card checkout flow).
   const redirectPaymentStatusError = useStripeRedirectPaymentReturn({
