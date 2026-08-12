@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import classNames from 'classnames';
@@ -256,6 +256,15 @@ const TimeRangeSelects = props => {
   // 'hour' keeps the plain native FieldSelect it already had.
   const isFixedUnitType = unitType === FIXED;
   const TimeSelectField = isFixedUnitType ? FieldSelectPopup : FieldSelect;
+  // FieldSelectPopup's own popup stays a plain in-flow child (see its module.css), so it would
+  // otherwise be clipped by a later row's own stacking context (.timeRangeRow: `position:
+  // relative` + `z-index: 1`); no z-index on the popup itself can out-rank a sibling row's
+  // content. Raising this row's own z-index above its siblings while either popup is open fixes
+  // that without the popup leaving this row's DOM subtree, unlike an escaped portal, which would
+  // also have to compete with unrelated ancestors (e.g. a wrapping Modal's own z-index).
+  const [isStartTimeOpen, setIsStartTimeOpen] = useState(false);
+  const [isEndTimeOpen, setIsEndTimeOpen] = useState(false);
+  const isAnyTimeSelectOpen = isStartTimeOpen || isEndTimeOpen;
   const entry = entries[index];
   const dayLabel = intl.formatMessage({
     id: `EditListingAvailabilityPlanForm.dayOfWeek.${dayOfWeek}`,
@@ -263,7 +272,10 @@ const TimeRangeSelects = props => {
   const hasTimeRange = Boolean(entry?.startTime && entry?.endTime);
   // Informative accessible names for the start/end fields. Neither component gets one from the
   // shared, sighted-only "Select time" <label> below, since it has no `htmlFor` and so isn't
-  // programmatically associated with either field.
+  // programmatically associated with either field. Passed as `label` (visually hidden via
+  // `css.srOnlyLabel`), so FieldSelect gets a real `<label for>` for the first time, and
+  // FieldSelectPopup's aria-labelledby composition has something to compose with. The current
+  // value isn't repeated here, since both components already announce it separately.
   const startTimeAriaLabel = intl.formatMessage(
     { id: 'EditListingAvailabilityPlanForm.screenreader.startTimeLabel' },
     { dayOfWeek: dayLabel }
@@ -287,7 +299,11 @@ const TimeRangeSelects = props => {
         <label>
           <FormattedMessage id="EditListingAvailabilityPlanForm.selectTime" />
         </label>
-        <div className={css.timeRangeRow}>
+        <div
+          className={classNames(css.timeRangeRow, {
+            [css.timeRangeRowRaised]: isAnyTimeSelectOpen,
+          })}
+        >
           <TimeSelectField
             id={`${name}.startTime`}
             name={`${name}.startTime`}
@@ -297,6 +313,7 @@ const TimeRangeSelects = props => {
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('startTime'),
             })}
+            {...(isFixedUnitType ? { onToggleActive: setIsStartTimeOpen } : {})}
           >
             <option disabled value="">
               {intl.formatMessage({
@@ -323,6 +340,7 @@ const TimeRangeSelects = props => {
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('endTime'),
             })}
+            {...(isFixedUnitType ? { onToggleActive: setIsEndTimeOpen } : {})}
           >
             <option disabled value="">
               {intl.formatMessage({
