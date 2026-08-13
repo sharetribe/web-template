@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v12.2.0] 2026-08-13
+
 - [change] Listing images can now be re-ordered while editing/creating a listing. Default behaviour
   uses a handle for drag-and-drop functionality, and there is also keyboard support for
   accessibility. [#889](https://github.com/sharetribe/web-template/pull/889)
@@ -38,6 +40,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] Topbar/PriorityLinks: turn the container into a list to improve accessibility.
   [#888](https://github.com/sharetribe/web-template/pull/888)
 - [fix] Harden Mapbox loading [#890](https://github.com/sharetribe/web-template/pull/890)
+
+  [v12.2.0]: https://github.com/sharetribe/web-template/compare/v12.1.0...v12.2.0
 
 ## [v12.1.0] 2026-07-27
 
