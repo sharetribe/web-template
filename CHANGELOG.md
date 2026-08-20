@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update sharetribe-flex-sdk to v1.24.2.
+  [#907](https://github.com/sharetribe/web-template/pull/907)
 - [add] Add currently available translations for DE, ES, FR.
   [#906](https://github.com/sharetribe/web-template/pull/906)
 

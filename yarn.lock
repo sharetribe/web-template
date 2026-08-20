@@ -10482,10 +10482,10 @@ jose@5.9.6:
   resolved "https://registry.yarnpkg.com/jose/-/jose-5.9.6.tgz#77f1f901d88ebdc405e57cce08d2a91f47521883"
   integrity sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==
 
-js-cookie@^2.1.3:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
-  integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
+js-cookie@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.8.tgz#444e6f4b27a5d844594fef61c9d6bca5f0787688"
+  integrity sha512-yeJd4aNAdYZQjaon2bpD/Gb0B/omw7HQOsynXXcOiWVCacbBcPlgn8S/d1X6blFSaHao7ozqtW7NZW19xpCtIw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -13803,13 +13803,13 @@ shallowequal@^1.1.0:
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
-sharetribe-flex-sdk@^1.24.1:
-  version "1.24.1"
-  resolved "https://registry.yarnpkg.com/sharetribe-flex-sdk/-/sharetribe-flex-sdk-1.24.1.tgz#13ee5fbfe8b2b2c1d015c308c55cd9f72851d491"
-  integrity sha512-k2Dn3NGTtw0IlwTzNA9CpYMMNfmPXediAWi4mH1s4LtjmV0ONbDAeAmlcF9tVZPn2kmzeiFA/MaTnumyj76dFw==
+sharetribe-flex-sdk@^1.24.2:
+  version "1.24.2"
+  resolved "https://registry.yarnpkg.com/sharetribe-flex-sdk/-/sharetribe-flex-sdk-1.24.2.tgz#88ecf6285bc5856d71f67bcb8d13376a31481d50"
+  integrity sha512-keSvF1yCDsmKrD4OaAhV0FQCZlANTtTdxrlxXQGSKVBA6IM9wR4oU5Sc0qKTv7ZcCCwrav4mbNok4rEEX+61DQ==
   dependencies:
     axios "^1.18.1"
-    js-cookie "^2.1.3"
+    js-cookie "^3.0.8"
     jsonwebtoken "^9.0.3"
     lodash "^4.18.1"
     transit-js "^0.8.861"
