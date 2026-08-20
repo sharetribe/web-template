@@ -2,12 +2,7 @@
 // I.e. These are custom fields to data entities. They are added through the Marketplace Console.
 // In the codebase, we also have React Final Form fields, which are wrapper around user inputs.
 
-import {
-  isPurchaseProcessAlias,
-  isBookingProcessAlias,
-  isNegotiationProcessAlias,
-  isDownloadProcessAlias,
-} from '../transactions/transaction';
+import { isStripeRelatedProcessAlias } from '../transactions/transaction';
 import {
   EXTENDED_DATA_SCHEMA_TYPES,
   SCHEMA_TYPE_MULTI_ENUM,
@@ -218,7 +213,8 @@ export const pickCustomFieldProps = (extendedData, fieldConfigs, entityTypeKey, 
  *                      and payment processor, otherwise false.
  *
  * Notes:
- * - The function checks if the specified currency is compatible with Stripe (for booking or purchase processes).
+ * - The function checks if the specified currency is compatible with Stripe (for processes
+ *   that declare Stripe payment methods in supportedPayments.stripe).
  * - Stripe only supports certain currencies. You can use other currencies on your marketplace for transactions that
  * - don't utilise Stripe. This function performs a check that the currency and transaction process provided are compatible
  * - with each other.
@@ -231,12 +227,8 @@ export const isValidCurrencyForTransactionProcess = (
   listingCurrency,
   paymentProcessor = null
 ) => {
-  // booking and purchase processes use Stripe actions.
-  const isStripeRelatedProcess =
-    isPurchaseProcessAlias(transactionProcessAlias) ||
-    isBookingProcessAlias(transactionProcessAlias) ||
-    isNegotiationProcessAlias(transactionProcessAlias) ||
-    isDownloadProcessAlias(transactionProcessAlias);
+  // Processes with Stripe checkout methods (booking, purchase, negotiation, download, test-payments, …)
+  const isStripeRelatedProcess = isStripeRelatedProcessAlias(transactionProcessAlias);
 
   // Determine if the listing currency is supported by Stripe
   const isStripeSupportedCurrency = stripeSupportedCurrencies.includes(listingCurrency);
