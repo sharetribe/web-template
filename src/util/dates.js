@@ -673,9 +673,9 @@ export const stringifyDateToISO8601 = (date, timeZone = null) => {
 // and different boundaries than sharp hours, you need to modify these functions:
 // - findBookingUnitBoundaries (DST changes)
 // - findNextBoundary
-// - getSharpHours
-// - getStartHours
-// - getEndHours
+// - getSharpHours -> use getSharpBoundaries
+// - getStartHours -> use getStartBoundaries
+// - getEndHours -> use getEndBoundaries
 
 // Helper function for exported function: getSharpHours
 // Recursively find boundaries for bookable time slots.
@@ -887,6 +887,118 @@ export const getStartHours = (startTime, endTime, timeZone, intl) => {
 export const getEndHours = (startTime, endTime, timeZone, intl) => {
   const hours = getSharpHours(startTime, endTime, timeZone, intl);
   return hours.length < 2 ? [] : hours.slice(1);
+};
+
+/**
+ * Find sharp boundaries inside given time window per time unit provided. Returned strings are localized to given time zone.
+ *
+ * > getSharpBoundaries(new Date('2019-09-18T08:00:00.000Z'), new Date('2019-09-18T09:00:00.000Z'), 'Europe/Helsinki', intl, 'quarterHour');
+ * => [
+ *    {
+ *      "timestamp": 1568793600000,
+ *      "timeOfDay": "11:00",
+ *    },
+ *    {
+ *      "timestamp": 1568794500000,
+ *      "timeOfDay": "11:15",
+ *    },
+ *    {
+ *      "timestamp": 1568795400000,
+ *      "timeOfDay": "11:30",
+ *    },
+ *    {
+ *      "timestamp": 1568796300000,
+ *      "timeOfDay": "11:45",
+ *    },
+ *    {
+ *      "timestamp": 1568797200000,
+ *      "timeOfDay": "12:00",
+ *    },
+ *  ]
+ *
+ * @param {Date} Start point of available time window.
+ * @param {Date} End point of available time window.
+ * @param {String} timezone name. It should represent IANA timezone key.
+ * @param {Object} intl containing formatting options for Intl.DateTimeFormat.
+ * @param {String} timeUnit scope. e.g. 'hour', 'quarterHour'. Defaults to 'hour'.
+ *
+ * @returns {Array} an array of objects with keys timestamp and timeOfDay.
+ */
+export const getSharpBoundaries = (startTime, endTime, timeZone, intl, timeUnit = 'hour') => {
+  return getBoundaries(startTime, endTime, 1, timeUnit, timeZone, intl);
+};
+
+/**
+ * Find sharp start boundaries for bookable time units (e.g. quarteHour) inside given time window.
+ * Returned strings are localized to given time zone.
+ *
+ * > getStartBoundaries(new Date('2019-09-18T08:00:00.000Z'), new Date('2019-09-18T09:00:00.000Z'), 'Europe/Helsinki', intl);
+ * => [
+ *    {
+ *      "timestamp": 1568793600000,
+ *      "timeOfDay": "11:00",
+ *    },
+ *    {
+ *      "timestamp": 1568794500000,
+ *      "timeOfDay": "11:15",
+ *    },
+ *    {
+ *      "timestamp": 1568795400000,
+ *      "timeOfDay": "11:30",
+ *    },
+ *    {
+ *      "timestamp": 1568796300000,
+ *      "timeOfDay": "11:45",
+ *    },
+ *  ]
+ *
+ * @param {Date} Start point of available time window.
+ * @param {Date} End point of available time window.
+ * @param {String} timezone name. It should represent IANA timezone key.
+ * @param {Object} intl containing formatting options for Intl.DateTimeFormat.
+ * @param {String} timeUnit scope. e.g. 'hour', 'quarterHour'. Defaults to 'hour'.
+ *
+ * @returns {Array} an array of objects with keys timestamp and timeOfDay.
+ */
+export const getStartBoundaries = (startTime, endTime, timeZone, intl, timeUnit = 'hour') => {
+  const boundaries = getSharpBoundaries(startTime, endTime, timeZone, intl, timeUnit);
+  return boundaries.length < 2 ? boundaries : boundaries.slice(0, -1);
+};
+
+/**
+ * Find sharp end boundaries for bookable time units (e.g. quarterHour) inside given time window.
+ * Returned strings are localized to given time zone.
+ *
+ * > getEndBoundaries(new Date('2019-09-18T08:00:00.000Z'), new Date('2019-09-18T09:00:00.000Z'), 'Europe/Helsinki', intl);
+ * => [
+ *    {
+ *      "timestamp": 1568794500000,
+ *      "timeOfDay": "11:15",
+ *    },
+ *    {
+ *      "timestamp": 1568795400000,
+ *      "timeOfDay": "11:30",
+ *    },
+ *    {
+ *      "timestamp": 1568796300000,
+ *      "timeOfDay": "11:45",
+ *    },
+ *    {
+ *      "timestamp": 1568797200000,
+ *      "timeOfDay": "12:00",
+ *    },
+ *  ]
+ *
+ * @param {Date} Start point of available time window.
+ * @param {Date} End point of available time window.
+ * @param {String} timezone name. It should represent IANA timezone key.
+ * @param {Object} intl containing formatting options for Intl.DateTimeFormat.
+ *
+ * @returns {Array} an array of objects with keys timestamp and timeOfDay.
+ */
+export const getEndBoundaries = (startTime, endTime, timeZone, intl, timeUnit = 'hour') => {
+  const boundaries = getSharpBoundaries(startTime, endTime, timeZone, intl, timeUnit);
+  return boundaries.length < 2 ? [] : boundaries.slice(1);
 };
 
 //////////

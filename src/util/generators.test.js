@@ -383,6 +383,33 @@ describe('generators and iterators', () => {
       const dateInfoHashMap = availabilityPerDate(start, end, plan, exceptions);
       expect(JSON.stringify(dateInfoHashMap)).toEqual(expectedResult);
     });
+
+    it('should build separate ranges for multiple entries that share an hour but differ in minutes', () => {
+      // A listing can have several entries inside the same hour
+      // (e.g. 12:00-12:15, 12:30-12:45). Ensure that these entries
+      // are handled as separate ranges even though they start on the same hour.
+      const start = parseDateFromISO8601('2023-01-04', 'Etc/UTC'); // Wednesday
+      const end = parseDateFromISO8601('2023-01-05', 'Etc/UTC');
+      const plan = {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'wed', startTime: '12:00', endTime: '12:15', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '12:30', endTime: '12:45', seats: 1 },
+        ],
+      };
+
+      const dateInfoHashMap = availabilityPerDate(start, end, plan, []);
+      const { ranges, hasAvailability } = dateInfoHashMap['2023-01-04'];
+      const entryRanges = ranges.filter(r => r.seats === 1);
+
+      expect(hasAvailability).toEqual(true);
+      expect(entryRanges).toHaveLength(2);
+      expect(entryRanges.map(r => [r.start.toISOString(), r.end.toISOString()])).toEqual([
+        ['2023-01-04T12:00:00.000Z', '2023-01-04T12:15:00.000Z'],
+        ['2023-01-04T12:30:00.000Z', '2023-01-04T12:45:00.000Z'],
+      ]);
+    });
   });
 
   describe('timeSlotsPerDate(start, end, timeSlots, timeZone, options)', () => {
