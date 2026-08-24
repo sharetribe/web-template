@@ -14,20 +14,36 @@ const CustomIconLocation = () => {
 
 const LocationSearchField = props => {
   const [isCurrentLocation, setIsCurrentLocation] = useState(false);
-  const { inputRootClass, intl, inputRef, onLocationChange, alignLeft } = props;
+  const {
+    inputRootClass,
+    intl,
+    inputRef,
+    onLocationChange,
+    onLocationSelected,
+    alignLeft,
+  } = props;
+
   return (
     <Field
       name="location"
       format={identity}
       render={({ input, meta }) => {
         const { onChange, ...restInput } = input;
+
         const searchOnChange = value => {
           onChange(value);
           onLocationChange(value);
+
           if (value?.selectedPlace && value.selectedPlace.address == '') {
             setIsCurrentLocation(true);
           } else {
             setIsCurrentLocation(false);
+          }
+
+          // GPS-15: once an address or current location has been
+          // completely resolved, search immediately.
+          if (value?.selectedPlace) {
+            onLocationSelected(value);
           }
         };
 
@@ -62,16 +78,19 @@ const LocationSearchField = props => {
 const FilterLocation = props => {
   const searchInpuRef = useRef(null);
   const intl = useIntl();
+
   const {
     appConfig,
     onSubmit,
     setSubmitDisabled,
+    onLocationSelected,
     className,
     rootClassName,
     alignLeft,
     isCurrentLocation,
     ...restOfProps
   } = props;
+
   const classes = classNames(rootClassName || css.root, className);
 
   const onChange = location => {
@@ -89,9 +108,11 @@ const FilterLocation = props => {
         intl={intl}
         inputRef={searchInpuRef}
         onLocationChange={onChange}
+        onLocationSelected={onLocationSelected}
         alignLeft={alignLeft}
       />
     </div>
   );
 };
+
 export default FilterLocation;
