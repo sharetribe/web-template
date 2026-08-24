@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
@@ -15,6 +15,12 @@ import { stringifyDateToISO8601 } from '../../../../util/dates';
 
 // Shared components
 import { Form, PrimaryButton } from '../../../../components';
+import GeocoderGoogleMaps, {
+  CURRENT_LOCATION_ID as GOOGLE_CURRENT_LOCATION_ID,
+} from '../../../../components/LocationAutocompleteInput/GeocoderGoogleMaps';
+import GeocoderMapbox, {
+  CURRENT_LOCATION_ID as MAPBOX_CURRENT_LOCATION_ID,
+} from '../../../../components/LocationAutocompleteInput/GeocoderMapbox';
 
 import FilterCategories from './FilterCategories/FilterCategories';
 import FilterDateRange from './FilterDateRange/FilterDateRange';
@@ -49,10 +55,27 @@ const formatDateValue = (dateRange, queryParamName) => {
   return { [queryParamName]: value };
 };
 
+const getCurrentLocationPlace = config => {
+  const isGoogleMapsInUse = config.maps.mapProvider === 'googleMaps';
+  const Geocoder = isGoogleMapsInUse ? GeocoderGoogleMaps : GeocoderMapbox;
+  const currentLocationId = isGoogleMapsInUse
+    ? GOOGLE_CURRENT_LOCATION_ID
+    : MAPBOX_CURRENT_LOCATION_ID;
+
+  const currentLocationBoundsDistance = config.maps?.search?.currentLocationBoundsDistance;
+  const geocoder = new Geocoder();
+
+  return geocoder.getPlaceDetails(
+    { id: currentLocationId, predictionPlace: {} },
+    currentLocationBoundsDistance
+  );
+};
+
 export const SearchCTA = React.forwardRef((props, ref) => {
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
+  const formApiRef = useRef(null);
 
   const { categories, dateRange, keywordSearch, locationSearch } = props.searchFields;
 
@@ -60,16 +83,66 @@ export const SearchCTA = React.forwardRef((props, ref) => {
 
   const categoryConfig = config.categoryConfiguration;
 
+  const navigateToSearch = values => {
+    let queryParams = {};
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (!isEmpty(value)) {
+        if (key == 'dateRange') {
+          const { dates } = formatDateValue(value, 'dates');
+          queryParams.dates = dates;
+        } else if (key == 'location') {
+          if (value.selectedPlace) {
+            const {
+              search,
+              selectedPlace: { origin, bounds },
+            } = value;
+
+            queryParams.bounds = bounds;
+            queryParams.address = search;
+
+            if (isOriginInUse(config) && origin) {
+              queryParams.origin = `${origin.lat},${origin.lng}`;
+            }
+          }
+        } else {
+          queryParams[key] = value;
+        }
+      }
+    });
+
+    const to = createResourceLocatorString(
+      'SearchPage',
+      routeConfiguration,
+      {},
+      queryParams
+    );
+
+    history.push(to);
+  };
+
+  const onLocationSelected = location => {
+    const currentValues = formApiRef.current?.getState()?.values || {};
+    navigateToSearch({
+      ...currentValues,
+      location,
+    });
+  };
+
   const filters = {
     categories: {
       enabled: categories,
       isValid: () => categoryConfig.categories.length > 0,
       render: alignLeft => (
         <div className={css.filterField} key="categories">
-          <FilterCategories categories={categoryConfig.categories} alignLeft={alignLeft} />
+          <FilterCategories
+            categories={categoryConfig.categories}
+            alignLeft={alignLeft}
+          />
         </div>
       ),
     },
+
     keywordSearch: {
       enabled: keywordSearch,
       isValid: () => keywordSearch,
@@ -79,12 +152,17 @@ export const SearchCTA = React.forwardRef((props, ref) => {
         </div>
       ),
     },
+
     locationSearch: {
       enabled: locationSearch,
       isValid: () => locationSearch,
       render: alignLeft => (
         <div className={css.filterField} key="locationSearch">
-          <FilterLocation setSubmitDisabled={setSubmitDisabled} alignLeft={alignLeft} />
+          <FilterLocation
+            setSubmitDisabled={setSubmitDisabled}
+            onLocationSelected={onLocationSelected}
+            alignLeft={alignLeft}
+          />
         </div>
       ),
     },
@@ -112,67 +190,89 @@ export const SearchCTA = React.forwardRef((props, ref) => {
       const isLast = index === totalEnabled - 1;
       const alignLeft = totalEnabled === 1 || !isLast;
 
-      return filter.enabled && filter.isValid() ? filter.render(alignLeft) : null;
+      return filter.enabled && filter.isValid()
+        ? filter.render(alignLeft)
+        : null;
     });
   };
 
-  // Count the number search fields that are enabled
-  const fieldCountForGrid = Object.values(filters).filter(field => field.enabled && field.isValid())
-    .length;
+  const fieldCountForGrid = Object.values(filters).filter(
+    field => field.enabled && field.isValid()
+  ).length;
 
-  //  If no search fields are enabled, we return null (Console won't allow you to enable 0 search fields)
   if (!fieldCountForGrid) {
     return null;
   }
 
-  const onSubmit = values => {
-    // Convert form values to query parameters
-    let queryParams = {};
+  const onSubmit = async values => {
+    const hasSelectedLocation = values?.location?.selectedPlace;
 
-    Object.entries(values).forEach(([key, value]) => {
-      if (!isEmpty(value)) {
-        if (key == 'dateRange') {
-          const { dates } = formatDateValue(value, 'dates');
-          queryParams.dates = dates;
-        } else if (key == 'location') {
-          if (value.selectedPlace) {
-            const {
-              search,
-              selectedPlace: { origin, bounds },
-            } = value;
-            queryParams.bounds = bounds;
-            queryParams.address = search;
+    // GPS-15:
+    // If Search is pressed without a selected address,
+    // use current location directly.
+    if (locationSearch && !hasSelectedLocation) {
+      setSubmitDisabled(true);
 
-            if (isOriginInUse(config) && origin) {
-              queryParams.origin = `${origin.lat},${origin.lng}`;
-            }
-          }
-        } else {
-          queryParams[key] = value;
-        }
+      try {
+        const place = await getCurrentLocationPlace(config);
+
+        const location = {
+          search: place.address,
+          predictions: [],
+          selectedPlace: place,
+        };
+
+        navigateToSearch({
+          ...values,
+          location,
+        });
+      } catch (e) {
+        // Permission denied, timeout or geolocation unavailable:
+        // stay on the Hero so the user can enter an address manually.
+        console.error(e);
+        setSubmitDisabled(false);
       }
-    });
 
-    const to = createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams);
-    // Use history.push to navigate without page refresh
-    history.push(to);
+      return;
+    }
+
+    navigateToSearch(values);
   };
 
   return (
-    <div className={classNames(css.searchBarContainer, getGridCount(fieldCountForGrid))}>
+    <div
+      className={classNames(
+        css.searchBarContainer,
+        getGridCount(fieldCountForGrid)
+      )}
+    >
       <FinalForm
         onSubmit={onSubmit}
         {...props}
-        render={({ fieldRenderProps, handleSubmit }) => {
+        render={({ fieldRenderProps, handleSubmit, form }) => {
+          formApiRef.current = form;
+
           return (
             <Form
               role="search"
               onSubmit={handleSubmit}
-              className={classNames(css.gridContainer, getGridCount(fieldCountForGrid))}
+              className={classNames(
+                css.gridContainer,
+                getGridCount(fieldCountForGrid)
+              )}
             >
-              {addFilters(['categories', 'keywordSearch', 'locationSearch', 'dateRange'])}
+              {addFilters([
+                'categories',
+                'keywordSearch',
+                'locationSearch',
+                'dateRange',
+              ])}
 
-              <PrimaryButton disabled={submitDisabled} className={css.submitButton} type="submit">
+              <PrimaryButton
+                disabled={submitDisabled}
+                className={css.submitButton}
+                type="submit"
+              >
                 <FormattedMessage id="PageBuilder.SearchCTA.buttonLabel" />
               </PrimaryButton>
             </Form>
