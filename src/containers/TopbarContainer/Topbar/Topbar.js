@@ -405,17 +405,19 @@ const TopbarComponent = props => {
         onManageDisableScrolling={onManageDisableScrolling}
         focusElementId={MOBILE_SEARCH_BUTTON_ID}
       >
-        <div className={css.searchContainer}>
-          <TopbarSearchForm
-            onSubmit={handleSubmit}
-            initialValues={initialSearchFormValues}
-            isMobile
-            appConfig={config}
-          />
-          <p className={css.mobileHelp}>
-            <FormattedMessage id="Topbar.mobileSearchHelp" />
-          </p>
-        </div>
+        {isMobileSearchOpen ? (
+          <div className={css.searchContainer}>
+            <TopbarSearchForm
+              onSubmit={handleSubmit}
+              initialValues={initialSearchFormValues}
+              isMobile
+              appConfig={config}
+            />
+            <p className={css.mobileHelp}>
+              <FormattedMessage id="Topbar.mobileSearchHelp" />
+            </p>
+          </div>
+        ) : null}
       </Modal>
       <ModalMissingInformation
         id="MissingInformationReminder"
