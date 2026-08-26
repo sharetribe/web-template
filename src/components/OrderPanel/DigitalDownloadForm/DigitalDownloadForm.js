@@ -46,6 +46,7 @@ const renderForm = formRenderProps => {
     onFetchTransactionLineItems,
     marketplaceName,
     finePrintComponent: FinePrint,
+    sectionHeadingAs = 'h3',
   } = formRenderProps;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -69,7 +70,7 @@ const renderForm = formRenderProps => {
     <Form id={formId} onSubmit={handleSubmit} className={classes}>
       {showBreakdown ? (
         <div className={css.breakdownWrapper}>
-          <H6 as="h3" className={css.bookingBreakdownTitle}>
+          <H6 as={sectionHeadingAs} className={css.bookingBreakdownTitle}>
             <FormattedMessage id="DigitalDownloadForm.breakdownTitle" />
           </H6>
           <hr className={css.totalDivider} />
@@ -110,6 +111,7 @@ const renderForm = formRenderProps => {
  * @param {Function} props.onSubmit - The function to handle the form submission
  * @param {boolean} props.isOwnListing - Whether the listing is owned by the current user
  * @param {string} [props.payoutDetailsWarning] - Warning about payout details
+ * @param {'h2'|'h3'} [props.sectionHeadingAs='h3'] - Semantic heading level for form section titles
  * @returns {JSX.Element}
  */
 const DigitalDownloadForm = props => {

@@ -326,6 +326,7 @@ export const ListingPageComponent = props => {
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                 </H4>
               }
+              sectionHeadingAs="h2"
               payoutDetailsWarning={payoutDetailsWarning}
               author={ensuredAuthor}
               onManageDisableScrolling={onManageDisableScrolling}

@@ -271,6 +271,7 @@ const hasValidPriceVariants = priceVariants => {
  * @param {string} props.marketplaceCurrency - The currency used in the marketplace
  * @param {number} props.dayCountAvailableForBooking - Number of days available for booking
  * @param {string} props.marketplaceName - Name of the marketplace
+ * @param {'h2'|'h3'} [props.sectionHeadingAs='h3'] - Semantic heading level for form section titles (under the panel title)
  *
  * @returns {JSX.Element} Component that displays the order panel with appropriate form
  */
@@ -312,6 +313,7 @@ const OrderPanel = props => {
     showListingImage,
     hideAuthorInfo,
     hidePrice,
+    sectionHeadingAs = 'h3',
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -422,6 +424,7 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    sectionHeadingAs,
   };
 
   const showClosedListingHelpText = listing.id && isClosed;
