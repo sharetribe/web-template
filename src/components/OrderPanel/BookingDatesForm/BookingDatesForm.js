@@ -621,6 +621,7 @@ export const BookingDatesForm = props => {
           onFetchTimeSlots,
           form: formApi,
           finePrintComponent: FinePrint,
+          sectionHeadingAs = 'h3',
         } = formRenderProps;
         const { startDate, endDate } = values?.bookingDates ? values.bookingDates : {};
         const priceVariantName = values?.priceVariantName || null;
@@ -828,7 +829,7 @@ export const BookingDatesForm = props => {
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
-                <H6 as="h3" className={css.bookingBreakdownTitle}>
+                <H6 as={sectionHeadingAs} className={css.bookingBreakdownTitle}>
                   <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
                 </H6>
                 <hr className={css.totalDivider} />

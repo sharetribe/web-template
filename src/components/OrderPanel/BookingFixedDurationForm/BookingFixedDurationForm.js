@@ -147,6 +147,7 @@ export const BookingFixedDurationForm = props => {
           payoutDetailsWarning,
           isOwnListing,
           finePrintComponent: FinePrint,
+          sectionHeadingAs = 'h3',
         } = formRenderProps;
 
         const startTime = values?.bookingStartTime ? values.bookingStartTime : null;
@@ -239,7 +240,7 @@ export const BookingFixedDurationForm = props => {
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
-                <H6 as="h3" className={css.bookingBreakdownTitle}>
+                <H6 as={sectionHeadingAs} className={css.bookingBreakdownTitle}>
                   <FormattedMessage id="BookingFixedDurationForm.priceBreakdownTitle" />
                 </H6>
                 <hr className={css.totalDivider} />
