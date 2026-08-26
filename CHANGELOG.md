@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] richText.js: coalesce adjacent strings to avoid multiple spaces between words.
+  [#910](https://github.com/sharetribe/web-template/pull/910)
 - [fix] OrderPanel: headings needed different heading levels on listing page vs transaction page.
   [#909](https://github.com/sharetribe/web-template/pull/909)
 - [change] Update sharetribe-flex-sdk to v1.24.2.
