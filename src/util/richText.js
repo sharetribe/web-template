@@ -137,6 +137,26 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
 };
 
 /**
+ * Merge adjacent string nodes so React does not create separate text nodes for
+ * each word/space (which can make screen readers announce "space" between them).
+ *
+ * @param {Array<node>} nodes mixed strings and React elements
+ * @return {Array<node>} nodes with consecutive strings concatenated
+ */
+export const coalesceAdjacentStrings = nodes =>
+  nodes.reduce((acc, node) => {
+    if (node == null || node === '') {
+      return acc;
+    }
+    if (typeof node === 'string' && typeof acc[acc.length - 1] === 'string') {
+      acc[acc.length - 1] += node;
+      return acc;
+    }
+    acc.push(node);
+    return acc;
+  }, []);
+
+/**
  * Scan text to fill in wrappers for long words and add links.
  * Wrap long words: options should contain longWordMinLength & longWordClass
  * Linkify found links: options should contain "linkify: true" (linkClass is optional)
@@ -146,7 +166,7 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
  *
  * @param {String} text check text content
  * @param {Object} options { longWordMinLength, longWordClass, linkify = false, linkClass }
- * @return {Array<node>} returns a child array containing strings and inline elements
+ * @return {string|Array<node>} a string, or a child array containing strings and inline elements
  */
 export const richText = (text, options) => {
   if (typeof text !== 'string') {
@@ -160,13 +180,15 @@ export const richText = (text, options) => {
   const nonWhiteSpaceSequence = /([^\s]+)/gi;
   const breakCharsConfig = breakChars != null ? breakChars : '/';
 
-  return text.split(nonWhiteSpaceSequence).reduce((acc, nextChild, i) => {
-    const parts = flow([
+  const parts = text.split(nonWhiteSpaceSequence).reduce((acc, nextChild, i) => {
+    const nextParts = flow([
       v =>
         v.flatMap(w => linkifyOrWrapLinkSplit(w, i, { linkify, linkClass: linkOrLongWordClass })),
       v => v.flatMap(w => zwspAroundSpecialCharsSplit(w, breakCharsConfig)),
       v => v.map((w, j) => wrapLongWord(w, `${i}${j}`, { longWordMinLength, longWordClass })),
     ])([nextChild]);
-    return acc.concat(parts);
+    return acc.concat(nextParts);
   }, []);
+  const coalescedParts = coalesceAdjacentStrings(parts);
+  return coalescedParts.length === 1 ? coalescedParts[0] : parts;
 };

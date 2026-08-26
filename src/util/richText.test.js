@@ -7,6 +7,7 @@ import {
   zwspAroundSpecialCharsSplit,
   linkifyOrWrapLinkSplit,
   wrapLongWord,
+  coalesceAdjacentStrings,
   richText,
 } from './richText';
 
@@ -191,14 +192,37 @@ describe('richText', () => {
     });
   });
 
+  describe('coalesceAdjacentStrings(nodes)', () => {
+    it('should merge adjacent strings and drop empty ones', () => {
+      expect(coalesceAdjacentStrings(['A', ' ', 'bike', '', ' ', "I'm", ' ', 'selling'])).toEqual([
+        "A bike I'm selling",
+      ]);
+    });
+    it('should keep element boundaries and attach spaces to neighboring strings', () => {
+      const longWord = (
+        <span className="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span>
+      );
+      expect(coalesceAdjacentStrings(['word', ' ', longWord, ' ', 'is', ' ', 'long'])).toEqual([
+        'word ',
+        longWord,
+        ' is long',
+      ]);
+    });
+  });
+
   describe('richText(text, { longWordMinLength, longWordClass })', () => {
     const options = { longWordMinLength: 10, longWordClass: 'longWord' };
 
     it('should not add anything to strings with short words', () => {
       const wrapper = render(<span>{richText('word word word', options)}</span>);
 
-      const htmlString = wrapper.asFragment().firstChild.outerHTML;
-      expect(htmlString).toEqual('<span>word word word</span>');
+      const span = wrapper.asFragment().firstChild;
+      expect(span.outerHTML).toEqual('<span>word word word</span>');
+      expect(span.childNodes.length).toEqual(1);
+      expect(span.firstChild.nodeType).toEqual(Node.TEXT_NODE);
+    });
+    it('should return a single string for short-word titles', () => {
+      expect(richText("A bike I'm selling", options)).toEqual("A bike I'm selling");
     });
     it('should add span around a string with a single long word', () => {
       const wrapper = render(
@@ -209,10 +233,17 @@ describe('richText', () => {
           )}
         </span>
       );
-      const htmlString = wrapper.asFragment().firstChild.outerHTML;
-      expect(htmlString).toEqual(
+      const span = wrapper.asFragment().firstChild;
+      expect(span.outerHTML).toEqual(
         '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word</span>'
       );
+      // text + long-word span + text (no lone space text nodes)
+      expect(span.childNodes.length).toEqual(3);
+      expect(span.childNodes[0].nodeType).toEqual(Node.TEXT_NODE);
+      expect(span.childNodes[0].textContent).toEqual('word ');
+      expect(span.childNodes[1].className).toEqual('longWord');
+      expect(span.childNodes[2].nodeType).toEqual(Node.TEXT_NODE);
+      expect(span.childNodes[2].textContent).toEqual(' is the longest word');
     });
     it('should add span around a string with multiple long words', () => {
       const wrapper = render(
@@ -223,10 +254,11 @@ describe('richText', () => {
           )}
         </span>
       );
-      const htmlString = wrapper.asFragment().firstChild.outerHTML;
-      expect(htmlString).toEqual(
+      const span = wrapper.asFragment().firstChild;
+      expect(span.outerHTML).toEqual(
         '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word - <span class="longWord">Pseudopseudohypoparathyroidism</span> is shorter</span>'
       );
+      expect(span.childNodes.length).toEqual(5);
     });
 
     it('should add span around a string with multiple long words and containing slashes', () => {
