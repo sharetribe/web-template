@@ -50,6 +50,11 @@ const defaultDirectives = {
     'api.mapbox.com',
     'events.mapbox.com',
 
+    // Imgix (e.g. fetch/XHR of hosted assets; img-src alone is not enough)
+    // Chrome seems to fetch icons through /site.webmanifest
+    '*.imgix.net',
+    'sharetribe.imgix.net', // Safari 9.1 didn't recognize asterisk rule.
+
     // Google Analytics
     // TODO: Signals support needs more work
     // https://developers.google.com/tag-platform/security/guides/csp
