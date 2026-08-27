@@ -42,7 +42,18 @@ exports.setupExpressErrorHandler = app => {
 };
 
 const responseAPIErrors = error => {
-  return error && error.data && error.data.errors ? error.data.errors : [];
+  if (!error) {
+    return [];
+  }
+  // SDK / Axios errors attach Marketplace API errors under data.errors
+  if (error?.data?.errors) {
+    return error.data.errors;
+  }
+  // storableError() plain objects use apiErrors
+  if (error.apiErrors) {
+    return error.apiErrors;
+  }
+  return [];
 };
 
 const responseApiErrorInfo = err =>
@@ -50,7 +61,27 @@ const responseApiErrorInfo = err =>
     status: e.status,
     code: e.code,
     meta: e.meta,
+    details: e.details,
   }));
+
+/**
+ * Sentry truncates nested plain objects in extra.__serialized__ (normalizeDepth),
+ * which turns apiErrors into useless "[Object]" strings. Always capture a real Error.
+ */
+const toCapturableError = e => {
+  if (e instanceof Error) {
+    return e;
+  }
+  const err = new Error(e?.message || 'Unknown error');
+  err.name = e?.name || 'Error';
+  if (e?.status != null) {
+    err.status = e.status;
+  }
+  if (e?.statusText != null) {
+    err.statusText = e.statusText;
+  }
+  return err;
+};
 
 /**
  * Logs a error. If Sentry client is set up
@@ -73,7 +104,7 @@ exports.error = (e, code, data, options = {}) => {
       Object.keys(extra).forEach(key => {
         scope.setExtra(key, extra[key]);
       });
-      Sentry.captureException(e);
+      Sentry.captureException(toCapturableError(e));
     });
   }
   // Let's log always to stdout

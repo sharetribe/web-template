@@ -391,6 +391,9 @@ export const speculateTransaction = (
   transitionName,
   isPrivilegedTransition
 ) => dispatch => {
+  // Errors are stored in Redux via rejectWithValue (and logged in the payload creator).
+  // Do not unwrap: fire-and-forget callers would otherwise get unhandled rejections of
+  // plain storableError objects, which Sentry serializes as apiErrors: ["[Object]"].
   return dispatch(
     speculateTransactionThunk({
       orderParams,
@@ -399,7 +402,7 @@ export const speculateTransaction = (
       transitionName,
       isPrivilegedTransition,
     })
-  ).unwrap();
+  );
 };
 
 ///////////////////////////
@@ -428,7 +431,8 @@ export const stripeCustomerThunk = createAsyncThunk(
 );
 // Backward compatible wrapper function for stripeCustomer
 export const stripeCustomer = () => dispatch => {
-  return dispatch(stripeCustomerThunk({})).unwrap();
+  // Same as speculateTransaction: avoid unhandled unwrap rejections for fire-and-forget callers.
+  return dispatch(stripeCustomerThunk({}));
 };
 
 // ================ Slice ================ //

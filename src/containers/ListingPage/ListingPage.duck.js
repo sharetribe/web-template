@@ -363,7 +363,10 @@ export const fetchTransactionLineItemsThunk = createAsyncThunk(
 );
 // Backward compatible wrapper for the thunk
 export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
-  return dispatch(fetchTransactionLineItemsThunk({ orderData, listingId, isOwnListing })).unwrap();
+  // Errors are stored in Redux via rejectWithValue (and logged in the payload creator).
+  // Do not unwrap: OrderPanel callers are fire-and-forget and would otherwise create
+  // unhandled rejections of plain storableError objects in Sentry.
+  return dispatch(fetchTransactionLineItemsThunk({ orderData, listingId, isOwnListing }));
 };
 
 // ================ Slice ================ //
