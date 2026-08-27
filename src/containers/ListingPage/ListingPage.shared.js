@@ -415,7 +415,6 @@ export const handleSubmit = parameters => values => {
   const {
     history,
     params,
-    currentUser,
     getListing,
     callSetInitialValues,
     onInitializeCardPaymentData,
@@ -473,8 +472,9 @@ export const handleSubmit = parameters => values => {
     confirmPaymentError: null,
   };
 
-  const saveToSessionStorage = !currentUser;
+  const saveToSessionStorage = true;
 
+  // Persist before navigation so a full reload (e.g. ChunkLoadError recovery) can resume checkout.
   // Customize the state of the CheckoutPage with the current listing and the selected orderData
   const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
   callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
