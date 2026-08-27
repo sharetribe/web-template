@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] richText.js: return coalesced strings instead of the previous array of strings.
+  [#916](https://github.com/sharetribe/web-template/pull/916)
 - [change] log.js: improve error handling and capture API errors better for Sentry.
   [#915](https://github.com/sharetribe/web-template/pull/915)
 - [fix] Add imgix.net to CSP / connect-src.
