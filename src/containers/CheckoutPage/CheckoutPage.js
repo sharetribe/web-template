@@ -25,7 +25,7 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 import { IconSpinner, NamedRedirect, Page, TopbarSimplified } from '../../components';
 
 // Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
-import { storeData, clearData, handlePageData } from './CheckoutPageSessionHelpers';
+import { clearData, handlePageData } from './CheckoutPageSessionHelpers';
 
 // Import modules from this directory
 import {
@@ -277,14 +277,8 @@ const CheckoutPage = props => {
   );
 };
 
-// setInitialValues is used to clear redux state and ensure it matches the data
-// of the listing the user is currently viewing
-CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
-  if (saveToSessionStorage) {
-    const { listing, orderData } = initialValues;
-    storeData(orderData, listing, null, STORAGE_KEY);
-  }
-  return setInitialValues(initialValues);
-};
+// Kept for callers that attach setInitialValues on the page component.
+// Route config uses pageDataLoadingAPI => CheckoutPage.duck setInitialValues (same behavior).
+CheckoutPage.setInitialValues = setInitialValues;
 
 export default CheckoutPage;

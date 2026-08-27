@@ -7,6 +7,10 @@ import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 import { setCurrentUserHasOrders, fetchCurrentUser } from '../../ducks/user.duck';
 
+import { storeData } from './CheckoutPageSessionHelpers';
+
+const CHECKOUT_PAGE_SESSION_KEY = 'CheckoutPage';
+
 // ================ Async thunks ================ //
 
 ////////////////////
@@ -518,8 +522,24 @@ const checkoutPageSlice = createSlice({
   },
 });
 
-// Export the action creators
-export const { setInitialValues } = checkoutPageSlice.actions;
+const { setInitialValues: setInitialValuesAction } = checkoutPageSlice.actions;
+
+/**
+ * Set CheckoutPage Redux state and optionally persist listing + order data to sessionStorage.
+ * Persistence lets checkout recover after a full page reload before the page mounts
+ * (e.g. ChunkLoadError auto-reload while navigating ListingPage → CheckoutPage).
+ *
+ * @param {Object} initialValues
+ * @param {boolean} [saveToSessionStorage=true]
+ * @returns {Object} Redux action
+ */
+export const setInitialValues = (initialValues, saveToSessionStorage = true) => {
+  if (saveToSessionStorage) {
+    const { listing, orderData, transaction } = initialValues;
+    storeData(orderData, listing, transaction || null, CHECKOUT_PAGE_SESSION_KEY);
+  }
+  return setInitialValuesAction(initialValues);
+};
 
 // Export the reducer
 export default checkoutPageSlice.reducer;
