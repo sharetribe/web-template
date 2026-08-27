@@ -38,8 +38,8 @@ const priceData = (price, currency, intl) => {
  *   - titleFormatted: React nodes from richText(title) for display
  *   - showPrice: whether to show the price block
  *   - priceTooltip: string for the price element's title attribute (tooltip on hover)
- *   - priceMessage: string or null for the price block content (same translation as used in cardAriaLabel when shown)
- *   - cardAriaLabel: ready-to-use aria-label for the card link (listing title + price line when shown)
+ *   - priceMessage: React nodes for the price block content (styled amount + per-unit)
+ *   - cardAriaLabel: ready-to-use aria-label for the card link (listing title + plain price line when shown)
  *   - authorName: "ListingCard.author" string containing author's display name
  */
 export const getListingCardTranslations = (listing, config, intl) => {
@@ -70,7 +70,7 @@ export const getListingCardTranslations = (listing, config, intl) => {
     ? intl.formatMessage({ id: 'ListingCard.perUnit' }, { unitType: publicData?.unitType })
     : '';
 
-  // Single formatted price line (amount + per-unit if applicable); used for both card aria and price block
+  // Visible price block uses JSX spans for styling; aria-label needs a plain string.
   const priceValue = <span className={css.priceValue}>{formattedPrice}</span>;
   const pricePerUnit = isBookable ? <span className={css.perUnit}>{perUnitString}</span> : '';
   const priceMessage =
@@ -78,11 +78,19 @@ export const getListingCardTranslations = (listing, config, intl) => {
       ? intl.formatMessage({ id: priceMessageId }, { priceValue, pricePerUnit })
       : '';
 
+  const priceMessagePlain =
+    showPrice && formattedPrice != null
+      ? intl.formatMessage(
+          { id: priceMessageId },
+          { priceValue: formattedPrice, pricePerUnit: perUnitString }
+        )
+      : '';
+
   const cardAriaLabel =
-    priceMessage.length > 0
+    priceMessagePlain.length > 0
       ? intl.formatMessage(
           { id: 'ListingCard.screenreader.label' },
-          { listingTitle: title, formattedPrice: priceMessage }
+          { listingTitle: title, formattedPrice: priceMessagePlain }
         )
       : title;
 
