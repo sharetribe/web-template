@@ -93,7 +93,7 @@ export const updatePaymentMethod = stripePaymentMethodId => (dispatch, getState,
       return dispatch(addPaymentMethod(stripePaymentMethodId));
     })
     .catch(e => {
-      log.error(storableError(e), 'updating-payment-method-failed');
+      log.error(e, 'updating-payment-method-failed');
     });
 };
 

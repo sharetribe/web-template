@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] log.js: improve error handling and capture API errors better for Sentry.
+  [#915](https://github.com/sharetribe/web-template/pull/915)
 - [fix] Add imgix.net to CSP / connect-src.
   [#914](https://github.com/sharetribe/web-template/pull/914)
 - [change] LoadableComponentErrorBoundary.js: add auto-reload and persist listing order data to
