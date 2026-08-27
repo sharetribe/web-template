@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] LoadableComponentErrorBoundary.js: add auto-reload and persist listing order data to
+  sessionStorage on ListingPage. [#913](https://github.com/sharetribe/web-template/pull/913)
 - [fix] CustomLinksMenu: post-a-new-listing link was not hidden after signup.
   [#912](https://github.com/sharetribe/web-template/pull/912)
 - [fix] Topbar: search form keeps modified value on mobile layout over modal re-opening.
