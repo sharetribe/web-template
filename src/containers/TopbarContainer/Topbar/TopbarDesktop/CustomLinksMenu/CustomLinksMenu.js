@@ -136,6 +136,8 @@ const CustomLinksMenu = ({
   }, []);
 
   // Resync when create-listing visibility changes (e.g. after signup / user type loads).
+  // Also runs when TopbarDesktop flips from the anonymous hydration-safe value to the
+  // user-specific one after mount.
   useEffect(() => {
     // Skip first run: useState already seeded links from the initial prop values.
     if (isInitialMount.current) {
