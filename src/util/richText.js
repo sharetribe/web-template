@@ -190,5 +190,5 @@ export const richText = (text, options) => {
     return acc.concat(nextParts);
   }, []);
   const coalescedParts = coalesceAdjacentStrings(parts);
-  return coalescedParts.length === 1 ? coalescedParts[0] : parts;
+  return coalescedParts.length === 1 ? coalescedParts[0] : coalescedParts;
 };
