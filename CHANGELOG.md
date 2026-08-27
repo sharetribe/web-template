@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] CustomLinksMenu: post-a-new-listing link was not hidden after signup.
+  [#912](https://github.com/sharetribe/web-template/pull/912)
 - [fix] Topbar: search form keeps modified value on mobile layout over modal re-opening.
   [#911](https://github.com/sharetribe/web-template/pull/911)
 - [change] richText.js: coalesce adjacent strings to avoid multiple spaces between words.

@@ -131,8 +131,9 @@ const setCause = (error, cause) => {
   setCauseIfNoExistingCause(error, cause);
 };
 
-export const onRecoverableError = (e, componentStack) => {
-  let data = {};
+export const onRecoverableError = (e, errorInfo) => {
+  const data = {};
+  const componentStack = errorInfo?.componentStack;
 
   if (componentStack) {
     // Generating this synthetic error allows monitoring services to apply sourcemaps
@@ -147,6 +148,5 @@ export const onRecoverableError = (e, componentStack) => {
     data.componentStack = componentStack;
   }
 
-  // Replace with your error monitoring service.
-  error(error, 'recoverable-error', data);
+  error(e, 'recoverable-error', data);
 };

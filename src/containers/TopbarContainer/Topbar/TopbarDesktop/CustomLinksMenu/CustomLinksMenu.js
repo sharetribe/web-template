@@ -125,10 +125,39 @@ const CustomLinksMenu = ({
     menuLinks: [],
     containerWidth: 0,
   });
+  // Avoid resetting links on the initial mount (useState already initializes them).
+  const isInitialMount = useRef(true);
+  // Topbar rebuilds customLinks every render; read latest value without depending on the array ref.
+  const customLinksRef = useRef(customLinks);
+  customLinksRef.current = customLinks;
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Resync when create-listing visibility changes (e.g. after signup / user type loads).
+  // Also runs when TopbarDesktop flips from the anonymous hydration-safe value to the
+  // user-specific one after mount.
+  useEffect(() => {
+    // Skip first run: useState already seeded links from the initial prop values.
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    // Rebuild the measured-links list so "Post a new listing" is added/removed to match
+    // accountLinksVisibility.postListings (stale useState would keep the old entry).
+    setLinks([
+      ...createListingLinkConfigMaybe(intl, showCreateListingsLink),
+      ...customLinksRef.current,
+    ]);
+    // Clear grouping so ResizeObserver + PriorityLinks remeasure against the new list.
+    setLayoutData({
+      priorityLinks: [],
+      menuLinks: [],
+      containerWidth: 0,
+    });
+  }, [showCreateListingsLink, intl]);
 
   useEffect(() => {
     let animationFrameId = null;
