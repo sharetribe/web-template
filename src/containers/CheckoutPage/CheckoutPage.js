@@ -18,7 +18,11 @@ import { requireListingImage } from '../../util/configHelpers';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import {
+  confirmCardPayment,
+  confirmRedirectPayment,
+  retrievePaymentIntent,
+} from '../../ducks/stripe.duck';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
 // Import shared components
@@ -68,6 +72,7 @@ const CheckoutPageComponent = props => {
     params,
     scrollingDisabled,
     speculateTransactionInProgress,
+    speculatedTransaction,
     onInquiryWithoutPayment,
     initiateOrderError,
     pageData,
@@ -80,6 +85,8 @@ const CheckoutPageComponent = props => {
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
+  const hasSpeculatedTransactionForRender =
+    !speculateTransactionInProgress || speculatedTransaction?.id;
 
   // Handle redirection to ListingPage if required data is not available
   const listing = pageData?.listing;
@@ -120,7 +127,7 @@ const CheckoutPageComponent = props => {
       transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
-  ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
+  ) : processName && !isInquiryProcess && hasSpeculatedTransactionForRender ? (
     <CheckoutPageWithPayment
       config={config}
       routeConfiguration={routeConfiguration}
@@ -205,6 +212,10 @@ const CheckoutPage = props => {
   const onConfirmCardPayment = useCallback(params => dispatch(confirmCardPayment(params)), [
     dispatch,
   ]);
+  const onConfirmRedirectPayment = useCallback(params => dispatch(confirmRedirectPayment(params)), [
+    dispatch,
+  ]);
+
   const onConfirmPayment = useCallback(
     (transactionId, transitionName, transitionParams) =>
       dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
@@ -264,6 +275,7 @@ const CheckoutPage = props => {
       onInitiateOrder={onInitiateOrder}
       onRetrievePaymentIntent={onRetrievePaymentIntent}
       onConfirmCardPayment={onConfirmCardPayment}
+      onConfirmRedirectPayment={onConfirmRedirectPayment}
       onConfirmPayment={onConfirmPayment}
       onFetchTransaction={onFetchTransaction}
       onSavePaymentMethod={onSavePaymentMethod}
