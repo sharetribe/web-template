@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v12.3.0] 2026-08-31
+
 - [fix] EditListingPage: fix a bug with listing image ids (duplicates were not removed on some edge
   cases). [#919](https://github.com/sharetribe/web-template/pull/919)
 - [fix] Menu.js: this.menu is null when the component is unmounting (ref callback receives null).
@@ -40,6 +42,8 @@ way to update this template, but currently, we follow a pattern:
   [#907](https://github.com/sharetribe/web-template/pull/907)
 - [add] Add currently available translations for DE, ES, FR.
   [#906](https://github.com/sharetribe/web-template/pull/906)
+
+  [v12.3.0]: https://github.com/sharetribe/web-template/compare/v12.2.0...v12.3.0
 
 ## [v12.2.0] 2026-08-13
 
