@@ -120,6 +120,10 @@ class Menu extends Component {
   onBlur(event) {
     // FocusEvent is fired faster than the link elements native click handler
     // gets its own event. Therefore, we need to check the origin of this FocusEvent.
+    // this.menu is null when the component is unmounting (ref callback receives null).
+    if (!this.menu) {
+      return;
+    }
     if (!this.menu.contains(event.relatedTarget)) {
       const { isOpen = null, onToggleActive = null } = this.props;
 

@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Menu.js: this.menu is null when the component is unmounting (ref callback receives null).
+  [#918](https://github.com/sharetribe/web-template/pull/918)
 - [fix] ListingCard: aria-label was not showing the price value.
   [#917](https://github.com/sharetribe/web-template/pull/917)
 - [fix] richText.js: return coalesced strings instead of the previous array of strings.
