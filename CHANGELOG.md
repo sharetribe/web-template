@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] EditListingPage: fix a bug with listing image ids (duplicates were not removed on some edge
+  cases). [#919](https://github.com/sharetribe/web-template/pull/919)
 - [fix] Menu.js: this.menu is null when the component is unmounting (ref callback receives null).
   [#918](https://github.com/sharetribe/web-template/pull/918)
 - [fix] ListingCard: aria-label was not showing the price value.

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { omit } from '../../util/common';
 import { types as sdkTypes, file as sdkFile, createImageVariantConfig } from '../../util/sdkLoader';
+import { uniqueListingImageApiIds } from './EditListingPage.shared';
 import { denormalisedResponseEntities } from '../../util/data';
 import {
   getDefaultTimeZoneOnBrowser,
@@ -40,12 +41,8 @@ const getArrayOfNItems = n =>
     .map((v, i) => i + 1)
     .slice(1);
 
-// Return an array of image ids
-const imageIds = images => {
-  // For newly uploaded image the UUID can be found from "img.imageId"
-  // and for existing listing images the id is "img.id"
-  return images ? images.map(img => img.imageId || img.id) : null;
-};
+// Return a de-duplicated array of image ids for the API call
+const imageIds = uniqueListingImageApiIds;
 
 // After listing creation & update, we want to make sure that uploadedImages state is cleaned
 const updateUploadedImagesState = (state, payload) => {

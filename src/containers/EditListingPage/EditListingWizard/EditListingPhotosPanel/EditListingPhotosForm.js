@@ -12,6 +12,7 @@ import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
+import { listingImageIdentifierStrings } from '../../EditListingPage.shared';
 
 // Import shared components
 import { Button, Form, AspectRatioWrapper, NamedLink } from '../../../../components';
@@ -21,12 +22,6 @@ import ListingImage from './ListingImage';
 import css from './EditListingPhotosForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
-
-// Matches an image across id/imageId as since which one is set changes over its lifecycle
-const imageIdentifiers = image =>
-  [image?.id, image?.imageId]
-    .map(idValue => (typeof idValue === 'string' ? idValue : idValue?.uuid))
-    .filter(Boolean);
 
 // Split out of the main bundle - only fetched once this form actually mounts.
 const Sortable = loadable.lib(() => import(/* webpackChunkName: "sortablejs" */ 'sortablejs'));
@@ -262,12 +257,12 @@ export const EditListingPhotosForm = props => {
     if (!form || propsImages.length === 0) {
       return;
     }
-    const currentImages = form.getState().values.images || [];
     propsImages.forEach(image => {
-      const ids = imageIdentifiers(image);
+      const currentImages = form.getState().values.images || [];
+      const ids = listingImageIdentifierStrings(image);
       // Find index of this image in the form's current images if it exists
       const index = currentImages.findIndex(existing =>
-        imageIdentifiers(existing).some(id => ids.includes(id))
+        listingImageIdentifierStrings(existing).some(id => ids.includes(id))
       );
       if (index === -1) {
         // New upload, not in the form yet
