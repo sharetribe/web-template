@@ -20,6 +20,7 @@ import {
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { ensureOwnListing } from '../../util/data';
+import { listingImageApiId, listingImageIdString } from './EditListingPage.shared';
 import { hasPermissionToPostListings, isUserAuthorized } from '../../util/userHelpers';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
@@ -76,20 +77,24 @@ const pickRenderableImages = (
   // Images not yet connected to the listing
   const unattachedImages = uploadedImageIdsInOrder.map(i => uploadedImages[i]);
   const allImages = currentListingImages.concat(unattachedImages);
+  const removedImageIdStrings = new Set(removedImageIds.map(listingImageIdString).filter(Boolean));
 
   const pickImagesAndIds = (imgs, img) => {
-    const imgId = img.imageId || img.id;
+    const apiId = listingImageApiId(img);
+    const idString = listingImageIdString(apiId);
     // Pick only unique images that are not marked to be removed
-    const shouldInclude = !imgs.imageIds.includes(imgId) && !removedImageIds.includes(imgId);
+    const shouldInclude =
+      idString && !imgs.imageIdStrings.has(idString) && !removedImageIdStrings.has(idString);
     if (shouldInclude) {
       imgs.imageEntities.push(img);
-      imgs.imageIds.push(imgId);
+      imgs.imageIdStrings.add(idString);
     }
     return imgs;
   };
 
   // Return array of image entities. Something like: [{ id, imageId, type, attributes }, ...]
-  return allImages.reduce(pickImagesAndIds, { imageEntities: [], imageIds: [] }).imageEntities;
+  return allImages.reduce(pickImagesAndIds, { imageEntities: [], imageIdStrings: new Set() })
+    .imageEntities;
 };
 
 /**
