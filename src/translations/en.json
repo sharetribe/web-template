@@ -202,6 +202,8 @@
   "EditListingAvailabilityExceptionForm.exceptionEndDateLabel": "Ends",
   "EditListingAvailabilityExceptionForm.exceptionStartDateLabel": "Starts",
   "EditListingAvailabilityExceptionForm.notAvailable": "Not available",
+  "EditListingAvailabilityExceptionForm.screenreader.endTimeLabel": "End time",
+  "EditListingAvailabilityExceptionForm.screenreader.startTimeLabel": "Start time",
   "EditListingAvailabilityExceptionForm.title": "Add an availability exception",
   "EditListingAvailabilityPanel.WeeklyCalendar.available": "Available",
   "EditListingAvailabilityPanel.WeeklyCalendar.exception": "Exception: {exception}",

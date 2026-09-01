@@ -2244,9 +2244,9 @@ describe('EditListingPage', () => {
     ).toBeInTheDocument();
   }, 10000);
 
-  // 'fixed' unit type renders FieldSelectPopup instead of the native <select> the 'hour' test
-  // above exercises, so this parallels that test's shape but swaps its `.selected`/
-  // native-<option> assertions for the custom popup's own open/select/update interaction.
+  // 'fixed' unit type renders FieldSelectPopup instead of a native <select>, so this test checks
+  // the custom popup's own open/select/update interaction rather than `.selected`/native-<option>
+  // assertions.
   it('Booking (fixed): edit flow on availability tab', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesBookingFixed, listingFieldsBooking);
@@ -2318,9 +2318,9 @@ describe('EditListingPage', () => {
 
     expect(getByText('EditListingAvailabilityPlanForm.title')).toBeInTheDocument();
 
-    // Monday is checked and already has a start/end time selected. Its triggers show the
-    // selected values' localized labels, same underlying data the 'hour' test above asserts via
-    // `.selected`, but read here off the custom popup's own trigger button.
+    // Monday is checked and already has a start/end time selected, read off the custom popup's
+    // own trigger button. The accessible name is "{dayOfWeek} start/end time {value}", matched
+    // by regex on the value alone so this doesn't couple to the exact label wording.
     const monday = getByRole('checkbox', {
       name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i,
     });
@@ -2353,6 +2353,38 @@ describe('EditListingPage', () => {
     expect(
       getByRole('button', { name: 'EditListingAvailabilityPlanForm.saveSchedule' })
     ).toBeEnabled();
+
+    // Test interaction: close plan modal
+    await user.click(getByRole('button', { name: /Modal.close/i }));
+
+    // Test interaction: open availability exception modal. Driving the date picker to reach real
+    // (non-placeholder) exception time options is a pre-existing gap (see the "TODO Testing date
+    // pickers needs more work" note above), so this only confirms that a 'fixed' listing's
+    // exception time fields render FieldSelectPopup instead of a native <select>.
+    await user.click(getByRole('button', { name: /EditListingAvailabilityPanel.addException/i }));
+
+    expect(getByText('EditListingAvailabilityExceptionForm.title')).toBeInTheDocument();
+    expect(
+      getByText('EditListingAvailabilityExceptionForm.exceptionStartDateLabel')
+    ).toBeInTheDocument();
+    expect(
+      getByText('EditListingAvailabilityExceptionForm.exceptionEndDateLabel')
+    ).toBeInTheDocument();
+
+    // Both exception time triggers render as FieldSelectPopup's custom button
+    // (`aria-haspopup="listbox"`), not a native <select>, and start disabled since no exception
+    // start date has been picked yet. Each has an informative accessible name (a visually hidden
+    // `label`), matched here by translation key since test messages render as their own id.
+    const exceptionStartTimeTrigger = screen.getByRole('button', {
+      name: /EditListingAvailabilityExceptionForm\.screenreader\.startTimeLabel/,
+    });
+    const exceptionEndTimeTrigger = screen.getByRole('button', {
+      name: /EditListingAvailabilityExceptionForm\.screenreader\.endTimeLabel/,
+    });
+    [exceptionStartTimeTrigger, exceptionEndTimeTrigger].forEach(trigger => {
+      expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
+      expect(trigger).toBeDisabled();
+    });
   }, 10000);
 
   it('Booking (day): edit flow on photos tab', async () => {
