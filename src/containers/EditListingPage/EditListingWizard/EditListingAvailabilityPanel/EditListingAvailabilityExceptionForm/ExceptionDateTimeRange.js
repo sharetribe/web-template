@@ -22,7 +22,7 @@ import {
 } from '../../../../../util/dates';
 import { exceptionFreeSlotsPerDate } from '../../../../../util/generators';
 import { bookingDateRequired } from '../../../../../util/validators';
-import { FieldSingleDatePicker, FieldSelect } from '../../../../../components';
+import { FieldSingleDatePicker, FieldSelect, FieldSelectPopup } from '../../../../../components';
 
 import {
   getStartOfNextMonth,
@@ -190,7 +190,19 @@ const getAllTimeValues = ({
   const endTimes = getAvailableEndTimes(params);
   const endTime = endTimes?.[0]?.timestamp || null;
 
-  return { startTime, endDate, endTime, selectedSlot };
+  // A native <select>'s DOM value is always a string, but `startTimes[0].timestamp`/
+  // `endTimes[0].timestamp` above (used when auto-suggesting a default rather than reflecting a
+  // user pick) are raw numbers. React's controlled <select> tolerates that mismatch, but
+  // FieldSelectPopup's plain `option.value === input.value` check does not, so a number here
+  // would silently fail to show as selected. Stringifying both here, once, keeps
+  // `exceptionStartTime`/`exceptionEndTime` consistently string-typed regardless of which path
+  // set them, matching the option values' own `String(p.timestamp)` (see the render below).
+  return {
+    startTime: startTime != null ? String(startTime) : startTime,
+    endDate,
+    endTime: endTime != null ? String(endTime) : endTime,
+    selectedSlot,
+  };
 };
 
 // Prop function for DatePicker component: check if the day is blocked
@@ -366,6 +378,10 @@ const ExceptionDateTimeRange = props => {
   } = props;
 
   const idPrefix = `${formId}` || 'EditListingAvailabilityExceptionForm';
+  // FieldSelectPopup caps the dropdown's height instead of letting the native <select> popup
+  // fill the viewport. Only the incremental-boundaries (15-minute) time list actually gets long
+  // enough (up to 96 options) for that to matter.
+  const TimeSelectField = useIncrementalBoundaries ? FieldSelectPopup : FieldSelect;
   const { exceptionStartDate, exceptionStartTime = null, exceptionEndDate } = values;
   const exceptionStartDay = extractDateFromFieldDateInput(exceptionStartDate);
   const exceptionEndDay = extractDateFromFieldDateInput(exceptionEndDate);
@@ -440,6 +456,19 @@ const ExceptionDateTimeRange = props => {
 
   const startOfToday = getStartOf(TODAY, 'day', timeZone);
 
+  // Informative accessible names for the start/end time fields. This form is keyed to a specific
+  // selected date, not a day of week, and there's no shared sighted-only heading here, so the
+  // label is visually hidden purely to avoid introducing new visible text. The current value
+  // itself isn't repeated in this string, since FieldSelectPopup's own aria-labelledby composition
+  // (label + current value) and a native <select>'s separately announced selected <option> both
+  // already supply it.
+  const startTimeAriaLabel = intl.formatMessage({
+    id: 'EditListingAvailabilityExceptionForm.screenreader.startTimeLabel',
+  });
+  const endTimeAriaLabel = intl.formatMessage({
+    id: 'EditListingAvailabilityExceptionForm.screenreader.endTimeLabel',
+  });
+
   return (
     <>
       <div className={css.formRow}>
@@ -481,10 +510,17 @@ const ExceptionDateTimeRange = props => {
           />
         </div>
         <div className={css.field}>
-          <FieldSelect
+          <TimeSelectField
             name="exceptionStartTime"
             id={`${idPrefix}.exceptionStartTime`}
+            label={startTimeAriaLabel}
+            labelClassName={css.srOnlyLabel}
             className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
+            // .select/.selectDisabled's down-only caret is reused unmodified so FieldSelectPopup's
+            // trigger matches it too, rather than keeping the component's own default chevron.
+            // Also supplies the padding-left this trigger needs to clear .fieldSelect::after's
+            // clock icon. One class does both jobs since neither declares its own
+            // background-position, so it composes with whichever base position is already set.
             selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
             disabled={startTimeDisabled}
             onChange={value =>
@@ -493,14 +529,20 @@ const ExceptionDateTimeRange = props => {
           >
             {exceptionStartDay ? (
               availableStartTimes.map(p => (
-                <option key={p.timestamp} value={p.timestamp}>
+                // FieldSelectPopup reads `value` as a plain JS prop (unlike a real <select>, which
+                // always coerces an option's DOM value to a string), so stringifying here keeps
+                // `exceptionStartTime` the same string-typed timestamp downstream code already
+                // expects (see the getAllTimeValues/timestampToDate chain below).
+                <option key={p.timestamp} value={String(p.timestamp)}>
                   {p.timeOfDay}
                 </option>
               ))
             ) : (
-              <option>{placeholderTime}</option>
+              <option disabled value="">
+                {placeholderTime}
+              </option>
             )}
-          </FieldSelect>
+          </TimeSelectField>
         </div>
       </div>
       <div className={css.formRow}>
@@ -536,9 +578,11 @@ const ExceptionDateTimeRange = props => {
           />
         </div>
         <div className={css.field}>
-          <FieldSelect
+          <TimeSelectField
             name="exceptionEndTime"
             id={`${idPrefix}.exceptionEndTime`}
+            label={endTimeAriaLabel}
+            labelClassName={css.srOnlyLabel}
             className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
             selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
             disabled={endTimeDisabled}
@@ -548,15 +592,17 @@ const ExceptionDateTimeRange = props => {
                 const isLastIndex = i === availableEndTimes.length - 1;
                 const timeOfDay = p.timeOfDay === '00:00' && isLastIndex ? '24:00' : p.timeOfDay;
                 return (
-                  <option key={p.timestamp} value={p.timestamp}>
+                  <option key={p.timestamp} value={String(p.timestamp)}>
                     {timeOfDay}
                   </option>
                 );
               })
             ) : (
-              <option>{placeholderTime}</option>
+              <option disabled value="">
+                {placeholderTime}
+              </option>
             )}
-          </FieldSelect>
+          </TimeSelectField>
         </div>
       </div>
     </>

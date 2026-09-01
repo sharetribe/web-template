@@ -140,3 +140,17 @@
   composes: select;
   background-image: url('data:image/svg+xml;utf8,<svg width="10" height="6" xmlns="http://www.w3.org/2000/svg"><path d="M4.686 5.315a.445.445 0 00.628 0L8.87 1.759a.444.444 0 10-.629-.628L5 4.37 1.759 1.13a.444.444 0 10-.628.628l3.555 3.556z" fill="%23E6E6E6" stroke="%23E6E6E6" fill-rule="evenodd"/></svg>');
 }
+
+/* Visually hidden but still reachable by assistive tech (unlike `visibility: hidden`, which hides
+ * from screen readers too). Gives each start/end time field its own accessible name without
+ * adding new sighted-visible text next to these fields, which currently have none at all. */
+.srOnlyLabel {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+}
