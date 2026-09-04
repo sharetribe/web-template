@@ -18,12 +18,6 @@ const timeOptions = Array.from({ length: 24 * 4 }, (_, i) => {
   return { value, label };
 });
 
-const timeOptionElements = timeOptions.map(({ value, label }) => (
-  <option value={value} key={value}>
-    {label}
-  </option>
-));
-
 const FormComponent = props => (
   <FinalForm
     {...props}
@@ -44,10 +38,8 @@ const FormComponent = props => (
             name="timeSelect1"
             label="Choose a time:"
             validate={required}
-          >
-            <option value="">Choose a time</option>
-            {timeOptionElements}
-          </FieldSelectPopup>
+            options={[{ value: '', label: 'Choose a time' }, ...timeOptions]}
+          />
           <Button style={{ marginTop: 24 }} type="submit" disabled={submitDisabled}>
             Submit
           </Button>
@@ -80,10 +72,13 @@ const DisabledFormComponent = props => (
       const { handleSubmit } = fieldRenderProps;
       return (
         <form onSubmit={handleSubmit}>
-          <FieldSelectPopup id="timeSelect2" name="timeSelect2" label="Disabled:" disabled>
-            <option value="">Choose a time</option>
-            {timeOptionElements}
-          </FieldSelectPopup>
+          <FieldSelectPopup
+            id="timeSelect2"
+            name="timeSelect2"
+            label="Disabled:"
+            disabled
+            options={[{ value: '', label: 'Choose a time' }, ...timeOptions]}
+          />
         </form>
       );
     }}

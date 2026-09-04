@@ -1,22 +1,3 @@
-import { Children } from 'react';
-
-/**
- * Reads the <option> children passed to FieldSelectPopup (the same children a native <select>
- * would take) into a plain array of { value, label, disabled } objects the component can render
- * its own trigger/list markup from.
- *
- * @param {ReactNode} children <option> elements
- * @returns {Array<{value: string, label: ReactNode, disabled: boolean}>}
- */
-export const optionsFromChildren = children =>
-  Children.toArray(children)
-    .filter(child => child.type === 'option')
-    .map(child => ({
-      value: child.props.value,
-      label: child.props.children,
-      disabled: !!child.props.disabled,
-    }));
-
 /**
  * Walks up from the trigger to find the nearest ancestor that clips vertical overflow (a scroll
  * container like a Modal's scroll layer, or any other `overflow: auto/scroll/hidden` ancestor).

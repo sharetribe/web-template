@@ -1,64 +1,6 @@
-import {
-  optionsFromChildren,
-  getScrollBoundary,
-  moveHighlight,
-  findTypeaheadMatch,
-} from './FieldSelectPopup.helpers';
+import { getScrollBoundary, moveHighlight, findTypeaheadMatch } from './FieldSelectPopup.helpers';
 
 describe('FieldSelectPopup helpers', () => {
-  describe('optionsFromChildren(children)', () => {
-    it('maps <option> elements into { value, label, disabled } objects, preserving order', () => {
-      const children = [
-        <option value="09:00">9:00 AM</option>,
-        <option value="09:15">9:15 AM</option>,
-      ];
-      expect(optionsFromChildren(children)).toEqual([
-        { value: '09:00', label: '9:00 AM', disabled: false },
-        { value: '09:15', label: '9:15 AM', disabled: false },
-      ]);
-    });
-
-    it('marks an option with the disabled prop as disabled: true', () => {
-      const children = [
-        <option disabled value="">
-          Choose start time
-        </option>,
-      ];
-      expect(optionsFromChildren(children)).toEqual([
-        { value: '', label: 'Choose start time', disabled: true },
-      ]);
-    });
-
-    it('filters out non-<option> children', () => {
-      const children = [
-        <option value="09:00">9:00 AM</option>,
-        <span>not an option</span>,
-        null,
-        false,
-      ];
-      expect(optionsFromChildren(children)).toEqual([
-        { value: '09:00', label: '9:00 AM', disabled: false },
-      ]);
-    });
-
-    it('accepts a single <option> passed directly, not wrapped in an array', () => {
-      expect(optionsFromChildren(<option value="09:00">9:00 AM</option>)).toEqual([
-        { value: '09:00', label: '9:00 AM', disabled: false },
-      ]);
-    });
-
-    it('returns an empty array when there are no children', () => {
-      expect(optionsFromChildren(undefined)).toEqual([]);
-      expect(optionsFromChildren(null)).toEqual([]);
-      expect(optionsFromChildren([])).toEqual([]);
-    });
-
-    it('coerces a missing disabled prop to false rather than undefined', () => {
-      const [option] = optionsFromChildren([<option value="09:00">9:00 AM</option>]);
-      expect(option.disabled).toBe(false);
-    });
-  });
-
   describe('getScrollBoundary(element)', () => {
     afterEach(() => {
       document.body.innerHTML = '';
