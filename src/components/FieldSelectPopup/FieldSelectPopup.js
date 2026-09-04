@@ -4,12 +4,7 @@ import classNames from 'classnames';
 
 import { OutsideClickHandler, ValidationError, HelpText } from '../../components';
 
-import {
-  optionsFromChildren,
-  getScrollBoundary,
-  moveHighlight,
-  findTypeaheadMatch,
-} from './FieldSelectPopup.helpers';
+import { getScrollBoundary, moveHighlight, findTypeaheadMatch } from './FieldSelectPopup.helpers';
 import css from './FieldSelectPopup.module.css';
 
 const FieldSelectPopupComponent = props => {
@@ -23,7 +18,7 @@ const FieldSelectPopupComponent = props => {
     helpText,
     input,
     meta,
-    children,
+    options = [],
     onChange,
     onToggleActive,
     showLabelAsDisabled,
@@ -43,8 +38,10 @@ const FieldSelectPopupComponent = props => {
   // (`top: 100%` vs `bottom: 100%`) is in effect; no pixel math needed.
   const [openAbove, setOpenAbove] = useState(false);
   // The keyboard-highlighted option index, independent of `input.value` (the committed
-  // selection). -1 means "no highlight" (always true while closed). Drives the visual
-  // `.popupOptionHighlighted` class and `aria-activedescendant`.
+  // selection). -1 means "no highlight" (always true while closed). Drives both the visual
+  // `.popupOptionHighlighted` class and `aria-activedescendant`: DOM focus itself never leaves the
+  // trigger button, so closing on blur (tabbing away) can coexist with clicking an option without
+  // one breaking the other.
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   // Set synchronously (not via state, see `handleKeyUp`'s comment below) whenever an Escape
   // keydown closes the popup, so the matching keyup (a separate DOM event this component can't
@@ -71,7 +68,6 @@ const FieldSelectPopupComponent = props => {
   // field has been touched and the validation has failed.
   const hasError = touched && invalid && error;
 
-  const options = optionsFromChildren(children);
   const selectedOption = options.find(o => o.value === input.value);
   const enabledIndices = options.reduce((acc, o, i) => (o.disabled ? acc : [...acc, i]), []);
 
@@ -93,11 +89,12 @@ const FieldSelectPopupComponent = props => {
     setHighlightedIndex(selectedIndex !== -1 ? selectedIndex : enabledIndices[0] ?? -1);
   }, [isOpen]);
 
-  // Keeps the keyboard-highlighted option in view while navigating, the same way native <select>
-  // scrolls to the current value on open.
-  // Sets `scrollTop` directly instead of `node.scrollIntoView({ block: 'center' })`: scrollIntoView
+  // Preserves the "opens scrolled to the current value" behavior a native <select> gives for
+  // free, now that the list can be taller than fits on screen (see .popupList's max-height
+  // below), and keeps the keyboard-highlighted option in view the same way while navigating.
+  // Sets `list.scrollTop` directly instead of `node.scrollIntoView({ block: 'center' })`, which
   // also scrolled a wrapping Modal's own scroll layer, causing a visible jump. Clamped to the
-  // list's own scrollable range so an option near the top/bottom doesn't overscroll.
+  // list's own scrollable range so an option near the very top/bottom doesn't overscroll.
   useEffect(() => {
     if (!isOpen || !listRef.current || highlightedIndex === -1) {
       return;
@@ -256,7 +253,8 @@ const FieldSelectPopupComponent = props => {
   // Closes the popup when focus moves away from the trigger (e.g. tabbing away), in addition to
   // the outside-click handling below. Clicking an option doesn't blur the trigger first, since
   // `.popupList`'s `onMouseDown` below prevents the browser's default focus-shifting behavior for
-  // mousedown on a non-focusable descendant.
+  // mousedown on a non-focusable descendant, so this only ever fires for a genuine "focus left
+  // the trigger" event, never as a side effect of clicking an option.
   const handleBlur = event => {
     input.onBlur(event);
     if (isOpen) {
@@ -375,7 +373,8 @@ const FieldSelectPopupComponent = props => {
  * @param {string} props.name Name of the input in Final Form
  * @param {string} props.id Label is optional, but if it is given, an id is also required so the label can reference the input in the `for` attribute
  * @param {ReactNode} props.label
- * @param {ReactNode} props.children <option> elements; the first should be a disabled placeholder
+ * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options options to
+ * render; the first should be a disabled placeholder
  * @param {boolean} props.disabled Whether the trigger is disabled
  * @param {boolean} props.showLabelAsDisabled Whether the label is disabled
  * @param {Function?} props.onToggleActive Called with the new open/closed boolean, so a caller can

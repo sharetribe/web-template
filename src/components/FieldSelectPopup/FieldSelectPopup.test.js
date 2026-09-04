@@ -27,14 +27,13 @@ const FormComponent = ({ onToggleActive, ...props }) => (
             label="Start time"
             validate={required}
             onToggleActive={onToggleActive}
-          >
-            <option disabled value="">
-              Choose start time
-            </option>
-            <option value="09:00">9:00 AM</option>
-            <option value="09:15">9:15 AM</option>
-            <option value="09:30">9:30 AM</option>
-          </FieldSelectPopup>
+            options={[
+              { value: '', label: 'Choose start time', disabled: true },
+              { value: '09:00', label: '9:00 AM' },
+              { value: '09:15', label: '9:15 AM' },
+              { value: '09:30', label: '9:30 AM' },
+            ]}
+          />
           <button type="submit" disabled={submitDisabled}>
             Submit
           </button>
@@ -346,18 +345,20 @@ describe('FieldSelectPopup', () => {
                 name="startTime"
                 label="Start time"
                 onToggleActive={onToggleActive}
-              >
-                <option disabled value="">
-                  Choose start time
-                </option>
-                <option value="09:15">9:15 AM</option>
-              </FieldSelectPopup>
-              <FieldSelectPopup id="otherTime" name="otherTime" label="Other time">
-                <option disabled value="">
-                  Choose other time
-                </option>
-                <option value="10:00">10:00 AM</option>
-              </FieldSelectPopup>
+                options={[
+                  { value: '', label: 'Choose start time', disabled: true },
+                  { value: '09:15', label: '9:15 AM' },
+                ]}
+              />
+              <FieldSelectPopup
+                id="otherTime"
+                name="otherTime"
+                label="Other time"
+                options={[
+                  { value: '', label: 'Choose other time', disabled: true },
+                  { value: '10:00', label: '10:00 AM' },
+                ]}
+              />
             </form>
           )}
         />
@@ -602,16 +603,19 @@ describe('FieldSelectPopup', () => {
         formId="test"
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <FieldSelectPopup id="test.startTime" name="startTime" label="Start time">
-              <option disabled value="">
-                9 - Choose start time
-              </option>
-              <option value="09:00">9:00 AM</option>
-              <option value="09:15">9:15 AM</option>
-              <option value="09:30">9:30 AM</option>
-              <option value="13:00">1:00 PM</option>
-              <option value="12:00">12:00 PM</option>
-            </FieldSelectPopup>
+            <FieldSelectPopup
+              id="test.startTime"
+              name="startTime"
+              label="Start time"
+              options={[
+                { value: '', label: '9 - Choose start time', disabled: true },
+                { value: '09:00', label: '9:00 AM' },
+                { value: '09:15', label: '9:15 AM' },
+                { value: '09:30', label: '9:30 AM' },
+                { value: '13:00', label: '1:00 PM' },
+                { value: '12:00', label: '12:00 PM' },
+              ]}
+            />
           </form>
         )}
       />
