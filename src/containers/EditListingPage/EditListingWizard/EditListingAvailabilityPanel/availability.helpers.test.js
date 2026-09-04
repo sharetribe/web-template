@@ -2,6 +2,7 @@ import {
   getParsedHourMinutes,
   getTotalMinutesFromTime,
   compareEntriesByStartTime,
+  getEntryBoundaries,
 } from './availability.helpers';
 
 describe('availability helpers', () => {
@@ -53,6 +54,50 @@ describe('availability helpers', () => {
       const set = { startTime: '09:00', endTime: '10:00' };
       expect(compareEntriesByStartTime()(unset, set)).toEqual(0);
       expect(compareEntriesByStartTime(-1)(unset, set)).toEqual(-1);
+    });
+  });
+
+  describe('getEntryBoundaries(entries, options)', () => {
+    it('excludes the entry at the given index from its own boundaries', () => {
+      const entries = [{ startTime: '09:00', endTime: '10:00' }];
+      const getStart = getEntryBoundaries(entries, {
+        findStartTimes: true,
+        useIncrementalBoundaries: true,
+      });
+      expect(getStart(0)).toEqual([]);
+    });
+
+    it('returns reserved start-time boundaries for another entry, including its own start', () => {
+      const entries = [
+        { startTime: '09:00', endTime: '10:00' },
+        { startTime: null, endTime: null },
+      ];
+      const getStart = getEntryBoundaries(entries, {
+        findStartTimes: true,
+        useIncrementalBoundaries: true,
+      });
+      expect(getStart(1)).toEqual(['09:00', '09:15', '09:30', '09:45']);
+    });
+
+    it('returns reserved end-time boundaries for another entry, including its own end', () => {
+      const entries = [
+        { startTime: '09:00', endTime: '10:00' },
+        { startTime: null, endTime: null },
+      ];
+      const getEnd = getEntryBoundaries(entries, {
+        findStartTimes: false,
+        useIncrementalBoundaries: true,
+      });
+      expect(getEnd(1)).toEqual(['09:15', '09:30', '09:45', '10:00']);
+    });
+
+    it('skips an entry missing either a start or an end time', () => {
+      const entries = [{ startTime: '09:00', endTime: null }, { startTime: null, endTime: null }];
+      const getStart = getEntryBoundaries(entries, {
+        findStartTimes: true,
+        useIncrementalBoundaries: true,
+      });
+      expect(getStart(1)).toEqual([]);
     });
   });
 });

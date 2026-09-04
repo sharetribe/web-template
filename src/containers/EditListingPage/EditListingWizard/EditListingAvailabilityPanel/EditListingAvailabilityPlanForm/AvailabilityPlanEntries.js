@@ -9,7 +9,9 @@ import { FIXED } from '../../../../../transactions/transaction';
 import {
   compareEntriesByStartTime,
   getParsedHourMinutes,
-  getTotalMinutesFromTime,
+  printHourStrings,
+  printMinuteString,
+  getEntryBoundaries,
 } from '../availability.helpers';
 
 import { bookingTimeUnits } from '../../../../../util/dates';
@@ -30,23 +32,11 @@ const HOUR_MINUTES = bookingTimeUnits.hour.timeUnitInMinutes;
 
 const HOURS = Array(24).fill();
 
-// Internally, we use 00:00 ... 24:00 mapping for hour strings
-const printHourStrings = h => (h > 9 ? `${h}:00` : `0${h}:00`);
-
 // Start hours and end hours for each day on weekly schedule
 // Note: if you need to use something else than sharp hours,
 //       you'll need to customize this.
 const ALL_START_HOURS = HOURS.map((v, i) => printHourStrings(i));
 const ALL_END_HOURS = HOURS.map((v, i) => printHourStrings(i + 1));
-
-// Formats a total-minutes-since-midnight value as a zero-padded 'HH:MM' string.
-const printMinuteString = totalMinutes => {
-  const hour = Math.floor(totalMinutes / HOUR_MINUTES);
-  const minutes = totalMinutes % HOUR_MINUTES;
-  const paddedHour = hour > 9 ? `${hour}` : `0${hour}`;
-  const paddedMinutes = minutes > 9 ? `${minutes}` : `0${minutes}`;
-  return `${paddedHour}:${paddedMinutes}`;
-};
 
 const STEP_MINUTES = bookingTimeUnits.quarterHour.timeUnitInMinutes;
 const MINUTES_PER_DAY = 24 * HOUR_MINUTES;
@@ -164,58 +154,6 @@ const filterEndTimes = (availableEndTimes, entries, index) => {
   return !nextEntry || !nextEntry.startTime
     ? availableEndTimes.filter(pickAfter(currentEntry.startTime))
     : availableEndTimes.filter(pickBetween(currentEntry.startTime, nextEntry.startTime));
-};
-
-/**
- * Find all the entries that boundaries are already reserved.
- *
- * @param {Array<AvailabilityPlanEntry>} entries look like this [{ startTime: '13:00', endTime: '17:00' }]
- * @param {Boolean} options.findStartTimes find start times (00:00 ... 23:00) or else (01:00 ... 24:00)
- * @param {Boolean} options.useIncrementalBoundaries return boundaries in 15 minute increments (00:15 ... 23:45) or in full hours (00:00 ... 23:00)
- * @returns array of reserved sharp hours (e.g. ['13:00', '14:00', '15:00', '16:00']) or quarter hours (e.g. ['13:00', '13:15', '13:30']).
- */
-const getEntryBoundaries = (entries, options) => index => {
-  const { findStartTimes, useIncrementalBoundaries } = options;
-  if (useIncrementalBoundaries) {
-    return entries.reduce((allIncrements, entry, i) => {
-      const { startTime, endTime } = entry || {};
-      const boundaryDiffMinutes = findStartTimes ? 0 : STEP_MINUTES;
-
-      if (i !== index && startTime && endTime) {
-        const startTotal = getTotalMinutesFromTime(startTime);
-        const endTotal = getTotalMinutesFromTime(endTime);
-
-        // Calculate the possible booking boundaries that fall between the end and start times:
-        // - determine how many 15 minute increments fall between the start and the end
-        // - create an array for that length
-        // - map the array to printed boundaries
-        const quartersBetween = Array((endTotal - startTotal) / STEP_MINUTES)
-          .fill()
-          .map((v, i) => printMinuteString(startTotal + i * STEP_MINUTES + boundaryDiffMinutes));
-
-        return allIncrements.concat(quartersBetween);
-      }
-
-      return allIncrements;
-    }, []);
-  } else {
-    return entries.reduce((allHours, entry, i) => {
-      const { startTime, endTime } = entry || {};
-      const boundaryDiff = findStartTimes ? 0 : 1;
-
-      if (i !== index && startTime && endTime) {
-        const startHour = Number.parseInt(startTime.split(':')[0]);
-        const endHour = Number.parseInt(endTime.split(':')[0]);
-        const hoursBetween = Array(endHour - startHour)
-          .fill()
-          .map((v, i) => printHourStrings(startHour + i + boundaryDiff));
-
-        return allHours.concat(hoursBetween);
-      }
-
-      return allHours;
-    }, []);
-  }
 };
 
 /**
