@@ -347,6 +347,37 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
  */
 
 /**
+ * Renders the correct time-select variant, FieldSelectPopup (capped-height custom popup) or
+ * FieldSelect (plain native <select>), and the option structure each one expects, from a single
+ * `useIncrementalBoundaries` flag.
+ *
+ * Defined here at module scope, not inside ExceptionDateTimeRange: a component defined inside
+ * another component's render body is a new type to React on every render, which would remount
+ * FieldSelectPopup (losing its open/highlighted-option state) instead of updating it in place.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Boolean} props.useIncrementalBoundaries whether to render FieldSelectPopup (true) or FieldSelect (false)
+ * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options
+ * @param {...*} rest forwarded to whichever component is rendered
+ * @returns {JSX.Element}
+ */
+const TimeSelectField = props => {
+  const { useIncrementalBoundaries, options, ...rest } = props;
+  return useIncrementalBoundaries ? (
+    <FieldSelectPopup options={options} {...rest} />
+  ) : (
+    <FieldSelect {...rest}>
+      {options.map(option => (
+        <option key={option.value} value={option.value} disabled={option.disabled}>
+          {option.label}
+        </option>
+      ))}
+    </FieldSelect>
+  );
+};
+
+/**
  * A DateRange field for the form
  *
  * @component
@@ -380,8 +411,8 @@ const ExceptionDateTimeRange = props => {
   const idPrefix = `${formId}` || 'EditListingAvailabilityExceptionForm';
   // FieldSelectPopup caps the dropdown's height instead of letting the native <select> popup
   // fill the viewport. Only the incremental-boundaries (15-minute) time list actually gets long
-  // enough (up to 96 options) for that to matter.
-  const TimeSelectField = useIncrementalBoundaries ? FieldSelectPopup : FieldSelect;
+  // enough (up to 96 options) for that to matter. Passed to the module-level TimeSelectField
+  // wrapper above, which picks the component/option shape.
   const { exceptionStartDate, exceptionStartTime = null, exceptionEndDate } = values;
   const exceptionStartDay = extractDateFromFieldDateInput(exceptionStartDate);
   const exceptionEndDay = extractDateFromFieldDateInput(exceptionEndDate);
@@ -469,6 +500,26 @@ const ExceptionDateTimeRange = props => {
     id: 'EditListingAvailabilityExceptionForm.screenreader.endTimeLabel',
   });
 
+  // FieldSelectPopup takes an `options` array prop; FieldSelect (a plain native <select>) still
+  // needs real <option> JSX children, built from the same array in TimeSelectField above so
+  // there's one source of truth for both. Values are stringified here (`String(p.timestamp)`)
+  // because a native <select>'s DOM value is always a string, while FieldSelectPopup's
+  // `option.value === input.value` check does not coerce. Stringifying once, here, keeps
+  // `exceptionStartTime`/`exceptionEndTime` the same string-typed timestamp downstream code
+  // already expects (see the getAllTimeValues/timestampToDate chain below), regardless of which
+  // component renders it.
+  const startTimeOptions = exceptionStartDay
+    ? availableStartTimes.map(p => ({ value: String(p.timestamp), label: p.timeOfDay }))
+    : [{ value: '', label: placeholderTime, disabled: true }];
+  const endTimeOptions =
+    exceptionStartDay && exceptionStartTime && endDate
+      ? availableEndTimes.map((p, i) => {
+          const isLastIndex = i === availableEndTimes.length - 1;
+          const timeOfDay = p.timeOfDay === '00:00' && isLastIndex ? '24:00' : p.timeOfDay;
+          return { value: String(p.timestamp), label: timeOfDay };
+        })
+      : [{ value: '', label: placeholderTime, disabled: true }];
+
   return (
     <>
       <div className={css.formRow}>
@@ -526,23 +577,9 @@ const ExceptionDateTimeRange = props => {
             onChange={value =>
               onExceptionStartTimeChange(value, availableSlotsOnSelectedDate, props)
             }
-          >
-            {exceptionStartDay ? (
-              availableStartTimes.map(p => (
-                // FieldSelectPopup reads `value` as a plain JS prop (unlike a real <select>, which
-                // always coerces an option's DOM value to a string), so stringifying here keeps
-                // `exceptionStartTime` the same string-typed timestamp downstream code already
-                // expects (see the getAllTimeValues/timestampToDate chain below).
-                <option key={p.timestamp} value={String(p.timestamp)}>
-                  {p.timeOfDay}
-                </option>
-              ))
-            ) : (
-              <option disabled value="">
-                {placeholderTime}
-              </option>
-            )}
-          </TimeSelectField>
+            useIncrementalBoundaries={useIncrementalBoundaries}
+            options={startTimeOptions}
+          />
         </div>
       </div>
       <div className={css.formRow}>
@@ -586,23 +623,9 @@ const ExceptionDateTimeRange = props => {
             className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
             selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
             disabled={endTimeDisabled}
-          >
-            {exceptionStartDay && exceptionStartTime && endDate ? (
-              availableEndTimes.map((p, i) => {
-                const isLastIndex = i === availableEndTimes.length - 1;
-                const timeOfDay = p.timeOfDay === '00:00' && isLastIndex ? '24:00' : p.timeOfDay;
-                return (
-                  <option key={p.timestamp} value={String(p.timestamp)}>
-                    {timeOfDay}
-                  </option>
-                );
-              })
-            ) : (
-              <option disabled value="">
-                {placeholderTime}
-              </option>
-            )}
-          </TimeSelectField>
+            useIncrementalBoundaries={useIncrementalBoundaries}
+            options={endTimeOptions}
+          />
         </div>
       </div>
     </>

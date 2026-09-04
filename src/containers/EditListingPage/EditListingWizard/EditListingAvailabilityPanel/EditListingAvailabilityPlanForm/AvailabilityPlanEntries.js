@@ -219,6 +219,39 @@ const getEntryBoundaries = (entries, options) => index => {
 };
 
 /**
+ * Renders the correct time-select variant, FieldSelectPopup (capped-height custom popup) or
+ * FieldSelect (plain native <select>), and the option structure each one expects, from a single
+ * `isFixedUnitType` flag.
+ *
+ * Defined here at module scope, not inside TimeRangeSelects: TimeRangeSelects re-renders on every
+ * parent update, and a component defined inside another component's render body is a new type to
+ * React on every render, which would remount FieldSelectPopup (losing its open/highlighted-option
+ * state) instead of updating it in place.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Boolean} props.isFixedUnitType whether to render FieldSelectPopup (true) or FieldSelect (false)
+ * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options
+ * @param {Function} [props.onToggleActive] FieldSelectPopup-only, never forwarded to FieldSelect
+ * @param {...*} rest forwarded to whichever component is rendered
+ * @returns {JSX.Element}
+ */
+const TimeSelectField = props => {
+  const { isFixedUnitType, options, onToggleActive, ...rest } = props;
+  return isFixedUnitType ? (
+    <FieldSelectPopup options={options} onToggleActive={onToggleActive} {...rest} />
+  ) : (
+    <FieldSelect {...rest}>
+      {options.map(option => (
+        <option value={option.value} key={option.value} disabled={option.disabled}>
+          {option.label}
+        </option>
+      ))}
+    </FieldSelect>
+  );
+};
+
+/**
  * Date pickers that create time range inside the day: start time - end time
  *
  * @component
@@ -253,9 +286,9 @@ const TimeRangeSelects = props => {
     intl,
   } = props;
   // Only 'fixed' unit type's quarter-hour list (up to 96 options) needs the custom popup;
-  // 'hour' keeps the plain native FieldSelect it already had.
+  // 'hour' keeps the plain native FieldSelect it already had. Passed to the module-level
+  // TimeSelectField wrapper above, which picks the component/option shape.
   const isFixedUnitType = unitType === FIXED;
-  const TimeSelectField = isFixedUnitType ? FieldSelectPopup : FieldSelect;
   // FieldSelectPopup's own popup stays a plain in-flow child (see its module.css), so it would
   // otherwise be clipped by a later row's own stacking context (.timeRangeRow: `position:
   // relative` + `z-index: 1`); no z-index on the popup itself can out-rank a sibling row's
@@ -293,6 +326,31 @@ const TimeRangeSelects = props => {
       endTime: hasTimeRange ? localizedTimeStrings(entry.endTime, intl) : null,
     }
   );
+  // FieldSelectPopup takes an `options` array prop; FieldSelect (a plain native <select>) still
+  // needs real <option> JSX children, built from the same array below so there's one source of
+  // truth for both.
+  const startTimeOptions = [
+    {
+      value: '',
+      label: intl.formatMessage({ id: 'EditListingAvailabilityPlanForm.startTimePlaceholder' }),
+      disabled: true,
+    },
+    ...filterStartTimes(availableStartTimes, entries, index).map(s => ({
+      value: s,
+      label: localizedTimeStrings(s, intl),
+    })),
+  ];
+  const endTimeOptions = [
+    {
+      value: '',
+      label: intl.formatMessage({ id: 'EditListingAvailabilityPlanForm.endTimePlaceholder' }),
+      disabled: true,
+    },
+    ...filterEndTimes(availableEndTimes, entries, index).map(s => ({
+      value: s,
+      label: localizedTimeStrings(s, intl),
+    })),
+  ];
   return (
     <div className={css.segmentWrapper} key={name}>
       <div className={css.segment}>
@@ -313,19 +371,10 @@ const TimeRangeSelects = props => {
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('startTime'),
             })}
-            {...(isFixedUnitType ? { onToggleActive: setIsStartTimeOpen } : {})}
-          >
-            <option disabled value="">
-              {intl.formatMessage({
-                id: 'EditListingAvailabilityPlanForm.startTimePlaceholder',
-              })}
-            </option>
-            {filterStartTimes(availableStartTimes, entries, index).map(s => (
-              <option value={s} key={s}>
-                {localizedTimeStrings(s, intl)}
-              </option>
-            ))}
-          </TimeSelectField>
+            isFixedUnitType={isFixedUnitType}
+            options={startTimeOptions}
+            onToggleActive={setIsStartTimeOpen}
+          />
           <span className={css.dashBetweenTimes}>
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none">
               <path d="M3.5 8h10" strokeWidth="1.333" strokeLinecap="round" />
@@ -340,19 +389,10 @@ const TimeRangeSelects = props => {
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('endTime'),
             })}
-            {...(isFixedUnitType ? { onToggleActive: setIsEndTimeOpen } : {})}
-          >
-            <option disabled value="">
-              {intl.formatMessage({
-                id: 'EditListingAvailabilityPlanForm.endTimePlaceholder',
-              })}
-            </option>
-            {filterEndTimes(availableEndTimes, entries, index).map(s => (
-              <option value={s} key={s}>
-                {localizedTimeStrings(s, intl)}
-              </option>
-            ))}
-          </TimeSelectField>
+            isFixedUnitType={isFixedUnitType}
+            options={endTimeOptions}
+            onToggleActive={setIsEndTimeOpen}
+          />
           <div className={classNames(css.plus1Day, { [css.showPlus1Day]: isNextDay })}>
             <FormattedMessage id="EditListingAvailabilityPlanForm.plus1Day" />
           </div>
