@@ -126,6 +126,14 @@
   z-index: 1;
 }
 
+/* Raised only while one of this row's FieldSelectPopup fields has its popup open, so the
+ * open popup (a plain in-flow child, see FieldSelectPopup.module.css) paints above every other
+ * row's content instead of being clipped by it. Every row shares the same base z-index (1) as
+ * its own stacking context, so raising just this one above `--zIndexPopup` is enough to win. */
+.timeRangeRowRaised {
+  z-index: var(--zIndexPopup);
+}
+
 .timeRangeHidden {
   display: none;
 }
@@ -135,6 +143,7 @@
 }
 .hourField {
   flex-grow: 1;
+  flex-basis: 0;
 }
 .dashBetweenTimes {
   stroke: var(--colorGrey700);
@@ -225,4 +234,17 @@
 }
 .notSelected {
   color: var(--colorGrey300);
+}
+
+/* Visually hidden but still reachable by assistive tech, unlike `visibility: hidden`, which
+ * hides from screen readers too. */
+.srOnlyLabel {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
 }

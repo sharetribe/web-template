@@ -1,0 +1,161 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.labelDisabled {
+  color: var(--colorGrey600);
+}
+
+.selectError {
+  border: var(--borderErrorField);
+}
+
+/* Trigger button. Reproduces the chrome the global `select` selector in marketplaceDefaults.css
+ * provides for free, since a `<button>` doesn't match that selector. */
+.trigger {
+  /* Dimensions */
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 6px 24px 4px 12px;
+  background-color: #fff;
+  text-align: left;
+
+  /* Borders */
+  border-radius: 6px;
+  border: 1px solid #d8dce6;
+  outline: none;
+
+  /* Transition */
+  transition: all ease-in-out 100ms;
+
+  /* Chevron, copied from marketplaceDefaults.css's `select` rule */
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-position: center right 12px;
+  background-size: 8px 14px;
+  background-repeat: no-repeat;
+
+  @media (--viewportMedium) {
+    padding: 7px 32px 7px 16px;
+    line-height: 32px;
+    background-position: center right 16px;
+    background-size: 10px 16px;
+  }
+}
+.trigger:hover {
+  border: 1px solid #b8bfd1;
+  transition: all ease-in-out 100ms;
+}
+.trigger:focus {
+  background-color: #fff;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+  transition: all ease-in-out 100ms;
+
+  /* .trigger's own `outline: none` removes the native focus ring, and box-shadow/border-color are
+   * author colors that forced-colors mode flattens, so a focused trigger needs this override to
+   * stay visible. `Highlight` is a system color keyword mapped to the user's high-contrast theme.
+   * Positive `outline-offset` keeps the ring outside the existing 1px border so they don't merge. */
+  @media (forced-colors: active) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+.trigger:disabled {
+  opacity: 0.5;
+  color: var(--colorGrey300);
+
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+.triggerError {
+  border: var(--borderErrorField);
+}
+
+.triggerLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  font-weight: var(--fontWeightMedium);
+}
+
+/* `position: relative` so `.popup` below can anchor to this wrapper (and therefore to the
+ * trigger button) via plain in-flow `position: absolute`. */
+.popupWrapper {
+  position: relative;
+}
+
+/* Stays a plain in-flow child. Clipping by a sibling row's own stacking context
+ * (AvailabilityPlanEntries.module.css's `.timeRangeRow`: `position: relative` + `z-index: 1`) is
+ * fixed by the caller raising that row's own z-index above its siblings while this popup is open
+ * (see FieldSelectPopup.js's `onToggleActive` prop), not by escaping the DOM subtree via a portal:
+ * a portal's reach also means competing with unrelated ancestors' z-index (e.g. a wrapping
+ * Modal's), which an in-flow popup never has to do. `--zIndexPopup` per marketplaceDefaults.css's
+ * convention for small on-page popups; only needs to out-rank this popup's own local siblings. */
+.popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: var(--zIndexPopup);
+
+  background-color: var(--colorWhite);
+  border: 1px solid var(--colorGrey100);
+  box-shadow: var(--boxShadowPopup);
+  border-radius: var(--borderRadiusMedium);
+}
+
+/* Opens above the trigger instead of below it, per FieldSelectPopup.js's edge-flip check. */
+.popupOpenAbove {
+  top: auto;
+  bottom: 100%;
+}
+
+/* Capped so roughly 8 options are visible before scrolling. */
+.popupList {
+  max-height: 272px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+
+  @media (--viewportMedium) {
+    max-height: 320px;
+  }
+}
+
+.popupOption {
+  padding: 8px 16px;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  cursor: pointer;
+}
+.popupOption:hover,
+.popupOptionHighlighted {
+  background-color: var(--colorGrey100);
+}
+.popupOptionDisabled {
+  color: var(--colorGrey300);
+  cursor: not-allowed;
+}
+.popupOptionSelected {
+  background-color: var(--colorGrey200);
+}
+
+/* Under forced-colors mode, the background-color signals above flatten away, leaving the
+ * highlighted/selected option indistinguishable from any other. `outline` survives forced-colors
+ * when authored inside this media query using a system color keyword. Negative `outline-offset`
+ * keeps the ring inside the option row instead of extending into a neighboring row or the popup's
+ * own border. */
+@media (forced-colors: active) {
+  .popupOptionHighlighted,
+  .popupOptionSelected {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

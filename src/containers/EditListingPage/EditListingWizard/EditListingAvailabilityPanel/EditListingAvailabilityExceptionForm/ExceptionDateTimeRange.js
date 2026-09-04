@@ -13,15 +13,16 @@ import {
   timeOfDayFromTimeZoneToLocal,
   isDateSameOrAfter,
   findNextBoundary,
-  getSharpHours,
-  getStartHours,
-  getEndHours,
+  getSharpBoundaries,
+  getStartBoundaries,
+  getEndBoundaries,
   formatDateIntoPartials,
   monthIdString,
+  bookingTimeUnits,
 } from '../../../../../util/dates';
 import { exceptionFreeSlotsPerDate } from '../../../../../util/generators';
 import { bookingDateRequired } from '../../../../../util/validators';
-import { FieldSingleDatePicker, FieldSelect } from '../../../../../components';
+import { FieldSingleDatePicker, FieldSelect, FieldSelectPopup } from '../../../../../components';
 
 import {
   getStartOfNextMonth,
@@ -49,6 +50,11 @@ const formatFieldDateInput = timeZone => v =>
 const parseFieldDateInput = timeZone => v =>
   v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v;
 
+// Pick the moment.js-recognized time unit to find boundaries with: 15-minute increments
+// for 'fixed' unitType listings, sharp hours otherwise.
+const getTimeUnit = useIncrementalBoundaries =>
+  useIncrementalBoundaries ? bookingTimeUnits.quarterHour.timeUnit : bookingTimeUnits.hour.timeUnit;
+
 const showNextMonthStepper = (currentMonth, timeZone) => {
   const nextMonthDate = getStartOfNextMonth(currentMonth, timeZone);
   const endOfRange = endOfAvailabilityExceptionRange(timeZone, TODAY);
@@ -63,7 +69,13 @@ const showPreviousMonthStepper = (currentMonth, timeZone) => {
 };
 
 // Get available start times for new exceptions on given date.
-const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZone }) => {
+const getAvailableStartTimes = ({
+  selectedStartDate,
+  availableSlots,
+  intl,
+  timeZone,
+  timeUnit,
+}) => {
   if (availableSlots.length === 0 || !availableSlots[0] || !selectedStartDate) {
     return [];
   }
@@ -72,7 +84,7 @@ const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZ
   const startOfDate = getStartOf(selectedStartDate, 'day', timeZone);
   const nextDay = getStartOf(startOfDate, 'day', timeZone, 1, 'days');
 
-  const allHours = availableSlots.reduce((availableHours, t) => {
+  const allStartTimes = availableSlots.reduce((availableBoundaries, t) => {
     // time-range: start and end
     const { start, end } = t;
 
@@ -84,10 +96,10 @@ const getAvailableStartTimes = ({ selectedStartDate, availableSlots, intl, timeZ
     // Otherwise use the end of the timeslot.
     const endLimit = isDateSameOrAfter(end, nextDay) ? nextDay : end;
 
-    const hours = getStartHours(startLimit, endLimit, timeZone, intl);
-    return availableHours.concat(hours);
+    const boundaries = getStartBoundaries(startLimit, endLimit, timeZone, intl, timeUnit);
+    return availableBoundaries.concat(boundaries);
   }, []);
-  return allHours;
+  return allStartTimes;
 };
 
 // Get available end times for new exceptions on selected time range.
@@ -97,6 +109,7 @@ const getAvailableEndTimes = ({
   selectedSlot,
   selectedStartTime,
   selectedEndDate,
+  timeUnit,
 }) => {
   if (!selectedSlot || !selectedEndDate || !selectedStartTime) {
     return [];
@@ -118,19 +131,20 @@ const getAvailableEndTimes = ({
     : startOfSelectedEndDate;
 
   // Return slot's end, if it becomes before the end of the selected end date (next 00:00)
-  // I.e. Get the hours of a full day, but no more.
+  // I.e. Get the boundaries of a full day, but no more.
   const limitEnd = isDateSameOrAfter(dayAfterSelectedEndDate, selectedSlotEnd)
     ? selectedSlotEnd
     : dayAfterSelectedEndDate;
 
-  const selectableHours = isSingleDayRange
-    ? getEndHours(limitStart, limitEnd, timeZone, intl)
-    : getSharpHours(limitStart, limitEnd, timeZone, intl);
+  const selectableBoundaries = isSingleDayRange
+    ? getEndBoundaries(limitStart, limitEnd, timeZone, intl, timeUnit)
+    : getSharpBoundaries(limitStart, limitEnd, timeZone, intl, timeUnit);
 
-  const lastSelectableTimestamp = selectableHours[selectableHours.length - 1]?.timestamp;
-  // If the selectable hour is "00:00" of the next day, we discard it to avoid confusion.
+  const lastSelectableTimestamp = selectableBoundaries[selectableBoundaries.length - 1]?.timestamp;
+  // If the selectable time stamp is "00:00" of the next day, we discard it to avoid confusion,
+  // as that time point does not fall on the selected date anymore.
   const isNextDate = isSameDay(dayAfterSelectedEndDate, timestampToDate(lastSelectableTimestamp));
-  return isNextDate ? selectableHours.slice(0, -1) : selectableHours;
+  return isNextDate ? selectableBoundaries.slice(0, -1) : selectableBoundaries;
 };
 
 // Use start date to calculate the first possible start time or times, end date and end time or times.
@@ -142,8 +156,15 @@ const getAllTimeValues = ({
   selectedStartDate,
   selectedStartTime,
   selectedEndDate,
+  timeUnit,
 }) => {
-  const startTimes = getAvailableStartTimes({ selectedStartDate, availableSlots, intl, timeZone });
+  const startTimes = getAvailableStartTimes({
+    selectedStartDate,
+    availableSlots,
+    intl,
+    timeZone,
+    timeUnit,
+  });
   const startTime = selectedStartTime ? selectedStartTime : startTimes?.[0]?.timestamp;
   const startTimeAsDate = startTime ? timestampToDate(startTime) : null;
   const selectedSlot = availableSlots.find(t => isInRange(startTimeAsDate, t.start, t.end));
@@ -155,7 +176,7 @@ const getAllTimeValues = ({
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, 1, 'hour', timeZone).getTime() - 1)
+    ? new Date(findNextBoundary(startTimeAsDate, 1, timeUnit, timeZone).getTime() - 1)
     : null;
 
   const params = {
@@ -164,11 +185,24 @@ const getAllTimeValues = ({
     selectedSlot,
     selectedStartTime: startTime,
     selectedEndDate: endDate,
+    timeUnit,
   };
   const endTimes = getAvailableEndTimes(params);
   const endTime = endTimes?.[0]?.timestamp || null;
 
-  return { startTime, endDate, endTime, selectedSlot };
+  // A native <select>'s DOM value is always a string, but `startTimes[0].timestamp`/
+  // `endTimes[0].timestamp` above (used when auto-suggesting a default rather than reflecting a
+  // user pick) are raw numbers. React's controlled <select> tolerates that mismatch, but
+  // FieldSelectPopup's plain `option.value === input.value` check does not, so a number here
+  // would silently fail to show as selected. Stringifying both here, once, keeps
+  // `exceptionStartTime`/`exceptionEndTime` consistently string-typed regardless of which path
+  // set them, matching the option values' own `String(p.timestamp)` (see the render below).
+  return {
+    startTime: startTime != null ? String(startTime) : startTime,
+    endDate,
+    endTime: endTime != null ? String(endTime) : endTime,
+    selectedSlot,
+  };
 };
 
 // Prop function for DatePicker component: check if the day is blocked
@@ -217,7 +251,7 @@ const isOutsideRange = timeZone => day => {
 
 // Helper function, which changes form's state when exceptionStartDate input has been changed
 const onExceptionStartDateChange = (value, availableDates, props) => {
-  const { timeZone, intl, formApi } = props;
+  const { timeZone, intl, formApi, useIncrementalBoundaries } = props;
 
   if (!value || !value.date) {
     formApi.batch(() => {
@@ -233,7 +267,8 @@ const onExceptionStartDateChange = (value, availableDates, props) => {
   const selectedStartDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
   const dayData = availableDates[stringifyDateToISO8601(selectedStartDate, timeZone)];
   const availableSlots = dayData.slots || [];
-  const params = { intl, timeZone, availableSlots, selectedStartDate };
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
+  const params = { intl, timeZone, availableSlots, selectedStartDate, timeUnit };
   const { startTime, endDate, endTime } = getAllTimeValues(params);
 
   formApi.batch(() => {
@@ -245,9 +280,17 @@ const onExceptionStartDateChange = (value, availableDates, props) => {
 
 // Helper function, which changes form's state when exceptionStartTime select has been changed
 const onExceptionStartTimeChange = (value, availableSlots, props) => {
-  const { timeZone, intl, formApi, values } = props;
+  const { timeZone, intl, formApi, values, useIncrementalBoundaries } = props;
   const selectedStartDate = values.exceptionStartDate.date;
-  const params = { intl, timeZone, availableSlots, selectedStartDate, selectedStartTime: value };
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
+  const params = {
+    intl,
+    timeZone,
+    availableSlots,
+    selectedStartDate,
+    selectedStartTime: value,
+    timeUnit,
+  };
   const { endDate, endTime } = getAllTimeValues(params);
 
   formApi.batch(() => {
@@ -258,7 +301,7 @@ const onExceptionStartTimeChange = (value, availableSlots, props) => {
 
 // Helper function, which changes form's state when exceptionEndDate input has been changed
 const onExceptionEndDateChange = (value, availableSlots, props) => {
-  const { timeZone, intl, formApi, values } = props;
+  const { timeZone, intl, formApi, values, useIncrementalBoundaries } = props;
   if (!value || !value.date) {
     formApi.change('exceptionEndDate', null);
     return;
@@ -270,6 +313,7 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
   // This callback function is called from DatePicker component.
   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
   const selectedEndDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
   const params = {
     intl,
     timeZone,
@@ -277,6 +321,7 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
     selectedStartDate,
     selectedStartTime,
     selectedEndDate,
+    timeUnit,
   };
   const { endTime } = getAllTimeValues(params);
 
@@ -300,6 +345,37 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
  * @property {Object?} fetchExceptionsError
  * @property {boolean} fetchExceptionsInProgress
  */
+
+/**
+ * Renders the correct time-select variant, FieldSelectPopup (capped-height custom popup) or
+ * FieldSelect (plain native <select>), and the option structure each one expects, from a single
+ * `useIncrementalBoundaries` flag.
+ *
+ * Defined here at module scope, not inside ExceptionDateTimeRange: a component defined inside
+ * another component's render body is a new type to React on every render, which would remount
+ * FieldSelectPopup (losing its open/highlighted-option state) instead of updating it in place.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Boolean} props.useIncrementalBoundaries whether to render FieldSelectPopup (true) or FieldSelect (false)
+ * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options
+ * @param {...*} rest forwarded to whichever component is rendered
+ * @returns {JSX.Element}
+ */
+const TimeSelectField = props => {
+  const { useIncrementalBoundaries, options, ...rest } = props;
+  return useIncrementalBoundaries ? (
+    <FieldSelectPopup options={options} {...rest} />
+  ) : (
+    <FieldSelect {...rest}>
+      {options.map(option => (
+        <option key={option.value} value={option.value} disabled={option.disabled}>
+          {option.label}
+        </option>
+      ))}
+    </FieldSelect>
+  );
+};
 
 /**
  * A DateRange field for the form
@@ -328,10 +404,15 @@ const ExceptionDateTimeRange = props => {
     monthlyExceptionQueries,
     allExceptions,
     timeZone,
+    useIncrementalBoundaries,
     values,
   } = props;
 
   const idPrefix = `${formId}` || 'EditListingAvailabilityExceptionForm';
+  // FieldSelectPopup caps the dropdown's height instead of letting the native <select> popup
+  // fill the viewport. Only the incremental-boundaries (15-minute) time list actually gets long
+  // enough (up to 96 options) for that to matter. Passed to the module-level TimeSelectField
+  // wrapper above, which picks the component/option shape.
   const { exceptionStartDate, exceptionStartTime = null, exceptionEndDate } = values;
   const exceptionStartDay = extractDateFromFieldDateInput(exceptionStartDate);
   const exceptionEndDay = extractDateFromFieldDateInput(exceptionEndDate);
@@ -357,12 +438,14 @@ const ExceptionDateTimeRange = props => {
     ? availableDates[stringifyDateToISO8601(exceptionStartDay, timeZone)]
     : null;
   const availableSlotsOnSelectedDate = dayData?.slots || [];
+  const timeUnit = getTimeUnit(useIncrementalBoundaries);
 
   const startTimeParams = {
     intl,
     timeZone,
     availableSlots: availableSlotsOnSelectedDate,
     selectedStartDate: exceptionStartDay,
+    timeUnit,
   };
   const availableStartTimes = getAvailableStartTimes(startTimeParams);
   // Get selected (or suggested) startTime, endDate, and slot (aka available time range)
@@ -394,7 +477,7 @@ const ExceptionDateTimeRange = props => {
   const startTimeDisabled = !exceptionStartDate;
   const endDateDisabled = !exceptionStartDate || !exceptionStartTime;
   const endTimeDisabled = !exceptionStartDate || !exceptionStartTime || !exceptionEndDate;
-  const nextBoundary = findNextBoundary(TODAY, 1, 'hour', timeZone);
+  const nextBoundary = findNextBoundary(TODAY, 1, timeUnit, timeZone);
   let placeholderTime = '08:00';
   try {
     placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
@@ -403,6 +486,39 @@ const ExceptionDateTimeRange = props => {
   }
 
   const startOfToday = getStartOf(TODAY, 'day', timeZone);
+
+  // Informative accessible names for the start/end time fields. This form is keyed to a specific
+  // selected date, not a day of week, and there's no shared sighted-only heading here, so the
+  // label is visually hidden purely to avoid introducing new visible text. The current value
+  // itself isn't repeated in this string, since FieldSelectPopup's own aria-labelledby composition
+  // (label + current value) and a native <select>'s separately announced selected <option> both
+  // already supply it.
+  const startTimeAriaLabel = intl.formatMessage({
+    id: 'EditListingAvailabilityExceptionForm.screenreader.startTimeLabel',
+  });
+  const endTimeAriaLabel = intl.formatMessage({
+    id: 'EditListingAvailabilityExceptionForm.screenreader.endTimeLabel',
+  });
+
+  // FieldSelectPopup takes an `options` array prop; FieldSelect (a plain native <select>) still
+  // needs real <option> JSX children, built from the same array in TimeSelectField above so
+  // there's one source of truth for both. Values are stringified here (`String(p.timestamp)`)
+  // because a native <select>'s DOM value is always a string, while FieldSelectPopup's
+  // `option.value === input.value` check does not coerce. Stringifying once, here, keeps
+  // `exceptionStartTime`/`exceptionEndTime` the same string-typed timestamp downstream code
+  // already expects (see the getAllTimeValues/timestampToDate chain below), regardless of which
+  // component renders it.
+  const startTimeOptions = exceptionStartDay
+    ? availableStartTimes.map(p => ({ value: String(p.timestamp), label: p.timeOfDay }))
+    : [{ value: '', label: placeholderTime, disabled: true }];
+  const endTimeOptions =
+    exceptionStartDay && exceptionStartTime && endDate
+      ? availableEndTimes.map((p, i) => {
+          const isLastIndex = i === availableEndTimes.length - 1;
+          const timeOfDay = p.timeOfDay === '00:00' && isLastIndex ? '24:00' : p.timeOfDay;
+          return { value: String(p.timestamp), label: timeOfDay };
+        })
+      : [{ value: '', label: placeholderTime, disabled: true }];
 
   return (
     <>
@@ -445,26 +561,25 @@ const ExceptionDateTimeRange = props => {
           />
         </div>
         <div className={css.field}>
-          <FieldSelect
+          <TimeSelectField
             name="exceptionStartTime"
             id={`${idPrefix}.exceptionStartTime`}
+            label={startTimeAriaLabel}
+            labelClassName={css.srOnlyLabel}
             className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
+            // .select/.selectDisabled's down-only caret is reused unmodified so FieldSelectPopup's
+            // trigger matches it too, rather than keeping the component's own default chevron.
+            // Also supplies the padding-left this trigger needs to clear .fieldSelect::after's
+            // clock icon. One class does both jobs since neither declares its own
+            // background-position, so it composes with whichever base position is already set.
             selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
             disabled={startTimeDisabled}
             onChange={value =>
               onExceptionStartTimeChange(value, availableSlotsOnSelectedDate, props)
             }
-          >
-            {exceptionStartDay ? (
-              availableStartTimes.map(p => (
-                <option key={p.timestamp} value={p.timestamp}>
-                  {p.timeOfDay}
-                </option>
-              ))
-            ) : (
-              <option>{placeholderTime}</option>
-            )}
-          </FieldSelect>
+            useIncrementalBoundaries={useIncrementalBoundaries}
+            options={startTimeOptions}
+          />
         </div>
       </div>
       <div className={css.formRow}>
@@ -500,27 +615,17 @@ const ExceptionDateTimeRange = props => {
           />
         </div>
         <div className={css.field}>
-          <FieldSelect
+          <TimeSelectField
             name="exceptionEndTime"
             id={`${idPrefix}.exceptionEndTime`}
+            label={endTimeAriaLabel}
+            labelClassName={css.srOnlyLabel}
             className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
             selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
             disabled={endTimeDisabled}
-          >
-            {exceptionStartDay && exceptionStartTime && endDate ? (
-              availableEndTimes.map((p, i) => {
-                const isLastIndex = i === availableEndTimes.length - 1;
-                const timeOfDay = p.timeOfDay === '00:00' && isLastIndex ? '24:00' : p.timeOfDay;
-                return (
-                  <option key={p.timestamp} value={p.timestamp}>
-                    {timeOfDay}
-                  </option>
-                );
-              })
-            ) : (
-              <option>{placeholderTime}</option>
-            )}
-          </FieldSelect>
+            useIncrementalBoundaries={useIncrementalBoundaries}
+            options={endTimeOptions}
+          />
         </div>
       </div>
     </>
