@@ -208,7 +208,7 @@
                               <td>
                                 <td>
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">
-                                    {{t "BookingMoneyPaid.PriceBreakdownHourlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}
+                                    {{t "BookingMoneyPaid.PriceBreakdownHourlyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}
                                   </p>
                                 </td>
                                 <td style="text-align:right">
@@ -239,7 +239,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownDailyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {day} other {days}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownDailyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {day} other {days}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>

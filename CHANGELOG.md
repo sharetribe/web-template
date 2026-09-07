@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fixes to Marketplace and Email texts. [#921](https://github.com/sharetribe/web-template/pull/921)
+
 ## [v12.3.0] 2026-08-31
 
 - [fix] EditListingPage: fix a bug with listing image ids (duplicates were not removed on some edge
