@@ -193,7 +193,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForHoursQuantityWithSeats" "{currency} {amount, number, ::.00} × {units, number} {units, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency units=units seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForHoursQuantityWithSeats" "{amount, number, ::.00} {currency} × {units, number} {units, plural, one {hour} other {hours}} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency units=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -208,7 +208,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForHoursQuantity" "{currency} {amount, number, ::.00} × {units, number} {units, plural, one {hour} other {hours}}" amount=unit-price.amount currency=unit-price.currency units=quantity}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForHoursQuantity" "{amount, number, ::.00} {currency} × {units, number} {units, plural, one {hour} other {hours}}" amount=unit-price.amount currency=unit-price.currency units=quantity}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -223,7 +223,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForDaysQuantityWithSeats" "{amount, number, ::.00} {currency} × {units, number} {units, plural, one {day} other {days}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency units=units seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForDaysQuantityWithSeats" "{amount, number, ::.00} {currency} × {units, number} {units, plural, one {day} other {days}} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency units=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -253,7 +253,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForNightsQuantityWithSeats" "{amount, number, ::.00} {currency} × {units, number} {units, plural, one {night} other {nights}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency units=units seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForNightsQuantityWithSeats" "{amount, number, ::.00} {currency} × {units, number} {units, plural, one {night} other {nights}} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency units=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -283,7 +283,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForFixedBookingWithSeats" "{amount, number, ::.00} {currency} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForFixedBookingWithSeats" "{currency} {amount, number, ::.00} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -298,7 +298,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForFixedBooking" "{amount, number, ::.00} {currency}" amount=unit-price.amount currency=unit-price.currency}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingNewRequest.PriceForFixedBooking" "{currency} {amount, number, ::.00}" amount=unit-price.amount currency=unit-price.currency}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -342,7 +342,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700">{{t "BookingNewRequest.AcceptText" "You need to accept the request by {date,date,::jmmYYYYMMMd}. Otherwise the request will expire automatically and you won't get paid." date=delayed-transition.run-at}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700">{{t "BookingNewRequest.AcceptText" "You need to accept the request by {date,date,::jmmyyyyMMMd}. Otherwise the request will expire automatically and you won't get paid." date=delayed-transition.run-at}}</p>
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingNewRequest.DeclineOptionText" "If the booked dates don't work for you, you can also choose to decline the request."}}</p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>

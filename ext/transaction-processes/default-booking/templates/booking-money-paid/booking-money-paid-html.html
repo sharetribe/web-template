@@ -23,17 +23,17 @@
                 <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">{{t "BookingMoneyPaid.Title" "You have been paid {amount,number,::.00} {currency}" amount=payout-total.amount currency=payout-total.currency}}</h1>
                 {{#each tx-line-items}}{{#eq "line-item/hour" code}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "BookingMoneyPaid.ContentForHourly" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::jmmYYYYMMMd} to {dateEnd,date,::jmmYYYYMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
+                  {{t "BookingMoneyPaid.ContentForHourly" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::jmmyyyyMMMd} to {dateEnd,date,::jmmyyyyMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
                 </p>
                 {{/ eq}}{{#eq "line-item/day" code}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "BookingMoneyPaid.ContentForDaily" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::YYYYMMMd} to {dateEnd,date,::YYYYMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=(date-transform booking.end days=-1) customerDisplayName=customer.display-name}}</p>
+                  {{t "BookingMoneyPaid.ContentForDaily" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::yyyyMMMd} to {dateEnd,date,::yyyyMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=(date-transform booking.end days=-1) customerDisplayName=customer.display-name}}</p>
                   {{/ eq}}{{#eq "line-item/night" code}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "BookingMoneyPaid.ContentForNightly" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::YYYYMMMd} to {dateEnd,date,::YYYYMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
+                  {{t "BookingMoneyPaid.ContentForNightly" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::yyyyMMMd} to {dateEnd,date,::yyyyMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
                 </p>{{/eq}}{{#eq "line-item/fixed" code}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{t "BookingMoneyPaid.ContentForFixed" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::jmmYYYYMMMd} to {dateEnd,date,::jmmYYYYMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
+                  {{t "BookingMoneyPaid.ContentForFixed" "We have sent you {amount,number,::.00} {currency} for the booking of {listingTitle} from {dateStart,date,::jmmyyyyMMMd} to {dateEnd,date,::jmmyyyyMMMd} by {customerDisplayName}. It might take up to 7 days for the money to reach your bank account." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title dateStart=booking.start dateEnd=booking.end customerDisplayName=customer.display-name}}
                 </p>{{/eq}}{{/each}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingMoneyPaid.BookingBreakdownTitle" "Here's the booking breakdown."}}</p>
                 <table style="color:#484848;font-size:16px;line-height:1.4;background-color:#FFF;padding:8px 24px;border-radius:8px;border:1px solid;border-color:#E1E1E1;margin:24px 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
@@ -208,7 +208,7 @@
                               <td>
                                 <td>
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">
-                                    {{t "BookingMoneyPaid.PriceBreakdownHourlyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}
+                                    {{t "BookingMoneyPaid.PriceBreakdownHourlyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {hour} other {hours}} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}
                                   </p>
                                 </td>
                                 <td style="text-align:right">
@@ -224,7 +224,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownHourly" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {hour} other {hours}}" amount=unit-price.amount currency=unit-price.currency multiplier=quantity}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownHourly" "{amount,number,::.00} {currency} × {multiplier, number} {multiplier, plural, one {hour} other {hours}}" amount=unit-price.amount currency=unit-price.currency multiplier=quantity}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -239,7 +239,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownDailyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {day} other {days}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownDailyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {day} other {days}} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -254,7 +254,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownDaily" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {day} other {days}}" amount=unit-price.amount currency=unit-price.currency multiplier=quantity}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownDaily" "{amount,number,::.00} {currency} × {multiplier, number} {multiplier, plural, one {day} other {days}}" amount=unit-price.amount currency=unit-price.currency multiplier=quantity}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -269,7 +269,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownNightlyWithSeats" "{amount, number, ::.00} {currency} × {multiplier, number} {multiplier, plural, one {night} other {nights}} x {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownNightlyWithSeats" "{currency} {amount, number, ::.00} × {multiplier, number} {multiplier, plural, one {night} other {nights}} × {seats, number} {seats, plural, one {seat} other {seats}}" amount=unit-price.amount currency=unit-price.currency multiplier=units seats=seats}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
@@ -284,7 +284,7 @@
                             <tr>
                               <td>
                                 <td>
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownNightly" "{amount,number,::.00} {currency} x {multiplier, number} {multiplier, plural, one {night} other {nights}}" amount=unit-price.amount currency=unit-price.currency multiplier=quantity}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{t "BookingMoneyPaid.PriceBreakdownNightly" "{amount,number,::.00} {currency} × {multiplier, number} {multiplier, plural, one {night} other {nights}}" amount=unit-price.amount currency=unit-price.currency multiplier=quantity}}</p>
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-bottom:1px">{{> format-money money=line-total}}</p>
