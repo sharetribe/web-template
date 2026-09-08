@@ -39,8 +39,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-stock-reservation}],
    :from :state/pending-payment,
    :to :state/payment-expired}
@@ -92,8 +90,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/cancel-stock-reservation}],
    :from :state/purchased,
    :to :state/canceled}
@@ -105,8 +101,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/cancel-stock-reservation}],
    :from :state/purchased,
    :to :state/canceled}
@@ -115,8 +109,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/cancel-stock-reservation}],
    :from :state/disputed,
    :to :state/canceled}
@@ -128,8 +120,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/cancel-stock-reservation}],
    :from :state/disputed,
    :to :state/canceled}
@@ -189,8 +179,6 @@
  :notifications
  [{:name :notification/order-receipt,
    :on :transition/confirm-payment,
-   ;; This notification is delayed to give the customer a chance to verify their
-   ;; email address, in case they are a new customer.
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/purchased]}

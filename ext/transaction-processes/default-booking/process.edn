@@ -31,8 +31,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/pending-payment,
    :to :state/payment-expired}
@@ -60,8 +58,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -70,8 +66,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -87,8 +81,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/expired}
@@ -109,8 +101,6 @@
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
-    ;; Keep this action last in the list of actions for
-    ;; the transition
     {:name :action/cancel-booking}],
    :from :state/accepted,
    :to :state/cancelled}
