@@ -36,8 +36,7 @@ file.
 
 ## Translations files on this directory
 
-This directory contains translated marketplace texts for different languages. We'll introduce new
-languages into this directory one by one.
+This directory contains AI-translated marketplace texts for different languages.
 
 The only file that is in active use, by default, is the **en.json** file. It is used as a fallback
 for those translations that might be missing from the hosted translations.json file.
