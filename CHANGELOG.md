@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Fix to transaction process. [#922](https://github.com/sharetribe/web-template/pull/922)
 - [fix] Fixes to Marketplace and Email texts. [#921](https://github.com/sharetribe/web-template/pull/921)
 
 ## [v12.3.0] 2026-08-31
