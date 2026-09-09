@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Restore comments to transaction process. [#927](https://github.com/sharetribe/web-template/pull/927)
 - [fix] user.duck / fetchCurrentUser: Don't treat login-as token expiration as a bug. In addition,
   fetchFeaturedListings was also sending unnecessary Sentry errors.
   [#926](https://github.com/sharetribe/web-template/pull/926)
