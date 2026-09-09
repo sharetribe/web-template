@@ -71,7 +71,9 @@ export const fetchCurrentUserHasListingsThunk = createAsyncThunk(
 
 // Backward compatible wrapper for the thunk
 export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
-  return dispatch(fetchCurrentUserHasListingsThunk()).unwrap();
+  return dispatch(fetchCurrentUserHasListingsThunk())
+    .unwrap()
+    .catch(() => {});
 };
 
 ///////////////////////////////////////////////////////////
@@ -105,7 +107,9 @@ export const fetchCurrentUserHasOrdersThunk = createAsyncThunk(
 
 // Backward compatible wrapper for the thunk
 export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
-  return dispatch(fetchCurrentUserHasOrdersThunk()).unwrap();
+  return dispatch(fetchCurrentUserHasOrdersThunk())
+    .unwrap()
+    .catch(() => {});
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -137,8 +141,8 @@ const fetchCurrentUserNotificationsPayloadCreator = (_, { extra: sdk, rejectWith
     sdk.transactions.query(paramsForOrders),
   ])
     .then(([sales, orders]) => {
-      const saleNotificationsCount = sales.data.data.length;
-      const orderNotificationsCount = orders.data.data.length;
+      const saleNotificationsCount = sales?.data?.data?.length ?? 0;
+      const orderNotificationsCount = orders?.data?.data?.length ?? 0;
       return { saleNotificationsCount, orderNotificationsCount };
     })
     .catch(e => rejectWithValue(storableError(e)));
@@ -151,7 +155,9 @@ export const fetchCurrentUserNotificationsThunk = createAsyncThunk(
 
 // Backward compatible wrapper for the thunk
 export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
-  return dispatch(fetchCurrentUserNotificationsThunk()).unwrap();
+  return dispatch(fetchCurrentUserNotificationsThunk())
+    .unwrap()
+    .catch(() => {});
 };
 
 const fetchCurrentUserPayloadCreator = (options, thunkAPI) => {
