@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] user.duck / fetchCurrentUser: Don't treat login-as token expiration as a bug.
+  [#926](https://github.com/sharetribe/web-template/pull/926)
 - [fix] Harden user.duck:
 
   - Safe counts for saleNotificationsCount and orderNotificationsCount
