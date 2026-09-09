@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as log from '../util/log';
-import { storableError } from '../util/errors';
+import { isForbiddenError, storableError } from '../util/errors';
 import { addMarketplaceEntities } from './marketplaceData.duck';
 import { createImageVariantConfig } from '../util/sdkLoader';
 
@@ -84,9 +84,14 @@ const fetchFeaturedListingsPayloadCreator = async (arg, thunkAPI) => {
       return { apiResponse: response };
     })
     .catch(error => {
-      log.error(error, 'featured-listings-fetch-failed', {
-        listingSelection: listingSelection,
-      });
+      // Private marketplace / pending-approval users get 403 on listings.query;
+      // that is expected access control, not an app bug.
+      log.error(
+        error,
+        'featured-listings-fetch-failed',
+        { listingSelection },
+        { skipSentry: isForbiddenError(error) }
+      );
       return rejectWithValue(storableError(error));
     });
 };

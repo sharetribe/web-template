@@ -122,10 +122,13 @@ const toCapturableError = e => {
  * @param {Error} e Error that occurred
  * @param {String} code Error code
  * @param {Object} data Additional data to be sent to Sentry
+ * @param {Object} [options]
+ * @param {boolean} [options.skipSentry] If true, skip Sentry and only log to console
  */
-export const error = (e, code, data) => {
+export const error = (e, code, data, options = {}) => {
+  const { skipSentry = false } = options;
   const apiErrors = responseApiErrorInfo(e);
-  if (appSettings.sentryDsn) {
+  if (appSettings.sentryDsn && !skipSentry) {
     const extra = { ...data, apiErrorData: apiErrors };
 
     Sentry.withScope(scope => {
