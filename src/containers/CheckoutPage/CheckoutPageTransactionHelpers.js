@@ -10,7 +10,7 @@ import { storeData } from './CheckoutPageSessionHelpers';
 // https://stripe.com/docs/payments/payment-intents/status
 export const STRIPE_PI_USER_ACTIONS_DONE_STATUSES = ['processing', 'requires_capture', 'succeeded'];
 
-const getCheckoutTransitions = (process, tx, checkoutPaymentMethod) =>
+export const getCheckoutTransitions = (process, tx, checkoutPaymentMethod) =>
   process.getCheckoutPaymentTransitions(tx, {
     paymentProcessor: 'stripe',
     paymentMethod: checkoutPaymentMethod,
@@ -153,7 +153,7 @@ export const hasTransactionPassedPendingPayment = (tx, process) => {
   return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
 };
 
-const persistTransaction = (order, pageData, storeData, setPageData, sessionStorageKey) => {
+export const persistTransaction = (order, pageData, storeData, setPageData, sessionStorageKey) => {
   // Store the returned transaction (order)
   if (order?.id) {
     // Store order.
@@ -193,7 +193,7 @@ const toRedirectPaymentStatus = paymentIntentStatus => {
   return isRecoverableFailure ? paymentIntentStatus : 'pending';
 };
 
-const getCompletedPaymentIntentOrReject = (paymentIntent, fallbackStatus) => {
+export const getCompletedPaymentIntentOrReject = (paymentIntent, fallbackStatus) => {
   if (paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status)) {
     return paymentIntent;
   }
