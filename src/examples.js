@@ -33,6 +33,7 @@ import * as FieldRadioButton from './components/FieldRadioButton/FieldRadioButto
 import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlider.example';
 import * as FieldReviewRating from './components/FieldReviewRating/FieldReviewRating.example';
 import * as FieldSelect from './components/FieldSelect/FieldSelect.example';
+import * as FieldSelectPopup from './components/FieldSelectPopup/FieldSelectPopup.example';
 import * as FieldSelectTree from './components/FieldSelectTree/FieldSelectTree.example';
 import * as FieldTextInput from './components/FieldTextInput/FieldTextInput.example';
 import * as IconAdd from './components/IconAdd/IconAdd.example';
@@ -174,6 +175,7 @@ export {
   FieldRangeSlider,
   FieldReviewRating,
   FieldSelect,
+  FieldSelectPopup,
   FieldSelectTree,
   FieldSingleDatePicker,
   FieldTextInput,
