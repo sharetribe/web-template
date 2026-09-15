@@ -196,8 +196,8 @@ export const getTotalMinutesFromTime = time => {
  * ordered by startTime.
  *
  * @param {Number} defaultCompareReturn value used when either entry is missing a startTime.
- *   UI filtering in AvailabilityPlanEntries.js uses -1 to push an unset entry to the front
- *   (see filterEndTimes); submit-time sorting and the default case use 0 (no-op ordering).
+ *   UI filtering uses -1 to push an unset entry to the front; submit-time sorting and the
+ *   default case use 0 for no-op ordering.
  */
 export const compareEntriesByStartTime = (defaultCompareReturn = 0) => (a, b) => {
   if (a.startTime && b.startTime) {

@@ -11,8 +11,8 @@
   border: var(--borderErrorField);
 }
 
-/* Trigger button. Reproduces the chrome the global `select` selector in marketplaceDefaults.css
- * provides for free, since a `<button>` doesn't match that selector. */
+/* Reproduces the chrome the global `select` selector in marketplaceDefaults.css provides for
+ * free, since a `<button>` doesn't match that selector. */
 .trigger {
   /* Dimensions */
   display: block;
@@ -53,10 +53,10 @@
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   transition: all ease-in-out 100ms;
 
-  /* .trigger's own `outline: none` removes the native focus ring, and box-shadow/border-color are
+  /* .trigger's own `outline: none` removes the native focus ring. Its box-shadow/border-color are
    * author colors that forced-colors mode flattens, so a focused trigger needs this override to
    * stay visible. `Highlight` is a system color keyword mapped to the user's high-contrast theme.
-   * Positive `outline-offset` keeps the ring outside the existing 1px border so they don't merge. */
+   * Positive `outline-offset` keeps the ring outside the existing 1px border, so they don't merge. */
   @media (forced-colors: active) {
     outline: 2px solid Highlight;
     outline-offset: 2px;
@@ -103,13 +103,12 @@
   position: relative;
 }
 
-/* Stays a plain in-flow child. Clipping by a sibling row's own stacking context
- * (AvailabilityPlanEntries.module.css's `.timeRangeRow`: `position: relative` + `z-index: 1`) is
- * fixed by the caller raising that row's own z-index above its siblings while this popup is open
- * (see FieldSelectPopup.js's `onToggleActive` prop), not by escaping the DOM subtree via a portal:
- * a portal's reach also means competing with unrelated ancestors' z-index (e.g. a wrapping
- * Modal's), which an in-flow popup never has to do. `--zIndexPopup` per marketplaceDefaults.css's
- * convention for small on-page popups; only needs to out-rank this popup's own local siblings. */
+/* Stays a plain in-flow child instead of using a portal, so it never has to compete with
+ * unrelated ancestors' z-index (e.g. a wrapping Modal's).
+ *
+ * A sibling row can still clip it with its own stacking context, though. The caller fixes that by
+ * raising that row's z-index above its siblings while this popup is open. `--zIndexPopup` only
+ * needs to out-rank this popup's own local siblings. */
 .popup {
   position: absolute;
   top: 100%;
