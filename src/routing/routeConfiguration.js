@@ -151,6 +151,16 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       },
     },
     {
+      path: '/l/:slug/:id/checkout/return',
+      name: 'CheckoutRedirectReturnPage',
+      auth: true,
+      component: CheckoutPage,
+      extraProps: { mode: 'return-after-redirect' },
+      prioritizeLibraryLoading: {
+        stripe: true,
+      },
+    },
+    {
       path: '/l/:slug/:id/:variant',
       name: 'ListingPageVariant',
       auth: true,
