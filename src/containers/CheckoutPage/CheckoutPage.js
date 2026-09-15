@@ -46,10 +46,12 @@ import CheckoutPageWithPayment, {
   loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
+import CheckoutPageRedirectReturn from './CheckoutPageRedirectReturn/CheckoutPageRedirectReturn';
 import CheckoutPageAccessWrapper from './CheckoutPageAccessWrapper';
 import css from './CheckoutPage.module.css';
 
 const STORAGE_KEY = 'CheckoutPage';
+export const CHECKOUT_MODE_RETURN_AFTER_REDIRECT = 'return-after-redirect';
 
 const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
@@ -80,11 +82,13 @@ const CheckoutPageComponent = props => {
     isDataLoaded,
     config,
     processName,
+    mode,
   } = props;
 
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
+  const isReturnAfterRedirect = mode === CHECKOUT_MODE_RETURN_AFTER_REDIRECT;
   const hasSpeculatedTransactionForRender =
     !speculateTransactionInProgress || speculatedTransaction?.id;
 
@@ -127,6 +131,8 @@ const CheckoutPageComponent = props => {
       transactionFieldConfigs={transactionFieldConfigs}
       {...props}
     />
+  ) : isReturnAfterRedirect ? (
+    <CheckoutPageRedirectReturn {...props} />
   ) : processName && !isInquiryProcess && hasSpeculatedTransactionForRender ? (
     <CheckoutPageWithPayment
       config={config}
@@ -162,6 +168,7 @@ const CheckoutPageComponent = props => {
  * @returns {JSX.Element}
  */
 const CheckoutPage = props => {
+  const { mode } = props;
   const dispatch = useDispatch();
   const history = useHistory();
   const config = useConfiguration();
@@ -170,6 +177,7 @@ const CheckoutPage = props => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const processName = getProcessName(pageData);
+  const isReturnAfterRedirect = mode === CHECKOUT_MODE_RETURN_AFTER_REDIRECT;
 
   const {
     listing,
@@ -235,7 +243,8 @@ const CheckoutPage = props => {
     setIsDataLoaded(true);
 
     // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
-    if (isUserAuthorized(currentUser)) {
+    // Return-after-redirect only resumes confirm — do not speculate or fetch StripeCustomer.
+    if (isUserAuthorized(currentUser) && !isReturnAfterRedirect) {
       // This is for processes using payments with Stripe integration
       if (processName !== INQUIRY_PROCESS_NAME) {
         // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments

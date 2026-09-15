@@ -335,14 +335,29 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     ? currentUser?.stripeCustomer?.defaultPaymentMethod?.attributes?.stripePaymentMethodId
     : null;
 
+  // Invariant: push methods never pair with USE_SAVED_CARD. The payment-method
+  // picker already resets card mode to onetime when a push method is selected;
+  // abort here if those states are still inconsistent.
+  if (
+    isStripePushPaymentMethod(process, checkoutPaymentMethod) &&
+    selectedPaymentFlow === USE_SAVED_CARD
+  ) {
+    setSubmitting(false);
+    return;
+  }
+
   // If paymentIntent status is not waiting user action,
   // confirmCardPayment has been called previously.
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
 
   const listingSlug = pathParams?.slug || createSlug(pageData?.listing?.attributes?.title || '');
-  const listingUuid = pageData?.listing?.id?.uuid;
-  const checkoutPageReturnUrl = `${config.marketplaceRootURL}/l/${listingSlug}/${listingUuid}/checkout`;
+  const listingUuid = pageData?.listing?.id?.uuid || pathParams?.id;
+  const checkoutPageReturnPath = pathByRouteName('CheckoutRedirectReturnPage', routeConfiguration, {
+    id: listingUuid,
+    slug: listingSlug,
+  });
+  const checkoutPageReturnUrl = `${config.marketplaceRootURL}${checkoutPageReturnPath}`;
 
   const requestPaymentParams = {
     pageData,
@@ -397,6 +412,30 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
       setSubmitting(false);
+
+      // Push/redirect methods never run Marketplace confirm-payment in this submit chain —
+      // only request-payment + Stripe confirmPayment(return_url). Marketplace confirm happens
+      // on CheckoutPageRedirectReturn (route mode return-after-redirect).
+      //
+      // Usual case: Stripe navigates to the bank/app and this .then never runs; the customer
+      // lands on /checkout/return with Stripe's redirect_status + payment_intent_client_secret.
+      // Fallback: Stripe's promise resolves in-page (no navigation, e.g. PI already past
+      // confirm). Synthesize the same query params and replace to the return route so resume
+      // / Marketplace confirm still run. Do not call completeCheckoutNavigation here.
+      if (isStripePushPaymentMethod(process, checkoutPaymentMethod)) {
+        const clientSecret =
+          response?.paymentIntent?.client_secret ||
+          pageData?.transaction?.attributes?.protectedData?.stripePaymentIntents?.default
+            ?.stripePaymentIntentClientSecret;
+        const search = clientSecret
+          ? `?redirect_status=succeeded&payment_intent_client_secret=${encodeURIComponent(
+              clientSecret
+            )}`
+          : '';
+        history.replace({ pathname: checkoutPageReturnPath, search });
+        return;
+      }
+
       // Navigate to the TransactionPage to show the order details
       completeCheckoutNavigation({
         response,
@@ -531,6 +570,14 @@ export const CheckoutPageWithPayment = props => {
     showTransactionFields,
     config,
     fetchSpeculatedTransaction,
+    onRetrievePaymentIntent,
+    onConfirmPayment,
+    routeConfiguration,
+    dispatch,
+    onSubmitCallback,
+    sessionStorageKey,
+    history,
+    setPageData,
   } = props;
 
   // Since the listing data is already given from the ListingPage
