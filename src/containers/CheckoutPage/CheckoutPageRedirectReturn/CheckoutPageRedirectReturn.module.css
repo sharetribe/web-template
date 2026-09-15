@@ -1,0 +1,30 @@
+.content {
+  margin: 48px 24px;
+  text-align: center;
+
+  @media (--viewportMedium) {
+    margin: 56px auto;
+    max-width: 480px;
+  }
+}
+
+.orderError {
+  margin: 11px 0 12px 0;
+  color: var(--colorFail);
+
+  @media (--viewportMedium) {
+    margin: 10px 0 12px 0;
+  }
+}
+
+.retry {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+
+.spinner {
+  margin: auto;
+}
