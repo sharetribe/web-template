@@ -283,6 +283,33 @@ Address mapping: `line1` → `customerStreet`, `postalCode` → `customerZip`.
 
 ## Recent Fixes & Gotchas
 
+### September 11, 2026 — Borrower re-shop SMS link was a dead short link (1c + 2b)
+
+Borrowers whose request was declined or expired got an SMS ending in
+`https://www.sherbrt.com/r/lyBUNc13c1`, which rendered as **"invalid/expired
+link"** when tapped. The `/r/` shortener target was gone, so every one of these
+texts sent the borrower to a dead end at exactly the moment they were most
+likely to re-book.
+
+Fixed in both senders — they had duplicated the same hardcoded default:
+
+- `server/api/transition-privileged.js` (**2b-SMS**, `transition/decline`) —
+  `BORROWER_RESHOP_URL` default → `https://sherbrt.com/s`. Also dropped the
+  trailing `.` after the URL; iOS was folding it into the link.
+- `server/scripts/sendLenderRequestReminders.js` (**1c-SMS**, watchdog on
+  `transition/expire`) — `BORROWER_EXPIRED_RESHOP_LINK` default → same URL.
+
+**Gotcha:** both read `process.env.BORROWER_RESHOP_URL` first. If that var is
+set on Render to the old `/r/` link, the code default never applies — check
+Render env before assuming the fix shipped. It should be unset, or set to
+`https://sherbrt.com/s`.
+
+`/s` is the canonical search results page and (since Sept 2) sorts by highest
+retail price, so borrowers land on real inventory with nothing left to expire.
+`server/scripts/test-borrower-sms.js` still carries older decline copy, but it's
+a dry-run formatting harness and sends nothing.
+
+
 ### September 2, 2026 — Search results default-sorted by highest retail price (PR #90)
 
 `/s` used to open newest-first with no way to change the default. It now opens

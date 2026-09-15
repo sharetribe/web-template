@@ -499,7 +499,11 @@ async function sendLenderRequestReminders() {
     //      See sherbrt_transaction_comms_v13 → Log tab → 1c-SMS row.
     const WATCHDOG_LOOKBACK_MS = 30 * 60 * 1000;
     const expireWindow = new Date(Date.now() - WATCHDOG_LOOKBACK_MS);
-    const BORROWER_EXPIRED_RESHOP_LINK = process.env.BORROWER_RESHOP_URL || 'https://www.sherbrt.com/r/lyBUNc13c1';
+    // Sept 11, 2026: the old /r/ short link had expired and rendered as
+    // "invalid/expired link" for borrowers. Point at the canonical search
+    // results page instead — no shortener, nothing to expire. Kept in sync
+    // with the 2b-SMS link in server/api/transition-privileged.js.
+    const BORROWER_EXPIRED_RESHOP_LINK = process.env.BORROWER_RESHOP_URL || 'https://sherbrt.com/s';
 
     try {
       const expiredResp = await sdk.transactions.query({

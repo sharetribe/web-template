@@ -2867,8 +2867,12 @@ module.exports = async (req, res) => {
             // 1c-SMS in sendLenderRequestReminders.js — refactor to env
             // var BORROWER_RESHOP_URL is tracked as a follow-up in the
             // May 7 backlog (CLAUDE_CONTEXT.md).
-            const BORROWER_RESHOP_URL = process.env.BORROWER_RESHOP_URL || 'https://www.sherbrt.com/r/lyBUNc13c1';
-            const message = `😔 Sherbrt 🍧: Your borrow request was declined. Don't worry — new looks are waiting to be borrowed! Check them out!  ${BORROWER_RESHOP_URL}.`;
+            // Sept 11, 2026: the old /r/ short link had expired and rendered
+            // as "invalid/expired link" for borrowers. Point at the canonical
+            // search results page instead — no shortener, nothing to expire.
+            // Trailing period removed so iOS doesn't swallow it into the URL.
+            const BORROWER_RESHOP_URL = process.env.BORROWER_RESHOP_URL || 'https://sherbrt.com/s';
+            const message = `😔 Sherbrt 🍧: Your borrow request was declined. Don't worry — new looks are waiting to be borrowed! Check them out!  ${BORROWER_RESHOP_URL}`;
             
             // Debug: log SMS length (Note: actual SMS segmentation depends on carrier encoding, newlines, etc.)
             console.log('[sms] borrower_decline length:', message.length, 'chars');
