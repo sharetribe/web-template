@@ -8,8 +8,8 @@ describe('FieldSelectPopup helpers', () => {
     });
 
     // Builds a chain of nested <div>s appended to document.body, one per entry in `overflowYs`,
-    // outermost first, and returns them in the same order, so the last entry is the "trigger"
-    // to pass to getScrollBoundary.
+    // outermost first. Returns them in the same order, so the last entry is the "trigger" to
+    // pass to getScrollBoundary.
     const appendChain = overflowYs => {
       let parent = document.body;
       return overflowYs.map(overflowY => {

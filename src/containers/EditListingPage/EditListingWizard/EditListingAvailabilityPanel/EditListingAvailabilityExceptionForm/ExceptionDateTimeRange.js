@@ -190,13 +190,11 @@ const getAllTimeValues = ({
   const endTimes = getAvailableEndTimes(params);
   const endTime = endTimes?.[0]?.timestamp || null;
 
-  // A native <select>'s DOM value is always a string, but `startTimes[0].timestamp`/
-  // `endTimes[0].timestamp` above (used when auto-suggesting a default rather than reflecting a
-  // user pick) are raw numbers. React's controlled <select> tolerates that mismatch, but
-  // FieldSelectPopup's plain `option.value === input.value` check does not, so a number here
-  // would silently fail to show as selected. Stringifying both here, once, keeps
-  // `exceptionStartTime`/`exceptionEndTime` consistently string-typed regardless of which path
-  // set them, matching the option values' own `String(p.timestamp)` (see the render below).
+  // FieldSelectPopup's `option.value === input.value` check doesn't coerce types, unlike a
+  // native <select>'s DOM value, which is always a string. startTime/endTime above can still be
+  // raw numbers here, since they come from auto-suggesting a default rather than a user pick.
+  // Stringifying them keeps exceptionStartTime/exceptionEndTime consistently string-typed
+  // either way.
   return {
     startTime: startTime != null ? String(startTime) : startTime,
     endDate,
@@ -409,10 +407,6 @@ const ExceptionDateTimeRange = props => {
   } = props;
 
   const idPrefix = `${formId}` || 'EditListingAvailabilityExceptionForm';
-  // FieldSelectPopup caps the dropdown's height instead of letting the native <select> popup
-  // fill the viewport. Only the incremental-boundaries (15-minute) time list actually gets long
-  // enough (up to 96 options) for that to matter. Passed to the module-level FieldSelectTime
-  // wrapper above, which picks the component/option shape.
   const { exceptionStartDate, exceptionStartTime = null, exceptionEndDate } = values;
   const exceptionStartDay = extractDateFromFieldDateInput(exceptionStartDate);
   const exceptionEndDay = extractDateFromFieldDateInput(exceptionEndDate);
@@ -487,12 +481,11 @@ const ExceptionDateTimeRange = props => {
 
   const startOfToday = getStartOf(TODAY, 'day', timeZone);
 
-  // Informative accessible names for the start/end time fields. This form is keyed to a specific
-  // selected date, not a day of week, and there's no shared sighted-only heading here, so the
-  // label is visually hidden purely to avoid introducing new visible text. The current value
-  // itself isn't repeated in this string, since FieldSelectPopup's own aria-labelledby composition
-  // (label + current value) and a native <select>'s separately announced selected <option> both
-  // already supply it.
+  // This form is keyed to a specific date, not a day of week, and has no shared sighted-only
+  // heading. The label is visually hidden purely to avoid introducing new visible text.
+  //
+  // The current value isn't repeated here: FieldSelectPopup's own aria-labelledby composition,
+  // and a native <select>'s separately announced selected <option>, both already supply it.
   const startTimeAriaLabel = intl.formatMessage({
     id: 'EditListingAvailabilityExceptionForm.screenreader.startTimeLabel',
   });
@@ -500,14 +493,10 @@ const ExceptionDateTimeRange = props => {
     id: 'EditListingAvailabilityExceptionForm.screenreader.endTimeLabel',
   });
 
-  // FieldSelectPopup takes an `options` array prop; FieldSelect (a plain native <select>) still
-  // needs real <option> JSX children, built from the same array in FieldSelectTime above so
-  // there's one source of truth for both. Values are stringified here (`String(p.timestamp)`)
-  // because a native <select>'s DOM value is always a string, while FieldSelectPopup's
-  // `option.value === input.value` check does not coerce. Stringifying once, here, keeps
-  // `exceptionStartTime`/`exceptionEndTime` the same string-typed timestamp downstream code
-  // already expects (see the getAllTimeValues/timestampToDate chain below), regardless of which
-  // component renders it.
+  // FieldSelectPopup takes an options array prop. FieldSelect (a plain native <select>) still
+  // needs real <option> JSX children, so both are built from the same array in FieldSelectTime
+  // above for one source of truth. Values are stringified for the same reason as
+  // getAllTimeValues above.
   const startTimeOptions = exceptionStartDay
     ? availableStartTimes.map(p => ({ value: String(p.timestamp), label: p.timeOfDay }))
     : [{ value: '', label: placeholderTime, disabled: true }];

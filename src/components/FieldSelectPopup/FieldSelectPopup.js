@@ -39,28 +39,25 @@ const FieldSelectPopupComponent = props => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
   const listRef = useRef(null);
-  // Whether the list should open above the trigger instead of below it (see the layout effect
-  // below). The popup stays a normal in-flow child, so this only switches which CSS anchor
-  // (`top: 100%` vs `bottom: 100%`) is in effect; no pixel math needed.
+  // Toggles which CSS anchor is active (`top: 100%` vs `bottom: 100%`), so opening above the
+  // trigger needs no pixel math. See the layout effect below.
   const [openAbove, setOpenAbove] = useState(false);
-  // The keyboard-highlighted option index, independent of `input.value` (the committed
-  // selection). -1 means "no highlight" (always true while closed). Drives both the visual
-  // `.popupOptionHighlighted` class and `aria-activedescendant`: DOM focus itself never leaves the
-  // trigger button, so closing on blur (tabbing away) can coexist with clicking an option without
-  // one breaking the other.
+  // The keyboard-highlighted option, independent of input.value (the committed selection). -1
+  // means no highlight, always true while closed. Drives the `.popupOptionHighlighted` class and
+  // `aria-activedescendant`.
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  // Set synchronously (not via state, see `handleKeyUp`'s comment below) whenever an Escape
-  // keydown closes the popup, so the matching keyup (a separate DOM event this component can't
-  // otherwise tie back to that keydown) knows to stop itself from also closing an ancestor Modal.
+  // keydown and keyup fire as separate DOM events. This ref carries state from the Escape keydown
+  // handler to the matching keyup handler below, so the keyup knows to stop itself from also
+  // closing a wrapping Modal.
   const suppressNextEscapeKeyUpRef = useRef(false);
-  // Type-ahead find (see `handleTypeahead`): the accumulated search string typed so far, and the
-  // timer that clears it after a pause. Plain refs, not state, since neither needs to trigger a
-  // re-render on its own; only `highlightedIndex` (set as a side effect of a match) does.
+  // The accumulated search string, and the timer that clears it after a pause (see
+  // handleTypeahead). Plain refs, not state: neither needs to trigger a re-render, unlike
+  // highlightedIndex.
   const typeaheadQueryRef = useRef('');
   const typeaheadResetTimeoutRef = useRef(null);
-  // When type-ahead opens an already-closed popup, it needs to land the highlight on its match,
-  // not the "on open" effect's own default. That effect runs after this same `isOpen` change and
-  // would otherwise overwrite the match, so this ref hands the match to it instead.
+  // Hands a type-ahead match to the "on open" effect below, so it highlights that match instead
+  // of its own default. Needed because that effect runs after this same `isOpen` change and would
+  // otherwise overwrite the match.
   const pendingHighlightIndexRef = useRef(null);
 
   const setOpen = next => {
@@ -78,10 +75,10 @@ const FieldSelectPopupComponent = props => {
   const hasSelection = Boolean(selectedOption) && !selectedOption.disabled;
   const enabledIndices = options.reduce((acc, o, i) => (o.disabled ? acc : [...acc, i]), []);
 
-  // On open, highlight the current selection (or the first enabled option, if nothing is
-  // selected yet) so aria-activedescendant is meaningful immediately and arrow keys/Home/End have
-  // a sensible starting point without a first keypress "wasted" just establishing one. On close,
-  // clear the highlight so it's recomputed fresh next time rather than carried over stale.
+  // Highlights the current selection when the popup opens, or the first enabled option if
+  // nothing's selected yet, so aria-activedescendant is meaningful right away and arrow
+  // keys/Home/End have a sensible start. Clears the highlight on close, so it's recomputed fresh
+  // next time.
   useEffect(() => {
     if (!isOpen) {
       setHighlightedIndex(-1);
@@ -96,12 +93,13 @@ const FieldSelectPopupComponent = props => {
     setHighlightedIndex(selectedIndex !== -1 ? selectedIndex : enabledIndices[0] ?? -1);
   }, [isOpen]);
 
-  // Preserves the "opens scrolled to the current value" behavior a native <select> gives for
-  // free, now that the list can be taller than fits on screen (see .popupList's max-height
-  // below), and keeps the keyboard-highlighted option in view the same way while navigating.
-  // Sets `list.scrollTop` directly instead of `node.scrollIntoView({ block: 'center' })`, which
-  // also scrolled a wrapping Modal's own scroll layer, causing a visible jump. Clamped to the
-  // list's own scrollable range so an option near the very top/bottom doesn't overscroll.
+  // Keep the highlighted option roughly centered in the list. That covers both opening on the
+  // current value (like a native <select>) and keyboard navigation afterward. The list can
+  // outgrow the viewport via .popupList's max-height.
+  //
+  // Set `list.scrollTop` directly instead of `node.scrollIntoView({ block: 'center' })`: the
+  // latter also scrolls a wrapping Modal and causes a visible jump. Clamp to the list's scroll
+  // range so options near the top/bottom don't overscroll.
   useEffect(() => {
     if (!isOpen || !listRef.current || highlightedIndex === -1) {
       return;
@@ -117,10 +115,10 @@ const FieldSelectPopupComponent = props => {
   }, [isOpen, highlightedIndex]);
 
   // Decides whether the list opens above the trigger instead of below it, matching native
-  // <select>'s viewport-edge behavior. Measured against the nearest ancestor that clips vertical
-  // overflow (e.g. a Modal's scroll layer), the real boundary the in-flow popup can't extend past;
-  // getScrollBoundary falls back to the viewport when there's no such ancestor. Runs in a layout
-  // effect so the decision is in place before the popup paints.
+  // <select>'s edge behavior. Measures against the nearest ancestor that clips vertical overflow,
+  // such as a Modal's scroll layer, since that's the real boundary the popup can't extend past.
+  // Falls back to the viewport when there's no such ancestor. Runs in a layout effect so the
+  // decision lands before the popup paints.
   useLayoutEffect(() => {
     if (!isOpen) {
       return;
@@ -139,9 +137,8 @@ const FieldSelectPopupComponent = props => {
     const spaceAbove = triggerRect.top - visibleTop;
     const fitsBelow = listHeight <= spaceBelow;
     const fitsAbove = listHeight <= spaceAbove;
-    // Prefer below (native <select>'s default); flip above only when below doesn't fit, and
-    // either above fits properly or, as a last resort when neither fully fits, above simply has
-    // more room to work with.
+    // Prefers opening below, matching native <select>. Flips above only when below doesn't fit
+    // and above does, or, as a last resort, when above simply has more room.
     setOpenAbove(!fitsBelow && (fitsAbove || spaceAbove > spaceBelow));
   }, [isOpen]);
 
@@ -154,9 +151,9 @@ const FieldSelectPopupComponent = props => {
   };
 
   // Accumulates printable characters typed in quick succession into a search string, then moves
-  // the highlight to whatever `findTypeaheadMatch` finds. Ignores modified key combinations
-  // (Ctrl/Alt/Meta) and multi-character keys like "ArrowDown", already handled by `handleKeyDown`.
-  // Only moves the highlight; it never commits a value on its own.
+  // the highlight to whatever findTypeaheadMatch finds. Ignores modified key combinations
+  // (Ctrl/Alt/Meta) and multi-character keys like "ArrowDown", since handleKeyDown already
+  // handles those. It only moves the highlight and never commits a value.
   const handleTypeahead = event => {
     if (event.key.length !== 1 || event.ctrlKey || event.altKey || event.metaKey) {
       return;
@@ -181,17 +178,14 @@ const FieldSelectPopupComponent = props => {
       setHighlightedIndex(match);
     } else {
       // Opening also triggers the "on open" effect above, which would otherwise overwrite this
-      // match with its own default. Handing the match off via the ref lets that effect apply it
-      // instead of the two competing.
+      // match with its own default. The ref hands the match to that effect instead, so they
+      // don't compete.
       pendingHighlightIndexRef.current = match;
       setOpen(true);
     }
   };
 
-  // Enter/Space open the list (or select the highlighted option, if already open); Arrow
-  // Up/Down open the list (matching native <select>) or move the highlight; Home/End jump to the
-  // first/last enabled option; Escape closes without changing the value.
-  // preventDefault on Enter/Space suppresses the button's own native click-on-activation, so this
+  // preventDefault on Enter/Space stops the button's own native click-on-activation, so this
   // handler is the single source of truth for those keys.
   const handleKeyDown = event => {
     switch (event.key) {
@@ -258,10 +252,9 @@ const FieldSelectPopupComponent = props => {
   };
 
   // Closes the popup when focus moves away from the trigger (e.g. tabbing away), in addition to
-  // the outside-click handling below. Clicking an option doesn't blur the trigger first, since
-  // `.popupList`'s `onMouseDown` below prevents the browser's default focus-shifting behavior for
-  // mousedown on a non-focusable descendant, so this only ever fires for a genuine "focus left
-  // the trigger" event, never as a side effect of clicking an option.
+  // the outside-click handling below. Clicking an option doesn't blur the trigger first:
+  // .popupList's onMouseDown below prevents the browser's default focus shift for a mousedown on
+  // a non-focusable descendant. So this only fires for a genuine focus-left-the-trigger event.
   const handleBlur = event => {
     input.onBlur(event);
     if (isOpen) {
@@ -279,9 +272,6 @@ const FieldSelectPopupComponent = props => {
     [css.triggerError]: hasError,
   });
 
-  // ARIA ids. `labelId` only exists when `label` is actually rendered (it's an optional prop:
-  // AvailabilityPlanEntries.js, for instance, relies on its own external <label> instead), so
-  // `aria-labelledby` is only wired up when there's something for it to point at.
   const labelId = label ? `${id}-label` : undefined;
   const valueId = `${id}-value`;
   const listboxId = `${id}-listbox`;
@@ -318,8 +308,8 @@ const FieldSelectPopupComponent = props => {
           {...(labelId ? { 'aria-labelledby': `${labelId} ${valueId}` } : {})}
           {...rest}
         >
-          {/* Shows the placeholder to sighted users only. It's aria-hidden because it isn't a
-              real value. The span below provides the accessible name instead. */}
+          {/* Shows the placeholder to sighted users only, since it isn't a real value. The span
+              below provides the accessible name instead. */}
           <span aria-hidden="true" className={css.triggerLabel}>
             {selectedOption?.label}
           </span>
@@ -384,10 +374,9 @@ const FieldSelectPopupComponent = props => {
  * @param {string?} props.rootClassName overwrite components own css.root
  * @param {string?} props.selectClassName add more style rules to the trigger button
  * @param {string} props.name Name of the input in Final Form
- * @param {string} props.id Label is optional, but if it is given, an id is also required so the label can reference the input in the `for` attribute
+ * @param {string} props.id Required when label is given, so the label can reference the input via `for`
  * @param {ReactNode} props.label
- * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options options to
- * render; the first should be a disabled placeholder
+ * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options Options to render. The first should be a disabled placeholder
  * @param {boolean} props.disabled Whether the trigger is disabled
  * @param {boolean} props.showLabelAsDisabled Whether the label is disabled
  * @param {Function?} props.onToggleActive Called with the new open/closed boolean, so a caller can

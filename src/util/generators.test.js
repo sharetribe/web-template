@@ -385,9 +385,7 @@ describe('generators and iterators', () => {
     });
 
     it('should build separate ranges for multiple entries that share an hour but differ in minutes', () => {
-      // A listing can have several entries inside the same hour
-      // (e.g. 12:00-12:15, 12:30-12:45). Ensure that these entries
-      // are handled as separate ranges even though they start on the same hour.
+      // A listing can have several entries inside the same hour, e.g. 12:00-12:15 and 12:30-12:45.
       const start = parseDateFromISO8601('2023-01-04', 'Etc/UTC'); // Wednesday
       const end = parseDateFromISO8601('2023-01-05', 'Etc/UTC');
       const plan = {
