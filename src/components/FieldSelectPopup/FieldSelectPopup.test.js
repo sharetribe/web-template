@@ -96,10 +96,9 @@ describe('FieldSelectPopup', () => {
   });
 
   // jsdom doesn't compute real layout: offsetTop/offsetHeight/clientHeight/scrollHeight all
-  // default to 0, so this stubs them to exercise (and verify the arithmetic of) the centering
-  // logic. offsetTop/offsetHeight live on HTMLElement.prototype but clientHeight/scrollHeight
-  // live on the more generic Element.prototype, so each property is restored on whichever
-  // prototype actually owns it.
+  // default to 0, so this stubs them to exercise the centering logic. offsetTop/offsetHeight live
+  // on HTMLElement.prototype but clientHeight/scrollHeight live on the more generic
+  // Element.prototype, so each property is restored on whichever prototype actually owns it.
   const withMockedListLayout = (getters, run) => {
     const owner = prop =>
       Object.getOwnPropertyDescriptor(HTMLElement.prototype, prop)
@@ -572,10 +571,9 @@ describe('FieldSelectPopup', () => {
     });
 
     it("closing the popup with Escape does not also bubble to a wrapping Modal's document-level Escape listener", async () => {
-      // Modal.js's own Escape-to-close handling listens for `keyup` on `document.body`
-      // (Modal.js:91/137-142). This stands in for that listener without pulling in the real
-      // Modal component, since what matters here is only whether the keyup reaches document.body,
-      // not Modal's own internals.
+      // Modal.js's own Escape-to-close handling listens for a `keyup` on document.body. This
+      // stands in for that listener without pulling in the real Modal component, since what
+      // matters here is only whether the keyup reaches document.body, not Modal's own internals.
       const user = userEvent.setup();
       const bodyKeyUpSpy = jest.fn();
       document.body.addEventListener('keyup', bodyKeyUpSpy);
@@ -709,9 +707,9 @@ describe('FieldSelectPopup', () => {
       await user.keyboard('9');
       expect(activedescendantOptionName(trigger)).toBe('9:15 AM');
 
-      // Longer than the 500ms reset window. Real timers, not fake ones, since user-event v14's
-      // own internal delays don't compose cleanly with jest.useFakeTimers(), and a real ~600ms
-      // wait is negligible next to the rest of this suite's runtime.
+      // Longer than the 500ms reset window. Uses real timers, not fake ones: user-event v14's own
+      // internal delays don't compose cleanly with jest.useFakeTimers(). The real ~600ms wait is
+      // negligible next to the rest of this suite's runtime.
       await new Promise(resolve => setTimeout(resolve, 600));
 
       await user.keyboard('9');

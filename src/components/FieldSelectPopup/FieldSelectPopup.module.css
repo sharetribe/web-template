@@ -7,8 +7,8 @@
   color: var(--colorGrey600);
 }
 
-/* Trigger button. Reproduces the chrome the global `select` selector in marketplaceDefaults.css
- * provides for free, since a `<button>` doesn't match that selector. */
+/* Reproduces the chrome the global `select` selector in marketplaceDefaults.css provides for
+ * free, since a `<button>` doesn't match that selector. */
 .trigger {
   /* Dimensions */
   display: block;
@@ -49,10 +49,10 @@
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   transition: all ease-in-out 100ms;
 
-  /* .trigger's own `outline: none` removes the native focus ring, and box-shadow/border-color are
+  /* .trigger's own `outline: none` removes the native focus ring. Its box-shadow/border-color are
    * author colors that forced-colors mode flattens, so a focused trigger needs this override to
    * stay visible. `Highlight` is a system color keyword mapped to the user's high-contrast theme.
-   * Positive `outline-offset` keeps the ring outside the existing 1px border so they don't merge. */
+   * Positive `outline-offset` keeps the ring outside the existing 1px border, so they don't merge. */
   @media (forced-colors: active) {
     outline: 2px solid Highlight;
     outline-offset: 2px;

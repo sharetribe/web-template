@@ -223,16 +223,12 @@ const TimeRangeSelects = props => {
     useMultipleSeats,
     intl,
   } = props;
-  // Only 'fixed' unit type's quarter-hour list (up to 96 options) needs the custom popup;
-  // 'hour' keeps the plain native FieldSelect it already had. Passed to the module-level
-  // FieldSelectTime wrapper above, which picks the component/option shape.
+  // Only 'fixed' unit type's quarter-hour list (up to 96 options) needs the custom popup. 'hour'
+  // keeps the plain native FieldSelect it already had.
   const isFixedUnitType = unitType === FIXED;
-  // FieldSelectPopup's own popup stays a plain in-flow child (see its module.css), so it would
-  // otherwise be clipped by a later row's own stacking context (.timeRangeRow: `position:
-  // relative` + `z-index: 1`); no z-index on the popup itself can out-rank a sibling row's
-  // content. Raising this row's own z-index above its siblings while either popup is open fixes
-  // that without the popup leaving this row's DOM subtree, unlike an escaped portal, which would
-  // also have to compete with unrelated ancestors (e.g. a wrapping Modal's own z-index).
+  // Raises this row's own z-index above its siblings while either popup is open. Needed because a
+  // later row's own stacking context would otherwise clip the popup, since it stays a plain
+  // in-flow child rather than escaping the DOM via a portal.
   const [isStartTimeOpen, setIsStartTimeOpen] = useState(false);
   const [isEndTimeOpen, setIsEndTimeOpen] = useState(false);
   const isAnyTimeSelectOpen = isStartTimeOpen || isEndTimeOpen;
@@ -241,12 +237,11 @@ const TimeRangeSelects = props => {
     id: `EditListingAvailabilityPlanForm.dayOfWeek.${dayOfWeek}`,
   });
   const hasTimeRange = Boolean(entry?.startTime && entry?.endTime);
-  // Informative accessible names for the start/end fields. Neither component gets one from the
-  // shared, sighted-only "Select time" <label> below, since it has no `htmlFor` and so isn't
-  // programmatically associated with either field. Passed as `label` (visually hidden via
-  // `css.srOnlyLabel`), so FieldSelect gets a real `<label for>` for the first time, and
-  // FieldSelectPopup's aria-labelledby composition has something to compose with. The current
-  // value isn't repeated here, since both components already announce it separately.
+  // The shared, sighted-only "Select time" <label> below has no htmlFor, so it isn't
+  // programmatically associated with either field. label supplies a real accessible name
+  // instead, visually hidden via css.srOnlyLabel.
+  //
+  // The current value isn't repeated here, since both components already announce it separately.
   const startTimeAriaLabel = intl.formatMessage(
     { id: 'EditListingAvailabilityPlanForm.screenreader.startTimeLabel' },
     { dayOfWeek: dayLabel }
@@ -264,9 +259,9 @@ const TimeRangeSelects = props => {
       endTime: hasTimeRange ? localizedTimeStrings(entry.endTime, intl) : null,
     }
   );
-  // FieldSelectPopup takes an `options` array prop; FieldSelect (a plain native <select>) still
-  // needs real <option> JSX children, built from the same array below so there's one source of
-  // truth for both.
+  // FieldSelectPopup takes an options array prop. FieldSelect (a plain native <select>) still
+  // needs real <option> JSX children, so both are built from the same array below for one
+  // source of truth.
   const startTimeOptions = [
     {
       value: '',

@@ -126,10 +126,10 @@
   z-index: 1;
 }
 
-/* Raised only while one of this row's FieldSelectPopup fields has its popup open, so the
- * open popup (a plain in-flow child, see FieldSelectPopup.module.css) paints above every other
- * row's content instead of being clipped by it. Every row shares the same base z-index (1) as
- * its own stacking context, so raising just this one above `--zIndexPopup` is enough to win. */
+/* Raised only while one of this row's FieldSelectPopup fields has its popup open, so the open
+ * popup paints above every other row's content instead of being clipped by it. Every row shares
+ * the same base z-index (1) for its own stacking context, so raising just this one above
+ * `--zIndexPopup` is enough to win. */
 .timeRangeRowRaised {
   z-index: var(--zIndexPopup);
 }

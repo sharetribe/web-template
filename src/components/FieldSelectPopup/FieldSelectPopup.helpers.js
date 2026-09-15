@@ -1,10 +1,16 @@
 /**
- * Walks up from the trigger to find the nearest ancestor that clips vertical overflow (a scroll
- * container like a Modal's scroll layer, or any other `overflow: auto/scroll/hidden` ancestor).
- * Falls back to a full-viewport-sized boundary when no such ancestor exists.
+ * Returns the vertical bounds a floating popup should stay inside when positioned relative to
+ * `element`, so it doesn't render past the nearest scrollable ancestor.
  *
- * @param {HTMLElement} element the trigger element to walk up from
- * @returns {{top: number, bottom: number}} the boundary's vertical extent
+ * Walks up from `element`'s parent looking for the nearest ancestor that clips vertical overflow
+ * (`overflow-y: auto | scroll | hidden`), such as a Modal's scroll layer. That ancestor's
+ * `getBoundingClientRect()` is returned.
+ *
+ * Falls back to the full viewport, `{ top: 0, bottom: window.innerHeight }`, if no such ancestor
+ * is found before `<body>`.
+ *
+ * @param {HTMLElement} element the element whose ancestors are searched (typically the trigger)
+ * @returns {{top: number, bottom: number}} the boundary's vertical extent, in viewport pixels
  */
 export const getScrollBoundary = element => {
   let node = element?.parentElement;
