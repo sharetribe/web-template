@@ -13,26 +13,30 @@
  *   passed through — whether it is required depends on the transaction process action.
  *
  * How to extend:
- * - Add Stripe push payment method type strings to `STRIPE_PUSH_PAYMENT_METHOD_TYPES`.
- *   The example list follows Sharetribe's documented examples for
- *   `:action/stripe-create-payment-intent-push`;
- *   Sharetribe supports payment methods that have immediate payment confirmation and
- *   that are supported by Stripe’s PaymentIntents API. Keep this allowlist in
- *   sync with the payment methods your marketplace enables in checkout and in Stripe.
+ * - The allowlist is empty by default so push payments fail closed until you opt in.
+ * - Uncomment or add Stripe push payment method type strings to
+ *   `STRIPE_PUSH_PAYMENT_METHOD_TYPES`. Keep it in sync with checkout, Stripe, and your
+ *   transaction process. See CheckoutPage/CheckoutPageRedirectReturn/README.md.
+ * - Sharetribe supports payment methods that have immediate payment confirmation and
+ *   that are supported by Stripe’s PaymentIntents API.
  *
  * @see https://www.sharetribe.com/docs/references/transaction-process-actions/#actionstripe-create-payment-intent-push
  */
 const STRIPE_PUSH_PAYMENT_METHOD_TYPES = new Set([
-  'alipay',
-  'bancontact',
-  'eps',
-  'giropay',
-  'ideal',
-  'p24',
-  'mobilepay',
+  // 'alipay',
+  // 'bancontact',
+  // 'eps',
+  // 'giropay',
+  // 'ideal',
+  // 'p24',
+  // 'mobilepay',
+  // etc.
 ]);
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const PUSH_PAYMENT_ALLOWLIST_GUIDANCE =
+  'Add allowed Stripe type strings to STRIPE_PUSH_PAYMENT_METHOD_TYPES in ' +
+  'server/api-util/pushPaymentMethodValidation.js, and follow the push payment checklist in ' +
+  'src/containers/CheckoutPage/CheckoutPageRedirectReturn/README.md.';
 
 const throwValidationError = message => {
   const error = new Error(message);
@@ -41,6 +45,11 @@ const throwValidationError = message => {
   error.data = {};
   throw error;
 };
+
+const invalidPaymentMethodTypesMessage = () =>
+  process.env.NODE_ENV === 'development'
+    ? `Invalid paymentMethodTypes. ${PUSH_PAYMENT_ALLOWLIST_GUIDANCE}`
+    : 'Invalid paymentMethodTypes.';
 
 const sanitizePushPaymentBodyParams = bodyParams => {
   if (!bodyParams) {
@@ -59,10 +68,7 @@ const sanitizePushPaymentBodyParams = bodyParams => {
 
   const sanitized = [...new Set(types.filter(t => STRIPE_PUSH_PAYMENT_METHOD_TYPES.has(t)))];
   if (sanitized.length === 0) {
-    const message = isDevelopment
-      ? 'Invalid paymentMethodTypes. Have you forgotten to review the push payment method validation on server?'
-      : 'Invalid paymentMethodTypes.';
-    throwValidationError(message);
+    throwValidationError(invalidPaymentMethodTypesMessage());
   }
 
   return {
