@@ -52,14 +52,29 @@ describe('sanitizePushPaymentBodyParams', () => {
     expect(() => sanitizePushPaymentBodyParams(bodyParams)).toThrow('Invalid paymentMethodTypes');
   });
 
-  it('sanitizes paymentMethodTypes to values listed in STRIPE_PUSH_PAYMENT_METHOD_TYPES', () => {
+  it('rejects paymentMethodTypes when the allowlist is empty (default)', () => {
     const bodyParams = {
       transition: 'transition/request-payment-after-inquiry-push',
       params: {
-        paymentMethodTypes: ['ideal', 'bancontact', 'ideal', 'invalid', 'mobilepay'],
+        paymentMethodTypes: ['ideal', 'bancontact', 'mobilepay'],
       },
     };
-    const result = sanitizePushPaymentBodyParams(bodyParams);
-    expect(result.params.paymentMethodTypes).toEqual(['ideal', 'bancontact', 'mobilepay']);
+    expect(() => sanitizePushPaymentBodyParams(bodyParams)).toThrow('Invalid paymentMethodTypes');
+  });
+
+  it('includes customization guidance in development errors', () => {
+    const previousEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'development';
+    try {
+      const bodyParams = {
+        transition: 'transition/request-payment-push',
+        params: { paymentMethodTypes: ['ideal'] },
+      };
+      expect(() => sanitizePushPaymentBodyParams(bodyParams)).toThrow(
+        /pushPaymentMethodValidation\.js[\s\S]*CheckoutPageRedirectReturn\/README\.md/
+      );
+    } finally {
+      process.env.NODE_ENV = previousEnv;
+    }
   });
 });
