@@ -13,7 +13,7 @@ It is mounted by [CheckoutPage](../CheckoutPage.js) when the route uses
 
 **Built-in template processes only expose card (**`paymentDirection: 'pull'`**).** This directory,
 the `/checkout/return` route, and the push branch in checkout submit exist so customizers can enable
-redirect payment methods without reinventing the return-page UX — but **stock checkout never
+redirect payment methods without reinventing the return-page UX — but **default checkout never
 navigates here**.
 
 Until you declare push methods on a process and offer them in checkout, treat this as dormant
@@ -52,16 +52,23 @@ sequenceDiagram
 
   Customer->>Checkout: Submit push payment
   Checkout->>MP: request-payment (create PI)
+  MP-->>Checkout: transaction + PI client_secret
   Checkout->>Stripe: confirmPayment(return_url)
-  Note over Stripe,Bank: Usual path: browser leaves checkout
-  Stripe->>Bank: Redirect to authorize payment
-  Bank->>Return: Return URL with redirect_status + client_secret
-  Return->>Stripe: retrievePaymentIntent
-  Return->>MP: confirm-payment
-  Return->>Customer: OrderDetailsPage
 
-  Note over Checkout,Return: Fallback: Stripe resolves in-page (no navigation)
-  Checkout->>Return: history.replace to /checkout/return
+  alt Usual path: browser leaves checkout
+    Stripe->>Bank: Redirect to authorize payment
+    Bank-->>Customer: Authorize at bank/wallet
+    Stripe->>Return: Redirect to return_url<br/>(redirect_status + client_secret)
+  else Fallback: Stripe resolves in-page (no navigation)
+    Stripe-->>Checkout: PaymentIntent (already past confirm)
+    Checkout->>Return: history.replace to /checkout/return<br/>(synthesized query params)
+  end
+
+  Return->>Stripe: retrievePaymentIntent
+  Stripe-->>Return: PaymentIntent
+  Return->>MP: confirm-payment
+  MP-->>Return: confirmed order
+  Return->>Customer: OrderDetailsPage
 ```
 
 Card checkout does **not** use this view: request → Stripe card confirm → Marketplace confirm all
@@ -74,7 +81,7 @@ process module contract). In short:
 
 ### 1. Backend transaction process
 
-- Use Sharetribe actions appropriate for push (e.g. `:action/stripe-create-payment-intent-push`).
+- Use `:action/stripe-create-payment-intent-push` to create the payment intent.
 - Provide request-payment / confirm-payment transitions the client can resolve via
   `getCheckoutPaymentTransitions`.
 - Capture / accept graph: many push methods do not support manual capture — you may need
@@ -127,9 +134,9 @@ Without webhooks (or equivalent polling), push checkout is incomplete for produc
 
 ### 6. Translations for this return page
 
-These strings are **not** in the template’s `en.json` (or other locale files). Add them to **hosted
-translations** in Console (preferred), and/or to your local `src/translations/{en,de,es,fr}.json`
-fallbacks:
+These strings are **not** in the template’s `en.json` (or other locale files). Add them to
+**hosted translations** in Console (preferred), and/or to your local
+`src/translations/en.json` fallbacks:
 
 ```json
 "CheckoutPage.redirectReturn.title": "Confirming payment",
