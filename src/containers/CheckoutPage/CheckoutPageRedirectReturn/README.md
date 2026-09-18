@@ -52,16 +52,23 @@ sequenceDiagram
 
   Customer->>Checkout: Submit push payment
   Checkout->>MP: request-payment (create PI)
+  MP-->>Checkout: transaction + PI client_secret
   Checkout->>Stripe: confirmPayment(return_url)
-  Note over Stripe,Bank: Usual path: browser leaves checkout
-  Stripe->>Bank: Redirect to authorize payment
-  Bank->>Return: Return URL with redirect_status + client_secret
-  Return->>Stripe: retrievePaymentIntent
-  Return->>MP: confirm-payment
-  Return->>Customer: OrderDetailsPage
 
-  Note over Checkout,Return: Fallback: Stripe resolves in-page (no navigation)
-  Checkout->>Return: history.replace to /checkout/return
+  alt Usual path: browser leaves checkout
+    Stripe->>Bank: Redirect to authorize payment
+    Bank-->>Customer: Authorize at bank/wallet
+    Stripe->>Return: Redirect to return_url<br/>(redirect_status + client_secret)
+  else Fallback: Stripe resolves in-page (no navigation)
+    Stripe-->>Checkout: PaymentIntent (already past confirm)
+    Checkout->>Return: history.replace to /checkout/return<br/>(synthesized query params)
+  end
+
+  Return->>Stripe: retrievePaymentIntent
+  Stripe-->>Return: PaymentIntent
+  Return->>MP: confirm-payment
+  MP-->>Return: confirmed order
+  Return->>Customer: OrderDetailsPage
 ```
 
 Card checkout does **not** use this view: request → Stripe card confirm → Marketplace confirm all
@@ -127,9 +134,9 @@ Without webhooks (or equivalent polling), push checkout is incomplete for produc
 
 ### 6. Translations for this return page
 
-These strings are **not** in the template’s `en.json` (or other locale files). Add them to **hosted
-translations** in Console (preferred), and/or to your local `src/translations/{en,de,es,fr}.json`
-fallbacks:
+These strings are **not** in the template’s `en.json` (or other locale files). Add them to
+**hosted translations** in Console (preferred), and/or to your local
+`src/translations/en.json` fallbacks:
 
 ```json
 "CheckoutPage.redirectReturn.title": "Confirming payment",
