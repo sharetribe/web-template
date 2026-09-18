@@ -11,7 +11,7 @@ import { savePaymentMethod, deletePaymentMethod } from '../../ducks/paymentMetho
 import { handleCardSetup } from '../../ducks/stripe.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, SavedCardDetails, Page, UserNav, LayoutSideNavigation } from '../../components';
+import { H3, PaymentMethodPicker, Page, UserNav, LayoutSideNavigation } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -198,7 +198,7 @@ const PaymentMethodsPageComponent = props => {
           {!stripeCustomerFetched ? null : (
             <>
               {showCardDetails ? (
-                <SavedCardDetails
+                <PaymentMethodPicker
                   card={card}
                   onManageDisableScrolling={onManageDisableScrolling}
                   onChange={setCardState}
