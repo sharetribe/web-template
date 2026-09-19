@@ -35,13 +35,16 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
 // Fetch ownListings to check if currentUser has published listings //
 //////////////////////////////////////////////////////////////////////
 
+// This reads no currentUser out of the store, and must not: fetchCurrentUser
+// dispatches it from inside its own isUserAuthorized branch, so there is a
+// signed-in user, while the store does not have one yet. The currentUser lands
+// in state when fetchCurrentUserThunk FULFILS, which is after the fetches it
+// spawns from inside its own .then have read the store, so a currentUser check
+// here saw null on every cold page load and answered "no listings" without ever
+// querying. The query needs no user id of its own: ownListings is scoped to the
+// caller's token.
 const fetchCurrentUserHasListingsPayloadCreator = (_, thunkAPI) => {
-  const { getState, extra: sdk, rejectWithValue } = thunkAPI;
-  const { currentUser } = getState().user;
-
-  if (!currentUser) {
-    return Promise.resolve({ hasListings: false });
-  }
+  const { extra: sdk, rejectWithValue } = thunkAPI;
 
   const params = {
     // Since we are only interested in if the user has published
