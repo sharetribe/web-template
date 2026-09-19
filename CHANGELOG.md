@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] user.duck / fetchCurrentUserHasListings: don't read the currentUser out of the store. It
+  is not there yet on a cold page load, so currentUserHasListings was false for everyone, and the
+  payout-details and email-verification reminders and the topbar's inbox tab all read it.
+  [#929](https://github.com/sharetribe/web-template/pull/929)
 - [fix] Restore comments to transaction process. [#927](https://github.com/sharetribe/web-template/pull/927)
 - [fix] user.duck / fetchCurrentUser: Don't treat login-as token expiration as a bug. In addition,
   fetchFeaturedListings was also sending unnecessary Sentry errors.
