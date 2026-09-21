@@ -22,7 +22,7 @@ import {
 } from '../../../../../util/dates';
 import { exceptionFreeSlotsPerDate } from '../../../../../util/generators';
 import { bookingDateRequired } from '../../../../../util/validators';
-import { FieldSingleDatePicker, FieldSelect, FieldSelectPopup } from '../../../../../components';
+import { FieldSingleDatePicker, FieldSelectPopup } from '../../../../../components';
 
 import {
   getStartOfNextMonth,
@@ -345,37 +345,6 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
  */
 
 /**
- * Renders the correct time-select variant, FieldSelectPopup (capped-height custom popup) or
- * FieldSelect (plain native <select>), and the option structure each one expects, from a single
- * `useIncrementalBoundaries` flag.
- *
- * Defined here at module scope, not inside ExceptionDateTimeRange: a component defined inside
- * another component's render body is a new type to React on every render, which would remount
- * FieldSelectPopup (losing its open/highlighted-option state) instead of updating it in place.
- *
- * @component
- * @param {Object} props
- * @param {Boolean} props.useIncrementalBoundaries whether to render FieldSelectPopup (true) or FieldSelect (false)
- * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options
- * @param {...*} rest forwarded to whichever component is rendered
- * @returns {JSX.Element}
- */
-const FieldSelectTime = props => {
-  const { useIncrementalBoundaries, options, ...rest } = props;
-  return useIncrementalBoundaries ? (
-    <FieldSelectPopup options={options} {...rest} />
-  ) : (
-    <FieldSelect {...rest}>
-      {options.map(option => (
-        <option key={option.value} value={option.value} disabled={option.disabled}>
-          {option.label}
-        </option>
-      ))}
-    </FieldSelect>
-  );
-};
-
-/**
  * A DateRange field for the form
  *
  * @component
@@ -484,8 +453,8 @@ const ExceptionDateTimeRange = props => {
   // This form is keyed to a specific date, not a day of week, and has no shared sighted-only
   // heading. The label is visually hidden purely to avoid introducing new visible text.
   //
-  // The current value isn't repeated here: FieldSelectPopup's own aria-labelledby composition,
-  // and a native <select>'s separately announced selected <option>, both already supply it.
+  // The current value isn't repeated here: FieldSelectPopup's own aria-labelledby composition
+  // already supplies it.
   const startTimeAriaLabel = intl.formatMessage({
     id: 'EditListingAvailabilityExceptionForm.screenreader.startTimeLabel',
   });
@@ -493,10 +462,7 @@ const ExceptionDateTimeRange = props => {
     id: 'EditListingAvailabilityExceptionForm.screenreader.endTimeLabel',
   });
 
-  // FieldSelectPopup takes an options array prop. FieldSelect (a plain native <select>) still
-  // needs real <option> JSX children, so both are built from the same array in FieldSelectTime
-  // above for one source of truth. Values are stringified for the same reason as
-  // getAllTimeValues above.
+  // Values are stringified for the same reason as getAllTimeValues above.
   const startTimeOptions = exceptionStartDay
     ? availableStartTimes.map(p => ({ value: String(p.timestamp), label: p.timeOfDay }))
     : [{ value: '', label: placeholderTime, disabled: true }];
@@ -550,7 +516,7 @@ const ExceptionDateTimeRange = props => {
           />
         </div>
         <div className={css.field}>
-          <FieldSelectTime
+          <FieldSelectPopup
             name="exceptionStartTime"
             id={`${idPrefix}.exceptionStartTime`}
             label={startTimeAriaLabel}
@@ -566,7 +532,6 @@ const ExceptionDateTimeRange = props => {
             onChange={value =>
               onExceptionStartTimeChange(value, availableSlotsOnSelectedDate, props)
             }
-            useIncrementalBoundaries={useIncrementalBoundaries}
             options={startTimeOptions}
           />
         </div>
@@ -604,7 +569,7 @@ const ExceptionDateTimeRange = props => {
           />
         </div>
         <div className={css.field}>
-          <FieldSelectTime
+          <FieldSelectPopup
             name="exceptionEndTime"
             id={`${idPrefix}.exceptionEndTime`}
             label={endTimeAriaLabel}
@@ -612,7 +577,6 @@ const ExceptionDateTimeRange = props => {
             className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
             selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
             disabled={endTimeDisabled}
-            useIncrementalBoundaries={useIncrementalBoundaries}
             options={endTimeOptions}
           />
         </div>

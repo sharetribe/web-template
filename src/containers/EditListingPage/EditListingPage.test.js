@@ -2071,7 +2071,8 @@ describe('EditListingPage', () => {
       ).toBeInTheDocument();
     });
   }, 10000);
-
+  // 'hour' unit type renders FieldSelectPopup, so this test checks
+  // the custom popup's own open/select/update interaction.
   it('Booking (hour): edit flow on availability tab', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesBookingHourly, listingFieldsBooking);
@@ -2169,25 +2170,44 @@ describe('EditListingPage', () => {
     // plan scheduler
     expect(getByText('EditListingAvailabilityPlanForm.hoursOfOperationTitle')).toBeInTheDocument();
 
-    // Monday is checked and it has 00:00 - 00:00
+    // Monday is checked and already has a start/end time selected, read off each popup's own
+    // trigger button and, once opened, its own option list.
     const monday = getByRole('checkbox', {
       name: /EditListingAvailabilityPlanForm.dayOfWeek.mon/i,
     });
     expect(monday).toBeChecked();
-    const cellMon = monday.parentNode.parentNode;
-    const monDataContainer = within(cellMon.nextElementSibling);
-    const startTimePlaceholderMon = monDataContainer.getByRole('option', {
-      name: 'EditListingAvailabilityPlanForm.startTimePlaceholder',
+    const monDataContainer = within(monday.parentNode.parentNode.nextElementSibling);
+
+    const startTimeTrigger = monDataContainer.getByRole('button', {
+      name: /EditListingAvailabilityPlanForm\.screenreader\.startTimeLabel/,
     });
-    expect(startTimePlaceholderMon.selected).toBe(false);
-    const midnight00 = startTimePlaceholderMon.nextElementSibling;
-    expect(midnight00.selected).toBe(true);
-    const endTimePlaceholder = monDataContainer.getByRole('option', {
-      name: 'EditListingAvailabilityPlanForm.endTimePlaceholder',
+    const endTimeTrigger = monDataContainer.getByRole('button', {
+      name: /EditListingAvailabilityPlanForm\.screenreader\.endTimeLabel/,
     });
-    expect(endTimePlaceholder.selected).toBe(false);
-    const midnight24 = endTimePlaceholder.parentNode.lastChild;
-    expect(midnight24.selected).toBe(true);
+
+    // start (00:00) and end (24:00) format to the same "12:00 AM" display text, so this checks
+    // the selected option's own underlying value instead of the displayed text.
+    await user.click(startTimeTrigger);
+    expect(
+      monDataContainer.getByRole('option', {
+        name: 'EditListingAvailabilityPlanForm.startTimePlaceholder',
+      })
+    ).toHaveAttribute('aria-selected', 'false');
+    expect(
+      monDataContainer.getByRole('option', { name: '12:00 AM', selected: true })
+    ).toHaveAttribute('data-value', '00:00');
+    await user.click(startTimeTrigger); // close again, without changing the selection
+
+    await user.click(endTimeTrigger);
+    expect(
+      monDataContainer.getByRole('option', {
+        name: 'EditListingAvailabilityPlanForm.endTimePlaceholder',
+      })
+    ).toHaveAttribute('aria-selected', 'false');
+    expect(
+      monDataContainer.getByRole('option', { name: '12:00 AM', selected: true })
+    ).toHaveAttribute('data-value', '24:00');
+    await user.click(endTimeTrigger); // close again, without changing the selection
 
     // Sunday is checked and it does not have selectors for start and end
     const sunday = getByRole('checkbox', {
@@ -2208,8 +2228,8 @@ describe('EditListingPage', () => {
     expect(monday).not.toBeChecked();
     const monDataContainerAfterUncheck = within(monday.parentNode.parentNode.nextElementSibling);
     expect(
-      monDataContainerAfterUncheck.queryByRole('option', {
-        name: 'EditListingAvailabilityPlanForm.startTimePlaceholder',
+      monDataContainerAfterUncheck.queryByRole('button', {
+        name: /EditListingAvailabilityPlanForm\.screenreader\.startTimeLabel/,
       })
     ).not.toBeInTheDocument();
 
@@ -2244,9 +2264,8 @@ describe('EditListingPage', () => {
     ).toBeInTheDocument();
   }, 10000);
 
-  // 'fixed' unit type renders FieldSelectPopup instead of a native <select>, so this test checks
-  // the custom popup's own open/select/update interaction rather than `.selected`/native-<option>
-  // assertions.
+  // 'fixed' unit type renders FieldSelectPopup, so this test checks
+  // the custom popup's own open/select/update interaction
   it('Booking (fixed): edit flow on availability tab', async () => {
     const user = userEvent.setup();
     const config = getConfig(listingTypesBookingFixed, listingFieldsBooking);
