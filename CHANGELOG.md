@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] PriorityLinks: measuring link widths while TopbarDesktop is hidden
+  (mobile layout) caused a maximum update depth warning; remasure when the
+  viewport grows to desktop.
+  [#932](https://github.com/sharetribe/web-template/pull/932)
 - [fix] user.duck: The clearCurrentUser thunk resets hasOrders.
   [#931](https://github.com/sharetribe/web-template/pull/931)
 - [fix] user.duck: after Redux toolkit change, currentUser is not populated yet to store.
