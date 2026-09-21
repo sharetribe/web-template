@@ -423,6 +423,7 @@ describe('auth duck', () => {
       const fakeCurrentUser = createCurrentUser({ id: 'test-user' });
       const fakeCurrentUserResponse = { data: { data: fakeCurrentUser, include: [] } };
       const fakeTransactionsResponse = { data: { data: [], include: [] } };
+      const fakeOwnListingsResponse = { data: { data: [], include: [] } };
       const sdk = {
         currentUser: {
           create: jest.fn(() => Promise.resolve({})),
@@ -430,6 +431,7 @@ describe('auth duck', () => {
         },
         login: jest.fn(() => Promise.resolve({})),
         authInfo: jest.fn(() => Promise.resolve({})),
+        ownListings: { query: jest.fn(() => Promise.resolve(fakeOwnListingsResponse)) },
         transactions: { query: jest.fn(() => Promise.resolve(fakeTransactionsResponse)) },
       };
       const initialState = reducer(undefined, { type: '@@INIT' });
@@ -455,19 +457,25 @@ describe('auth duck', () => {
       };
 
       return signup(params)(dispatch, getState, sdk).then(() => {
-        // signup > login > fetchCurrentUser
+        // signup > login > fetchCurrentUser (+ derived fetches)
         expect(sdk.currentUser.create.mock.calls).toEqual([[params]]);
-        expect(actions[0].type).toBe('auth/signup/pending');
-        expect(actions[1].type).toBe('auth/login/pending');
-        expect(actions[2].type).toBe('user/fetchCurrentUser/pending');
-        expect(actions[3].type).toBe('user/fetchCurrentUserHasListings/pending');
-        expect(actions[4].type).toBe('user/fetchCurrentUserNotifications/pending');
-        expect(actions[5].type).toBe('auth/authInfo/pending');
-        expect(actions[6].type).toBe('user/fetchCurrentUserHasListings/fulfilled');
-        expect(actions[7].type).toBe('auth/authInfo/fulfilled');
-        expect(actions[8].type).toBe('user/fetchCurrentUser/fulfilled');
-        expect(actions[9].type).toBe('user/fetchCurrentUserNotifications/fulfilled');
-        expect(actions[10].type).toBe('auth/login/fulfilled');
+        expect(sdk.ownListings.query).toHaveBeenCalled();
+
+        const types = actions.map(a => a.type);
+        // Pending dispatches are synchronous and ordered; fulfillments can interleave.
+        expect(types.slice(0, 6)).toEqual([
+          'auth/signup/pending',
+          'auth/login/pending',
+          'user/fetchCurrentUser/pending',
+          'user/fetchCurrentUserHasListings/pending',
+          'user/fetchCurrentUserNotifications/pending',
+          'auth/authInfo/pending',
+        ]);
+        expect(types).toContain('user/fetchCurrentUserHasListings/fulfilled');
+        expect(types).toContain('user/fetchCurrentUserNotifications/fulfilled');
+        expect(types).toContain('auth/authInfo/fulfilled');
+        expect(types).toContain('user/fetchCurrentUser/fulfilled');
+        expect(types).toContain('auth/login/fulfilled');
       });
     });
     it('should dispatch error', () => {
