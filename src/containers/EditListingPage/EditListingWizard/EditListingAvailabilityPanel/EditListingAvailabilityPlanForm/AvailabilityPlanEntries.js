@@ -4,7 +4,6 @@ import { FieldArray } from 'react-final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../../util/reactIntl';
-import { FIXED } from '../../../../../transactions/transaction';
 
 import {
   compareEntriesByStartTime,
@@ -18,7 +17,6 @@ import { bookingTimeUnits } from '../../../../../util/dates';
 
 import {
   InlineTextButton,
-  FieldSelect,
   FieldSelectPopup,
   FieldCheckbox,
   IconDelete,
@@ -157,39 +155,6 @@ const filterEndTimes = (availableEndTimes, entries, index) => {
 };
 
 /**
- * Renders the correct time-select variant, FieldSelectPopup (capped-height custom popup) or
- * FieldSelect (plain native <select>), and the option structure each one expects, from a single
- * `isFixedUnitType` flag.
- *
- * Defined here at module scope, not inside TimeRangeSelects: TimeRangeSelects re-renders on every
- * parent update, and a component defined inside another component's render body is a new type to
- * React on every render, which would remount FieldSelectPopup (losing its open/highlighted-option
- * state) instead of updating it in place.
- *
- * @component
- * @param {Object} props
- * @param {Boolean} props.isFixedUnitType whether to render FieldSelectPopup (true) or FieldSelect (false)
- * @param {Array<{value: string, label: ReactNode, disabled: boolean}>} props.options
- * @param {Function} [props.onToggleActive] FieldSelectPopup-only, never forwarded to FieldSelect
- * @param {...*} rest forwarded to whichever component is rendered
- * @returns {JSX.Element}
- */
-const FieldSelectTime = props => {
-  const { isFixedUnitType, options, onToggleActive, ...rest } = props;
-  return isFixedUnitType ? (
-    <FieldSelectPopup options={options} onToggleActive={onToggleActive} {...rest} />
-  ) : (
-    <FieldSelect {...rest}>
-      {options.map(option => (
-        <option value={option.value} key={option.value} disabled={option.disabled}>
-          {option.label}
-        </option>
-      ))}
-    </FieldSelect>
-  );
-};
-
-/**
  * Date pickers that create time range inside the day: start time - end time
  *
  * @component
@@ -223,9 +188,6 @@ const TimeRangeSelects = props => {
     useMultipleSeats,
     intl,
   } = props;
-  // Only 'fixed' unit type's quarter-hour list (up to 96 options) needs the custom popup. 'hour'
-  // keeps the plain native FieldSelect it already had.
-  const isFixedUnitType = unitType === FIXED;
   // Raises this row's own z-index above its siblings while either popup is open. Needed because a
   // later row's own stacking context would otherwise clip the popup, since it stays a plain
   // in-flow child rather than escaping the DOM via a portal.
@@ -259,9 +221,6 @@ const TimeRangeSelects = props => {
       endTime: hasTimeRange ? localizedTimeStrings(entry.endTime, intl) : null,
     }
   );
-  // FieldSelectPopup takes an options array prop. FieldSelect (a plain native <select>) still
-  // needs real <option> JSX children, so both are built from the same array below for one
-  // source of truth.
   const startTimeOptions = [
     {
       value: '',
@@ -295,7 +254,7 @@ const TimeRangeSelects = props => {
             [css.timeRangeRowRaised]: isAnyTimeSelectOpen,
           })}
         >
-          <FieldSelectTime
+          <FieldSelectPopup
             id={`${name}.startTime`}
             name={`${name}.startTime`}
             rootClassName={css.hourField}
@@ -304,7 +263,6 @@ const TimeRangeSelects = props => {
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('startTime'),
             })}
-            isFixedUnitType={isFixedUnitType}
             options={startTimeOptions}
             onToggleActive={setIsStartTimeOpen}
           />
@@ -313,7 +271,7 @@ const TimeRangeSelects = props => {
               <path d="M3.5 8h10" strokeWidth="1.333" strokeLinecap="round" />
             </svg>
           </span>
-          <FieldSelectTime
+          <FieldSelectPopup
             id={`${name}.endTime`}
             name={`${name}.endTime`}
             rootClassName={css.hourField}
@@ -322,7 +280,6 @@ const TimeRangeSelects = props => {
             selectClassName={classNames(css.fieldSelect, {
               [css.notSelected]: !isTimeSetFn('endTime'),
             })}
-            isFixedUnitType={isFixedUnitType}
             options={endTimeOptions}
             onToggleActive={setIsEndTimeOpen}
           />
