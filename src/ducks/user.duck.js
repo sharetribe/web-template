@@ -35,14 +35,15 @@ const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
 // Fetch ownListings to check if currentUser has published listings //
 //////////////////////////////////////////////////////////////////////
 
-// This reads no currentUser out of the store, and must not: fetchCurrentUser
-// dispatches it from inside its own isUserAuthorized branch, so there is a
-// signed-in user, while the store does not have one yet. The currentUser lands
-// in state when fetchCurrentUserThunk FULFILS, which is after the fetches it
-// spawns from inside its own .then have read the store, so a currentUser check
-// here saw null on every cold page load and answered "no listings" without ever
-// querying. The query needs no user id of its own: ownListings is scoped to the
-// caller's token.
+/**
+ * Fetch derived user data: whether the current user has published listings.
+ *
+ * Called from `fetchCurrentUser`'s authorized branch before that thunk
+ * fulfills, so `currentUser` may not be in the store yet. Safe without it:
+ * `ownListings` is scoped to the caller's token.
+ *
+ * @returns {Promise<{ hasListings: boolean }>}
+ */
 const fetchCurrentUserHasListingsPayloadCreator = (_, thunkAPI) => {
   const { extra: sdk, rejectWithValue } = thunkAPI;
 
@@ -83,10 +84,17 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
 // Fetch transactions to check if currentUser has orders //
 ///////////////////////////////////////////////////////////
 
-const fetchCurrentUserHasOrdersPayloadCreator = (_, { getState, extra: sdk, rejectWithValue }) => {
-  if (!getState().user.currentUser) {
-    return Promise.resolve({ hasOrders: false });
-  }
+/**
+ * Fetch derived user data: whether the current user has orders.
+ *
+ * Called from `fetchCurrentUser`'s authorized branch before that thunk
+ * fulfills, so `currentUser` may not be in the store yet. Safe without it:
+ * `transactions` is scoped to the caller's token.
+ *
+ * @returns {Promise<{ hasOrders: boolean }>}
+ */
+const fetchCurrentUserHasOrdersPayloadCreator = (_, thunkAPI) => {
+  const { extra: sdk, rejectWithValue } = thunkAPI;
 
   const params = {
     only: 'order',
