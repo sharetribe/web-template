@@ -349,8 +349,9 @@ const userSlice = createSlice({
       state.currentUserHasListingsError = null;
       state.currentUserSaleNotificationCount = 0;
       state.currentUserOrderNotificationCount = 0;
-
       state.currentUserNotificationCountError = null;
+      state.currentUserHasOrders = null;
+      state.currentUserHasOrdersError = null;
     },
     setCurrentUser: (state, action) => {
       state.currentUser = mergeCurrentUser(state.currentUser, action.payload);
