@@ -226,7 +226,8 @@ const CheckoutPage = props => {
     // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
     if (isUserAuthorized(currentUser)) {
       // This is for processes using payments with Stripe integration
-      if (processName !== INQUIRY_PROCESS_NAME) {
+      // Inquiry process has no payment transitions; skip speculate/Stripe customer fetch.
+      if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
         // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
         loadInitialDataForStripePayments({
           pageData: data || {},
