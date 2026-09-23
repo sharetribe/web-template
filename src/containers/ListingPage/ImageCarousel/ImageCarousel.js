@@ -20,6 +20,7 @@ const IMAGE_GALLERY_OPTIONS = {
   showThumbnails: false,
   showFullscreenButton: false,
   slideDuration: 350,
+  lazyLoad: true,
 };
 
 /**
