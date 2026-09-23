@@ -54,6 +54,7 @@ const SectionHero = props => {
           alt={title}
           image={firstImage}
           variants={variants}
+          {...(firstImage ? { fetchpriority: 'high' } : {})}
         />
         {viewPhotosButton}
       </div>
