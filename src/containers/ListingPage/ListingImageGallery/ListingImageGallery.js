@@ -26,6 +26,25 @@ const IMAGE_GALLERY_OPTIONS = {
 };
 const MAX_LANDSCAPE_ASPECT_RATIO = 2; // 2:1
 const MAX_PORTRAIT_ASPECT_RATIO = 4 / 3;
+/** Longer side of a thumbnail inside the gallery strip (matches .thumb max-*). */
+const THUMBNAIL_MAX_SIDE = 88;
+
+/**
+ * Display size for a thumbnail that fits inside an 88px box
+ * while keeping the hosted listing-image crop aspect ratio.
+ *
+ * @param {number} aspectWidth
+ * @param {number} aspectHeight
+ * @returns {{ width: number, height: number }}
+ */
+const getThumbnailDisplaySize = (aspectWidth, aspectHeight) => {
+  const w = aspectWidth || 1;
+  const h = aspectHeight || 1;
+  if (w >= h) {
+    return { width: THUMBNAIL_MAX_SIDE, height: Math.round((THUMBNAIL_MAX_SIDE * h) / w) };
+  }
+  return { width: Math.round((THUMBNAIL_MAX_SIDE * w) / h), height: THUMBNAIL_MAX_SIDE };
+};
 
 const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
   if (!firstImage) {
@@ -59,15 +78,29 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
  * @param {Array<propTypes.image>} props.images - The images
  * @param {Array<string>} props.imageVariants - The image variants
  * @param {Array<string>} props.thumbnailVariants - The thumbnail variants
+ * @param {number} [props.aspectWidth] - Hosted listing-image crop aspect width (for thumbnails)
+ * @param {number} [props.aspectHeight] - Hosted listing-image crop aspect height (for thumbnails)
  * @returns {JSX.Element} listing image gallery component
  */
 const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const intl = useIntl();
-  const { rootClassName, className, images, imageVariants, thumbnailVariants } = props;
+  const {
+    rootClassName,
+    className,
+    images,
+    imageVariants,
+    thumbnailVariants,
+    aspectWidth: listingImageAspectWidth = 1,
+    aspectHeight: listingImageAspectHeight = 1,
+  } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
-  // imageVariants are scaled variants.
+  // imageVariants are scaled variants (main slide uses natural image aspect, capped).
   const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
+  const thumbDisplaySize = getThumbnailDisplaySize(
+    listingImageAspectWidth,
+    listingImageAspectHeight
+  );
   const items = images.map((img, i) => {
     return {
       // We will only use the image resource, but react-image-gallery
@@ -88,7 +121,9 @@ const ListingImageGallery = props => {
   const imageSizesMaybe = isFullscreen
     ? {}
     : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
+  const firstImageId = images[0]?.id?.uuid;
   const renderItem = item => {
+    const isLcpImage = !!firstImageId && item.image?.id?.uuid === firstImageId;
     return (
       <AspectRatioWrapper
         width={aspectWidth || 1}
@@ -102,6 +137,7 @@ const ListingImageGallery = props => {
             alt={item.alt}
             variants={imageVariants}
             {...imageSizesMaybe}
+            {...(isLcpImage ? { fetchpriority: 'high' } : {})}
           />
         </div>
       </AspectRatioWrapper>
@@ -109,15 +145,15 @@ const ListingImageGallery = props => {
   };
   const renderThumbInner = item => {
     return (
-      <div>
-        <ResponsiveImage
-          rootClassName={css.thumb}
-          image={item.image}
-          alt={item.thumbAlt}
-          variants={thumbVariants}
-          sizes="88px"
-        />
-      </div>
+      <ResponsiveImage
+        rootClassName={css.thumb}
+        image={item.image}
+        alt={item.thumbAlt}
+        variants={thumbVariants}
+        sizes={`${THUMBNAIL_MAX_SIDE}px`}
+        width={thumbDisplaySize.width}
+        height={thumbDisplaySize.height}
+      />
     );
   };
 
@@ -170,19 +206,25 @@ const ListingImageGallery = props => {
   }
 
   const classes = classNames(rootClassName || css.root, className);
+  // Explicit rendered thumb size (longer side ≤ 88px) for CSS layout reservation.
+  const rootStyle = {
+    '--listing-thumb-display-width': `${thumbDisplaySize.width}px`,
+    '--listing-thumb-display-height': `${thumbDisplaySize.height}px`,
+  };
 
   return (
-    <ReactImageGallery
-      additionalClass={classes}
-      items={items}
-      renderItem={renderItem}
-      renderThumbInner={renderThumbInner}
-      onScreenChange={onScreenChange}
-      renderLeftNav={renderLeftNav}
-      renderRightNav={renderRightNav}
-      renderFullscreenButton={renderFullscreenButton}
-      {...IMAGE_GALLERY_OPTIONS}
-    />
+    <div className={classes} style={rootStyle}>
+      <ReactImageGallery
+        items={items}
+        renderItem={renderItem}
+        renderThumbInner={renderThumbInner}
+        onScreenChange={onScreenChange}
+        renderLeftNav={renderLeftNav}
+        renderRightNav={renderRightNav}
+        renderFullscreenButton={renderFullscreenButton}
+        {...IMAGE_GALLERY_OPTIONS}
+      />
+    </div>
   );
 };
 
