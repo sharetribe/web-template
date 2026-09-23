@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] ListingPage: fix layout shift caused by carousel images and add fetch priority to the first
+  image. [#934](https://github.com/sharetribe/web-template/pull/934)
 - [fix] CheckoutPage: fix a bug with speculation made against an inquiry process.
   [#933](https://github.com/sharetribe/web-template/pull/933)
 - [fix] PriorityLinks: measuring link widths while TopbarDesktop is hidden (mobile layout) caused a
