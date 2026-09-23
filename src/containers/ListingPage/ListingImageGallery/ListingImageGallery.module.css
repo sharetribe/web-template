@@ -16,15 +16,34 @@
   width: 100vw;
   overflow: auto;
 
+  /*
+   Reserve strip height before images load (padding-top + border + rendered thumb height).
+   */
+  min-height: calc(
+    24px + 2 * var(--ig-thumbnail-border-width, 4px) + var(--listing-thumb-display-height, 88px)
+  );
+
   @media (--viewportMedium) {
     width: calc(100vw - 48px);
   }
   @media (--viewportLarge) {
     width: unset;
   }
+
+  @media (max-width: 768px) {
+    min-height: calc(
+      24px + 2 * var(--ig-thumbnail-border-width-small, 3px) +
+        var(--listing-thumb-display-height, 88px)
+    );
+  }
 }
 :global(.image-gallery-thumbnail) {
+  /*
+   Hug the image width (longer side ≤ 88px). Fixed library width would stretch
+   or squash thumbs; height is reserved via min-height on the strip + img attrs.
+   */
   width: auto;
+  vertical-align: top;
   border-radius: 8px;
 
   text-align: left !important;
@@ -111,10 +130,14 @@
 }
 
 .thumb {
-  /* With the active thumbnail border (default 4px), make the result
-   height a multiple of the baseline. */
-  max-width: 88px;
-  max-height: 88px;
+  /*
+   Rendered size matches width/height attrs (longer side = 88px). Explicit
+   dimensions reserve layout space before the image decodes.
+   */
+  display: block;
+  width: var(--listing-thumb-display-width, 88px);
+  height: var(--listing-thumb-display-height, 88px);
+  object-fit: cover;
   border-radius: var(--borderRadiusMedium);
 }
 
