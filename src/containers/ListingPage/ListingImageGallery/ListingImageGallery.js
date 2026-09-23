@@ -121,7 +121,9 @@ const ListingImageGallery = props => {
   const imageSizesMaybe = isFullscreen
     ? {}
     : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
+  const firstImageId = images[0]?.id?.uuid;
   const renderItem = item => {
+    const isLcpImage = !!firstImageId && item.image?.id?.uuid === firstImageId;
     return (
       <AspectRatioWrapper
         width={aspectWidth || 1}
@@ -135,6 +137,7 @@ const ListingImageGallery = props => {
             alt={item.alt}
             variants={imageVariants}
             {...imageSizesMaybe}
+            {...(isLcpImage ? { fetchpriority: 'high' } : {})}
           />
         </div>
       </AspectRatioWrapper>
