@@ -96,9 +96,9 @@ const EditListingPricingAndStockPanel = props => {
 
   // Form needs to know data from listingType
   const publicData = listing?.attributes?.publicData;
-  const unitType = publicData.unitType;
+  const unitType = publicData?.unitType;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
-  const transactionProcessAlias = listingTypeConfig.transactionType.alias;
+  const transactionProcessAlias = listingTypeConfig?.transactionType?.alias;
 
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
 
