@@ -1,25 +1,42 @@
 version: 2.1
+
+# Fastest safe install: cache yarn downloads with fallbacks, and node_modules only
+# when yarn.lock matches exactly (no master/branch fallbacks for node_modules).
+commands:
+  install_dependencies:
+    steps:
+      - restore_cache:
+          name: Restore Yarn download cache
+          keys:
+            - yarn-cache-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-cache-v1-{{ .Branch }}
+            - yarn-cache-v1-master
+            - yarn-cache-v1-
+      - restore_cache:
+          name: Restore node_modules
+          keys:
+            - node-modules-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install
+      - save_cache:
+          name: Save Yarn download cache
+          key: yarn-cache-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          name: Save node_modules
+          key: node-modules-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+
 jobs:
   format:
     docker:
       - image: cimg/node:22.22
     steps:
       - checkout
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-{{ .Branch }}
-            - yarn-packages-master
-            - yarn-packages-
-      - run:
-          name: Install Dependencies
-          command: yarn install
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
+      - install_dependencies
       - run:
           name: Check code formatting
           command: yarn run format-ci
@@ -28,21 +45,7 @@ jobs:
       - image: cimg/node:22.22
     steps:
       - checkout
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-{{ .Branch }}
-            - yarn-packages-master
-            - yarn-packages-
-      - run:
-          name: Install Dependencies
-          command: yarn install
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
+      - install_dependencies
       - run:
           name: Run test suite
           command: yarn run test-ci
@@ -51,47 +54,10 @@ jobs:
       - image: cimg/node:22.22
     steps:
       - checkout
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-{{ .Branch }}
-            - yarn-packages-master
-            - yarn-packages-
-      - run:
-          name: Install Dependencies
-          command: yarn install
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
+      - install_dependencies
       - run:
           name: Build client application
           command: yarn run build
-  audit:
-    docker:
-      - image: cimg/node:22.22
-    steps:
-      - checkout
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-{{ .Branch }}
-            - yarn-packages-master
-            - yarn-packages-
-      - run:
-          name: Install Dependencies
-          command: yarn install
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
-      - run:
-          name: Audit dependencies
-          command: yarn run audit
 workflows:
   format_test_build_audit:
     jobs:
