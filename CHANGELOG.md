@@ -14,6 +14,11 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update Sentry (@sentry/browser and @sentry/node) 10.43.0 > 11.0.0. Load the browser SDK
+  asynchronously via a tree-shakeable wrapper so it is not bundled into the main chunk. Pin
+  `@babel/helper-compilation-targets/lru-cache` to 5.1.1 so CI does not resolve a newer lru-cache
+  and fail with `_lruCache is not a constructor` (safe to remove once Babel no longer depends on
+  lru-cache@^5). [#938](https://github.com/sharetribe/web-template/pull/938)
 - [fix] EditListingPricingAndStockPanel: guard against missing listingTypeConfig.
   [#937](https://github.com/sharetribe/web-template/pull/937)
 - [fix] data.js: limitListingsSections fails and sends Sentry error when a Pages asset has no
