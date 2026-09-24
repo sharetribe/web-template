@@ -256,15 +256,6 @@ const sitemapPages = (req, res, rootUrl, sdk) => {
     .then(response => {
       const assets = response.data.data || [];
 
-      // If there's no Pages, let's just return empty sitemap
-      const hasAssets = assets.length > 0;
-      if (!hasAssets) {
-        res.send(
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"></urlset>`
-        );
-        return;
-      }
-
       // Pick those asset paths that CMSPage component renders
       const cmsPagePaths = assets.reduce((picked, asset) => {
         const assetFileName = asset.attributes?.assetPath?.slice(pathPrefix.length);
@@ -272,6 +263,14 @@ const sitemapPages = (req, res, rootUrl, sdk) => {
         const permanentPaths = ['landing-page', 'terms-of-service', 'privacy-policy'];
         return permanentPaths.includes(assetName) ? picked : [...picked, `p/${assetName}`];
       }, []);
+
+      // After filtering permanent paths, there may be nothing left to include
+      if (cmsPagePaths.length === 0) {
+        res.send(
+          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"></urlset>`
+        );
+        return;
+      }
 
       const smStream = new SitemapStream({ hostname: rootUrl });
       Readable.from(cmsPagePaths).pipe(smStream);
