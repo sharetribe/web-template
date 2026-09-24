@@ -84,7 +84,10 @@ const StripePaymentAddress = props => {
   const handleOnChange = event => {
     const value = event.target.value;
     form.change('postal', value);
-    card.update({ value: { postalCode: value } });
+    // Card Element may be absent (e.g. some Stripe push payment flows); only sync to Stripe then.
+    if (card) {
+      card.update({ value: { postalCode: value } });
+    }
   };
 
   // Use the language set in config.localization.locale to get the correct translations of the country names
