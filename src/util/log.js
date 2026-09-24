@@ -20,10 +20,11 @@ const pickSelectedErrors = (ignored, entry) => {
 };
 
 /**
- * Dynamically loads @sentry/browser into its own webpack chunk and initializes it.
- * Shared promise so concurrent callers share one load + init.
+ * Dynamically loads the tree-shakeable Sentry client into its own webpack chunk
+ * and initializes it. Shared promise so concurrent callers share one load + init.
  *
- * @returns {Promise<object|null>} Sentry SDK module, or null when no DSN is configured
+ * @returns {Promise<object|null>} Client API ({ init, setUser, withScope, captureException }),
+ *   or null when no DSN is configured
  */
 const loadSentry = (() => {
   let sentryPromise = null;
@@ -33,7 +34,9 @@ const loadSentry = (() => {
       return Promise.resolve(null);
     }
     if (!sentryPromise) {
-      sentryPromise = import(/* webpackChunkName: "sentry" */ '@sentry/browser').then(Sentry => {
+      // Import the thin wrapper (not @sentry/browser directly) so static named
+      // exports enable tree-shaking of unused SDK features in this async chunk.
+      sentryPromise = import(/* webpackChunkName: "sentry" */ './sentryClient').then(Sentry => {
         const ignoreErrors = Object.entries(ingoreErrorsMap).reduce(pickSelectedErrors, []);
 
         // Configures the Sentry client. Adds a handler for
