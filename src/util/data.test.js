@@ -6,6 +6,7 @@ import {
   denormalisedEntities,
   humanizeLineItemCode,
   denormalizeAssetData,
+  limitListingsSections,
 } from './data';
 
 const { UUID } = sdkTypes;
@@ -427,5 +428,27 @@ describe('denormalizeAssetData', () => {
       },
     };
     expect(JSON.stringify(denormalizeAssetData(jsonObj))).toEqual(JSON.stringify(expected));
+  });
+});
+
+describe('limitListingsSections', () => {
+  it('handles empty page asset data without sections', () => {
+    expect(limitListingsSections({})).toEqual({ sections: [] });
+  });
+
+  it('handles missing data', () => {
+    expect(limitListingsSections(undefined)).toEqual({ sections: [] });
+  });
+
+  it('keeps non-listing sections and limits listing sections to 10', () => {
+    const sections = [
+      { sectionType: 'hero' },
+      ...Array.from({ length: 12 }, (_, i) => ({ sectionType: 'listings', id: `l${i}` })),
+      { sectionType: 'footer' },
+    ];
+    const result = limitListingsSections({ sections });
+    expect(result.sections.filter(s => s.sectionType === 'listings')).toHaveLength(10);
+    expect(result.sections[0]).toEqual({ sectionType: 'hero' });
+    expect(result.sections[result.sections.length - 1]).toEqual({ sectionType: 'footer' });
   });
 });

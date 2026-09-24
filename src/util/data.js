@@ -222,7 +222,9 @@ export const denormalizeAssetData = assetJson => {
 export const limitListingsSections = data => {
   let acc = 0;
   const listingSectionLimit = 10;
-  const filteredSections = data.sections.filter(section => {
+  // Empty hosted page assets may return {} without a sections array.
+  const sections = Array.isArray(data?.sections) ? data.sections : [];
+  const filteredSections = sections.filter(section => {
     if (section.sectionType === 'listings') {
       if (acc < listingSectionLimit) {
         acc++;
