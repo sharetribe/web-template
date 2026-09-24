@@ -6,7 +6,6 @@
  *
  */
 
-import * as Sentry from '@sentry/browser';
 import appSettings from '../config/settings';
 
 const ingoreErrorsMap = {
@@ -21,21 +20,42 @@ const pickSelectedErrors = (ignored, entry) => {
 };
 
 /**
+ * Dynamically loads @sentry/browser into its own webpack chunk and initializes it.
+ * Shared promise so concurrent callers share one load + init.
+ *
+ * @returns {Promise<object|null>} Sentry SDK module, or null when no DSN is configured
+ */
+const loadSentry = (() => {
+  let sentryPromise = null;
+
+  return () => {
+    if (!appSettings.sentryDsn) {
+      return Promise.resolve(null);
+    }
+    if (!sentryPromise) {
+      sentryPromise = import(/* webpackChunkName: "sentry" */ '@sentry/browser').then(Sentry => {
+        const ignoreErrors = Object.entries(ingoreErrorsMap).reduce(pickSelectedErrors, []);
+
+        // Configures the Sentry client. Adds a handler for
+        // any uncaught exception.
+        Sentry.init({
+          dsn: appSettings.sentryDsn,
+          environment: appSettings.env,
+          ignoreErrors,
+        });
+        return Sentry;
+      });
+    }
+    return sentryPromise;
+  };
+})();
+
+/**
  * Set up error handling. If a Sentry DSN is
  * provided a Sentry client will be installed.
  */
 export const setup = () => {
-  if (appSettings.sentryDsn) {
-    const ignoreErrors = Object.entries(ingoreErrorsMap).reduce(pickSelectedErrors, []);
-
-    // Configures the Sentry client. Adds a handler for
-    // any uncaught exception.
-    Sentry.init({
-      dsn: appSettings.sentryDsn,
-      environment: appSettings.env,
-      ignoreErrors,
-    });
-  }
+  loadSentry();
 };
 
 /**
@@ -45,7 +65,11 @@ export const setup = () => {
  * @param {String} userId ID of current user
  */
 export const setUserId = userId => {
-  Sentry.setUser({ id: userId });
+  loadSentry().then(Sentry => {
+    if (Sentry) {
+      Sentry.setUser({ id: userId });
+    }
+  });
 };
 
 /**
@@ -53,7 +77,11 @@ export const setUserId = userId => {
  */
 
 export const clearUserId = () => {
-  Sentry.setUser(null);
+  loadSentry().then(Sentry => {
+    if (Sentry) {
+      Sentry.setUser(null);
+    }
+  });
 };
 
 const printAPIErrorsAsConsoleTable = apiErrors => {
@@ -131,12 +159,17 @@ export const error = (e, code, data, options = {}) => {
   if (appSettings.sentryDsn && !skipSentry) {
     const extra = { ...data, apiErrorData: apiErrors };
 
-    Sentry.withScope(scope => {
-      scope.setTag('code', code);
-      Object.keys(extra).forEach(key => {
-        scope.setExtra(key, extra[key]);
+    loadSentry().then(Sentry => {
+      if (!Sentry) {
+        return;
+      }
+      Sentry.withScope(scope => {
+        scope.setTag('code', code);
+        Object.keys(extra).forEach(key => {
+          scope.setExtra(key, extra[key]);
+        });
+        Sentry.captureException(toCapturableError(e));
       });
-      Sentry.captureException(toCapturableError(e));
     });
 
     printAPIErrorsAsConsoleTable(apiErrors);
