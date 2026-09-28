@@ -226,6 +226,19 @@ describe('Field helpers', () => {
         backgroundImage,
         alt,
       });
+      expect(
+        exposeCustomAppearanceProps({ backgroundImage, alt }, { fetchPriority: 'high' })
+      ).toEqual({
+        backgroundImage,
+        alt,
+        fetchPriority: 'high',
+      });
+      // Color-only appearance: no background image → no fetchPriority
+      expect(
+        exposeCustomAppearanceProps({ backgroundColor: '#FFAA00' }, { fetchPriority: 'high' })
+      ).toEqual({
+        backgroundColor: '#FFAA00',
+      });
     });
 
     it('should return empty "backgroundImage" prop if invalid value is passed', () => {

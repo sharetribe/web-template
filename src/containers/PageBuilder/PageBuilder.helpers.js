@@ -4,11 +4,12 @@
  * Extend this allowlist when adding new Field-scoped flags.
  *
  * @param {Object} [options]
- * @returns {{ fieldComponents?: Object, lazyImages?: boolean }}
+ * @returns {{ fieldComponents?: Object, fetchPriority?: string }}
  */
 export const pickFieldOptions = (options = {}) => {
-  const { fieldComponents } = options;
+  const { fieldComponents, fetchPriority } = options;
   return {
     ...(fieldComponents ? { fieldComponents } : {}),
+    ...(fetchPriority ? { fetchPriority } : {}),
   };
 };

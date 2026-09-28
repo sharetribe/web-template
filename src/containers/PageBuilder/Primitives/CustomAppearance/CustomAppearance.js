@@ -33,6 +33,7 @@ import css from './CustomAppearance.module.css';
  * @param {number} props.backgroundImageOverlay.opacity
  * @param {string?} props.alt
  * @param {string?} props.sizes
+ * @param {string?} props.fetchPriority HTML fetchpriority attribute (e.g. 'high' for LCP image)
  * @returns {JSX.Element} custom appearance for the container of a section component
  */
 export const CustomAppearance = React.forwardRef((props, ref) => {
@@ -44,6 +45,7 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
     backgroundImageOverlay,
     alt = 'background image',
     sizes,
+    fetchPriority,
   } = props;
 
   const getVariantNames = img => {
@@ -72,6 +74,7 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
           image={backgroundImage}
           variants={getVariantNames(backgroundImage)}
           sizes={sizes}
+          {...(fetchPriority ? { fetchpriority: fetchPriority } : {})}
         />
       ) : null}
       {hasBackgroundOverlay ? <div className={css.backgroundOverlay} style={overlayStyle} /> : null}

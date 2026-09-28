@@ -100,7 +100,7 @@ const getValidSanitizedImage = image => {
  * }
  *
  * @param {Object} data E.g. "{ fieldType: 'image', alt: 'my portrait', image: { id, type, attributes } }"
- * @param {Object} [options] field options (e.g. lazyImages from SectionBuilder)
+ * @param {Object} [options] field options (runtime flags from SectionBuilder)
  * @returns object containing alt string and variants.
  */
 export const exposeImageProps = (data, options = {}) => {
@@ -142,7 +142,7 @@ const exposeColorValue = color => {
  * backgroundColor contains hexadecimal string like "#FF0000" or "#F00".
  *
  * @param {Object} data E.g. "{ fieldType: 'customAppearance', backgroundImage: imageAssetRef, backgroundColor: '#000000', textColor: '#FFFFFF' }"
- * @param {Object} [options] field options (e.g. lazyImages from SectionBuilder)
+ * @param {Object} [options] field options (e.g. fetchPriority from SectionBuilder)
  * @returns object containing valid data.
  */
 export const exposeCustomAppearanceProps = (data, options = {}) => {
@@ -184,6 +184,8 @@ export const exposeCustomAppearanceProps = (data, options = {}) => {
     ...backgroundColorMaybe,
     ...backgroundImageOverlayMaybe,
     ...textColorMaybe,
+    // First-section LCP hint for background images only (not block FieldImages yet)
+    ...(options.fetchPriority && sanitizedImage ? { fetchPriority: options.fetchPriority } : {}),
   };
 };
 
