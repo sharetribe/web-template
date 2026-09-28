@@ -1,11 +1,11 @@
-import * as stripe from './configStripe';
-import * as listing from './configListing';
-import * as search from './configSearch';
-import * as maps from './configMaps';
-import * as branding from './configBranding';
-import * as layout from './configLayout';
-import * as analytics from './configAnalytics';
-import * as user from './configUser';
+import * as stripe from './stripe/defaultStripe';
+import * as listing from './listing/defaultListing';
+import * as search from './search/defaultSearch';
+import * as maps from './maps/defaultMaps';
+import * as branding from './branding/defaultBranding';
+import * as layout from './layout/defaultLayout';
+import * as analytics from './analytics/defaultAnalytics';
+import * as user from './user/defaultUser';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -35,7 +35,7 @@ const defaultConfig = {
   // Marketplace name is needed for microcopy (aka marketplace texts) and in meta tags (bots and social media sharing reads those)
   marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || '[Marketplace Name]',
 
-  // Modify Stripe configuration in configStripe.js
+  // Modify Stripe configuration in stripe/defaultStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
   // - dayCountAvailableForBooking: Stripe can hold payments only limited time on Connect Account
   //                                This adds some restriction for bookings (payouts vs long bookings)
@@ -43,20 +43,20 @@ const defaultConfig = {
   // - supportedCountries
   stripe,
 
-  // Modify listing extended data and listing type in configListing.js
+  // Modify listing extended data and listing type in listing/defaultListing.js
   listing,
 
   user,
-  // Modify search settings data in configSearch.js
+  // Modify search settings data in search/defaultSearch.js
   search,
-  // Modify settings for map providers in configMaps.js
+  // Modify settings for map providers in maps/defaultMaps.js
   // This includes also default locations for location search
   maps,
-  // Modify branding configs in configBranding.js
+  // Modify branding configs in branding/defaultBranding.js
   branding,
-  // Modify layout configs in configLayout.js
+  // Modify layout configs in layout/defaultLayout.js
   layout,
-  // Modify analytics configs in configAnalytics.js
+  // Modify analytics configs in analytics/defaultAnalytics.js
   // By default, it doesn't add anything.
   analytics,
 
