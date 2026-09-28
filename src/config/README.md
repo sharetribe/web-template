@@ -10,11 +10,11 @@ _src/util/configHelpers.js_
 
 Some of the content is splitted to separate files:
 
-- **[configBranding.js](./configBranding.js)**
+- **[branding/defaultBranding.js](./branding/defaultBranding.js)**
   - marketplaceColor, logo, etc.
-- **[configLayout.js](./configLayout.js)**
+- **[layout/defaultLayout.js](./layout/defaultLayout.js)**
   - layout for search and listing page
-- **[configListing.js](./configListing.js)**
+- **[listing/defaultListing.js](./listing/defaultListing.js)**
   - Extended data config (also used for enabling search filters)
   - Listing type (listingType) config
   - Besides custom extended data fields, listing's extended data can also contain other extra data.
@@ -22,12 +22,16 @@ Some of the content is splitted to separate files:
     - listingType
     - transactionProcessAlias
     - unitType
-- **[configSearch.js](./configSearch.js)**
+- **[search/defaultSearch.js](./search/defaultSearch.js)**
   - mainSearchType, default filters, sort, etc.
-- **[configMaps.js](./configMaps.js)**
-  - mapProvider config, location search config (also in defaultLocationSearchesConfig.js)
-- **[configStripe.js](./configStripe.js)**
+- **[maps/defaultMaps.js](./maps/defaultMaps.js)**
+  - mapProvider config, location search config (also in maps/defaultLocationSearches.js)
+- **[stripe/defaultStripe.js](./stripe/defaultStripe.js)**
   - Stripe publishable key, day count available for booking, default merchant categry code
+- **[analytics/defaultAnalytics.js](./analytics/defaultAnalytics.js)**
+  - analytics defaults
+- **[user/defaultUser.js](./user/defaultUser.js)**
+  - user types and fields defaults
 
 ### Hosted app configs
 
@@ -108,7 +112,7 @@ too.
 ## Search only listings that are supported by listing type
 
 SearchPage can restrict search results to listings with valid listingType. Validity is defined by
-listingTypes array in _configListing.js_.
+listingTypes array in _listing/defaultListing.js_.
 
 However, it only works if you have set 'enum' type search schema for the following public data
 field: **_listingType_**.
@@ -119,7 +123,7 @@ You could even extend that validation to
 - unitType
 
 If you have set the search schema for those public data fields, you can turn
-`enforceValidListingType` config to true in [configListing.js](./configListing.js) file.
+`enforceValidListingType` config to true in [listing/defaultListing.js](./listing/defaultListing.js) file.
 
 Read More:
 

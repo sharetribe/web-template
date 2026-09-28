@@ -1642,7 +1642,7 @@ const mergeSearchConfig = (
           hostedSearchConfig?.mainSearch?.searchType === 'location',
           listingFieldsConfig
         ),
-        // This is an example of how to load custom built-in filters through the configListing.js file
+        // This is an example of how to load custom built-in filters through the listing/defaultListing.js file
         // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
         listingTypeFilter: defaultSearchConfig.listingTypeFilter,
         categoryFilter: defaultSearchConfig.categoryFilter,

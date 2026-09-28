@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
 // Configurations related to search                                 //
-// Note: some search experience is also on defaultMapsConfig        //
+// Note: some search experience is also on maps/defaultMaps.js       //
 // and defaultListingConfig.js is responsible public data filtering //
 //////////////////////////////////////////////////////////////////////
 
