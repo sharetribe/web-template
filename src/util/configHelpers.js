@@ -160,60 +160,6 @@ const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
 // Legacy merge* helpers below remain until those domains are ported.    //
 ///////////////////////////////////////////////////////////////////////////
 
-///////////////////
-// Merge layouts //
-///////////////////
-
-const pickVariant = (hostedVariant, defaultVariant) =>
-  hostedVariant?.variantType ? hostedVariant : defaultVariant;
-const validVariantConfig = (hostedVariant, defaultVariant, validVariantTypes, fallback) => {
-  const variant = pickVariant(hostedVariant, defaultVariant);
-  const isValidVariant = validVariantTypes.includes(variant?.variantType);
-
-  if (!isValidVariant) {
-    console.warn('Unsupported layout option detected', variant);
-  }
-  if (variant.variantType === 'cropImage') {
-    const [w, h] = variant.aspectRatio.split('/') || ['1', '1'];
-    const aspectWidth = Number.parseInt(w, 10);
-    const aspectHeight = Number.parseInt(h, 10);
-    return isValidVariant
-      ? { ...variant, aspectWidth, aspectHeight, variantPrefix: defaultVariant.variantPrefix }
-      : fallback;
-  }
-
-  return isValidVariant ? variant : fallback;
-};
-
-const mergeLayouts = (layoutConfig, defaultLayout) => {
-  const searchPage = validVariantConfig(
-    layoutConfig?.searchPage,
-    defaultLayout?.searchPage,
-    ['map', 'grid'],
-    { variantType: 'grid' }
-  );
-
-  const listingPage = validVariantConfig(
-    layoutConfig?.listingPage,
-    defaultLayout?.listingPage,
-    ['coverPhoto', 'carousel'],
-    { variantType: 'carousel' }
-  );
-
-  const listingImage = validVariantConfig(
-    layoutConfig?.listingImage,
-    defaultLayout?.listingImage,
-    ['cropImage'],
-    { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
-  );
-
-  return {
-    searchPage,
-    listingPage,
-    listingImage,
-  };
-};
-
 ////////////////////////////////////
 // Validate listing fields config //
 ////////////////////////////////////
@@ -1691,10 +1637,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Localization (locale, first day of week)
     localization: mergeLocalizations(configAsset.localization, defaultConfigs.localization),
-
-    // Layout configuration comes entirely from hosted assets,
-    // but defaultConfigs is used if type of the hosted configs is unknown
-    layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // User configuration comes entirely from hosted assets by default.
     user: mergeUserConfig(configAsset, defaultConfigs),
