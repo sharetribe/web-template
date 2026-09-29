@@ -160,109 +160,6 @@ const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
 // Legacy merge* helpers below remain until those domains are ported.    //
 ///////////////////////////////////////////////////////////////////////////
 
-////////////////////
-// Merge branding //
-////////////////////
-
-// Generate darker and lighter versions of marketplace color,
-// if those values are not set by default.
-// Adjusted from https://gist.github.com/xenozauros/f6e185c8de2a04cdfecf
-const hexToCssHsl = (hexColor, lightnessDiff) => {
-  let hex = hexColor.replace(/^#/, '');
-  if (hex.length === 3) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-  const r = parseInt(hex.substr(0, 2), 16) / 255;
-  const g = parseInt(hex.substr(2, 2), 16) / 255;
-  const b = parseInt(hex.substr(4, 2), 16) / 255;
-
-  // r /= 255, g /= 255, b /= 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-
-  let h;
-  let s;
-  let l = (max + min) / 2;
-
-  if (max == min) {
-    // achromatic
-    h = 0;
-    s = 0;
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-    h /= 6;
-  }
-
-  h = Math.round(h * 360);
-  s = Math.round(s * 100);
-  l = Math.round(l * 100);
-
-  return `hsl(${h}, ${s}%, ${l + lightnessDiff}%)`;
-};
-
-const getVariantURL = (socialSharingImage, variantName) => {
-  return socialSharingImage?.type === 'imageAsset'
-    ? socialSharingImage.attributes.variants[variantName]?.url
-    : null;
-};
-
-const mergeBranding = (brandingConfig, defaultBranding) => {
-  const {
-    marketplaceColors,
-    logo,
-    logoSettings,
-    loginBackgroundImage,
-    socialSharingImage,
-    ...rest
-  } = brandingConfig || {};
-
-  const marketplaceColor = marketplaceColors?.mainColor || defaultBranding.marketplaceColor;
-  const marketplaceColorDark = marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null;
-  const marketplaceColorLight = marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null;
-
-  // The 'marketplaceColor' has a special status for branding. Other colors are just prefixed with "color".
-  const colorPrimaryButton = marketplaceColors?.primaryButton;
-  const colorPrimaryButtonDark = colorPrimaryButton ? hexToCssHsl(colorPrimaryButton, -10) : null;
-  const colorPrimaryButtonLight = colorPrimaryButton ? hexToCssHsl(colorPrimaryButton, 10) : null;
-
-  const logoSettingsRaw = logoSettings || defaultBranding.logoSettings;
-  const validLogoSettings =
-    logoSettingsRaw?.format === 'image' && [24, 36, 48].includes(logoSettingsRaw?.height);
-
-  const facebookImage =
-    getVariantURL(socialSharingImage, 'scaled1200') || defaultBranding.facebookImageURL;
-  const twitterImage =
-    getVariantURL(socialSharingImage, 'scaled600') || defaultBranding.twitterImageURL;
-
-  return {
-    marketplaceColor,
-    marketplaceColorDark,
-    marketplaceColorLight,
-    colorPrimaryButton,
-    colorPrimaryButtonDark,
-    colorPrimaryButtonLight,
-    logoSettings: validLogoSettings ? logoSettingsRaw : { format: 'image', height: 24 },
-    logoImageDesktop: logo || defaultBranding.logoImageDesktopURL,
-    logoImageMobile: logo || defaultBranding.logoImageMobileURL,
-    brandImage: loginBackgroundImage,
-    facebookImage,
-    twitterImage,
-    ...rest,
-  };
-};
-
 ///////////////////
 // Merge layouts //
 ///////////////////
@@ -1794,11 +1691,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Localization (locale, first day of week)
     localization: mergeLocalizations(configAsset.localization, defaultConfigs.localization),
-
-    // Branding configuration comes entirely from hosted assets,
-    // but defaults to values set in defaultConfigs.branding for
-    // marketplace color, logo, brandImage and Facebook and Twitter images
-    branding: mergeBranding(configAsset.branding, defaultConfigs.branding),
 
     // Layout configuration comes entirely from hosted assets,
     // but defaultConfigs is used if type of the hosted configs is unknown
