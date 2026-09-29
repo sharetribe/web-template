@@ -154,38 +154,11 @@ const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
   return { locale, firstDayOfWeek: firstDayInMomentRange };
 };
 
-/////////////////////
-// Merge analytics //
-/////////////////////
-
-// The "arguments" (an Array like object) is only available for non-arrow functions.
-function joinStrings(str1, str2) {
-  const removeTrailingComma = str => str.trim().replace(/,\s*$/, '');
-  // Filter out empty strings (falsy) and join remaining items with comma
-  return Array.from(arguments)
-    .filter(Boolean)
-    .map(str => removeTrailingComma(str))
-    .join(',');
-}
-
-const mergeAnalyticsConfig = (hostedAnalyticsConfig, defaultAnalyticsConfig) => {
-  const { enabled, measurementId } = hostedAnalyticsConfig?.googleAnalytics || {};
-  const googleAnalyticsId =
-    enabled && measurementId ? measurementId : defaultAnalyticsConfig.googleAnalyticsId;
-
-  // With Plausible, we merge hosted analytics and default (built-in) analytics if any (Plausible supports multiple domains)
-  // Hosted format is: "plausible": { "enabled": true, "domain": "example.com" }
-  const plausibleHostedConfig = hostedAnalyticsConfig?.plausible || {};
-  const plausibleDomainsHosted =
-    plausibleHostedConfig?.enabled && plausibleHostedConfig?.domain
-      ? plausibleHostedConfig.domain
-      : '';
-  const plausibleDomainsDefault = defaultAnalyticsConfig.plausibleDomains;
-  const plausibleDomains = joinStrings(plausibleDomainsHosted, plausibleDomainsDefault);
-  const plausibleDomainsMaybe = plausibleDomains ? { plausibleDomains } : {};
-
-  return { googleAnalyticsId, ...plausibleDomainsMaybe };
-};
+///////////////////////////////////////////////////////////////////////////
+// Config handlers (ported)                                              //
+// Domains like analytics are built via buildAppConfig + configRegistry. //
+// Legacy merge* helpers below remain until those domains are ported.    //
+///////////////////////////////////////////////////////////////////////////
 
 ////////////////////
 // Merge branding //
@@ -1821,9 +1794,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Localization (locale, first day of week)
     localization: mergeLocalizations(configAsset.localization, defaultConfigs.localization),
-
-    // Analytics might come from hosted assets at some point.
-    analytics: mergeAnalyticsConfig(configAsset.analytics, defaultConfigs.analytics),
 
     // Branding configuration comes entirely from hosted assets,
     // but defaults to values set in defaultConfigs.branding for
