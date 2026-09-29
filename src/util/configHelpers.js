@@ -1,4 +1,6 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
+import { buildAppConfig } from '../config/buildAppConfig';
+import { configHandlers } from '../config/configRegistry';
 import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transactions/transaction';
 import { sanitizeText } from './sanitize';
 import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
@@ -1790,6 +1792,15 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     validHostedCategories
   );
 
+  // App-config slices from registered handlers (normalize -> validate -> resolve).
+  // Keys match handler.id (e.g. analytics). Hosted inputs come from handler.assetKeys.
+  // Hosted configs win when usable; built-in defaults fill gaps.
+  const { resolved: appConfigs } = buildAppConfig({
+    hosted: configAsset,
+    defaults: defaultConfigs,
+    handlers: configHandlers,
+  });
+
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
@@ -1863,5 +1874,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Check if all the mandatory info have been retrieved from hosted assets
     hasMandatoryConfigurations: hasMandatoryConfigs(configAsset),
+
+    // Handler-built slices 
+    ...appConfigs,
   };
 };
