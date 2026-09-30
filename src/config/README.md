@@ -25,6 +25,7 @@ Some of the content is splitted to separate files:
     - unitType
 - **[search/defaultSearch.js](./search/defaultSearch.js)**
   - mainSearchType, default filters, sort, etc.
+  - Hosted merge: [search/search.js](./search/search.js) (`config.search`)
 - **[maps/defaultMaps.js](./maps/defaultMaps.js)**
   - mapProvider config, location search config (also in maps/defaultLocationSearches.js)
   - Hosted merge: [maps/maps.js](./maps/maps.js) (`config.maps`)
