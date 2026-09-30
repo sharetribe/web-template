@@ -27,6 +27,11 @@ Some of the content is splitted to separate files:
 - **[maps/defaultMaps.js](./maps/defaultMaps.js)**
   - mapProvider config, location search config (also in maps/defaultLocationSearches.js)
   - Hosted merge: [maps/maps.js](./maps/maps.js) (`config.maps`)
+- **[categoryConfiguration/defaultCategoryConfiguration.js](./categoryConfiguration/defaultCategoryConfiguration.js)**
+  - Optional built-in category tree (empty by default)
+  - Hosted merge:
+    [categoryConfiguration/categoryConfiguration.js](./categoryConfiguration/categoryConfiguration.js)
+    (`config.categoryConfiguration`)
 - **[stripe/defaultStripe.js](./stripe/defaultStripe.js)**
   - Stripe publishable key, day count available for booking, default merchant categry code
 - **[analytics/defaultAnalytics.js](./analytics/defaultAnalytics.js)**
