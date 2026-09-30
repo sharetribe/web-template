@@ -26,6 +26,7 @@ Some of the content is splitted to separate files:
   - mainSearchType, default filters, sort, etc.
 - **[maps/defaultMaps.js](./maps/defaultMaps.js)**
   - mapProvider config, location search config (also in maps/defaultLocationSearches.js)
+  - Hosted merge: [maps/maps.js](./maps/maps.js) (`config.maps`)
 - **[stripe/defaultStripe.js](./stripe/defaultStripe.js)**
   - Stripe publishable key, day count available for booking, default merchant categry code
 - **[analytics/defaultAnalytics.js](./analytics/defaultAnalytics.js)**

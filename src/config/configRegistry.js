@@ -1,6 +1,7 @@
 import { analyticsConfig } from './analytics/analytics';
 import { brandingConfig } from './branding/branding';
 import { layoutConfig } from './layout/layout';
+import { mapsConfig } from './maps/maps';
 
 /**
  * Ordered registry of config handlers used by buildAppConfig.
@@ -10,4 +11,4 @@ import { layoutConfig } from './layout/layout';
  * Add handlers here as domains are ported out of mergeConfig.
  * Interdependent handlers must follow their dependencies (e.g. search after listing).
  */
-export const configHandlers = [analyticsConfig, brandingConfig, layoutConfig];
+export const configHandlers = [analyticsConfig, brandingConfig, layoutConfig, mapsConfig];

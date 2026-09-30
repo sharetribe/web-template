@@ -5,13 +5,13 @@ import defaultLocationSearches from './defaultLocationSearches';
 //////////////////////////////////////////////////////
 
 // Note: The mapboxAccessToken & googleMapsAPIKey come from map asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeMapConfig func)
+//       To use this built-in configuration, you need to remove the overwrite from maps/maps.js (mergeMapsConfig)
 export const mapboxAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 export const googleMapsAPIKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 // Choose map provider: 'mapbox', 'googleMaps'
 // Note: The mapProvider comes from map asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeMapConfig func)
+//       To use this built-in configuration, you need to remove the overwrite from maps/maps.js (mergeMapsConfig)
 export const mapProvider = 'mapbox';
 
 // The location search input can be configured to show default
