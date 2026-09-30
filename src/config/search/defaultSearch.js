@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////
 // Configurations related to search                                 //
 // Note: some search experience is also on maps/defaultMaps.js       //
-// and defaultListingConfig.js is responsible public data filtering //
+// and listing/defaultListing.js is responsible public data filtering //
 //////////////////////////////////////////////////////////////////////
 
 // NOTE: if you want to change the structure of the data,
-// you should also check src/util/configHelpers.js
+// you should also check src/config/search/search.js
 // some validation is added there.
 
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 // Note: The mainSearch comes from the listing-search asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
+//       To use this built-in configuration, you need to remove the overwrite from search/search.js (mergeSearchConfig)
 export const mainSearch = {
   searchType: 'location',
 };
@@ -20,8 +20,8 @@ export const mainSearch = {
  * Configuration for default filters.
  * These are custom configs for each filter.
  * Common properties: key, schemaType, and label.
- * Note: the order of default filters is defined in util/configHelpers.js
- * To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
+ * Note: the order of default filters is defined in search/search.js
+ * To use this built-in configuration, you need to remove the overwrite from search/search.js (mergeSearchConfig)
  */
 
 export const listingTypeFilter = {
@@ -47,8 +47,8 @@ export const dateRangeFilter = {
 };
 
 /**
- * Note: the order of default filters is defined in util/configHelpers.js
- * To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
+ * Note: the order of default filters is defined in search/search.js
+ * To use this built-in configuration, you need to remove the overwrite from search/search.js (mergeSearchConfig)
  */
 export const priceFilter = {
   schemaType: 'price',
