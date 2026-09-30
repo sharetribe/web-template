@@ -5,7 +5,6 @@ import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transaction
 import { sanitizeText } from './sanitize';
 import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
 
-const isTestEnvironment = process.env.NODE_ENV === 'test';
 // Generic helpers for validating config values
 
 const mandatoryHostedAttributes = {
@@ -1541,31 +1540,6 @@ const getListingMinimumPrice = transactionSize => {
 };
 
 ////////////////////////////////////
-// Validate and merge map configs //
-////////////////////////////////////
-const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
-  const { mapProvider, mapboxAccessToken, googleMapsAPIKey, ...restOfDefault } = defaultMapConfig;
-  const mapProviderPicked = hostedMapConfig?.provider || mapProvider;
-  const mapboxAccessTokenPicked = hostedMapConfig?.mapboxAccessToken || mapboxAccessToken;
-  const googleMapsAPIKeyPicked = hostedMapConfig?.googleMapsApiKey || googleMapsAPIKey;
-
-  const hasApiAccess =
-    mapProviderPicked === 'googleMaps' ? !!googleMapsAPIKeyPicked : !!mapboxAccessTokenPicked;
-  if (!hasApiAccess && !isTestEnvironment) {
-    console.error(
-      `The access tokens are not in place for the selected map provider (${mapProviderPicked})`
-    );
-  }
-
-  return {
-    ...restOfDefault,
-    mapProvider: mapProviderPicked,
-    mapboxAccessToken: mapboxAccessTokenPicked,
-    googleMapsAPIKey: googleMapsAPIKeyPicked,
-  };
-};
-
-////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
 
@@ -1655,9 +1629,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
       listingConfiguration.listingTypes,
       listingConfiguration.listingFields
     ),
-
-    // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
-    maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
 
     // Google Site Verification can be given through configs.
     // Renders a meta tag: <meta name="google-site-verification" content="[token-here]>" />
