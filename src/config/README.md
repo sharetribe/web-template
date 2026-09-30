@@ -17,6 +17,7 @@ Some of the content is splitted to separate files:
 - **[listing/defaultListing.js](./listing/defaultListing.js)**
   - Extended data config (also used for enabling search filters)
   - Listing type (listingType) config
+  - Hosted merge: [listing/listing.js](./listing/listing.js) (`config.listing`)
   - Besides custom extended data fields, listing's extended data can also contain other extra data.
   - Most notable ones are:
     - listingType
@@ -129,7 +130,8 @@ You could even extend that validation to
 - unitType
 
 If you have set the search schema for those public data fields, you can turn
-`enforceValidListingType` config to true in [listing/defaultListing.js](./listing/defaultListing.js) file.
+`enforceValidListingType` config to true in [listing/defaultListing.js](./listing/defaultListing.js)
+file.
 
 Read More:
 
