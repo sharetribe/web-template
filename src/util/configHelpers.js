@@ -1,8 +1,19 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
 import { buildAppConfig } from '../config/buildAppConfig';
 import { configHandlers } from '../config/configRegistry';
-import { getSupportedProcessesInfo, isBookingProcessAlias } from '../transactions/transaction';
-import { sanitizeText } from './sanitize';
+import {
+  validBoolean,
+  validEnumString,
+  validHelpText,
+  validKey,
+  validLabel,
+  validNumberConfig,
+  validPlaceholderMessage,
+  validRequiredMessage,
+  validSchemaOptions,
+  union,
+  mergeDefaultTypesAndFieldsForDebugging,
+} from '../config/config.shared';
 import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
 
 // Generic helpers for validating config values
@@ -31,40 +42,6 @@ const printErrorForInvalidHostedAsset = (assetName, asset, attribute) => {
   console.error(`${problem}
       Check that "appCdnAssets" property has valid paths in src/config/configDefault.js file,
       and that the marketplace has added content in Console`);
-};
-
-/**
- * Check that listing fields don't have keys that clash with built-in keys
- * that this app uses in public data.
- *
- * @param {Object} listingFields object that has 'key' property.
- * @returns true if there's a clash with specific built-in keys.
- */
-const hasClashWithBuiltInPublicDataKey = listingFields => {
-  const builtInPublicDataKeys = [
-    'listingType',
-    'transactionProcessAlias',
-    'unitType',
-    'location',
-    'pickupEnabled',
-    'shippingEnabled',
-    'shippingPriceInSubunitsOneItem',
-    'shippingPriceInSubunitsAdditionalItems',
-    'categoryLevel1',
-    'categoryLevel2',
-    'categoryLevel3',
-    'cardStyle',
-  ];
-  let hasClash = false;
-  listingFields.forEach(field => {
-    if (builtInPublicDataKeys.includes(field.key)) {
-      hasClash = true;
-      console.error(
-        `The id of a listing field ("${field.key}") clashes with the built-in keys that this app uses in public data.`
-      );
-    }
-  });
-  return hasClash;
 };
 
 /**
@@ -133,45 +110,6 @@ const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
 // Legacy merge* helpers below remain until those domains are ported.    //
 ///////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////
-// Validate listing fields config //
-////////////////////////////////////
-
-// Validate enum type strings (if default value is given, value is considered optional)
-const validEnumString = (key, value, options, defaultOption) => {
-  const isUndefined = typeof value === 'undefined';
-  const isValidValue = options.includes(value);
-  const isValid = (typeof defaultOption !== 'undefined' && isUndefined) || isValidValue;
-  const valueMaybe = isValid ? { [key]: value || defaultOption } : {};
-  return [isValid, valueMaybe];
-};
-
-// Validate boolean values (if default value is given, value is considered optional)
-const validBoolean = (key, value, defaultValue) => {
-  const isUndefined = typeof value === 'undefined';
-  const isBoolean = typeof value == 'boolean';
-  const isValid = (typeof defaultValue !== 'undefined' && isUndefined) || isBoolean;
-
-  const validValue = isBoolean ? { [key]: value } : isValid ? { [key]: defaultValue } : {};
-  return [isValid, validValue];
-};
-
-const validLabel = label => {
-  const isValid = typeof label === 'string';
-  const labelMaybe = isValid ? { label } : {};
-  return [isValid, labelMaybe];
-};
-
-const validHelpText = helpText => {
-  const isValid = typeof helpText === 'string';
-  const helpTextMaybe = isValid ? { helpText: sanitizeText(helpText) } : {};
-  return [isValid, helpTextMaybe];
-};
-
-const validKey = (key, allKeys) => {
-  const isUniqueKey = allKeys.indexOf(key) === allKeys.lastIndexOf(key);
-  return [isUniqueKey, { key }];
-};
 
 const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
   const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
@@ -207,221 +145,6 @@ const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
           limitToUserTypeIds: false,
         },
       };
-  return [isValid, validValue];
-};
-
-// TODO: this (includeForListingTypes) is deprecated config key!
-// You should change your buil-in listing field configs:
-// do not use includeForListingTypes but listingTypeConfig: { limitToListingTypeIds, listingTypeIds }
-const validListingTypesForBuiltInSetup = (includeForListingTypes, listingTypesInUse) => {
-  const isUndefinedOrNull = includeForListingTypes == null;
-  const isArray = Array.isArray(includeForListingTypes);
-  const validatedListingTypes = isArray
-    ? includeForListingTypes.filter(pa => listingTypesInUse.includes(pa))
-    : [];
-
-  const hasValidListingTypes = validatedListingTypes.length > 0;
-  const isValid = hasValidListingTypes || isUndefinedOrNull;
-  const validValue = hasValidListingTypes
-    ? { listingTypeConfig: { limitToListingTypeIds: true, listingTypeIds: validatedListingTypes } }
-    : isUndefinedOrNull
-    ? { listingTypeConfig: { limitToListingTypeIds: false } }
-    : {};
-  return [isValid, validValue];
-};
-
-const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesInUse) => {
-  const { limitToListingTypeIds, listingTypeIds } = listingTypeConfig || {};
-
-  // When no user types are in use, fields by default cannot be limited to a subset of types
-  if (!listingTypesInUse) {
-    const isValid = true;
-    const validValue = {
-      listingTypeConfig: {
-        limitToListingTypeIds: false,
-      },
-    };
-
-    return [isValid, validValue];
-  }
-
-  const isArray = Array.isArray(listingTypeIds);
-  const validatedListingTypeIds = isArray
-    ? listingTypeIds.filter(c => listingTypesInUse?.includes(c))
-    : [];
-
-  // If a field is limited to user type ids, it has to have at least one valid type
-  const hasValidListingTypeIds = validatedListingTypeIds.length > 0;
-  const isValid = hasValidListingTypeIds || !limitToListingTypeIds;
-
-  const validValue = hasValidListingTypeIds
-    ? {
-        listingTypeConfig: {
-          limitToListingTypeIds,
-          listingTypeIds: validatedListingTypeIds,
-        },
-      }
-    : { listingTypeConfig: { limitToListingTypeIds: false } };
-  return [isValid, validValue];
-};
-
-const getCategoryIds = categories => {
-  return categories.reduce((picked, conf) => {
-    const { id, subcategories } = conf;
-    return Array.isArray(subcategories) && subcategories.length > 0
-      ? [...picked, id, ...getCategoryIds(subcategories)]
-      : [...picked, id];
-  }, []);
-};
-
-const validListingTypesForCategoryConfig = (categoryConfig, categoriesInUse) => {
-  const { limitToCategoryIds, categoryIds } = categoryConfig || {};
-
-  // When no user types are in use, fields by default cannot be limited to a subset of types
-  if (!categoriesInUse) {
-    const isValid = true;
-    const validValue = {
-      categoryConfig: {
-        limitToCategoryIds: false,
-      },
-    };
-
-    return [isValid, validValue];
-  }
-
-  const validCategoryIds = getCategoryIds(categoriesInUse);
-  const isArray = Array.isArray(categoryIds);
-  const validatedCategoryIds = isArray
-    ? categoryIds.filter(c => validCategoryIds?.includes(c))
-    : [];
-
-  // If a field is limited to user type ids, it has to have at least one valid type
-  const hasValidCategoryIds = validatedCategoryIds.length > 0;
-  const isValid = hasValidCategoryIds || !limitToCategoryIds;
-
-  const validValue = hasValidCategoryIds
-    ? {
-        categoryConfig: {
-          limitToCategoryIds,
-          categoryIds: validatedCategoryIds,
-        },
-      }
-    : { categoryConfig: { limitToCategoryIds: false } };
-  return [isValid, validValue];
-};
-
-const isStringType = str => typeof str === 'string';
-const pickOptionShapes = o => isStringType(o.option) && isStringType(o.label);
-
-const validSchemaOptions = (enumOptions, schemaType) => {
-  const isUndefined = typeof enumOptions === 'undefined';
-  const isArray = Array.isArray(enumOptions);
-  const arrayContainsOptionShapes = isArray
-    ? enumOptions.filter(pickOptionShapes).length === enumOptions.length
-    : false;
-  const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
-  const shouldHaveSchemaOptions = isEnumSchemaType && !isUndefined && enumOptions.length > 0;
-
-  const isValid = !isEnumSchemaType || (shouldHaveSchemaOptions && arrayContainsOptionShapes);
-
-  const schemaOptionsMaybe =
-    isEnumSchemaType && isArray ? { enumOptions } : isEnumSchemaType ? { enumOptions: [] } : {};
-
-  return [isValid, schemaOptionsMaybe];
-};
-
-// listingFieldsConfig.filterConfig
-const filterTypes = ['SelectSingleFilter', 'SelectMultipleFilter'];
-const validFilterType = (filterType, schemaType) => {
-  const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
-  const isUndefined = typeof searchMode === 'undefined';
-  const isKnownFilterType = filterTypes.includes(filterType);
-  const shouldHaveFilterType = isEnumSchemaType && (isKnownFilterType || isUndefined);
-  const isValid = !isEnumSchemaType || shouldHaveFilterType;
-  const filterTypeMaybe = shouldHaveFilterType
-    ? { filterType: filterType || 'SelectMultipleFilter' }
-    : {};
-  return [isValid, filterTypeMaybe];
-};
-
-const searchModes = ['has_all', 'has_any'];
-const validSearchMode = (searchMode, schemaType) => {
-  const isMultiEnumSchemaType = schemaType === 'multi-enum';
-  const isUndefined = typeof searchMode === 'undefined';
-  const hasValidMode = searchModes.includes(searchMode);
-  const isSearchModeValid = isMultiEnumSchemaType && (isUndefined || hasValidMode);
-  const isValid = !isMultiEnumSchemaType || isSearchModeValid;
-  const searchModeMaybe = isSearchModeValid ? { searchMode: searchMode || 'has_all' } : {};
-  return [isValid, searchModeMaybe];
-};
-
-const validFilterConfig = (config, schemaType) => {
-  const isUndefined = typeof config === 'undefined';
-  if (isUndefined) {
-    return [true, {}];
-  }
-  // Validate: indexForSearch, showFilter, label, filterType, searchMode, group
-  const [isValidIndexForSearch, indexForSearch] = validBoolean(
-    'indexForSearch',
-    config.indexForSearch,
-    false
-  );
-  const [isValidShowFilter, showFilter] = validBoolean('showFilter', config.showFilter, false);
-  const [isValidLabel, label] = validLabel(config.label);
-  const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
-  const [isValidSearchMode, searchMode] = validSearchMode(config.searchMode, schemaType);
-  const groupOptions = ['primary', 'secondary'];
-  const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
-
-  // Validate sort-related fields (used by numeric public and metadata fields)
-  // Validate: showSorting, sortingOrder and sortingGroup
-  const [isValidShowSorting, showSorting] = validBoolean('showSorting', config.showSorting, false);
-
-  const sortingGroupOptions = ['primary', 'secondary'];
-  const [isValidSortingGroup, sortingGroup] = validEnumString(
-    'sortingGroup',
-    config.sortingGroup,
-    sortingGroupOptions,
-    'primary'
-  );
-
-  const [isValidSortingOrderAsc, { asc: sortingOrderAsc }] = validBoolean(
-    'asc',
-    config.sortingOrder?.asc,
-    false
-  );
-  const [isValidSortingOrderDesc, { desc: sortingOrderDesc }] = validBoolean(
-    'desc',
-    config.sortingOrder?.desc,
-    false
-  );
-  const isValidSortingOrder = isValidSortingOrderAsc && isValidSortingOrderDesc;
-  const sortingOrder = { asc: sortingOrderAsc, desc: sortingOrderDesc };
-
-  const isValid =
-    isValidIndexForSearch &&
-    isValidShowFilter &&
-    isValidLabel &&
-    isValidFilterType &&
-    isValidSearchMode &&
-    isValidGroup &&
-    isValidShowSorting &&
-    isValidSortingGroup &&
-    isValidSortingOrder;
-
-  const validValue = {
-    filterConfig: {
-      ...indexForSearch,
-      ...showFilter,
-      ...label,
-      ...filterType,
-      ...searchMode,
-      ...group,
-      ...showSorting,
-      ...sortingGroup,
-      sortingOrder,
-    },
-  };
   return [isValid, validValue];
 };
 
@@ -468,77 +191,6 @@ const getSortOptionsFromListingFields = listingFields => {
 
   return { primaryOptions, secondaryOptions };
 };
-
-// listingFieldsConfig.showConfig
-const validShowConfig = config => {
-  const isUndefined = typeof config === 'undefined';
-  if (isUndefined) {
-    return [true, {}];
-  }
-
-  // Validate: label, isDetail.
-  const [isValidLabel, label] = validLabel(config.label);
-  const [isValidIsDetail, isDetail] = validBoolean('isDetail', config.isDetail, true);
-  const [isValidDisplayOnListingPage, isDisplayOnListingPage] = validBoolean(
-    'displayOnListingPage',
-    config.displayOnListingPage,
-    true
-  );
-  const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
-    'unselectedOptions',
-    config.unselectedOptions,
-    true
-  );
-
-  const isValid =
-    isValidLabel && isValidIsDetail && isValidUnselectedOptions && isValidDisplayOnListingPage;
-  const validValue = {
-    showConfig: {
-      ...label,
-      ...isDetail,
-      ...unselectedOptions,
-      ...isDisplayOnListingPage,
-    },
-  };
-  return [isValid, validValue];
-};
-
-// numberConfig is passed along with listing fields that use the schema type `long`
-const validNumberConfig = (config, schemaType) => {
-  const shouldHaveNumberConfig = schemaType === 'long';
-
-  if (!shouldHaveNumberConfig) {
-    // A field might have an obsolete numberConfig that no longer
-    // matches the field's schema type. If that is the case, return
-    // a valid result and remove the obsolete number config
-    return [true, {}];
-  }
-
-  const { minimum, maximum } = config;
-  const integerConfig = { minimum, maximum, step: 1 };
-
-  // Check if both minimum and maximum are integers
-  if (!Number.isInteger(minimum) || !Number.isInteger(maximum)) {
-    return [false, integerConfig];
-  }
-
-  // Ensure both values are within the safe integer range
-  if (
-    minimum < Number.MIN_SAFE_INTEGER ||
-    minimum > Number.MAX_SAFE_INTEGER ||
-    maximum < Number.MIN_SAFE_INTEGER ||
-    maximum > Number.MAX_SAFE_INTEGER
-  ) {
-    return [false, integerConfig];
-  }
-
-  // Check that the maximum is greater than the minimum
-  if (maximum <= minimum) {
-    return [false, integerConfig];
-  }
-  return [true, integerConfig];
-};
-
 const validUserShowConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
@@ -569,46 +221,6 @@ const validUserShowConfig = config => {
   return [isValid, validValue];
 };
 
-// listingFieldsConfig.saveConfig
-const validPlaceholderMessage = placeholderMessage => {
-  const isUndefined = typeof placeholderMessage === 'undefined';
-  const isString = typeof placeholderMessage === 'string';
-  const isValid = isUndefined || isString;
-  const validValue = isValid ? { placeholderMessage } : {};
-  return [isValid, validValue];
-};
-const validRequiredMessage = requiredMessage => {
-  const isUndefined = typeof requiredMessage === 'undefined';
-  const isString = typeof requiredMessage === 'string';
-  const isValid = isUndefined || isString;
-  const validValue = isValid ? { requiredMessage } : {};
-  return [isValid, validValue];
-};
-
-const validSaveConfig = config => {
-  const isUndefined = typeof config === 'undefined';
-  if (isUndefined) {
-    return [true, {}];
-  }
-  // Validate: label, placeholderMessage, required, requiredMessage
-  const [isValidLabel, label] = validLabel(config.label);
-  const [isValidPlaceholder, placeholderMessage] = validPlaceholderMessage(
-    config.placeholderMessage
-  );
-  const [isValidIsRequired, isRequired] = validBoolean('isRequired', config.isRequired, false);
-  const [isValidRequiredMessage, requiredMessage] = validRequiredMessage(config.requiredMessage);
-
-  const isValid = isValidLabel && isValidPlaceholder && isValidIsRequired && isValidRequiredMessage;
-  const validValue = {
-    saveConfig: {
-      ...label,
-      ...placeholderMessage,
-      ...isRequired,
-      ...requiredMessage,
-    },
-  };
-  return [isValid, validValue];
-};
 const validUserSaveConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
@@ -645,119 +257,6 @@ const validUserSaveConfig = config => {
     },
   };
   return [isValid, validValue];
-};
-
-const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
-  const keys = listingFields.map(d => d.key);
-  const scopeOptions = ['public', 'private', 'metadata'];
-
-  return listingFields.reduce((acc, data) => {
-    const schemaType = data.schemaType;
-
-    const validationData = Object.entries(data).reduce(
-      (acc, entry) => {
-        const [name, value] = entry;
-
-        // Validate each property
-        const [isValid, prop] =
-          name === 'key'
-            ? validKey(value, keys)
-            : name === 'scope'
-            ? validEnumString('scope', value, scopeOptions, 'public')
-            : name === 'numberConfig'
-            ? validNumberConfig(value, schemaType)
-            : name === 'includeForListingTypes'
-            ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
-            : name === 'listingTypeConfig'
-            ? validListingTypesForListingTypeConfig(value, listingTypesInUse)
-            : name === 'categoryConfig'
-            ? validListingTypesForCategoryConfig(value, categoriesInUse)
-            : name === 'schemaType'
-            ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
-            : name === 'enumOptions'
-            ? validSchemaOptions(value, schemaType)
-            : name === 'filterConfig'
-            ? validFilterConfig(value, schemaType)
-            : name === 'showConfig'
-            ? validShowConfig(value)
-            : name === 'saveConfig'
-            ? validSaveConfig(value)
-            : name === 'helpText'
-            ? validHelpText(value)
-            : [true, { [name]: value }];
-
-        const hasFoundValid = !(acc.isValid === false || isValid === false);
-        // Let's warn about wrong data in listing extended data config
-        if (isValid === false) {
-          console.warn(
-            `Unsupported listing extended data configurations detected (${name}) in`,
-            data
-          );
-        }
-
-        return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
-      },
-      { config: {}, isValid: true }
-    );
-
-    if (validationData.isValid) {
-      return [...acc, validationData.config];
-    } else {
-      return acc;
-    }
-  }, []);
-};
-
-const validTransactionFields = transactionFields => {
-  const keys = transactionFields.map(d => d.key);
-  const scopeOptions = ['protected'];
-
-  return transactionFields.reduce((acc, data) => {
-    const schemaType = data.schemaType;
-
-    const validationData = Object.entries(data).reduce(
-      (acc, entry) => {
-        const [name, value] = entry;
-
-        // Validate each property
-        const [isValid, prop] =
-          name === 'key'
-            ? validKey(value, keys)
-            : name === 'scope'
-            ? validEnumString('scope', value, scopeOptions, 'protected')
-            : name === 'numberConfig'
-            ? validNumberConfig(value, schemaType)
-            : name === 'schemaType'
-            ? validEnumString('schemaType', value, EXTENDED_DATA_SCHEMA_TYPES)
-            : name === 'enumOptions'
-            ? validSchemaOptions(value, schemaType)
-            : name === 'filterConfig'
-            ? validFilterConfig(value, schemaType)
-            : name === 'showConfig'
-            ? validShowConfig(value)
-            : name === 'saveConfig'
-            ? validSaveConfig(value)
-            : [true, { [name]: value }];
-
-        const hasFoundValid = !(acc.isValid === false || isValid === false);
-        // Let's warn about wrong data in listing extended data config
-        if (isValid === false) {
-          console.warn(
-            `Unsupported transaction extended data configurations detected (${name}) in`,
-            data
-          );
-        }
-
-        return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
-      },
-      { config: {}, isValid: true }
-    );
-    if (validationData.isValid) {
-      return [...acc, validationData.config];
-    } else {
-      return acc;
-    }
-  }, []);
 };
 
 const validUserTypes = userTypes => {
@@ -819,65 +318,6 @@ const validUserFields = (userFields, userTypesInUse) => {
   }, []);
 };
 
-///////////////////////////////////
-// Validate listing types config //
-///////////////////////////////////
-
-const validListingTypes = listingTypes => {
-  // Check what transaction processes this client app supports
-  const supportedProcessesInfo = getSupportedProcessesInfo();
-
-  const validTypes = listingTypes.reduce((validConfigs, listingType) => {
-    const {
-      listingType: type,
-      label,
-      transactionType,
-      priceVariations,
-      transactionFields,
-      ...restOfListingType
-    } = listingType;
-    const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
-
-    const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
-    const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
-    const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
-
-    const priceVariationTypeMaybe = isBookingProcessAlias(alias)
-      ? { priceVariations: { enabled: priceVariations?.enabled } }
-      : {};
-
-    const hasTransactionFields = transactionFields?.length > 0;
-    const restructuredTransactionFields = transactionFields?.map(restructureTransactionFields);
-
-    const validTransactionFieldsMaybe = hasTransactionFields
-      ? { transactionFields: validTransactionFields(restructuredTransactionFields) }
-      : {};
-
-    if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
-      return [
-        ...validConfigs,
-        {
-          listingType: type,
-          label,
-          transactionType: {
-            process: processName,
-            alias,
-            unitType,
-            ...restOfTransactionType,
-          },
-          ...validTransactionFieldsMaybe,
-          ...priceVariationTypeMaybe,
-          // e.g. stockType, availabilityType, messagingOptions...
-          ...restOfListingType,
-        },
-      ];
-    }
-    console.warn('Unsupported listing type configurations detected', listingType);
-    return validConfigs;
-  }, []);
-
-  return validTypes;
-};
 
 export const displayDescription = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.description !== false;
@@ -952,121 +392,6 @@ export const allowProviderUpdateOffer = listingTypeConfig => {
 };
 
 ///////////////////////////////////////
-// Restructure hosted listing config //
-///////////////////////////////////////
-
-const restructureListingTypes = hostedListingTypes => {
-  return (
-    hostedListingTypes?.map(listingType => {
-      const { id, label, transactionProcess, unitType, ...rest } = listingType;
-      return transactionProcess
-        ? {
-            listingType: id,
-            label,
-            transactionType: {
-              process: transactionProcess.name,
-              alias: transactionProcess.alias,
-              unitType,
-            },
-            ...rest,
-          }
-        : null;
-    }) || []
-  );
-};
-
-const restructureListingFields = hostedListingFields => {
-  return (
-    hostedListingFields?.map(listingField => {
-      const {
-        key,
-        scope,
-        schemaType,
-        enumOptions,
-        label,
-        displayOnListingPage,
-        filterConfig = {},
-        showConfig = {},
-        saveConfig = {},
-        numberConfig = {},
-        categoryConfig = {},
-        ...rest
-      } = listingField;
-      const defaultLabel = label || key;
-      const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
-      const numberConfigMaybe = schemaType === 'long' ? { numberConfig } : {};
-      const { required: isRequired, ...restSaveConfig } = saveConfig;
-
-      return key
-        ? {
-            key,
-            scope,
-            schemaType,
-            ...enumOptionsMaybe,
-            ...numberConfigMaybe,
-            filterConfig: {
-              ...filterConfig,
-              label: filterConfig.label || defaultLabel,
-            },
-            showConfig: {
-              ...showConfig,
-              label: showConfig.label || defaultLabel,
-              displayOnListingPage,
-            },
-            saveConfig: {
-              ...restSaveConfig,
-              isRequired,
-              label: saveConfig.label || defaultLabel,
-            },
-            categoryConfig,
-            ...rest,
-          }
-        : null;
-    }) || []
-  );
-};
-
-const restructureTransactionFields = transactionField => {
-  const {
-    key,
-    enumOptions,
-    label,
-    numberConfig = {},
-    saveConfig = {},
-    showConfig = {},
-    schemaType,
-    ...rest
-  } = transactionField;
-
-  const defaultLabel = label || key;
-  const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
-  const numberConfigMaybe = schemaType === 'long' ? { numberConfig } : {};
-  const { required: isRequired, ...restSaveConfig } = saveConfig;
-
-  return key
-    ? {
-        key,
-        label,
-        scope: 'protected',
-        schemaType,
-        ...enumOptionsMaybe,
-        ...numberConfigMaybe,
-        showConfig: {
-          ...showConfig,
-          unselectedOptions: false,
-          label: showConfig.label || defaultLabel,
-        },
-        saveConfig: {
-          ...restSaveConfig,
-          isRequired,
-          label: saveConfig.label || defaultLabel,
-        },
-        ...rest,
-      }
-    : null;
-};
-
-///////////////////////////////////////
 // Restructure hosted user config //
 ///////////////////////////////////////
 
@@ -1118,55 +443,12 @@ const restructureUserFields = hostedUserFields => {
   );
 };
 
-///////////////////////////
-// Merge listing configs //
-///////////////////////////
 
-// Merge 2 arrays and pick only unique objects according to "key" property
-// Note: This solution prefers objects from the second array
-//       I.e. default configs override hosted asset configs if they have the same key.
-const union = (arr1, arr2, key) => {
-  const all = [...arr1, ...arr2];
-  const map = new Map(all.map(obj => [obj[key], obj]));
-  return [...map.values()];
-};
 
-// For debugging, it becomes sometimes important to be able to merge and overwrite with local values
-// Note: We don't want to expose this to production by default.
-//       If you customization relies on multiple listing types or custom listing fields, you need to change this.
-const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
-  const isDev = process.env.NODE_ENV === 'development';
-  return isDebugging && isDev;
-};
 
-// Note: by default, listing types and fields are only merged if explicitly set for debugging
-const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
-  // Listing configuration is splitted to several assets in Console
-  const hostedListingTypes = restructureListingTypes(hostedConfig.listingTypes?.listingTypes);
-  const hostedListingFields = restructureListingFields(hostedConfig.listingFields?.listingFields);
 
-  // The default values for local debugging
-  const { listingTypes: defaultListingTypes, listingFields: defaultListingFields, ...rest } =
-    defaultConfigs.listing || {};
 
-  // When debugging, include default configs by passing 'true' here.
-  // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
-  const listingTypes = shouldMerge
-    ? union(hostedListingTypes, defaultListingTypes, 'listingType')
-    : hostedListingTypes;
-  const listingFields = shouldMerge
-    ? union(hostedListingFields, defaultListingFields, 'key')
-    : hostedListingFields;
 
-  const listingTypesInUse = listingTypes.map(lt => `${lt.listingType}`);
-
-  return {
-    ...rest,
-    listingFields: validListingFields(listingFields, listingTypesInUse, categoriesInUse),
-    listingTypes: validListingTypes(listingTypes),
-    enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
-  };
 };
 
 const mergeUserConfig = (hostedConfig, defaultConfigs) => {
@@ -1490,12 +772,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     getListingMinimumPrice(configAsset.transactionSize) ||
     defaultConfigs.listingMinimumPriceSubUnits;
 
-  const listingConfiguration = mergeListingConfig(
-    configAsset,
-    defaultConfigs,
-    validHostedCategories
-  );
-
   // App-config slices from registered handlers (normalize -> validate -> resolve).
   // Keys match handler.id (e.g. analytics). Hosted inputs come from handler.assetKeys.
   // Hosted configs win when usable; built-in defaults fill gaps.
@@ -1528,9 +804,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // User configuration comes entirely from hosted assets by default.
     user: mergeUserConfig(configAsset, defaultConfigs),
-
-    // Listing configuration comes entirely from hosted assets by default.
-    listing: listingConfiguration,
 
     // Hosted search configuration does not yet contain sortConfig
     search: mergeSearchConfig(
