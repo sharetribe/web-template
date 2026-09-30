@@ -33,32 +33,6 @@ const printErrorForInvalidHostedAsset = (assetName, asset, attribute) => {
       and that the marketplace has added content in Console`);
 };
 
-// Functions to create built-in specs for category setup.
-const depthFirstSearch = (category, iterator, depth = 0) => {
-  const { subcategories = [] } = category;
-  return iterator(depth, subcategories.map(cat => depthFirstSearch(cat, iterator, depth + 1)));
-};
-// Pick maximum depth from subcategories or default to given depth parameter
-const getMaxDepth = (depth, subcategories) =>
-  subcategories.length ? Math.max(...subcategories) : depth;
-const createArray = length => [...Array(length)].fill(null).map((_, i) => i + 1);
-
-/**
- * Returns the fixed/built-in configs. Marketplace API has specified search schema for
- * categoryLevel1, categoryLevel2, categoryLevel3
- *
- * @param {Array} categories config from listing-categories.json asset
- * @returns object-literal containing fixed key and array of extended data keys used with nested categories.
- */
-const getBuiltInCategorySpecs = (categories = []) => {
-  // Don't change! The search schema is fixed to categoryLevel1, categoryLevel2, categoryLevel3
-  const key = 'categoryLevel';
-  const maxDepth = depthFirstSearch({ subcategories: categories }, getMaxDepth);
-  const categoryLevelKeys = createArray(maxDepth).map(i => `${key}${i}`);
-
-  return { key, scope: 'public', categoryLevelKeys, categories };
-};
-
 /**
  * Check that listing fields don't have keys that clash with built-in keys
  * that this app uses in public data.
@@ -1145,64 +1119,6 @@ const restructureUserFields = hostedUserFields => {
 };
 
 ///////////////////////////
-// Merge category config //
-///////////////////////////
-
-// The expected structure of the category configuration should be an object with a 'categories' key,
-// where 'categories' is an array containing objects representing different categories. Each category object should have:
-//   - 'name': A string representing the name of the category.
-//   - 'id': A string representing the unique identifier of the category.
-//   - 'subcategories': An array containing objects representing subcategories within the category (can also be an empty array).
-// Each subcategory object should have:
-//   - 'name': A string representing the name of the subcategory.
-//   - 'id': A string representing the unique identifier of the subcategory.
-//   - 'subcategories': (optional) An array of subcategories following the same structure as above,
-//    allowing for nesting of subcategories.
-// Example structure:
-// {
-//   categories: [
-//     {
-//       name: 'Cats',
-//       id: 'cats',
-//       subcategories: [
-//         { name: 'Burmese', id: 'burmese' },
-//         { name: 'Egyptian Mau', id: 'egyptian-mau' },
-//         // Additional subcategories can be added here, including nested subcategories if needed.
-//       ],
-//     },
-//     // Additional categories can be added here.
-//   ],
-// }
-const validateCategoryConfig = hostedConfig => {
-  const validateData = data => {
-    if (!data || !data.categories || !Array.isArray(data.categories)) {
-      return {};
-    }
-
-    return {
-      categories: data.categories.map(({ name, id, subcategories }) => ({
-        name,
-        id,
-        subcategories: validateSubcategories(subcategories),
-      })),
-    };
-  };
-
-  const validateSubcategories = subcategories => {
-    if (!subcategories || !Array.isArray(subcategories)) {
-      return [];
-    }
-
-    return subcategories.map(({ name, id, subcategories }) => ({
-      name,
-      id,
-      subcategories: validateSubcategories(subcategories),
-    }));
-  };
-  return validateData(hostedConfig).categories;
-};
-
-///////////////////////////
 // Merge listing configs //
 ///////////////////////////
 
@@ -1574,8 +1490,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     getListingMinimumPrice(configAsset.transactionSize) ||
     defaultConfigs.listingMinimumPriceSubUnits;
 
-  const validHostedCategories = validateCategoryConfig(configAsset.categories);
-  const categoryConfiguration = getBuiltInCategorySpecs(validHostedCategories);
   const listingConfiguration = mergeListingConfig(
     configAsset,
     defaultConfigs,
@@ -1614,9 +1528,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // User configuration comes entirely from hosted assets by default.
     user: mergeUserConfig(configAsset, defaultConfigs),
-
-    // Set category configuration (includes fixed key, array of categories etc.
-    categoryConfiguration,
 
     // Listing configuration comes entirely from hosted assets by default.
     listing: listingConfiguration,

@@ -6,6 +6,7 @@ import * as branding from './branding/defaultBranding';
 import * as layout from './layout/defaultLayout';
 import * as analytics from './analytics/defaultAnalytics';
 import * as user from './user/defaultUser';
+import * as categoryConfiguration from './categoryConfiguration/defaultCategoryConfiguration';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -59,6 +60,9 @@ const defaultConfig = {
   // Modify analytics configs in analytics/defaultAnalytics.js
   // By default, it doesn't add anything.
   analytics,
+  // Modify category tree in categoryConfiguration/defaultCategoryConfiguration.js
+  // Hosted listing-categories.json takes priority when present.
+  categoryConfiguration,
 
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
