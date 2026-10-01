@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] PageBuilder: lazy-load FieldImage and section background images. (IntersectionObserver
+  with a ~1 viewport prefetch margin). First two sections still server-side render with images
+  mounted. [#941](https://github.com/sharetribe/web-template/pull/941)
 - [change] Improve image loading on ListingPage (lazy load carousel images on both variants).
   [#940](https://github.com/sharetribe/web-template/pull/940)
 - [change] Update browserlist db [#939](https://github.com/sharetribe/web-template/pull/939)
