@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////
 
 // Note: The userFields come from userFields asset nowadays by default.
-//       To use this built-in configuration, you need to change the overwrite from configHelper.js
+//       To use this built-in configuration, you need to change the overwrite from user/user.js
 //       (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
 
 /**
@@ -170,7 +170,8 @@ export const userFields = [
  *  - Consider whether or not you want to allow your users to change their user type after first creating it
  * - Set your user types as the available options for the userType field
  * - Add your user types in the array below
- * - Update configHelpers.js mergeUserConfig to pass user types to the validUserFields function
+ * - Enable debugging merge in user/user.js (mergeDefaultTypesAndFieldsForDebugging)
+ *   so built-in types/fields are unioned with hosted assets
  */
 
 export const userTypes = [
