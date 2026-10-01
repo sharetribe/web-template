@@ -5,6 +5,7 @@ import { layoutConfig } from './layout/layout';
 import { listingConfig } from './listing/listing';
 import { mapsConfig } from './maps/maps';
 import { searchConfig } from './search/search';
+import { userConfig } from './user/user';
 
 /**
  * Ordered registry of config handlers used by buildAppConfig.
@@ -23,4 +24,5 @@ export const configHandlers = [
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,
+  userConfig,
 ];

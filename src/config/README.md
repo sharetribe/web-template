@@ -40,6 +40,7 @@ Some of the content is splitted to separate files:
   - analytics defaults
 - **[user/defaultUser.js](./user/defaultUser.js)**
   - user types and fields defaults
+  - Hosted merge: [user/user.js](./user/user.js) (`config.user`)
 
 ### Hosted app configs
 
