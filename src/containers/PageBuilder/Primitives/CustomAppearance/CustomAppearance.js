@@ -1,6 +1,7 @@
 import React from 'react';
-import { number, objectOf, oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
+
+import { useLazyLoad } from '../../PageBuilder.helpers';
 
 import { ResponsiveImage } from '../../../../components/index.js';
 
@@ -34,6 +35,7 @@ import css from './CustomAppearance.module.css';
  * @param {string?} props.alt
  * @param {string?} props.sizes
  * @param {string?} props.fetchPriority HTML fetchpriority attribute (e.g. 'high' for LCP image)
+ * @param {boolean?} props.lazy if true, defer mounting the background image until near the viewport
  * @returns {JSX.Element} custom appearance for the container of a section component
  */
 export const CustomAppearance = React.forwardRef((props, ref) => {
@@ -46,7 +48,10 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
     alt = 'background image',
     sizes,
     fetchPriority,
+    lazy = false,
   } = props;
+
+  const [shellRef, shouldLoad] = useLazyLoad({ lazy });
 
   const getVariantNames = img => {
     const { variants } = img?.attributes || {};
@@ -64,12 +69,22 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
     : {};
 
   const classes = classNames(rootClassName || css.backgroundImageWrapper, className);
+
+  // Merge forwarded ref (if any) with the lazy-load shell ref
+  const setRefs = node => {
+    shellRef.current = node;
+    if (typeof ref === 'function') {
+      ref(node);
+    } else if (ref) {
+      ref.current = node;
+    }
+  };
+
   return (
-    <div className={classes} style={backgroundColorMaybe}>
-      {backgroundImage ? (
+    <div className={classes} style={backgroundColorMaybe} ref={setRefs}>
+      {backgroundImage && shouldLoad ? (
         <ResponsiveImage
           className={css.backgroundImage}
-          ref={ref}
           alt={alt}
           image={backgroundImage}
           variants={getVariantNames(backgroundImage)}

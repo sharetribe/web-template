@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { isLazyImagesSection } from '../PageBuilder.helpers';
 import { getPrioritySectionId } from './SectionBuilder.helpers';
 
 // Section components
@@ -151,6 +152,7 @@ const SectionBuilder = props => {
                 ...otherOption,
                 defaultClasses: DEFAULT_CLASSES,
                 ...(isPrioritySection ? { fetchPriority: 'high' } : {}),
+                lazyImages: isLazyImagesSection(index),
               }}
               {...section}
               sectionId={sectionId}

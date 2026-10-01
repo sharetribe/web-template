@@ -121,7 +121,16 @@ export const exposeImageProps = (data, options = {}) => {
   const alternativeText = typeof alt === 'string' ? alt : '🖼️';
   const sanitizedImage = getValidSanitizedImage(image);
 
-  return sanitizedImage ? { alt: alternativeText, image: sanitizedImage, link: linkData } : {};
+  if (!sanitizedImage) {
+    return {};
+  }
+
+  return {
+    alt: alternativeText,
+    image: sanitizedImage,
+    link: linkData,
+    ...(options.lazyImages ? { lazy: true } : {}),
+  };
 };
 
 /**
@@ -142,7 +151,7 @@ const exposeColorValue = color => {
  * backgroundColor contains hexadecimal string like "#FF0000" or "#F00".
  *
  * @param {Object} data E.g. "{ fieldType: 'customAppearance', backgroundImage: imageAssetRef, backgroundColor: '#000000', textColor: '#FFFFFF' }"
- * @param {Object} [options] field options (e.g. fetchPriority from SectionBuilder)
+ * @param {Object} [options] field options (e.g. fetchPriority, lazyImages from SectionBuilder)
  * @returns object containing valid data.
  */
 export const exposeCustomAppearanceProps = (data, options = {}) => {
@@ -186,6 +195,8 @@ export const exposeCustomAppearanceProps = (data, options = {}) => {
     ...textColorMaybe,
     // First-section LCP hint for background images only (not block FieldImages yet)
     ...(options.fetchPriority && sanitizedImage ? { fetchPriority: options.fetchPriority } : {}),
+    // Defer background image mount when section opts into lazy images
+    ...(options.lazyImages && sanitizedImage ? { lazy: true } : {}),
   };
 };
 

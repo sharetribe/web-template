@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { useLazyLoad } from '../../PageBuilder.helpers';
+
 import { AspectRatioWrapper, ResponsiveImage } from '../../../../components/index.js';
 import { Link } from '../Link';
 
@@ -47,10 +49,22 @@ MarkdownImage.displayName = 'MarkdownImage';
  * @param {Object} props.image.attributes
  * @param {Object.<key,ImageVariant>} props.image.attributes.variants
  * @param {string?} props.sizes responsive sizes string to be used with srcset
+ * @param {boolean?} props.lazy if true, defer mounting until near the viewport
  * @returns {JSX.Element} image element
  */
 export const FieldImage = React.forwardRef((props, ref) => {
-  const { className, rootClassName, alt = 'image', image, sizes, link, ...otherProps } = props;
+  const {
+    className,
+    rootClassName,
+    alt = 'image',
+    image,
+    sizes,
+    link,
+    lazy = false,
+    ...otherProps
+  } = props;
+
+  const [shellRef, shouldLoad] = useLazyLoad({ lazy });
 
   const { variants } = image?.attributes || {};
   const variantNames = Object.keys(variants);
@@ -68,7 +82,9 @@ export const FieldImage = React.forwardRef((props, ref) => {
     { [css.imageHoverEffect]: imageLinkHref } // Add a hover effect for the image if it is wrapped in a link
   );
 
-  const responsiveImage = (
+  // Keep a non-null child so Link still renders in SSR/no-JS (it returns null without children).
+  // Defer only the ResponsiveImage fetch/mount.
+  const media = shouldLoad ? (
     <ResponsiveImage
       className={css.fieldImage}
       ref={ref}
@@ -78,15 +94,23 @@ export const FieldImage = React.forwardRef((props, ref) => {
       sizes={sizes}
       {...otherProps}
     />
+  ) : (
+    <span className={css.fieldImage} aria-hidden="true" />
   );
+
   return (
-    <AspectRatioWrapper className={classes} width={aspectWidth || 1} height={aspectHeight || 1}>
+    <AspectRatioWrapper
+      className={classes}
+      width={aspectWidth || 1}
+      height={aspectHeight || 1}
+      ref={shellRef}
+    >
       {imageLinkHref ? (
         <Link href={imageLinkHref} title={alt} fieldType={imageLinkFieldType}>
-          {responsiveImage}
+          {media}
         </Link>
       ) : (
-        responsiveImage
+        media
       )}
     </AspectRatioWrapper>
   );
