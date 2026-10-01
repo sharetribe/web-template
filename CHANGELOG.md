@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Improve image loading on ListingPage (lazy load carousel images on both variants).
+  [#940](https://github.com/sharetribe/web-template/pull/940)
 - [change] Update browserlist db [#939](https://github.com/sharetribe/web-template/pull/939)
 - [change] Update Sentry (@sentry/browser and @sentry/node) 10.43.0 > 11.0.0. Load the browser SDK
   asynchronously via a tree-shakeable wrapper so it is not bundled into the main chunk. Pin
