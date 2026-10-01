@@ -111,6 +111,12 @@ describe('Field helpers', () => {
         image,
         link: null,
       });
+      expect(exposeImageProps({ alt: 'Hello world!', image }, { lazyImages: true })).toEqual({
+        alt: 'Hello world!',
+        image,
+        link: null,
+        lazy: true,
+      });
     });
 
     it('should return empty object if data is not valid', () => {
@@ -225,6 +231,38 @@ describe('Field helpers', () => {
       expect(exposeCustomAppearanceProps({ backgroundImage, alt })).toEqual({
         backgroundImage,
         alt,
+      });
+      expect(
+        exposeCustomAppearanceProps({ backgroundImage, alt }, { fetchPriority: 'high' })
+      ).toEqual({
+        backgroundImage,
+        alt,
+        fetchPriority: 'high',
+      });
+      expect(exposeCustomAppearanceProps({ backgroundImage, alt }, { lazyImages: true })).toEqual({
+        backgroundImage,
+        alt,
+        lazy: true,
+      });
+      expect(
+        exposeCustomAppearanceProps(
+          { backgroundImage, alt },
+          { fetchPriority: 'high', lazyImages: true }
+        )
+      ).toEqual({
+        backgroundImage,
+        alt,
+        fetchPriority: 'high',
+        lazy: true,
+      });
+      // Color-only appearance: no background image → no fetchPriority / lazy
+      expect(
+        exposeCustomAppearanceProps(
+          { backgroundColor: '#FFAA00' },
+          { fetchPriority: 'high', lazyImages: true }
+        )
+      ).toEqual({
+        backgroundColor: '#FFAA00',
       });
     });
 

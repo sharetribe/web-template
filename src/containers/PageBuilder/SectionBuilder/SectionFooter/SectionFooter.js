@@ -1,5 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
+
+import { pickFieldOptions } from '../../PageBuilder.helpers';
+
 import { LinkedLogo } from '../../../../components';
 
 import Field from '../../Field';
@@ -86,8 +89,7 @@ const SectionFooter = props => {
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
-  const fieldComponents = options?.fieldComponents;
-  const fieldOptions = { fieldComponents };
+  const fieldOptions = pickFieldOptions(options);
   const linksWithBlockId = socialMediaLinks?.map(sml => {
     return {
       ...sml,

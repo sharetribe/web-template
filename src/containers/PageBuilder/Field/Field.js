@@ -159,7 +159,9 @@ export const validProps = (data, options) => {
   const config = getFieldConfig(data, defaultFieldComponents, options);
   const pickValidProps = config?.pickValidProps;
   if (data && pickValidProps) {
-    const validProps = pickValidProps(data);
+    // Pass field options so type-specific pickers can expose runtime props
+    // (e.g. fetchPriority, lazy)
+    const validProps = pickValidProps(data, options);
     const omitWarning = config?.omitInvalidPropsWarning && config?.omitInvalidPropsWarning(data);
 
     // If picker returns an empty object, data was invalid.

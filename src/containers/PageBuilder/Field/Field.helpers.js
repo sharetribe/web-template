@@ -100,9 +100,10 @@ const getValidSanitizedImage = image => {
  * }
  *
  * @param {Object} data E.g. "{ fieldType: 'image', alt: 'my portrait', image: { id, type, attributes } }"
+ * @param {Object} [options] field options (runtime flags from SectionBuilder)
  * @returns object containing alt string and variants.
  */
-export const exposeImageProps = data => {
+export const exposeImageProps = (data, options = {}) => {
   // Note: data includes also "aspectRatio" key (and "fieldType"),
   //       but image refs can rely on actual image variants
   const { alt, image, link } = data;
@@ -120,7 +121,16 @@ export const exposeImageProps = data => {
   const alternativeText = typeof alt === 'string' ? alt : '🖼️';
   const sanitizedImage = getValidSanitizedImage(image);
 
-  return sanitizedImage ? { alt: alternativeText, image: sanitizedImage, link: linkData } : {};
+  if (!sanitizedImage) {
+    return {};
+  }
+
+  return {
+    alt: alternativeText,
+    image: sanitizedImage,
+    link: linkData,
+    ...(options.lazyImages ? { lazy: true } : {}),
+  };
 };
 
 /**
@@ -141,9 +151,10 @@ const exposeColorValue = color => {
  * backgroundColor contains hexadecimal string like "#FF0000" or "#F00".
  *
  * @param {Object} data E.g. "{ fieldType: 'customAppearance', backgroundImage: imageAssetRef, backgroundColor: '#000000', textColor: '#FFFFFF' }"
+ * @param {Object} [options] field options (e.g. fetchPriority, lazyImages from SectionBuilder)
  * @returns object containing valid data.
  */
-export const exposeCustomAppearanceProps = data => {
+export const exposeCustomAppearanceProps = (data, options = {}) => {
   const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
   const { type } = backgroundImage || {};
 
@@ -182,6 +193,10 @@ export const exposeCustomAppearanceProps = data => {
     ...backgroundColorMaybe,
     ...backgroundImageOverlayMaybe,
     ...textColorMaybe,
+    // First-section LCP hint for background images only (not block FieldImages yet)
+    ...(options.fetchPriority && sanitizedImage ? { fetchPriority: options.fetchPriority } : {}),
+    // Defer background image mount when section opts into lazy images
+    ...(options.lazyImages && sanitizedImage ? { lazy: true } : {}),
   };
 };
 

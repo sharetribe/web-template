@@ -15,7 +15,7 @@ import css from './AspectRatioWrapper.module.css';
  * @param {ReactNode} props.children
  * @returns {JSX.Element} container element that maintains given aspect ratio
  */
-const AspectRatioWrapper = props => {
+const AspectRatioWrapper = React.forwardRef((props, ref) => {
   const { children, className, rootClassName, width, height, ...rest } = props;
   const classes = classNames(rootClassName || css.root, className);
 
@@ -23,12 +23,14 @@ const AspectRatioWrapper = props => {
   const paddingBottom = `${aspectRatio}%`;
 
   return (
-    <div className={classes} {...rest}>
+    <div className={classes} ref={ref} {...rest}>
       <div className={css.aspectPadding} style={{ paddingBottom }}>
         <div className={css.aspectBox}>{children}</div>
       </div>
     </div>
   );
-};
+});
+
+AspectRatioWrapper.displayName = 'AspectRatioWrapper';
 
 export default AspectRatioWrapper;

@@ -49,6 +49,17 @@ also other responsibilities that StaticPage takes care of.
 - **options**: possibility to extend built-in sections, blocks, and fields.
 - All the other props are given to the **StaticPage** component, which PageBuilder uses internally.
 
+## Image loading
+
+**SectionBuilder** sets loading hints on section options. **FieldImage** and section background
+images (**CustomAppearance**) consume them.
+
+- **Lazy loading**: sections from index 2 onward defer mounting images until near the viewport
+  (IntersectionObserver, ~1 viewport prefetch). The first two sections still SSR with images
+  mounted. Tune via `LAZY_IMAGES_FROM_SECTION_INDEX` in `PageBuilder.helpers.js`.
+- **fetchPriority**: the first section’s background image gets `fetchpriority="high"` to favor LCP.
+  Block FieldImages do not use this yet.
+
 ## Extend PageBuilder
 
 By default, PageBuilder has only one layout that consists of 3 parts: topbar, main, and footer. You
