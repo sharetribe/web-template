@@ -49,6 +49,7 @@ export const smartSearch = body => {
 {
   q: string | null,        // what the buyer just typed. null when they clicked something instead
   state: object | null,    // the `state` from the previous response. null for a brand-new search
+                           // with no filters picked (see "Starting state" below)
   page: number,            // 1, 2, 3… (default 1)
   perPage: number,         // default 24
   sort: 'relevance' | 'price-asc' | 'price-desc' | 'newest', // default 'relevance'
@@ -64,7 +65,8 @@ export const smartSearch = body => {
 
 | What the buyer did                                  | `q`                | `state`                         | `page` |
 | --------------------------------------------------- | ------------------ | ------------------------------- | ------ |
-| Typed a search on an empty page                     | the text           | `null`                          | 1      |
+| Typed a search on an empty page, no filters picked  | the text           | `null`                          | 1      |
+| Picked filters first, then typed a search           | the text           | a starting state (see below)    | 1      |
 | Typed again while results are showing ("cheaper")   | the new text       | the last `state`                | 1      |
 | Removed, locked or added a chip                     | `null`             | the last `state`, edited (§6)   | 1      |
 | Changed the sort                                    | `null`             | the last `state`                | 1      |
@@ -72,6 +74,34 @@ export const smartSearch = body => {
 
 The backend decides whether new text is a refinement ("cheaper", "in black") or a completely new
 search ("now I need sneakers"). The frontend always sends the last state with new text.
+
+### Starting state: filters picked before the first search
+
+`state` is `null` only when there is no previous response **and** the buyer hasn't picked any
+filters. If the buyer picks filters before typing (for example "Men" from the "+ Add filter"
+menu), send a starting state that holds just those filters, built the same way as in §6
+("Add or change a filter"):
+
+```json
+{
+  "q": "black jeans size M",
+  "state": {
+    "q": "",
+    "filters": [
+      { "key": "categoryLevel1", "value": "men", "label": "Men",
+        "mode": "hard", "locked": false, "source": "user", "op": "eq" }
+    ],
+    "preferences": [],
+    "removed": [],
+    "similarTo": null,
+    "terms": []
+  },
+  "page": 1
+}
+```
+
+The backend keeps these filters and adds the ones it reads from the text. The response's `state`
+would contain Men, Size M and Black.
 
 ---
 
