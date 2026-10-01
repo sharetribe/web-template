@@ -100,9 +100,10 @@ const getValidSanitizedImage = image => {
  * }
  *
  * @param {Object} data E.g. "{ fieldType: 'image', alt: 'my portrait', image: { id, type, attributes } }"
+ * @param {Object} [options] field options (e.g. lazyImages from SectionBuilder)
  * @returns object containing alt string and variants.
  */
-export const exposeImageProps = data => {
+export const exposeImageProps = (data, options = {}) => {
   // Note: data includes also "aspectRatio" key (and "fieldType"),
   //       but image refs can rely on actual image variants
   const { alt, image, link } = data;
@@ -141,9 +142,10 @@ const exposeColorValue = color => {
  * backgroundColor contains hexadecimal string like "#FF0000" or "#F00".
  *
  * @param {Object} data E.g. "{ fieldType: 'customAppearance', backgroundImage: imageAssetRef, backgroundColor: '#000000', textColor: '#FFFFFF' }"
+ * @param {Object} [options] field options (e.g. lazyImages from SectionBuilder)
  * @returns object containing valid data.
  */
-export const exposeCustomAppearanceProps = data => {
+export const exposeCustomAppearanceProps = (data, options = {}) => {
   const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
   const { type } = backgroundImage || {};
 

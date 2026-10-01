@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import classNames from 'classnames';
 
+import { pickFieldOptions } from '../../PageBuilder.helpers';
+
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 
@@ -106,8 +108,7 @@ const SectionCarousel = props => {
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
-  const fieldComponents = options?.fieldComponents;
-  const fieldOptions = { fieldComponents };
+  const fieldOptions = pickFieldOptions(options);
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 

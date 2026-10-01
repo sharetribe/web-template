@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
-// Import configs and components
+// Import configs and util modules
 import { useConfiguration } from '../../../../context/configurationContext';
 import { lazyLoadWithDimensions } from '../../../../util/uiHelpers';
 import { FormattedMessage } from '../../../../util/reactIntl';
+import { pickFieldOptions } from '../../PageBuilder.helpers';
 
+// Import shared components
 import { ListingCard, IconSpinner, ErrorMessage, NamedLink } from '../../../../components';
 
 import Field, { hasDataInFields } from '../../Field';
+
 import SectionContainer from '../SectionContainer';
 
 import css from './SectionListings.module.css';
@@ -315,8 +318,7 @@ const SectionListings = props => {
     }
   };
 
-  const fieldComponents = options?.fieldComponents;
-  const fieldOptions = { fieldComponents };
+  const fieldOptions = pickFieldOptions(options);
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const darkMode = appearance?.textColor === 'white';
   const noListingsFound = fetched && listingEntities.length === 0;
@@ -336,6 +338,7 @@ const SectionListings = props => {
       className={className}
       rootClassName={rootClassName}
       appearance={appearance}
+      options={fieldOptions}
     >
       {hasHeaderFields ? (
         <header className={defaultClasses.sectionDetails}>

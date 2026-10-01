@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { pickFieldOptions } from '../PageBuilder.helpers';
+
 // Block components
 import BlockDefault from './BlockDefault';
 import BlockFooter from './BlockFooter';
@@ -60,11 +62,10 @@ const defaultBlockComponents = {
 const BlockBuilder = props => {
   const { blocks = [], sectionId, options, ...otherProps } = props;
 
-  // Extract block & field component mappings from props
-  // If external mapping has been included for fields
-  // E.g. { h1: { component: MyAwesomeHeader } }
-  const { blockComponents, fieldComponents } = options || {};
-  const blockOptionsMaybe = fieldComponents ? { options: { fieldComponents } } : {};
+  // Extract block component mapping; pass allowlisted field options into each Block
+  const { blockComponents } = options || {};
+  const fieldOptions = pickFieldOptions(options);
+  const blockOptionsMaybe = Object.keys(fieldOptions).length > 0 ? { options: fieldOptions } : {};
 
   // If there's no block, we can't render the correct block component
   if (!blocks || blocks.length === 0) {
