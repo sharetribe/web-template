@@ -204,12 +204,21 @@ export class SearchPageComponent extends Component {
       marketplaceCurrency,
     });
     const activeFiltersCount = activeChips.length;
-    const handleChangeParams = this.getHandleChangedValueFn(true);
 
     // "Selling" / "In search of" switch is shown only when that listing type exists in Console
     const inSearchOfType = getInSearchOfListingType(config.listing?.listingTypes)?.listingType;
     const selectedListingType = parse(location.search).pub_listingType;
     const isInSearchOf = isInSearchOfListingType(selectedListingType);
+
+    // pub_listingType is only a valid URL param when the listing type filter is enabled in
+    // Console. Carry the "In search of" choice over when other filters change.
+    const keepListingType = params =>
+      inSearchOfType && isInSearchOf && params && !('pub_listingType' in params)
+        ? { pub_listingType: selectedListingType, ...params }
+        : params;
+    const getHandleChangedValueFn = useHistoryPush => params =>
+      this.getHandleChangedValueFn(useHistoryPush)(keepListingType(params));
+    const handleChangeParams = getHandleChangedValueFn(true);
 
     const renderFilter = filterConfig => (
       <FilterComponent
@@ -221,7 +230,7 @@ export class SearchPageComponent extends Component {
         marketplaceCurrency={marketplaceCurrency}
         urlQueryParams={validQueryParams}
         initialValues={initialValues(this.props, this.state.currentQueryParams)}
-        getHandleChangedValueFn={this.getHandleChangedValueFn}
+        getHandleChangedValueFn={getHandleChangedValueFn}
         intl={intl}
         liveEdit
         showAsPopup={false}

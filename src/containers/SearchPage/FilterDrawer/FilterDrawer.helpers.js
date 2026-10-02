@@ -9,12 +9,26 @@ export const HIDDEN_CATEGORY_IDS = ['accessories'];
 
 // Size fields, shown together as button grids. `collapsed` is how many options are shown
 // before "More sizes" is clicked; 0 means the whole group is behind "More sizes".
+// `chipMessageId` formats the chip text, e.g. "Size M"; without it the option label is used.
 export const SIZE_GROUPS = [
-  { key: 'size', collapsed: 5, chipPrefix: 'Size ' },
-  { key: 'shoeSize', collapsed: 8, chipPrefix: 'EU ' },
-  { key: 'kidsSize', collapsed: 0, chipPrefix: '' },
+  { key: 'size', collapsed: 5, chipMessageId: 'FilterDrawer.chip.size' },
+  { key: 'shoeSize', collapsed: 8, chipMessageId: 'FilterDrawer.chip.shoeSize' },
+  { key: 'kidsSize', collapsed: 0, chipMessageId: null },
 ];
 export const SIZE_FIELD_KEYS = SIZE_GROUPS.map(g => g.key);
+
+/**
+ * Chip text for a size option, e.g. "Size M" or "EU 42".
+ *
+ * @param {Object} intl
+ * @param {Object} sizeGroup entry of SIZE_GROUPS
+ * @param {string} optionLabel
+ * @returns {string}
+ */
+export const formatSizeChip = (intl, sizeGroup, optionLabel) =>
+  sizeGroup.chipMessageId
+    ? intl.formatMessage({ id: sizeGroup.chipMessageId }, { value: optionLabel })
+    : optionLabel;
 
 export const COLOR_FIELD_KEY = 'color';
 export const BRAND_FIELD_KEY = 'brand';
@@ -208,7 +222,7 @@ export const getActiveChips = ({
         const option = (filterConfig.enumOptions || []).find(o => `${o.option}` === value);
         const optionLabel = option?.label || value;
         const label = sizeGroup
-          ? `${sizeGroup.chipPrefix}${optionLabel}`
+          ? formatSizeChip(intl, sizeGroup, optionLabel)
           : PLAIN_CHIP_FIELD_KEYS.includes(key)
           ? optionLabel
           : `${getFilterLabel(filterConfig)}: ${optionLabel}`;

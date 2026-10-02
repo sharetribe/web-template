@@ -21,10 +21,13 @@ import {
 import css from './FilterDrawer.module.css';
 
 const DRAWER_ID = 'SearchFilterDrawer';
+const FOCUSABLE_ELEMENTS = 'button, [href], input, select, textarea, [tabindex]';
 
 // Order of the enum sections after Size; the rest follow in Console order
 const ENUM_SECTION_ORDER = ['condition', BRAND_FIELD_KEY];
 const ENUM_SECTIONS_AFTER_PRICE = [COLOR_FIELD_KEY];
+// Filter types without a custom section; FilterComponent renders nothing for other types
+const RENDERABLE_OTHER_SCHEMA_TYPES = ['long', 'dates', 'seats'];
 
 const CloseIcon = () => (
   <svg className={css.closeIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -244,12 +247,7 @@ const SizeSection = props => {
 };
 
 const CheckboxRow = ({ label, isOn, swatch, onClick }) => (
-  <button
-    type="button"
-    className={css.checkRow}
-    aria-pressed={isOn}
-    onClick={onClick}
-  >
+  <button type="button" className={css.checkRow} aria-pressed={isOn} onClick={onClick}>
     <span className={classNames(css.checkBox, { [css.checkBoxOn]: isOn })}>
       {isOn ? <CheckIcon className={css.checkMark} /> : null}
     </span>
@@ -276,9 +274,7 @@ const EnumSection = props => {
     : q
     ? options.filter(o => `${o.label}`.toLowerCase().includes(q))
     : [
-        ...options.filter(
-          (o, i) => i >= POPULAR_BRAND_COUNT && selected.includes(`${o.option}`)
-        ),
+        ...options.filter((o, i) => i >= POPULAR_BRAND_COUNT && selected.includes(`${o.option}`)),
         ...options.slice(0, POPULAR_BRAND_COUNT),
       ];
 
@@ -362,13 +358,19 @@ const FilterDrawer = props => {
     onManageDisableScrolling,
   } = props;
   const panelRef = useRef(null);
+  // Element that had focus before the drawer opened (e.g. the "Filters" button)
+  const returnFocusRef = useRef(null);
 
   useEffect(() => {
     if (onManageDisableScrolling) {
       onManageDisableScrolling(DRAWER_ID, isOpen);
     }
     if (isOpen) {
+      returnFocusRef.current = document.activeElement;
       panelRef.current?.focus();
+    } else if (returnFocusRef.current) {
+      returnFocusRef.current.focus?.();
+      returnFocusRef.current = null;
     }
   }, [isOpen]);
 
@@ -379,6 +381,27 @@ const FilterDrawer = props => {
     const handleKeyDown = e => {
       if (e.key === 'Escape') {
         onClose();
+        return;
+      }
+      // Keep keyboard focus inside the drawer while it is open
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusable = Array.from(panelRef.current.querySelectorAll(FOCUSABLE_ELEMENTS)).filter(
+          el => !el.disabled && el.tabIndex >= 0
+        );
+        if (focusable.length === 0) {
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+        const isInside = panelRef.current.contains(active);
+        if (e.shiftKey && (active === first || !isInside || active === panelRef.current)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (active === last || !isInside)) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -388,9 +411,7 @@ const FilterDrawer = props => {
   const toggleEnumValue = (filter, value) => {
     const paramName = getParamNames(filter)[0];
     const current = parseEnumValues(urlQueryParams[paramName]);
-    const next = current.includes(value)
-      ? current.filter(v => v !== value)
-      : [...current, value];
+    const next = current.includes(value) ? current.filter(v => v !== value) : [...current, value];
     onChangeParams({ [paramName]: formatEnumValues(filter, next) });
   };
 
@@ -399,18 +420,14 @@ const FilterDrawer = props => {
   const listingTypeFilter = filters.find(f => f.schemaType === 'listingType');
   const sizeFilters = filters.filter(f => SIZE_FIELD_KEYS.includes(f.key));
   const enumFilters = filters.filter(f => isEnumFilter(f) && !SIZE_FIELD_KEYS.includes(f.key));
-  const byKeys = keys =>
-    keys.map(k => enumFilters.find(f => f.key === k)).filter(Boolean);
+  const byKeys = keys => keys.map(k => enumFilters.find(f => f.key === k)).filter(Boolean);
   const enumBeforePrice = byKeys(ENUM_SECTION_ORDER);
   const enumAfterPrice = byKeys(ENUM_SECTIONS_AFTER_PRICE);
   const orderedKeys = [...ENUM_SECTION_ORDER, ...ENUM_SECTIONS_AFTER_PRICE];
   const otherEnums = enumFilters.filter(f => !orderedKeys.includes(f.key));
-  // Filter types without a custom section use the template's own filter components
+  // Other filter types that the template's own filter components can render
   const otherFilters = filters.filter(
-    f =>
-      !isEnumFilter(f) &&
-      !['category', 'price', 'listingType'].includes(f.schemaType) &&
-      !SIZE_FIELD_KEYS.includes(f.key)
+    f => RENDERABLE_OTHER_SCHEMA_TYPES.includes(f.schemaType) && !SIZE_FIELD_KEYS.includes(f.key)
   );
 
   const renderEnum = f => (
