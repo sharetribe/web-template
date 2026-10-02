@@ -322,3 +322,97 @@
 .mapRoot {
   background-color: var(--colorGrey100);
 }
+
+/* ---------- Grid layout: filter toolbar + drawer ---------- */
+
+/* No filter column next to results, so no left border */
+.layoutWrapperMainFullWidth {
+  @media (--viewportMedium) {
+    border-left: none;
+  }
+
+  @media (min-width: 1440px) {
+    padding: 40px calc((100vw - 1368px) / 2) 0;
+  }
+  @media (--viewportXLarge) {
+    padding: 40px calc((100vw - 1800px) / 2) 0;
+  }
+}
+
+.filterToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 0;
+
+  @media (--viewportMedium) {
+    padding: 0 0 24px;
+  }
+}
+
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  height: 42px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorWhite);
+  background-color: #1c1c1a;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #000;
+  }
+
+  @media (--viewportMedium) {
+    height: 44px;
+  }
+}
+
+.filtersButtonIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.filtersButtonBadge {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: var(--fontWeightBold);
+  color: #1c1c1a;
+  background-color: var(--colorWhite);
+  border-radius: 999px;
+}
+
+.listingTypePill {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: var(--fontWeightSemiBold);
+  color: #24402f;
+  background-color: #e3e8e4;
+  border-radius: 999px;
+}
+
+.resultsCount {
+  margin: 0 0 0 auto;
+  padding: 0;
+  font-size: 14px;
+  font-weight: var(--fontWeightRegular);
+  color: #5f5d57;
+}
+
+.sortWrapper {
+  flex-shrink: 0;
+}

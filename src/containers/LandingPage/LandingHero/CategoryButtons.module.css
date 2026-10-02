@@ -1,0 +1,99 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Pills (glass) ---------- */
+
+.pills {
+  justify-content: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 20px 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.pill:hover {
+  color: #1c1c1a;
+  background-color: #fff;
+  border-color: #fff;
+  text-decoration: none;
+}
+
+.pill:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  border-radius: 50%;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+/* "Discover" stays solid dark green */
+.discover {
+  background-color: #2e4d3c;
+  border-color: #2e4d3c;
+}
+
+.discover:hover {
+  color: #fff;
+  background-color: #243d30;
+  border-color: #243d30;
+}
+
+.discoverIcon {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 600px) {
+  .root {
+    gap: 6px;
+  }
+
+  .pill {
+    height: 42px;
+    padding: 0 16px 0 6px;
+    font-size: 15px;
+  }
+
+  .icon {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+}

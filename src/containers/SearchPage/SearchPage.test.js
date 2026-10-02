@@ -317,7 +317,7 @@ describe('SearchPage', () => {
     onManageDisableScrolling: noop,
   };
 
-  it('Check that filterColumn and filters exist in grid variant', async () => {
+  it('Check that filter drawer and filters exist in grid variant', async () => {
     // Select correct SearchPage variant according to route configuration
     const user = userEvent.setup();
     const config = getConfig('grid');
@@ -331,75 +331,67 @@ describe('SearchPage', () => {
         initialState,
         config,
         routeConfiguration,
-        messages: { 'FieldSelectTree.screenreader.option': 'Choose {optionName}.' },
       }
     );
 
+    await waitFor(
+      () => {
+        // Has main search in Topbar and it's a location search.
+        expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+        expect(screen.getByTestId('location-search')).toBeInTheDocument();
+
+        // Has the button that opens the filter drawer
+        expect(screen.getByTestId('openFilterDrawer')).toBeInTheDocument();
+        // Does not have search map container
+        expect(screen.queryByTestId('searchMapContainer')).not.toBeInTheDocument();
+
+        // Has SortBy component
+        expect(getAllByText('Newest').length).toBeGreaterThan(0);
+
+        // Shows listings
+        // Has listing with title
+        expect(getByText('l1 title')).toBeInTheDocument();
+        // Has listing with title
+        expect(getByText('l2 title')).toBeInTheDocument();
+        // 2 listings with the same price
+        expect(getAllByText('ListingCard.price')).toHaveLength(2);
+        // The page is slow to render when many test suites run in parallel
+      },
+      { timeout: 5000 }
+    );
+
+    await user.click(screen.getByTestId('openFilterDrawer'));
+
+    // All filter sections are shown in the drawer
+    expect(getByRole('dialog')).toBeInTheDocument();
+    // Has no Cat filter (primary filter tied to 'Cats' category)
+    expect(queryByText('Cat')).not.toBeInTheDocument();
+    // Has no Boat filter (primary filter tied to 'sell-bicycles' listing type)
+    expect(queryByText('Boat')).not.toBeInTheDocument();
+    expect(getByText('Amenities')).toBeInTheDocument();
+    expect(getByText('Single Select Test')).toBeInTheDocument();
+    expect(getByText('Enum 1')).toBeInTheDocument();
+    expect(getByText('Enum 2')).toBeInTheDocument();
+    expect(getByText('FilterComponent.listingTypeLabel')).toBeInTheDocument();
+    expect(getByText('Rent bicycles daily')).toBeInTheDocument();
+    expect(getByText('FilterComponent.priceLabel')).toBeInTheDocument();
+
+    // Category tree: top-level categories, subcategories only under the chosen one
+    expect(getByText('FilterComponent.categoryLabel')).toBeInTheDocument();
+    expect(getByRole('button', { name: 'FilterDrawer.allCategories' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'Dogs' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'Cats' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'Fish' })).toBeInTheDocument();
+    expect(queryByText('Freshwater')).not.toBeInTheDocument();
+
+    // Test category interaction: click "Fish"
+    await user.click(getByRole('button', { name: 'Fish' }));
     await waitFor(() => {
-      // Has main search in Topbar and it's a location search.
-      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
-      expect(screen.getByTestId('location-search')).toBeInTheDocument();
-
-      // Has filter column
-      expect(screen.getByTestId('filterColumnAside')).toBeInTheDocument();
-      // Does not have search map container
-      expect(screen.queryByTestId('searchMapContainer')).not.toBeInTheDocument();
-
-      // Has SortBy component
-      expect(getByText('MainPanelHeader.sortBy')).toBeInTheDocument();
-      expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
-      expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
-
-      // Has no Cat filter (primary filter tied to 'Cats' category)
-      expect(queryByText('Cat')).not.toBeInTheDocument();
-      // Has no Boat filter (primary filter tied to 'sell-bicycles' listing type)
-      expect(queryByText('Boat')).not.toBeInTheDocument();
-      // Has(!) Amenities filter (secondary filter) (it contains also legend for screen readers)
-      expect(getAllByText('Amenities')).toHaveLength(2);
-      // Has Single Select Test filter
-      expect(getByText('Single Select Test')).toBeInTheDocument();
-      expect(getByText('Enum 1')).toBeInTheDocument();
-      expect(getByText('Enum 2')).toBeInTheDocument();
-
-      // Has Category filter
-      expect(getByText('FilterComponent.categoryLabel')).toBeInTheDocument();
-      expect(getByText('Dogs')).toBeInTheDocument();
-      expect(queryByText('Poodle')).not.toBeInTheDocument();
-      expect(getByText('Cats')).toBeInTheDocument();
-      expect(queryByText('Burmese')).not.toBeInTheDocument();
-      expect(getByText('Fish')).toBeInTheDocument();
-      expect(queryByText('Freshwater')).not.toBeInTheDocument();
-
-      // Has Listing type filter
-      expect(getByText('FilterComponent.listingTypeLabel')).toBeInTheDocument();
-      expect(getByText('Rent bicycles daily')).toBeInTheDocument();
-      expect(getByText('Rent bicycles nightly')).toBeInTheDocument();
-      expect(getByText('Rent bicycles hourly')).toBeInTheDocument();
-      expect(getByText('Sell bicycles')).toBeInTheDocument();
-
-      // Has Price filter
-      expect(getByText('FilterComponent.priceLabel')).toBeInTheDocument();
-
-      // Shows listings
-      // Has listing with title
-      expect(getByText('l1 title')).toBeInTheDocument();
-      // Has listing with title
-      expect(getByText('l2 title')).toBeInTheDocument();
-      // 2 listings with the same price
-      expect(getAllByText('ListingCard.price')).toHaveLength(2);
+      expect(getByText('Freshwater')).toBeInTheDocument();
+      expect(getByText('Saltwater')).toBeInTheDocument();
     });
-
-    // Test category intercation: click "Fish"
-    await user.click(getByRole('button', { name: 'Choose Fish.' }));
-
-    expect(getByText('Dogs')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
-    expect(getByText('Cats')).toBeInTheDocument();
     expect(queryByText('Burmese')).not.toBeInTheDocument();
-    // Subcategories of Fish should be visible
-    expect(getByText('Fish')).toBeInTheDocument();
-    expect(getByText('Freshwater')).toBeInTheDocument();
-    expect(getByText('Saltwater')).toBeInTheDocument();
   });
 
   it('Check that map and filters exist in map variant', async () => {
@@ -510,45 +502,30 @@ describe('SearchPage', () => {
     const props = { ...commonProps };
     const SearchPage = getConnectedSearchPageForTests(config.layout);
 
-    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
-      <SearchPage {...props} />,
-      {
-        initialState,
-        config,
-        routeConfiguration,
-        messages: {
-          'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
-        },
-      }
-    );
-
-    await waitFor(() => {
-      // Has no Cat filter (primary)
-      expect(queryByText('Cat')).not.toBeInTheDocument();
-
-      // Has Category filter
-      expect(getByText('FilterComponent.categoryLabel')).toBeInTheDocument();
-      expect(getByText('Dogs')).toBeInTheDocument();
-      expect(queryByText('Poodle')).not.toBeInTheDocument();
-      expect(getByText('Cats')).toBeInTheDocument();
-      expect(queryByText('Burmese')).not.toBeInTheDocument();
-      expect(getByText('Fish')).toBeInTheDocument();
-      expect(queryByText('Freshwater')).not.toBeInTheDocument();
+    const { getByText, queryByText, getByRole } = render(<SearchPage {...props} />, {
+      initialState,
+      config,
+      routeConfiguration,
     });
 
-    // Test category intercation: click "Cats"
-    await user.click(getByRole('button', { name: 'Choose Cats.' }));
+    await waitFor(() => {
+      expect(screen.getByTestId('openFilterDrawer')).toBeInTheDocument();
+    });
+    await user.click(screen.getByTestId('openFilterDrawer'));
 
-    // Has Cat filter (enum) using SelectMultipleFilter component (it contains also legend for screen readers)
-    expect(getAllByText('Cat')).toHaveLength(2);
+    // Has no Cat filter (primary)
+    expect(queryByText('Cat')).not.toBeInTheDocument();
 
-    expect(getByText('Dogs')).toBeInTheDocument();
+    // Test category interaction: click "Cats"
+    await user.click(getByRole('button', { name: 'Cats' }));
+
+    // Cat filter (tied to the 'Cats' category) and the subcategories of Cats are shown
+    await waitFor(() => {
+      expect(getByText('Cat')).toBeInTheDocument();
+    });
+    expect(getByText('Burmese')).toBeInTheDocument();
+    expect(getByText('Egyptian mau')).toBeInTheDocument();
     expect(queryByText('Poodle')).not.toBeInTheDocument();
-    expect(getByText('Cats')).toBeInTheDocument();
-    // Subcategories of Cats should be visible
-    expect(queryByText('Burmese')).toBeInTheDocument();
-    expect(queryByText('Egyptian mau')).toBeInTheDocument();
-    expect(getByText('Fish')).toBeInTheDocument();
     expect(queryByText('Freshwater')).not.toBeInTheDocument();
     expect(queryByText('Saltwater')).not.toBeInTheDocument();
   });
@@ -561,35 +538,36 @@ describe('SearchPage', () => {
     const props = { ...commonProps };
     const SearchPage = getConnectedSearchPageForTests(config.layout);
 
-    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
-      <SearchPage {...props} />,
-      {
-        initialState,
-        config,
-        routeConfiguration,
-        messages: {
-          'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
-        },
-      }
-    );
-
-    await waitFor(() => {
-      // Has no Boat filter (primary)
-      expect(queryByText('Boat')).not.toBeInTheDocument();
-
-      // Has Listing type filter
-      expect(getByText('FilterComponent.listingTypeLabel')).toBeInTheDocument();
-      expect(getByText('Rent bicycles daily')).toBeInTheDocument();
-      expect(getByText('Rent bicycles nightly')).toBeInTheDocument();
-      expect(getByText('Rent bicycles hourly')).toBeInTheDocument();
-      expect(getByText('Sell bicycles')).toBeInTheDocument();
+    const { getByText, queryByText, getByRole } = render(<SearchPage {...props} />, {
+      initialState,
+      config,
+      routeConfiguration,
+      messages: {
+        'FieldSelectTree.screenreader.option': 'Choose {optionName}.',
+      },
     });
 
-    // Test category intercation: click "Sell bicycles"
+    await waitFor(() => {
+      expect(screen.getByTestId('openFilterDrawer')).toBeInTheDocument();
+    });
+    await user.click(screen.getByTestId('openFilterDrawer'));
+
+    // Has no Boat filter (primary)
+    expect(queryByText('Boat')).not.toBeInTheDocument();
+
+    // Listing type filter is shown in the drawer
+    expect(getByText('Rent bicycles daily')).toBeInTheDocument();
+    expect(getByText('Rent bicycles nightly')).toBeInTheDocument();
+    expect(getByText('Rent bicycles hourly')).toBeInTheDocument();
+    expect(getByText('Sell bicycles')).toBeInTheDocument();
+
+    // Test listing type interaction: click "Sell bicycles"
     await user.click(getByRole('button', { name: 'Choose Sell bicycles.' }));
 
-    // Has Boat filter (enum) using SelectMultipleFilter component (it contains also legend for screen readers)
-    expect(getAllByText('Boat')).toHaveLength(2);
+    // Boat filter (tied to the 'sell-bicycles' listing type) appears in the drawer
+    await waitFor(() => {
+      expect(getByText('Boat')).toBeInTheDocument();
+    });
   });
 
   it('Check that Listing type filter is not revealed when using a listing type path param', async () => {

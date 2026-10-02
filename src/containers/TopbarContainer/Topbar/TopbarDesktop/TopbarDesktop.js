@@ -15,6 +15,7 @@ import {
   NamedLink,
 } from '../../../../components';
 
+import IconHeart from '../../../SaveListingButton/IconHeart';
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
@@ -52,6 +53,25 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
       <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.inbox" />
         {notificationDot}
+      </span>
+    </NamedLink>
+  );
+};
+
+const SavedLink = ({ intl, currentPage }) => {
+  const label = intl.formatMessage({ id: 'TopbarDesktop.savedLink' });
+  return (
+    <NamedLink
+      id="saved-link"
+      className={classNames(css.topbarLink, {
+        [css.currentPage]: currentPage === 'SavedListingsPage',
+      })}
+      name="SavedListingsPage"
+      title={label}
+      ariaLabel={label}
+    >
+      <span className={classNames(css.topbarLinkLabel, css.savedLinkLabel)}>
+        <IconHeart className={css.savedIcon} />
       </span>
     </NamedLink>
   );
@@ -173,6 +193,10 @@ const TopbarDesktop = props => {
   const giveSpaceForSearch = customLinks == null || customLinks?.length === 0;
   const classes = classNames(rootClassName || css.root, className);
 
+  const savedLinkMaybe = authenticatedOnClientSide ? (
+    <SavedLink intl={intl} currentPage={currentPage} />
+  ) : null;
+
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink notificationCount={notificationCount} inboxTab={inboxTab} />
   ) : null;
@@ -228,6 +252,7 @@ const TopbarDesktop = props => {
         showCreateListingsLink={showCreateListingsLinkHydrationSafe}
       />
 
+      {savedLinkMaybe}
       {inboxLinkMaybe}
       {profileMenuMaybe}
       {signupLinkMaybe}

@@ -1,0 +1,525 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  --drawerGreen: #2e4d3c;
+  --drawerGreenHover: #243d30;
+  --drawerGreenSoft: #eef1ee;
+  --drawerInk: #1c1c1a;
+  --drawerMuted: #5f5d57;
+  --drawerLine: #ece9e1;
+  --drawerBorder: #d9d6cc;
+  --drawerCheckBorder: #a8a59c;
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--zIndexModal);
+  pointer-events: none;
+}
+
+.isOpen {
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(28, 28, 26, 0.42);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.isOpen .overlay {
+  opacity: 1;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: var(--drawerInk);
+  background-color: var(--colorWhite);
+  transform: translateX(-100%);
+  transition: transform 0.22s ease-out;
+  outline: none;
+
+  @media (--viewportMedium) {
+    width: 420px;
+  }
+}
+
+.isOpen .panel {
+  transform: translateX(0);
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 18px 24px 12px;
+  border-bottom: 1px solid var(--drawerLine);
+
+  @media (--viewportMedium) {
+    padding: 24px 24px 16px;
+  }
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: var(--fontWeightBold);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--drawerMuted);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin: -6px -10px 0 0;
+  padding: 0;
+  color: var(--drawerInk);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--drawerGreenSoft);
+  }
+
+  @media (--viewportMedium) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.closeIcon {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Body and sections ---------- */
+
+.body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--drawerLine);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: var(--fontWeightBold);
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--drawerMuted);
+}
+
+/* ---------- Selling / In search of ---------- */
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  background-color: #f0eee8;
+  border-radius: 999px;
+}
+
+.segment {
+  height: 42px;
+  font-size: 15px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--drawerMuted);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  @media (--viewportMedium) {
+    height: 40px;
+  }
+}
+
+.segmentOn {
+  color: var(--drawerInk);
+  background-color: var(--colorWhite);
+  box-shadow: 0 1px 3px rgba(28, 28, 26, 0.18);
+}
+
+/* ---------- Category tree ---------- */
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.treeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  font-size: 15px;
+  font-weight: var(--fontWeightMedium);
+  text-align: left;
+  color: var(--drawerInk);
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--drawerGreenSoft);
+  }
+
+  @media (--viewportMedium) {
+    height: 40px;
+  }
+}
+
+.treeRowSub {
+  padding-left: 30px;
+  font-weight: var(--fontWeightRegular);
+}
+
+.treeRowBold {
+  font-weight: var(--fontWeightBold);
+}
+
+.treeRowOn {
+  background-color: var(--drawerGreenSoft);
+}
+
+.treeCheck {
+  width: 16px;
+  height: 16px;
+  color: var(--drawerGreen);
+}
+
+/* ---------- Size ---------- */
+
+.sizeGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupLabel {
+  font-size: 13px;
+  color: var(--drawerMuted);
+}
+
+.sizeGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+
+  @media (--viewportMedium) {
+    gap: 8px;
+  }
+}
+
+.sizeButton {
+  height: 42px;
+  padding: 0 4px;
+  font-size: 14px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--drawerInk);
+  background-color: var(--colorWhite);
+  border: 1px solid var(--drawerBorder);
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--drawerInk);
+  }
+
+  @media (--viewportMedium) {
+    height: 40px;
+  }
+}
+
+.sizeButtonOn {
+  color: var(--colorWhite);
+  background-color: var(--drawerGreen);
+  border-color: var(--drawerGreen);
+
+  &:hover {
+    border-color: var(--drawerGreen);
+  }
+}
+
+.moreButton {
+  align-self: flex-start;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--drawerInk);
+  background-color: var(--colorWhite);
+  border: 1px solid var(--drawerInk);
+  border-radius: 999px;
+  cursor: pointer;
+
+  @media (--viewportMedium) {
+    height: 40px;
+  }
+}
+
+/* ---------- Checkbox lists ---------- */
+
+.checkList {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkListTwoColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 12px;
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 42px;
+  padding: 0;
+  font-size: 15px;
+  text-align: left;
+  color: var(--drawerInk);
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover .checkBox {
+    border-color: var(--drawerInk);
+  }
+
+  @media (--viewportMedium) {
+    height: 40px;
+  }
+}
+
+.checkBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background-color: var(--colorWhite);
+  border: 1.5px solid var(--drawerCheckBorder);
+  border-radius: 6px;
+}
+
+.checkBoxOn {
+  background-color: var(--drawerGreen);
+  border-color: var(--drawerGreen);
+}
+
+.checkRow:hover .checkBoxOn {
+  border-color: var(--drawerGreen);
+}
+
+.checkMark {
+  width: 14px;
+  height: 14px;
+  color: var(--colorWhite);
+}
+
+.swatch {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #cfccc3;
+  border-radius: 50%;
+}
+
+.checkLabel {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchField {
+  position: relative;
+  display: block;
+}
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  color: var(--drawerMuted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 42px;
+  font-size: 15px;
+  color: var(--drawerInk);
+  background-color: var(--colorWhite);
+  border: 1px solid var(--drawerBorder);
+  border-radius: 12px;
+
+  &:hover,
+  &:focus {
+    border-color: var(--drawerInk);
+    box-shadow: none;
+  }
+
+  @media (--viewportMedium) {
+    height: 40px;
+  }
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 12px 24px;
+  border-top: 1px solid var(--drawerLine);
+
+  @media (--viewportMedium) {
+    padding: 16px 24px;
+  }
+}
+
+.resetButton {
+  height: 48px;
+  padding: 0 8px;
+  font-size: 15px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--drawerInk);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.showResultsButton {
+  flex-grow: 1;
+  height: 48px;
+  font-size: 16px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorWhite);
+  background-color: var(--drawerGreen);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--drawerGreenHover);
+  }
+}
+
+/* ---------- Active filter chips (toolbar above results) ---------- */
+
+.activeChips {
+  display: contents;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.activeChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px 0 14px;
+  font-size: 14px;
+  color: #1c1c1a;
+  background-color: var(--colorWhite);
+  border: 1px solid #d9d6cc;
+  border-radius: 999px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #1c1c1a;
+  }
+}
+
+.activeChipIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.clearAllLink {
+  height: 36px;
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: var(--fontWeightSemiBold);
+  color: #2e4d3c;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .panel {
+    transition: none;
+  }
+}
