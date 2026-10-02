@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -9,17 +9,19 @@ import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { parse } from '../../util/urlHelpers';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 import { LayoutSingleColumn, ListingCard, NamedLink, Page } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import SaveListingButton from '../SaveListingButton/SaveListingButton';
+import FilterComponent from '../SearchPage/FilterComponent';
+import FilterDrawer from '../SearchPage/FilterDrawer/FilterDrawer';
 
 import {
   SORT_OPTIONS,
-  addFilter,
+  createStartingState,
   decodeState,
   encodeState,
   normalizeSearchParams,
@@ -30,6 +32,12 @@ import {
   toggleLockFilter,
   undoRelaxation,
 } from './SmartSearchPage.helpers';
+import {
+  applyDrawerChange,
+  clearAllFilters,
+  getSmartSearchDrawerFilters,
+  stateToDrawerParams,
+} from './SmartSearchFilters';
 import css from './SmartSearchPage.module.css';
 
 const RENDER_SIZES = [
@@ -39,15 +47,16 @@ const RENDER_SIZES = [
   '25vw',
 ].join(', ');
 
-const EXAMPLE_SEARCHES = [
-  'vintage jacket for autumn, size L, under 60€',
-  'black nike shoes size 42',
-  'pet free sweater for women',
+// Translation keys of the example searches on the empty page
+const EXAMPLE_SEARCH_IDS = [
+  'SmartSearchPage.example1',
+  'SmartSearchPage.example2',
+  'SmartSearchPage.example3',
 ];
 
-// Listing fields that can be added with "+ Add filter" (the rest come from the search text)
-const ADDABLE_FIELD_KEYS = ['size', 'shoeSize', 'kidsSize', 'color', 'brand', 'condition'];
-const CATEGORY_FILTER_KEY = 'categoryLevel1';
+// Filter changes in the drawer are sent together once the buyer stops clicking for this long,
+// so a few quick clicks make one smart search request instead of many
+const DRAWER_CHANGE_DELAY_MS = 600;
 
 const ERROR_MESSAGE_IDS = {
   INVALID_REQUEST: 'SmartSearchPage.errorInvalidRequest',
@@ -81,124 +90,6 @@ const CloseIcon = () => (
     />
   </svg>
 );
-
-/**
- * Options for the "+ Add filter" menu: main categories and selected listing fields.
- */
-const getAddableFields = (config, intl) => {
-  const categories = (config.categoryConfiguration?.categories || [])
-    .filter(c => c.id !== 'accessories')
-    .map(c => ({ option: c.id, label: c.name }));
-  const categoryField = categories.length
-    ? [
-        {
-          key: CATEGORY_FILTER_KEY,
-          label: intl.formatMessage({ id: 'FilterComponent.categoryLabel' }),
-          options: categories,
-        },
-      ]
-    : [];
-  const fields = (config.listing?.listingFields || [])
-    .filter(f => ADDABLE_FIELD_KEYS.includes(f.key) && (f.enumOptions || []).length > 0)
-    .map(f => ({
-      key: f.key,
-      label: f.filterConfig?.label || f.showConfig?.label || f.key,
-      options: f.enumOptions,
-    }));
-  return [...categoryField, ...fields];
-};
-
-const chipLabelFor = (fieldKey, optionLabel) =>
-  fieldKey === 'size'
-    ? `Size ${optionLabel}`
-    : fieldKey === 'shoeSize'
-    ? `EU ${optionLabel}`
-    : optionLabel;
-
-/**
- * "+ Add filter" menu: pick a field, then a value.
- */
-const AddFilterMenu = props => {
-  const { fields, onAdd } = props;
-  const intl = useIntl();
-  const [isOpen, setIsOpen] = useState(false);
-  const [fieldKey, setFieldKey] = useState('');
-  const [option, setOption] = useState('');
-  const field = fields.find(f => f.key === fieldKey);
-
-  if (fields.length === 0) {
-    return null;
-  }
-
-  const close = () => {
-    setIsOpen(false);
-    setFieldKey('');
-    setOption('');
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    const picked = field?.options.find(o => `${o.option}` === option);
-    if (field && picked) {
-      onAdd({ key: field.key, value: picked.option, label: chipLabelFor(field.key, picked.label) });
-      close();
-    }
-  };
-
-  return isOpen ? (
-    <form className={css.addFilterForm} onSubmit={handleSubmit}>
-      <label className={css.visuallyHidden} htmlFor="SmartSearchPage.addFilterField">
-        <FormattedMessage id="SmartSearchPage.addFilterField" />
-      </label>
-      <select
-        id="SmartSearchPage.addFilterField"
-        className={css.select}
-        value={fieldKey}
-        onChange={e => {
-          setFieldKey(e.target.value);
-          setOption('');
-        }}
-      >
-        <option value="">{intl.formatMessage({ id: 'SmartSearchPage.addFilterField' })}</option>
-        {fields.map(f => (
-          <option key={f.key} value={f.key}>
-            {f.label}
-          </option>
-        ))}
-      </select>
-      {field ? (
-        <>
-          <label className={css.visuallyHidden} htmlFor="SmartSearchPage.addFilterValue">
-            <FormattedMessage id="SmartSearchPage.addFilterValue" />
-          </label>
-          <select
-            id="SmartSearchPage.addFilterValue"
-            className={css.select}
-            value={option}
-            onChange={e => setOption(e.target.value)}
-          >
-            <option value="">{intl.formatMessage({ id: 'SmartSearchPage.addFilterValue' })}</option>
-            {field.options.map(o => (
-              <option key={o.option} value={o.option}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </>
-      ) : null}
-      <button type="submit" className={css.smallPrimaryButton} disabled={!field || !option}>
-        <FormattedMessage id="SmartSearchPage.addFilterSubmit" />
-      </button>
-      <button type="button" className={css.textButton} onClick={close}>
-        <FormattedMessage id="SmartSearchPage.addFilterCancel" />
-      </button>
-    </form>
-  ) : (
-    <button type="button" className={css.addFilterButton} onClick={() => setIsOpen(true)}>
-      <FormattedMessage id="SmartSearchPage.addFilter" />
-    </button>
-  );
-};
 
 const ResultSection = ({ titleId, listings, resultMeta }) =>
   listings.length > 0 ? (
@@ -241,6 +132,12 @@ const SmartSearchPage = () => {
   const pageState = useSelector(state => state.SmartSearchPage);
   const listings = useSelector(state => getListingsById(state, state.SmartSearchPage.resultIds));
   const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
+  const dispatch = useDispatch();
+  const onManageDisableScrolling = useCallback(
+    (componentId, disableScrolling) =>
+      dispatch(manageDisableScrolling(componentId, disableScrolling)),
+    [dispatch]
+  );
   const {
     searchInProgress,
     searchError,
@@ -257,6 +154,13 @@ const SmartSearchPage = () => {
 
   const urlParams = normalizeSearchParams(parse(location.search));
   const [text, setText] = useState(urlParams.q || '');
+  // Filters picked before the first search are sent with it as a starting state
+  const [draftState, setDraftState] = useState(null);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  // Drawer changes that are shown already but wait for the next request (or its response)
+  const [pendingState, setPendingState] = useState(null);
+  const unsentStateRef = useRef(null);
+  const sendTimerRef = useRef(null);
 
   const goTo = (params, replace = false) => {
     const path = createResourceLocatorString('SmartSearchPage', routes, {}, toUrlParams(params));
@@ -277,14 +181,84 @@ const SmartSearchPage = () => {
   const currentState = searchState || decodeState(urlParams.s);
   const currentS = encodeState(currentState);
   const currentSort = sort || urlParams.sort;
+  // Chips are edited on the backend state, or on the starting state before the first search
+  const editableState = pendingState || currentState || draftState || createStartingState();
+
+  // A new state from the backend replaces the changes that were waiting for it
+  useEffect(() => {
+    setPendingState(null);
+  }, [searchState]);
+  useEffect(() => () => window.clearTimeout(sendTimerRef.current), []);
 
   const search = q => {
     const trimmed = (q || '').trim();
     if (trimmed) {
-      goTo({ q: trimmed, s: currentS, page: 1, sort: currentSort });
+      const s = currentState ? currentS : encodeState(draftState);
+      goTo({ q: trimmed, s, page: 1, sort: currentSort });
     }
   };
-  const updateState = nextState => goTo({ s: encodeState(nextState), page: 1, sort: currentSort });
+  const updateState = nextState => {
+    window.clearTimeout(sendTimerRef.current);
+    unsentStateRef.current = null;
+    if (currentState) {
+      goTo({ s: encodeState(nextState), page: 1, sort: currentSort });
+    } else {
+      setDraftState(nextState);
+      setPendingState(null);
+    }
+  };
+  // Show a change right away, send it after a short pause
+  const updateStateSoon = nextState => {
+    setPendingState(nextState);
+    unsentStateRef.current = nextState;
+    window.clearTimeout(sendTimerRef.current);
+    sendTimerRef.current = window.setTimeout(() => updateState(nextState), DRAWER_CHANGE_DELAY_MS);
+  };
+  const closeFilterDrawer = () => {
+    setIsFilterDrawerOpen(false);
+    if (unsentStateRef.current) {
+      updateState(unsentStateRef.current);
+    }
+  };
+
+  // The filter drawer of the search page, working on state.filters
+  const drawerFilters = getSmartSearchDrawerFilters(config);
+  const drawerParams = stateToDrawerParams(editableState, drawerFilters);
+  const listingCategories = config.categoryConfiguration?.categories || [];
+  const handleDrawerChange = changedParams =>
+    updateStateSoon(
+      applyDrawerChange({
+        state: editableState,
+        changedParams: changedParams || {},
+        drawerFilters,
+        listingCategories,
+        intl,
+        marketplaceCurrency: config.currency,
+      })
+    );
+  const handleClearAll = () => updateState(clearAllFilters(editableState));
+  const renderFilter = filterConfig => (
+    <FilterComponent
+      key={`SmartSearchFilterDrawer.${filterConfig.key}`}
+      id={`SmartSearchFilterDrawer.${filterConfig.key.toLowerCase()}`}
+      config={filterConfig}
+      containerId="SearchFilterDrawer"
+      listingCategories={listingCategories}
+      marketplaceCurrency={config.currency}
+      urlQueryParams={drawerParams}
+      initialValues={queryParamNames =>
+        queryParamNames.reduce(
+          (acc, p) => (drawerParams[p] ? { ...acc, [p]: drawerParams[p] } : acc),
+          {}
+        )
+      }
+      getHandleChangedValueFn={() => handleDrawerChange}
+      intl={intl}
+      liveEdit
+      showAsPopup={false}
+      hideClearButton
+    />
+  );
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -336,47 +310,108 @@ const SmartSearchPage = () => {
             </p>
           ) : null}
 
-          {currentState ? (
-            <div className={css.chipsRow}>
-              {currentState.filters.map(f => (
-                <span
-                  key={f.key}
-                  className={classNames(css.chip, {
-                    [css.chipSoft]: f.mode === 'soft',
-                    [css.chipLocked]: f.locked,
+          <div className={css.toolbar}>
+            <button
+              type="button"
+              className={css.filtersButton}
+              onClick={() => setIsFilterDrawerOpen(true)}
+              aria-haspopup="dialog"
+              data-testid="openSmartSearchFilters"
+            >
+              <svg
+                className={css.filtersButtonIcon}
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M4 7h10M18 7h2M4 17h4M12 17h8"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" strokeWidth="2" />
+                <circle cx="10" cy="17" r="2" fill="none" stroke="currentColor" strokeWidth="2" />
+              </svg>
+              <FormattedMessage id="FilterDrawer.openButton" />
+              {editableState.filters.length > 0 ? (
+                <span className={css.filtersButtonBadge}>{editableState.filters.length}</span>
+              ) : null}
+            </button>
+
+            {editableState.filters.map(f => (
+              <span
+                key={f.key}
+                className={classNames(css.chip, {
+                  [css.chipSoft]: f.mode === 'soft',
+                  [css.chipLocked]: f.locked,
+                })}
+              >
+                <button
+                  type="button"
+                  className={css.chipPart}
+                  onClick={() => updateState(toggleLockFilter(editableState, f))}
+                  aria-pressed={f.locked}
+                  title={intl.formatMessage({
+                    id: f.locked ? 'SmartSearchPage.unlockFilter' : 'SmartSearchPage.lockFilter',
                   })}
                 >
-                  <button
-                    type="button"
-                    className={css.chipPart}
-                    onClick={() => updateState(toggleLockFilter(currentState, f))}
-                    aria-pressed={f.locked}
-                    title={intl.formatMessage({
-                      id: f.locked ? 'SmartSearchPage.unlockFilter' : 'SmartSearchPage.lockFilter',
-                    })}
-                  >
-                    {f.locked ? <PinIcon /> : null}
-                    <span>{f.label}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={css.chipPart}
-                    onClick={() => updateState(removeFilter(currentState, f))}
-                    aria-label={intl.formatMessage(
-                      { id: 'SmartSearchPage.removeFilter' },
-                      { label: f.label }
-                    )}
-                  >
-                    <CloseIcon />
-                  </button>
-                </span>
-              ))}
-              <AddFilterMenu
-                fields={getAddableFields(config, intl)}
-                onAdd={filter => updateState(addFilter(currentState, filter))}
-              />
-            </div>
-          ) : null}
+                  {f.locked ? <PinIcon /> : null}
+                  <span>{f.label}</span>
+                </button>
+                <button
+                  type="button"
+                  className={css.chipPart}
+                  onClick={() => updateState(removeFilter(editableState, f))}
+                  aria-label={intl.formatMessage(
+                    { id: 'SmartSearchPage.removeFilter' },
+                    { label: f.label }
+                  )}
+                >
+                  <CloseIcon />
+                </button>
+              </span>
+            ))}
+
+            {editableState.filters.length > 0 ? (
+              <button type="button" className={css.textButton} onClick={handleClearAll}>
+                <FormattedMessage id="FilterDrawer.resetAll" />
+              </button>
+            ) : null}
+
+            {hasSearch ? (
+              <span className={css.resultsCount}>
+                {searchInProgress ? (
+                  <FormattedMessage id="SmartSearchPage.searching" />
+                ) : (
+                  <FormattedMessage
+                    id="SmartSearchPage.resultsCount"
+                    values={{ count: resultsCount }}
+                  />
+                )}
+              </span>
+            ) : null}
+
+            {hasSearch ? (
+              <label className={css.sortLabel} htmlFor="SmartSearchPage.sort">
+                <FormattedMessage id="SmartSearchPage.sortBy" />
+                <select
+                  id="SmartSearchPage.sort"
+                  className={css.select}
+                  value={currentSort}
+                  disabled={!currentState}
+                  onChange={e => goTo({ s: currentS, page: 1, sort: e.target.value })}
+                >
+                  {SORT_OPTIONS.map(o => (
+                    <option key={o} value={o}>
+                      {intl.formatMessage({ id: `SmartSearchPage.sort.${o}` })}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+          </div>
 
           {currentState?.preferences?.length > 0 ? (
             <div className={css.preferencesRow}>
@@ -445,37 +480,6 @@ const SmartSearchPage = () => {
             </p>
           ))}
 
-          {hasSearch ? (
-            <div className={css.resultsHeader}>
-              <span className={css.resultsCount}>
-                {searchInProgress ? (
-                  <FormattedMessage id="SmartSearchPage.searching" />
-                ) : (
-                  <FormattedMessage
-                    id="SmartSearchPage.resultsCount"
-                    values={{ count: resultsCount }}
-                  />
-                )}
-              </span>
-              <label className={css.sortLabel} htmlFor="SmartSearchPage.sort">
-                <FormattedMessage id="SmartSearchPage.sortBy" />
-                <select
-                  id="SmartSearchPage.sort"
-                  className={css.select}
-                  value={currentSort}
-                  disabled={!currentState}
-                  onChange={e => goTo({ s: currentS, page: 1, sort: e.target.value })}
-                >
-                  {SORT_OPTIONS.map(o => (
-                    <option key={o} value={o}>
-                      {intl.formatMessage({ id: `SmartSearchPage.sort.${o}` })}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          ) : null}
-
           {searchError ? (
             <div className={css.error} role="alert">
               <FormattedMessage
@@ -501,16 +505,19 @@ const SmartSearchPage = () => {
                 <FormattedMessage id="SmartSearchPage.emptyHint" />
               </p>
               <div className={css.examples}>
-                {EXAMPLE_SEARCHES.map(example => (
-                  <button
-                    key={example}
-                    type="button"
-                    className={css.exampleChip}
-                    onClick={() => search(example)}
-                  >
-                    {example}
-                  </button>
-                ))}
+                {EXAMPLE_SEARCH_IDS.map(id => {
+                  const example = intl.formatMessage({ id });
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      className={css.exampleChip}
+                      onClick={() => search(example)}
+                    >
+                      {example}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ) : null}
@@ -564,6 +571,19 @@ const SmartSearchPage = () => {
             </nav>
           ) : null}
         </div>
+        <FilterDrawer
+          isOpen={isFilterDrawerOpen}
+          onClose={closeFilterDrawer}
+          filters={drawerFilters}
+          renderFilter={renderFilter}
+          listingCategories={listingCategories}
+          urlQueryParams={drawerParams}
+          onChangeParams={handleDrawerChange}
+          onResetAll={handleClearAll}
+          resultsCount={resultsCount}
+          searchInProgress={searchInProgress}
+          onManageDisableScrolling={onManageDisableScrolling}
+        />
       </LayoutSingleColumn>
     </Page>
   );

@@ -9,8 +9,15 @@ import {
   testingLibrary,
 } from '../../util/testHelpers';
 
+import sampleResponse from '../../../server/api/smart-search/sample-response.json';
+
 import SmartSearchPage from './SmartSearchPage';
 import reducer, { clearResults, loadData, smartSearchThunk } from './SmartSearchPage.duck';
+import {
+  applyDrawerChange,
+  getSmartSearchDrawerFilters,
+  stateToDrawerParams,
+} from './SmartSearchFilters';
 import {
   addFilter,
   decodeState,
@@ -22,8 +29,22 @@ import {
   undoRelaxation,
 } from './SmartSearchPage.helpers';
 
-const { UUID } = sdkTypes;
-const { screen } = testingLibrary;
+const { UUID, Money, LatLng } = sdkTypes;
+const { screen, userEvent } = testingLibrary;
+
+// sample-response.json writes SDK types as { _sdkType, ... }; post() returns real SDK types
+const reviveSdkTypes = value => {
+  if (Array.isArray(value)) {
+    return value.map(reviveSdkTypes);
+  }
+  if (value && typeof value === 'object') {
+    if (value._sdkType === 'UUID') return new UUID(value.uuid);
+    if (value._sdkType === 'Money') return new Money(value.amount, value.currency);
+    if (value._sdkType === 'LatLng') return new LatLng(value.lat, value.lng);
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, reviveSdkTypes(v)]));
+  }
+  return value;
+};
 
 const filter = (key, value, label, extra = {}) => ({
   key,
@@ -88,6 +109,66 @@ describe('SmartSearchPage helpers', () => {
   });
 });
 
+describe('SmartSearchFilters', () => {
+  const drawerFilters = getSmartSearchDrawerFilters({
+    search: { defaultFilters: [{ key: 'price', schemaType: 'price', min: 0, max: 1000, step: 5 }] },
+    listing: {
+      listingFields: [
+        {
+          key: 'brand',
+          scope: 'public',
+          schemaType: 'enum',
+          enumOptions: [{ option: 'cube', label: 'Cube' }, { option: 'ghost', label: 'GHOST' }],
+          filterConfig: { showFilter: true, label: 'Brand' },
+        },
+      ],
+    },
+  });
+  const config = { categoryConfiguration: { categories: [] } };
+  const intl = {
+    formatNumber: (v, o) => `€${v}`,
+    formatMessage: ({ id }, values) => `${id} ${JSON.stringify(values)}`,
+  };
+  const apply = (state, changedParams) =>
+    applyDrawerChange({
+      state,
+      changedParams,
+      drawerFilters,
+      listingCategories: config.categoryConfiguration?.categories || [],
+      intl,
+      marketplaceCurrency: 'EUR',
+    });
+  const empty = { q: '', filters: [], preferences: [], removed: [], similarTo: null, terms: [] };
+
+  it('keeps one value per filter: picking another option replaces it', () => {
+    const one = apply(empty, { pub_brand: 'cube' });
+    expect(one.filters).toEqual([
+      {
+        key: 'brand',
+        value: 'cube',
+        label: 'Cube',
+        mode: 'hard',
+        locked: false,
+        source: 'user',
+        op: 'eq',
+      },
+    ]);
+    expect(stateToDrawerParams(one, drawerFilters)).toEqual({ pub_brand: 'cube' });
+
+    const two = apply(one, { pub_brand: 'cube,ghost' });
+    expect(two.filters.map(f => f.value)).toEqual(['ghost']);
+
+    const none = apply(two, { pub_brand: null });
+    expect(none.filters).toEqual([]);
+    expect(none.removed).toEqual(['brand']);
+  });
+
+  it('turns the price slider into a price filter in cents', () => {
+    const priced = apply(empty, { price: '0,60' });
+    expect(priced.filters[0]).toMatchObject({ key: 'price', value: { max: 6000 }, op: 'range' });
+  });
+});
+
 describe('SmartSearchPage duck', () => {
   const params = normalizeSearchParams({ q: 'jacket' });
   const response = {
@@ -121,6 +202,23 @@ describe('SmartSearchPage duck', () => {
     expect(state.responseUrlKey).toEqual(
       requestKey({ q: undefined, s: encodeState(searchState), page: 1, sort: 'relevance' })
     );
+  });
+
+  it('reads the sample response from the backend', () => {
+    const response = reviveSdkTypes(sampleResponse);
+    const pending = reducer(undefined, {
+      type: smartSearchThunk.pending.type,
+      meta: { arg: { params } },
+    });
+    const state = reducer(pending, {
+      type: smartSearchThunk.fulfilled.type,
+      payload: response,
+      meta: { arg: { params } },
+    });
+    expect(state.resultIds.map(id => id.uuid)).toEqual(response.results.map(r => r.id.uuid));
+    expect(state.searchState.filters.map(f => f.label)).toEqual(['Size M', 'Under €40']);
+    expect(state.relaxation.suggestions[0]).toMatchObject({ key: 'size', extra: 2 });
+    expect(decodeState(encodeState(state.searchState))).toEqual(state.searchState);
   });
 
   it('ignores a response to a request that was replaced', () => {
@@ -163,6 +261,24 @@ describe('SmartSearchPage', () => {
       initialState: { SmartSearchPage: reducer(undefined, {}) },
       config,
     });
+    expect(screen.getByText('SmartSearchPage.emptyTitle')).toBeInTheDocument();
+  });
+
+  it('keeps filters picked before the first search as a starting state', async () => {
+    const user = userEvent.setup();
+    render(<SmartSearchPage />, {
+      initialState: { SmartSearchPage: reducer(undefined, {}) },
+      config,
+    });
+
+    await user.click(screen.getByTestId('openSmartSearchFilters'));
+    await user.click(screen.getByRole('button', { name: 'Cube' }));
+
+    // The chip is shown in the toolbar, but no search is made before the buyer types something
+    expect(
+      screen.getByRole('button', { name: 'SmartSearchPage.removeFilter' })
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('Cube').length).toBeGreaterThan(1);
     expect(screen.getByText('SmartSearchPage.emptyTitle')).toBeInTheDocument();
   });
 

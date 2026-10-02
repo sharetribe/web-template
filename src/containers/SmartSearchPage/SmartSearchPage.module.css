@@ -103,7 +103,68 @@
 
 /* ---------- Chips and preferences ---------- */
 
-.chipsRow,
+/* Toolbar: Filters button, filter chips, result count and sort (like the search page) */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+
+  @media (--viewportMedium) {
+    gap: 12px;
+    margin-top: 24px;
+  }
+}
+
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  height: 42px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorWhite);
+  background-color: var(--smartInk);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #000;
+  }
+
+  @media (--viewportMedium) {
+    height: 44px;
+  }
+}
+
+.filtersButtonIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.filtersButtonBadge {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: var(--fontWeightBold);
+  color: var(--smartInk);
+  background-color: var(--colorWhite);
+  border-radius: 999px;
+}
+
+.resultsCount {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--smartMuted);
+}
+
 .preferencesRow {
   display: flex;
   flex-wrap: wrap;
@@ -162,25 +223,6 @@
   flex-shrink: 0;
 }
 
-.addFilterButton {
-  height: 36px;
-  padding: 0 14px;
-  font-size: 14px;
-  font-weight: var(--fontWeightSemiBold);
-  color: var(--smartGreen);
-  background-color: var(--colorWhite);
-  border: 1px dashed var(--smartGreen);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.addFilterForm {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
 .select {
   width: auto;
   height: 36px;
@@ -189,23 +231,6 @@
   background-color: var(--colorWhite);
   border: 1px solid var(--smartBorder);
   border-radius: 10px;
-}
-
-.smallPrimaryButton {
-  height: 36px;
-  padding: 0 16px;
-  font-size: 14px;
-  font-weight: var(--fontWeightSemiBold);
-  color: var(--colorWhite);
-  background-color: var(--smartGreen);
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
 }
 
 .textButton {
@@ -270,20 +295,6 @@
 }
 
 /* ---------- Results ---------- */
-
-.resultsHeader {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.resultsCount {
-  font-size: 14px;
-  color: var(--smartMuted);
-}
 
 .sortLabel {
   display: flex;

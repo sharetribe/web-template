@@ -90,6 +90,20 @@ export const toUrlParams = ({ q, s, page, sort }) => ({
 
 // ================ State edits (CONTRACT.md §6) ================ //
 
+/**
+ * Starting state for filters the buyer picks before the first search (CONTRACT.md §3).
+ *
+ * @returns {Object} empty search state
+ */
+export const createStartingState = () => ({
+  q: '',
+  filters: [],
+  preferences: [],
+  removed: [],
+  similarTo: null,
+  terms: [],
+});
+
 const withRemoved = (removed = [], key) => (removed.includes(key) ? removed : [...removed, key]);
 
 /** Remove a chip: delete the filter and remember its key in `removed`. */
