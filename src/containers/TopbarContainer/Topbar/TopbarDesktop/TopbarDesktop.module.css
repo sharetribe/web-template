@@ -121,6 +121,17 @@
   position: relative;
 }
 
+.savedLinkLabel {
+  display: flex;
+  align-items: center;
+  height: 18px;
+}
+
+.savedIcon {
+  width: 20px;
+  height: 20px;
+}
+
 .notificationDot {
   /* Dimensions */
   width: 7px;

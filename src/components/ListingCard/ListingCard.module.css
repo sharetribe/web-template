@@ -4,11 +4,39 @@
   /* Layout */
   display: flex;
   flex-direction: column;
+  position: relative;
 
   /* Remove link's hover effect */
   &:hover {
     text-decoration: none;
   }
+}
+
+/* Label on "In search of" listings (buyer is looking for an item) */
+.inSearchOfBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 4px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorWhite);
+  background-color: #1c1c1a;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.cardWithAction {
+  position: relative;
+}
+
+.actionButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
 }
 
 .aspectRatioWrapper {

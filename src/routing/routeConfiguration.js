@@ -24,6 +24,8 @@ const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ 
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
+const SmartSearchPage = loadable(() => import(/* webpackChunkName: "SmartSearchPage" */ '../containers/SmartSearchPage/SmartSearchPage'));
+const SavedListingsPage = loadable(() => import(/* webpackChunkName: "SavedListingsPage" */ '../containers/SavedListingsPage/SavedListingsPage'));
 const ManageAccountPage = loadable(() => import(/* webpackChunkName: "ManageAccountPage" */ '../containers/ManageAccountPage/ManageAccountPage'));
 const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ '../containers/PasswordChangePage/PasswordChangePage'));
 const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ '../containers/PasswordRecoveryPage/PasswordRecoveryPage'));
@@ -323,6 +325,20 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/smart-search',
+      name: 'SmartSearchPage',
+      component: SmartSearchPage,
+      loadData: pageDataLoadingAPI.SmartSearchPage.loadData,
+    },
+    {
+      path: '/saved',
+      name: 'SavedListingsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: SavedListingsPage,
+      loadData: pageDataLoadingAPI.SavedListingsPage.loadData,
     },
     {
       path: '/account',

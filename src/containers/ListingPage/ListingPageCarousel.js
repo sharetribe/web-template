@@ -55,6 +55,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
 import ListingPageAccessWrapper from './ListingPageAccessWrapper';
+import SaveListingButton from '../SaveListingButton/SaveListingButton';
 
 import css from './ListingPage.module.css';
 
@@ -258,6 +259,9 @@ export const ListingPageComponent = props => {
                 variantPrefix={config.layout.listingImage.variantPrefix}
                 aspectWidth={config.layout.listingImage.aspectWidth}
                 aspectHeight={config.layout.listingImage.aspectHeight}
+                actionButton={
+                  isOwnListing ? null : <SaveListingButton listingId={currentListing.id.uuid} />
+                }
               />
             )}
             <div

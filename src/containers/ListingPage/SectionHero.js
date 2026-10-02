@@ -23,6 +23,7 @@ const SectionHero = props => {
     onImageCarouselClose,
     onManageDisableScrolling,
     actionBar,
+    actionButton,
   } = props;
 
   const hasImages = listing.images && listing.images.length > 0;
@@ -58,6 +59,7 @@ const SectionHero = props => {
         />
         {viewPhotosButton}
       </div>
+      {actionButton ? <div className={css.saveButtonForListingImage}>{actionButton}</div> : null}
       <Modal
         id="ListingPage.imageCarousel"
         scrollLayerClassName={css.carouselModalScrollLayer}

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { parse } from '../../util/urlHelpers';
+import { getInSearchOfListingType, isInSearchOfListingType } from '../../util/inSearchOf';
 import { makeGetListingsByIdSelector } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -21,8 +22,9 @@ import {
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
-import MainPanelHeader from './MainPanelHeader/MainPanelHeader';
-import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
+import FilterDrawer from './FilterDrawer/FilterDrawer';
+import ActiveFilterChips from './FilterDrawer/ActiveFilterChips';
+import { getActiveChips, getDrawerFilters } from './FilterDrawer/FilterDrawer.helpers';
 import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
@@ -30,8 +32,6 @@ import SearchPageAccessWrapper from './SearchPageAccessWrapper';
 import SearchErrors from './SearchErrors';
 
 import css from './SearchPage.module.css';
-
-const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 
 // SortBy component has its content in dropdown-popup.
 // With this offset we move the dropdown a few pixels on desktop layout.
@@ -42,12 +42,12 @@ export class SearchPageComponent extends Component {
     super(props);
 
     this.state = {
-      isMobileModalOpen: false,
+      isFilterDrawerOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
     };
 
-    this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
-    this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
+    this.openFilterDrawer = this.openFilterDrawer.bind(this);
+    this.closeFilterDrawer = this.closeFilterDrawer.bind(this);
 
     // Filter functions
     this.resetAll = this.resetAll.bind(this);
@@ -57,16 +57,12 @@ export class SearchPageComponent extends Component {
     this.handleSortBy = this.handleSortBy.bind(this);
   }
 
-  // Invoked when a modal is opened from a child component,
-  // for example when a filter modal is opened in mobile view
-  onOpenMobileModal() {
-    this.setState({ isMobileModalOpen: true });
+  openFilterDrawer() {
+    this.setState({ isFilterDrawerOpen: true });
   }
 
-  // Invoked when a modal is closed from a child component,
-  // for example when a filter modal is opened in mobile view
-  onCloseMobileModal() {
-    this.setState({ isMobileModalOpen: false });
+  closeFilterDrawer() {
+    this.setState({ isFilterDrawerOpen: false });
   }
 
   // Reset all filter query parameters
@@ -152,7 +148,6 @@ export class SearchPageComponent extends Component {
       availableFilters,
       selectedFilters,
       isValidDatesFilter,
-      selectedFiltersCountForMobile,
       totalItems,
       listingsAreLoaded,
       conflictingFilterActive,
@@ -200,14 +195,49 @@ export class SearchPageComponent extends Component {
       />
     );
 
-    // Set topbar class based on if a modal is open in
-    // a child component
-    const topbarClasses = this.state.isMobileModalOpen
-      ? classNames(css.topbarBehindModal, css.topbar)
-      : css.topbar;
+    const drawerFilters = getDrawerFilters(availableFilters);
+    const activeChips = getActiveChips({
+      filters: drawerFilters,
+      urlQueryParams: validQueryParams,
+      listingCategories,
+      intl,
+      marketplaceCurrency,
+    });
+    const activeFiltersCount = activeChips.length;
 
-    // N.B. openMobileMap button is sticky.
-    // For some reason, stickyness doesn't work on Safari, if the element is <button>
+    // "Selling" / "In search of" switch is shown only when that listing type exists in Console
+    const inSearchOfType = getInSearchOfListingType(config.listing?.listingTypes)?.listingType;
+    const selectedListingType = parse(location.search).pub_listingType;
+    const isInSearchOf = isInSearchOfListingType(selectedListingType);
+
+    // pub_listingType is only a valid URL param when the listing type filter is enabled in
+    // Console. Carry the "In search of" choice over when other filters change.
+    const keepListingType = params =>
+      inSearchOfType && isInSearchOf && params && !('pub_listingType' in params)
+        ? { pub_listingType: selectedListingType, ...params }
+        : params;
+    const getHandleChangedValueFn = useHistoryPush => params =>
+      this.getHandleChangedValueFn(useHistoryPush)(keepListingType(params));
+    const handleChangeParams = getHandleChangedValueFn(true);
+
+    const renderFilter = filterConfig => (
+      <FilterComponent
+        key={`SearchFilterDrawer.${filterConfig.scope || 'built-in'}.${filterConfig.key}`}
+        id={`SearchFilterDrawer.${filterConfig.key.toLowerCase()}`}
+        config={filterConfig}
+        containerId="SearchFilterDrawer"
+        listingCategories={listingCategories}
+        marketplaceCurrency={marketplaceCurrency}
+        urlQueryParams={validQueryParams}
+        initialValues={initialValues(this.props, this.state.currentQueryParams)}
+        getHandleChangedValueFn={getHandleChangedValueFn}
+        intl={intl}
+        liveEdit
+        showAsPopup={false}
+        hideClearButton
+      />
+    );
+
     return (
       <Page
         scrollingDisabled={scrollingDisabled}
@@ -215,94 +245,88 @@ export class SearchPageComponent extends Component {
         title={title}
         schema={schema}
       >
-        <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
+        <TopbarContainer rootClassName={css.topbar} currentSearchParams={validQueryParams} />
         <div className={css.layoutWrapperContainer}>
-          <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
-            <div className={css.filterColumnContent}>
-              {availableFilters.map(filterConfig => {
-                const key = `SearchFiltersDesktop.${filterConfig.scope || 'built-in'}.${
-                  filterConfig.key
-                }`;
-                const filterId = `SearchFiltersDesktop.${filterConfig.key.toLowerCase()}`;
-                return (
-                  <FilterComponent
-                    key={key}
-                    id={filterId}
-                    className={css.filter}
-                    config={filterConfig}
-                    containerId="SearchPageWithGrid_DesktopFilters"
-                    listingCategories={listingCategories}
-                    marketplaceCurrency={marketplaceCurrency}
-                    urlQueryParams={validQueryParams}
-                    initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                    getHandleChangedValueFn={this.getHandleChangedValueFn}
-                    intl={intl}
-                    liveEdit
-                    showAsPopup={false}
-                    isDesktop
-                  />
-                );
-              })}
-              <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
-                <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
-              </button>
-            </div>
-          </aside>
-
-          <div id="main-content" className={css.layoutWrapperMain} role="main">
+          <div
+            id="main-content"
+            className={classNames(css.layoutWrapperMain, css.layoutWrapperMainFullWidth)}
+            role="main"
+          >
             <div className={css.searchResultContainer}>
-              <SearchFiltersMobile
-                className={css.searchFiltersMobileList}
-                urlQueryParams={validQueryParams}
-                sortByComponent={sortBy('mobile')}
-                listingsAreLoaded={listingsAreLoaded}
-                resultsCount={totalItems}
-                searchInProgress={searchInProgress}
-                searchListingsError={searchListingsError}
-                showAsModalMaxWidth={MODAL_BREAKPOINT}
-                onManageDisableScrolling={onManageDisableScrolling}
-                onOpenModal={this.onOpenMobileModal}
-                onCloseModal={this.onCloseMobileModal}
-                resetAll={this.resetAll}
-                selectedFiltersCount={selectedFiltersCountForMobile}
-                isMapVariant={false}
-                noResultsInfo={noResultsInfo}
-                location={location}
-              >
-                {availableFilters.map(filterConfig => {
-                  const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
-                    filterConfig.key
-                  }`;
-                  const filterId = `SearchFiltersMobile.${filterConfig.key.toLowerCase()}`;
-
-                  return (
-                    <FilterComponent
-                      key={key}
-                      id={filterId}
-                      config={filterConfig}
-                      containerId="SearchPage_MobileFilters"
-                      listingCategories={listingCategories}
-                      marketplaceCurrency={marketplaceCurrency}
-                      urlQueryParams={validQueryParams}
-                      initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                      getHandleChangedValueFn={this.getHandleChangedValueFn}
-                      intl={intl}
-                      liveEdit
-                      showAsPopup={false}
+              <div className={css.filterToolbar}>
+                <button
+                  type="button"
+                  className={css.filtersButton}
+                  onClick={this.openFilterDrawer}
+                  aria-haspopup="dialog"
+                  data-testid="openFilterDrawer"
+                >
+                  <svg
+                    className={css.filtersButtonIcon}
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M4 7h10M18 7h2M4 17h4M12 17h8"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
                     />
-                  );
-                })}
-              </SearchFiltersMobile>
-              <MainPanelHeader
-                className={css.mainPanel}
-                sortByComponent={sortBy('desktop')}
-                isSortByActive={sortConfig.active}
-                listingsAreLoaded={listingsAreLoaded}
-                resultsCount={totalItems}
-                searchInProgress={searchInProgress}
-                searchListingsError={searchListingsError}
-                noResultsInfo={noResultsInfo}
-              />
+                    <circle
+                      cx="16"
+                      cy="7"
+                      r="2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="10"
+                      cy="17"
+                      r="2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                  <FormattedMessage id="FilterDrawer.openButton" />
+                  {activeFiltersCount > 0 ? (
+                    <span className={css.filtersButtonBadge}>{activeFiltersCount}</span>
+                  ) : null}
+                </button>
+
+                {inSearchOfType ? (
+                  <span className={css.listingTypePill}>
+                    <FormattedMessage
+                      id={`FilterDrawer.listingType.${isInSearchOf ? 'inSearchOf' : 'selling'}`}
+                    />
+                  </span>
+                ) : null}
+
+                <ActiveFilterChips
+                  chips={activeChips}
+                  onChangeParams={handleChangeParams}
+                  onClearAll={e => this.handleResetAll(e)}
+                />
+
+                <h1 className={css.resultsCount}>
+                  {searchInProgress ? (
+                    <FormattedMessage id="MainPanelHeader.loadingResults" />
+                  ) : (
+                    <FormattedMessage
+                      id="MainPanelHeader.foundResults"
+                      values={{ count: totalItems }}
+                    />
+                  )}
+                </h1>
+
+                <div className={css.sortWrapper}>{sortBy('desktop')}</div>
+              </div>
+
+              {noResultsInfo}
+
               <div
                 className={classNames(css.listingsForGridVariant, {
                   [css.newSearchInProgress]: !(listingsAreLoaded || searchListingsError),
@@ -325,6 +349,20 @@ export class SearchPageComponent extends Component {
             </div>
           </div>
         </div>
+        <FilterDrawer
+          isOpen={this.state.isFilterDrawerOpen}
+          onClose={this.closeFilterDrawer}
+          filters={drawerFilters}
+          renderFilter={renderFilter}
+          listingCategories={listingCategories}
+          inSearchOfType={inSearchOfType}
+          urlQueryParams={{ ...validQueryParams, pub_listingType: selectedListingType }}
+          onChangeParams={handleChangeParams}
+          onResetAll={e => this.handleResetAll(e)}
+          resultsCount={totalItems}
+          searchInProgress={searchInProgress}
+          onManageDisableScrolling={onManageDisableScrolling}
+        />
         <FooterContainer />
       </Page>
     );

@@ -161,6 +161,15 @@ const TopbarComponent = props => {
   const handleSubmit = values => {
     const { currentSearchParams, history, location, config, routeConfiguration } = props;
 
+    // Keyword searches go to the smart search page
+    const keywords = values?.keywords?.trim();
+    if (isMainSearchTypeKeywords(config) && keywords) {
+      history.push(
+        createResourceLocatorString('SmartSearchPage', routeConfiguration, {}, { q: keywords })
+      );
+      return;
+    }
+
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
         return { keywords: values?.keywords };
@@ -293,8 +302,13 @@ const TopbarComponent = props => {
   const showSearchNotOnLandingPage =
     searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && resolvedCurrentPage !== 'LandingPage';
 
+  // The landing page and the smart search page have their own large search bar, so the topbar
+  // search is always hidden there. Those pages pass currentPage explicitly to enable this.
+  const isLandingPageWithOwnSearch = ['LandingPage', 'SmartSearchPage'].includes(currentPage);
+
   const showSearchForm =
-    showSearchOnAllPages || showSearchOnSearchPage || showSearchNotOnLandingPage;
+    !isLandingPageWithOwnSearch &&
+    (showSearchOnAllPages || showSearchOnSearchPage || showSearchNotOnLandingPage);
 
   const mobileSearchButtonMaybe = showSearchForm ? (
     <Button

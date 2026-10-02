@@ -28,6 +28,7 @@ import {
 // Related components and modules
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
+import SaveListingButton from '../SaveListingButton/SaveListingButton';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 import {
@@ -274,6 +275,9 @@ export const ListingPageComponent = props => {
             handleViewPhotosClick={handleViewPhotosClick}
             onManageDisableScrolling={onManageDisableScrolling}
             actionBar={actionBar}
+            actionButton={
+              isOwnListing ? null : <SaveListingButton listingId={currentListing.id.uuid} />
+            }
           />
         ) : (
           <div className={css.actionBarContainerForNoListingImage}>{actionBar}</div>

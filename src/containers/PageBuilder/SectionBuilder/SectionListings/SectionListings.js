@@ -10,6 +10,8 @@ import { pickFieldOptions } from '../../PageBuilder.helpers';
 // Import shared components
 import { ListingCard, IconSpinner, ErrorMessage, NamedLink } from '../../../../components';
 
+import SaveListingButton from '../../../SaveListingButton/SaveListingButton';
+
 import Field, { hasDataInFields } from '../../Field';
 
 import SectionContainer from '../SectionContainer';
@@ -200,6 +202,7 @@ const ListingCarouselComponent = props => {
             darkMode={darkMode}
             renderSizes={getResponsiveImageSizes(numColumns)}
             lazyLoadImage={!isInsideContainer}
+            actionButton={<SaveListingButton listingId={listing.id.uuid} />}
           />
         </li>
       ))}

@@ -151,3 +151,10 @@ export const createUserWithIdp = body => {
 export const deleteUserAccount = body => {
   return post('/api/delete-account', body);
 };
+
+// Smart search: send the buyer's text and/or the current search state, get ranked listings back.
+//
+// See Hackthon_case/CONTRACT.md for the request and response format.
+export const smartSearch = body => {
+  return post('/api/smart-search', body);
+};

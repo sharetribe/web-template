@@ -1,0 +1,231 @@
+.root {
+  --heroBg: #f7f6f2;
+  --heroInk: #1c1c1a;
+  --heroMuted: #6b6b66;
+  --heroGreen: #2e4d3c;
+  --heroGreenHover: #243d30;
+  --heroChip: #ecebe5;
+  --heroBorder: #e4e2db;
+
+  background-color: var(--heroBg);
+  color: var(--heroInk);
+
+  /* Like SectionContainer: the Console background image covers the whole section */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+  position: relative;
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 16px 0 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--heroMuted);
+}
+
+.searchForm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 28px;
+  padding: 6px 6px 6px 20px;
+  background-color: #fff;
+  border: 1px solid var(--heroBorder);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(28, 28, 26, 0.06);
+}
+
+.searchForm:focus-within {
+  border-color: var(--heroGreen);
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--heroInk);
+}
+
+.inputWrapper {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+/* Reset the template input styles to match the design */
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0;
+  font-size: 16px;
+  color: var(--heroInk);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.input:hover,
+.input:focus {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #9a9a94;
+}
+
+.searchButton {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 26px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--heroGreen);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.searchButton:hover {
+  background-color: var(--heroGreenHover);
+}
+
+.searchButton:focus-visible,
+.tryChip:focus-visible {
+  outline: 2px solid var(--heroGreen);
+  outline-offset: 3px;
+}
+
+.tryRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.tryLabel {
+  font-size: 14px;
+  color: var(--heroMuted);
+  margin-right: 2px;
+}
+
+.tryChip {
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--heroInk);
+  background-color: var(--heroChip);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.tryChip:hover {
+  background-color: #e2e0d8;
+}
+
+/* ---------- Categories ---------- */
+
+/* Higher specificity than CategoryButtons' own margin reset */
+.hero .categoryButtons {
+  margin-top: 32px;
+}
+
+/* ---------- On top of the Console hero image ---------- */
+
+.onImage {
+  color: #fff;
+}
+
+.onImage .title {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.onImage .subtitle,
+.onImage .subtitle p {
+  max-width: 640px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+.onImage .searchForm {
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.onImage .tryLabel {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.onImage .tryChip {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+}
+
+.onImage .tryChip:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 600px) {
+  .inner {
+    padding: 0 16px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .searchForm {
+    padding-left: 16px;
+  }
+
+  .searchButton {
+    padding: 0 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchButton,
+  .tryChip {
+    transition: none;
+  }
+}

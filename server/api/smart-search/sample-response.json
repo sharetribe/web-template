@@ -1,0 +1,314 @@
+{
+  "state": {
+    "q": "vintage jacket for autumn, size M, under 40€",
+    "filters": [
+      {
+        "key": "size",
+        "value": "m",
+        "label": "Size M",
+        "mode": "hard",
+        "locked": false,
+        "source": "inferred",
+        "op": "eq"
+      },
+      {
+        "key": "price",
+        "value": {
+          "max": 4000
+        },
+        "label": "Under €40",
+        "mode": "hard",
+        "locked": false,
+        "source": "inferred",
+        "op": "range"
+      }
+    ],
+    "preferences": [
+      "vintage",
+      "outerwear",
+      "autumn"
+    ],
+    "removed": [],
+    "similarTo": null,
+    "terms": [
+      "jacket",
+      "coat",
+      "bomber",
+      "outerwear"
+    ]
+  },
+  "results": [
+    {
+      "id": {
+        "_sdkType": "UUID",
+        "uuid": "6ab28b71-b709-44f6-808a-4f6dd41e861e"
+      },
+      "tier": "best",
+      "reason": "Not a jacket, but a warm wool layer for autumn"
+    },
+    {
+      "id": {
+        "_sdkType": "UUID",
+        "uuid": "6ab28b71-6155-49fd-9ffa-5eb0901eaab2"
+      },
+      "tier": "related",
+      "reason": "Light knitted layer with a boho, vintage look"
+    }
+  ],
+  "listings": {
+    "data": [
+      {
+        "id": {
+          "_sdkType": "UUID",
+          "uuid": "6ab28b71-b709-44f6-808a-4f6dd41e861e"
+        },
+        "type": "listing",
+        "attributes": {
+          "description": "Soft beige wool sweater, great for layering in colder months. Classic cut with ribbed cuffs and hem. Photo by Toa Heftiba (https://unsplash.com/@heftiba)",
+          "deleted": false,
+          "geolocation": {
+            "_sdkType": "LatLng",
+            "lat": 60.1889,
+            "lng": 25.0186
+          },
+          "createdAt": "2026-09-07T16:00:00.000Z",
+          "state": "published",
+          "title": "Beige wool sweater M",
+          "availabilityPlan": null,
+          "publicData": {
+            "careInstructions": "Hand wash cold, dry flat, do not tumble dry.",
+            "categoryLevel1": "women",
+            "categoryLevel2": "women-tops",
+            "condition": "gently-used",
+            "listingType": "sell-used-products",
+            "location": {
+              "address": "Hiihtomaentie 8, 00810 Helsinki, Finland",
+              "building": ""
+            },
+            "material": "100% wool",
+            "petFreeHome": "yes",
+            "pickupEnabled": true,
+            "shippingEnabled": true,
+            "shippingPriceInSubunitsOneItem": 500,
+            "size": "m",
+            "smokeFreeHome": "yes",
+            "transactionProcessAlias": "default-purchase/release-1",
+            "unitType": "item"
+          },
+          "price": {
+            "_sdkType": "Money",
+            "amount": 1800,
+            "currency": "EUR"
+          },
+          "metadata": {}
+        },
+        "relationships": {
+          "author": {
+            "data": {
+              "id": {
+                "_sdkType": "UUID",
+                "uuid": "6ab28b71-7614-45a0-87bb-62f54b27242b"
+              },
+              "type": "user"
+            }
+          },
+          "images": {
+            "data": [
+              {
+                "id": {
+                  "_sdkType": "UUID",
+                  "uuid": "6ab28b71-e77d-4e9a-a46c-d50d085784e6"
+                },
+                "type": "image"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": {
+          "_sdkType": "UUID",
+          "uuid": "6ab28b71-6155-49fd-9ffa-5eb0901eaab2"
+        },
+        "type": "listing",
+        "attributes": {
+          "description": "Handmade-style beige cotton crochet poncho with fringed trim. Loose, breathable fit. Photo by Milada Vigerova (https://unsplash.com/@milada_vigerova)",
+          "deleted": false,
+          "geolocation": {
+            "_sdkType": "LatLng",
+            "lat": 60.1719,
+            "lng": 24.9578
+          },
+          "createdAt": "2026-09-05T10:00:00.000Z",
+          "state": "published",
+          "title": "Beige crochet poncho with fringe",
+          "availabilityPlan": null,
+          "publicData": {
+            "careInstructions": "Hand wash only.",
+            "categoryLevel1": "women",
+            "categoryLevel2": "women-tops",
+            "condition": "well-used",
+            "listingType": "sell-used-products",
+            "location": {
+              "address": "Siltavuorenranta 4, 00170 Helsinki, Finland",
+              "building": ""
+            },
+            "material": "100% cotton",
+            "petFreeHome": "yes",
+            "pickupEnabled": true,
+            "shippingEnabled": true,
+            "shippingPriceInSubunitsOneItem": 500,
+            "size": "m",
+            "smokeFreeHome": "yes",
+            "transactionProcessAlias": "default-purchase/release-1",
+            "unitType": "item"
+          },
+          "price": {
+            "_sdkType": "Money",
+            "amount": 1200,
+            "currency": "EUR"
+          },
+          "metadata": {}
+        },
+        "relationships": {
+          "author": {
+            "data": {
+              "id": {
+                "_sdkType": "UUID",
+                "uuid": "6ab28b71-6634-4c3f-b10d-543a25fa96a4"
+              },
+              "type": "user"
+            }
+          },
+          "images": {
+            "data": [
+              {
+                "id": {
+                  "_sdkType": "UUID",
+                  "uuid": "6ab28b71-a037-470f-9813-27fd4c8fec02"
+                },
+                "type": "image"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "included": [
+      {
+        "id": {
+          "_sdkType": "UUID",
+          "uuid": "6ab28b71-7614-45a0-87bb-62f54b27242b"
+        },
+        "type": "user",
+        "attributes": {
+          "profile": {
+            "displayName": "Noora L",
+            "abbreviatedName": "NL"
+          }
+        }
+      },
+      {
+        "id": {
+          "_sdkType": "UUID",
+          "uuid": "6ab28b71-e77d-4e9a-a46c-d50d085784e6"
+        },
+        "type": "image",
+        "attributes": {
+          "variants": {
+            "scaled-small": {
+              "height": 320,
+              "width": 222,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-e77d-4e9a-a46c-d50d085784e6?auto=format&fit=clip&h=320&w=320&s=06c91c34fe1696dfb7758da5a9a0092b",
+              "name": "scaled-small"
+            },
+            "listing-card": {
+              "height": 400,
+              "width": 400,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-e77d-4e9a-a46c-d50d085784e6?auto=format&crop=edges&fit=crop&h=400&w=400&s=dbc7f0a8555b9bf20d8ee5b252a19942",
+              "name": "listing-card"
+            },
+            "scaled-medium": {
+              "height": 750,
+              "width": 522,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-e77d-4e9a-a46c-d50d085784e6?auto=format&fit=clip&h=750&w=750&s=4ca6aacefa4132b062adaeda1529f87d",
+              "name": "scaled-medium"
+            },
+            "listing-card-2x": {
+              "height": 800,
+              "width": 800,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-e77d-4e9a-a46c-d50d085784e6?auto=format&crop=edges&fit=crop&h=800&w=800&s=9c8a032ceeab4b66647e147a60061670",
+              "name": "listing-card-2x"
+            }
+          }
+        }
+      },
+      {
+        "id": {
+          "_sdkType": "UUID",
+          "uuid": "6ab28b71-6634-4c3f-b10d-543a25fa96a4"
+        },
+        "type": "user",
+        "attributes": {
+          "profile": {
+            "displayName": "Petra N",
+            "abbreviatedName": "PN"
+          }
+        }
+      },
+      {
+        "id": {
+          "_sdkType": "UUID",
+          "uuid": "6ab28b71-a037-470f-9813-27fd4c8fec02"
+        },
+        "type": "image",
+        "attributes": {
+          "variants": {
+            "scaled-small": {
+              "height": 320,
+              "width": 222,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-a037-470f-9813-27fd4c8fec02?auto=format&fit=clip&h=320&w=320&s=06244a54f8beef3e1fcb4c2cad03c084",
+              "name": "scaled-small"
+            },
+            "listing-card": {
+              "height": 400,
+              "width": 400,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-a037-470f-9813-27fd4c8fec02?auto=format&crop=edges&fit=crop&h=400&w=400&s=2a127ef523a1ed40f1407ec0a669f4fb",
+              "name": "listing-card"
+            },
+            "scaled-medium": {
+              "height": 750,
+              "width": 522,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-a037-470f-9813-27fd4c8fec02?auto=format&fit=clip&h=750&w=750&s=e08d91d37ee827e57c63c5445171b65d",
+              "name": "scaled-medium"
+            },
+            "listing-card-2x": {
+              "height": 800,
+              "width": 800,
+              "url": "https://sharetribe.imgix.net/6ab2816b-37bc-4ca9-8201-2257b8502035/6ab28b71-a037-470f-9813-27fd4c8fec02?auto=format&crop=edges&fit=crop&h=800&w=800&s=ac2f342f6e2dcbead1b45f637d7b9fff",
+              "name": "listing-card-2x"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "total": {
+    "best": 1,
+    "related": 1
+  },
+  "page": 1,
+  "perPage": 24,
+  "totalPages": 1,
+  "relaxation": {
+    "auto": null,
+    "suggestions": [
+      {
+        "key": "size",
+        "label": "Size M",
+        "extra": 2
+      }
+    ]
+  },
+  "notices": []
+}

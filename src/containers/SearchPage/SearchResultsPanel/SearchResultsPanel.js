@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
+import SaveListingButton from '../../SaveListingButton/SaveListingButton';
+
 import css from './SearchResultsPanel.module.css';
 
 /**
@@ -82,6 +84,7 @@ const SearchResultsPanel = props => {
               listing={l}
               renderSizes={cardRenderSizes(isMapVariant)}
               setActiveListing={setActiveListing}
+              actionButton={<SaveListingButton listingId={l.id.uuid} />}
             />
           </li>
         ))}

@@ -17,6 +17,26 @@ const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const deleteAccount = require('./api/delete-account');
 
+// Smart search uses the real backend (server/api/smart-search/index.js) when it exists, and the
+// mock otherwise. SMART_SEARCH_MOCK=true always uses the mock.
+const loadSmartSearch = () => {
+  if (process.env.SMART_SEARCH_MOCK !== 'true') {
+    try {
+      return require('./api/smart-search');
+    } catch (e) {
+      // Fall back only when the backend itself is missing, not one of its own imports
+      const isBackendMissing =
+        e.code === 'MODULE_NOT_FOUND' && e.message.includes("'./api/smart-search'");
+      if (!isBackendMissing) {
+        throw e;
+      }
+    }
+  }
+  console.log('Smart search: using the mock backend (server/api/smart-search-mock.js)');
+  return require('./api/smart-search-mock');
+};
+const smartSearch = loadSmartSearch();
+
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
 const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
@@ -56,6 +76,7 @@ router.post('/transaction-line-items', transactionLineItems);
 router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/delete-account', deleteAccount);
+router.post('/smart-search', smartSearch);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

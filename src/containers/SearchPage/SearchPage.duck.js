@@ -11,6 +11,7 @@ import {
   getStartOf,
 } from '../../util/dates';
 import { constructQueryParamName, isOriginInUse } from '../../util/search';
+import { getInSearchOfListingType, getSellingListingTypeIds } from '../../util/inSearchOf';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
 import { getReferralParams } from '../../util/webStorageHelpers';
@@ -294,6 +295,14 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     })
   );
 
+  // When an "In search of" listing type exists, a search without a listing type shows only
+  // the selling listings. "In search of" listings are shown only when that type is chosen.
+  const listingTypes = config.listing.listingTypes || [];
+  const sellingListingTypesMaybe =
+    !isListingTypeVariant && !apiParamsRaw.pub_listingType && getInSearchOfListingType(listingTypes)
+      ? { pub_listingType: getSellingListingTypeIds(listingTypes) }
+      : {};
+
   const params = {
     // The params that are related to listing fields and categories are prepared here.
     // We add handler functions that check category and integer range configurations.
@@ -303,6 +312,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     //   I.e. the range end must be exclusive. E.g. 1000,2000 -> 1000,2001
     // Note: invalid independent search params are still passed through
     ...prepareAPIParams(apiParamsRaw, [prepareCategoryParams, prepareIntegerRangeParam]),
+    ...sellingListingTypesMaybe,
     // If the search page variant is of type /s/:listingType, this sets the pub_listingType
     // query parameter to the value of the listing type path parameter. The ordering matters here,
     // since this value overrides any possible pub_listingType value coming from query parameters
