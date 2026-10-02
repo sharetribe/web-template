@@ -16,8 +16,26 @@ const transactionLineItems = require('./api/transaction-line-items');
 const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const deleteAccount = require('./api/delete-account');
-// MOCK: replace with the real smart search backend when it is merged
-const smartSearch = require('./api/smart-search-mock');
+
+// Smart search uses the real backend (server/api/smart-search/index.js) when it exists, and the
+// mock otherwise. SMART_SEARCH_MOCK=true always uses the mock.
+const loadSmartSearch = () => {
+  if (process.env.SMART_SEARCH_MOCK !== 'true') {
+    try {
+      return require('./api/smart-search');
+    } catch (e) {
+      // Fall back only when the backend itself is missing, not one of its own imports
+      const isBackendMissing =
+        e.code === 'MODULE_NOT_FOUND' && e.message.includes("'./api/smart-search'");
+      if (!isBackendMissing) {
+        throw e;
+      }
+    }
+  }
+  console.log('Smart search: using the mock backend (server/api/smart-search-mock.js)');
+  return require('./api/smart-search-mock');
+};
+const smartSearch = loadSmartSearch();
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 

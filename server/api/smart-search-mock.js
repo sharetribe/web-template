@@ -304,8 +304,9 @@ const nextState = (q, previous, consoleConfig) => {
     !!prev && parsed.terms.length === 0 && !parsed.filters.some(f => f.key === 'categoryLevel1');
 
   if (!isRefinement) {
-    // New search: keep only filters the buyer locked
-    const locked = prev ? prev.filters.filter(f => f.locked) : [];
+    // New search: keep the filters the buyer locked or picked themselves (also the filters of
+    // a starting state, picked before the first search)
+    const locked = prev ? prev.filters.filter(f => f.locked || f.source === 'user') : [];
     const filters = [...locked];
     parsed.filters.forEach(f => {
       if (!filters.some(x => x.key === f.key)) {
