@@ -1,0 +1,56 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--colorGrey700);
+  background-color: var(--colorWhite);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    color: var(--colorFail);
+    transform: scale(1.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--marketplaceColor);
+    outline-offset: 2px;
+  }
+
+  @media (--viewportMedium) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.saved {
+  color: var(--colorFail);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+
+  @media (--viewportMedium) {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

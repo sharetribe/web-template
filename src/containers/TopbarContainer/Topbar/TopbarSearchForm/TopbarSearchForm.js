@@ -7,6 +7,7 @@ import { isMainSearchTypeKeywords } from '../../../../util/search';
 
 import { Form, LocationAutocompleteInput } from '../../../../components';
 
+import KeywordAutocompleteInput from '../../../../components/KeywordAutocompleteInput/KeywordAutocompleteInput';
 import IconSearchDesktop from './IconSearchDesktop';
 import css from './TopbarSearchForm.module.css';
 
@@ -28,17 +29,15 @@ const KeywordSearchField = props => {
         name="keywords"
         render={({ input, meta }) => {
           return (
-            <input
-              className={isMobile ? css.mobileInput : css.desktopInput}
-              {...input}
+            <KeywordAutocompleteInput
+              input={input}
+              inputClassName={isMobile ? css.mobileInput : css.desktopInput}
               id={isMobile ? 'keyword-search-mobile' : 'keyword-search'}
               data-testid={isMobile ? 'keyword-search-mobile' : 'keyword-search'}
-              ref={inputRef}
-              type="text"
+              inputRef={inputRef}
               placeholder={intl.formatMessage({
                 id: 'TopbarSearchForm.placeholder',
               })}
-              autoComplete="off"
             />
           );
         }}

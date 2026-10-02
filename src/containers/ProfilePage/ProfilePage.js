@@ -48,6 +48,7 @@ import {
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import SaveListingButton from '../../containers/SaveListingButton/SaveListingButton';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
@@ -312,7 +313,11 @@ export const MainContent = props => {
           <ul className={css.listings}>
             {listings.map(l => (
               <li className={css.listing} key={l.id.uuid}>
-                <ListingCard listing={l} showAuthorInfo={false} />
+                <ListingCard
+                  listing={l}
+                  showAuthorInfo={false}
+                  actionButton={<SaveListingButton listingId={l.id.uuid} />}
+                />
               </li>
             ))}
           </ul>

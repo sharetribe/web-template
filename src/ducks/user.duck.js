@@ -427,6 +427,80 @@ export default userSlice.reducer;
 
 export const { clearCurrentUser, setCurrentUser, setCurrentUserHasOrders } = userSlice.actions;
 
+// ================ Saved listings ================ //
+
+// Saved listing ids are stored in the current user's private data, so they follow the user
+// across devices and are visible only to them.
+const SAVED_LISTINGS_KEY = 'savedListingIds';
+// listings.query accepts at most 100 ids per page
+const SAVED_LISTINGS_MAX = 100;
+
+/**
+ * Get the ids (strings) of listings the current user has saved.
+ *
+ * @param {Object} currentUser currentUser entity
+ * @returns {Array<string>} saved listing ids, newest first
+ */
+export const getSavedListingIds = currentUser => {
+  const ids = currentUser?.attributes?.profile?.privateData?.[SAVED_LISTINGS_KEY];
+  return Array.isArray(ids) ? ids : [];
+};
+
+const withSavedListingIds = (currentUser, ids) => {
+  const { attributes } = currentUser;
+  const { profile } = attributes;
+  return {
+    ...currentUser,
+    attributes: {
+      ...attributes,
+      profile: { ...profile, privateData: { ...profile.privateData, [SAVED_LISTINGS_KEY]: ids } },
+    },
+  };
+};
+
+const toggleIdInList = (ids, id, shouldInclude) => {
+  const withoutId = ids.filter(i => i !== id);
+  return shouldInclude ? [id, ...withoutId].slice(0, SAVED_LISTINGS_MAX) : withoutId;
+};
+
+const toggleSavedListingPayloadCreator = (listingId, thunkAPI) => {
+  const { getState, dispatch, extra: sdk, rejectWithValue } = thunkAPI;
+  const currentUser = getState().user.currentUser;
+  if (!currentUser) {
+    return rejectWithValue({ message: 'Current user is not available' });
+  }
+
+  const shouldSave = !getSavedListingIds(currentUser).includes(listingId);
+  const nextIds = toggleIdInList(getSavedListingIds(currentUser), listingId, shouldSave);
+
+  // Optimistic update: the heart changes immediately and is reverted if the API call fails.
+  dispatch(setCurrentUser(withSavedListingIds(currentUser, nextIds)));
+
+  return sdk.currentUser
+    .updateProfile({ privateData: { [SAVED_LISTINGS_KEY]: nextIds } })
+    .then(() => ({ listingId, isSaved: shouldSave }))
+    .catch(e => {
+      const latestUser = getState().user.currentUser;
+      const revertedIds = toggleIdInList(getSavedListingIds(latestUser), listingId, !shouldSave);
+      dispatch(setCurrentUser(withSavedListingIds(latestUser, revertedIds)));
+      return rejectWithValue(storableError(e));
+    });
+};
+
+export const toggleSavedListingThunk = createAsyncThunk(
+  'user/toggleSavedListing',
+  toggleSavedListingPayloadCreator
+);
+
+/**
+ * Save or unsave a listing for the current user.
+ *
+ * @param {string} listingId listing id as a string (uuid)
+ */
+export const toggleSavedListing = listingId => dispatch => {
+  return dispatch(toggleSavedListingThunk(listingId));
+};
+
 // ================ Selectors ================ //
 
 export const hasCurrentUserErrors = state => {

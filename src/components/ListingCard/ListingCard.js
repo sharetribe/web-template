@@ -9,6 +9,7 @@ import { useIntl } from '../../util/reactIntl';
 import { requireListingImage } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { createSlug } from '../../util/urlHelpers';
+import { isInSearchOfListingType } from '../../util/inSearchOf';
 
 import {
   AspectRatioWrapper,
@@ -93,6 +94,7 @@ const ListingCardImage = props => {
  * @param {string?} props.renderSizes for img/srcset
  * @param {Function?} props.setActiveListing
  * @param {boolean?} props.showAuthorInfo
+ * @param {ReactNode?} props.actionButton optional button shown on top of the card image (e.g. save)
  * @returns {JSX.Element} listing card to be used in search result panel etc.
  */
 export const ListingCard = props => {
@@ -109,6 +111,7 @@ export const ListingCard = props => {
     setActiveListing,
     showAuthorInfo = true,
     lazyLoadImage = true,
+    actionButton,
   } = props;
 
   const translations = getListingCardTranslations(listing, config, intl);
@@ -123,6 +126,8 @@ export const ListingCard = props => {
   } = translations;
 
   const classes = classNames(rootClassName || css.root, className);
+  // A button can't be nested inside the card link, so the link and the button become siblings
+  const linkClasses = actionButton ? rootClassName || css.root : classes;
 
   const id = listing?.id?.uuid;
   const { title = '', publicData } = listing?.attributes || {};
@@ -148,13 +153,18 @@ export const ListingCard = props => {
       }
     : null;
 
-  return (
+  const cardLink = (
     <NamedLink
-      className={classes}
+      className={linkClasses}
       name="ListingPage"
       params={{ id, slug }}
       ariaLabel={cardAriaLabel}
     >
+      {isInSearchOfListingType(listingType) ? (
+        <span className={css.inSearchOfBadge}>
+          {intl.formatMessage({ id: 'ListingCard.inSearchOf' })}
+        </span>
+      ) : null}
       {showListingImage ? (
         <ListingCardImage
           renderSizes={renderSizes}
@@ -197,6 +207,15 @@ export const ListingCard = props => {
         </div>
       </div>
     </NamedLink>
+  );
+
+  return actionButton ? (
+    <div className={classNames(css.cardWithAction, className)}>
+      {cardLink}
+      <div className={css.actionButton}>{actionButton}</div>
+    </div>
+  ) : (
+    cardLink
   );
 };
 

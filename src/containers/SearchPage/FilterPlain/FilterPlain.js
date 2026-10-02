@@ -128,6 +128,7 @@ class FilterPlainComponent extends Component {
       initialValues,
       keepDirtyOnReinitialize = false,
       ariaLabel,
+      hideClearButton = false,
       containerId, // Note: this could be used to identify different filter containers
     } = this.props;
     const formId = `${id}.form`;
@@ -280,14 +281,16 @@ class FilterPlainComponent extends Component {
             initialValues={initialValues}
             keepDirtyOnReinitialize={keepDirtyOnReinitialize}
             clearButton={
-              <button
-                id={`${formId}.clear`}
-                type="button"
-                className={css.clearButton}
-                onClick={this.handleClear}
-              >
-                <FormattedMessage id={'FilterPlain.clear'} />
-              </button>
+              hideClearButton ? null : (
+                <button
+                  id={`${formId}.clear`}
+                  type="button"
+                  className={css.clearButton}
+                  onClick={this.handleClear}
+                >
+                  <FormattedMessage id={'FilterPlain.clear'} />
+                </button>
+              )
             }
           >
             {children}
