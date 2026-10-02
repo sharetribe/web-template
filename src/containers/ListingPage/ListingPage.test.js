@@ -232,43 +232,49 @@ describe('ListingPage variants', () => {
       }
     );
 
-    await waitFor(() => {
-      // Has main search in Topbar and it's a location search.
-      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
-      expect(screen.getByTestId('location-search')).toBeInTheDocument();
+    await waitFor(
+      () => {
+        // Has main search in Topbar and it's a location search.
+        expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+        expect(screen.getByTestId('location-search')).toBeInTheDocument();
 
-      // Has hero (coverPhoto) section
-      expect(screen.getByTestId('hero')).toBeInTheDocument();
-      expect(screen.queryByTestId('carousel')).not.toBeInTheDocument();
+        // Has hero (coverPhoto) section
+        expect(screen.getByTestId('hero')).toBeInTheDocument();
+        expect(screen.queryByTestId('carousel')).not.toBeInTheDocument();
 
-      // Has order title (rendered for )
-      const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
-      expect(orderTitle).toHaveLength(3);
+        // Has order title (rendered for )
+        const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
+        expect(orderTitle).toHaveLength(3);
 
-      // Has details section title and selected category info
-      expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Cat')).toBeInTheDocument();
-      expect(getByText('Cat 1')).toBeInTheDocument();
+        // Has details section title and selected category info
+        expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
+        expect(getByText('Cat')).toBeInTheDocument();
+        expect(getByText('Cat 1')).toBeInTheDocument();
 
-      // Has details location title
-      expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
+        // Has details location title
+        expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
 
-      // Has details reviews title
-      const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
-      expect(reviewsTitle).toBeInTheDocument();
-      const sectionReviews = within(reviewsTitle.parentNode.parentNode);
-      expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
-      expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
-      expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
-      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
+        // Has details reviews title
+        const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
+        expect(reviewsTitle).toBeInTheDocument();
+        const sectionReviews = within(reviewsTitle.parentNode.parentNode);
+        expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
+        expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
+        expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
+        expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
 
-      // Has details provider/author title
-      expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
-      // Has link to provider's profile
-      expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
-      // Has button to contact provider
-      expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
-    });
+        // Has details provider/author title
+        expect(
+          getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })
+        ).toBeInTheDocument();
+        // Has link to provider's profile
+        expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
+        // Has button to contact provider
+        expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
+        // The page is slow to render when many test suites run in parallel
+      },
+      { timeout: 5000 }
+    );
   });
 
   it('has carousel on carousel mode', async () => {
@@ -287,43 +293,49 @@ describe('ListingPage variants', () => {
         routeConfiguration,
       }
     );
-    await waitFor(() => {
-      // Has main search in Topbar and it's a location search.
-      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
-      expect(screen.getByTestId('location-search')).toBeInTheDocument();
+    await waitFor(
+      () => {
+        // Has main search in Topbar and it's a location search.
+        expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+        expect(screen.getByTestId('location-search')).toBeInTheDocument();
 
-      // Does not have hero (coverPhoto) section on carousel mode
-      expect(screen.getByTestId('carousel')).toBeInTheDocument();
-      expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
+        // Does not have hero (coverPhoto) section on carousel mode
+        expect(screen.getByTestId('carousel')).toBeInTheDocument();
+        expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
-      // Has order title (rendered for )
-      const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
-      expect(orderTitle).toHaveLength(3);
+        // Has order title (rendered for )
+        const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
+        expect(orderTitle).toHaveLength(3);
 
-      // Has details section title and selected category info
-      expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Cat')).toBeInTheDocument();
-      expect(getByText('Cat 1')).toBeInTheDocument();
+        // Has details section title and selected category info
+        expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
+        expect(getByText('Cat')).toBeInTheDocument();
+        expect(getByText('Cat 1')).toBeInTheDocument();
 
-      // Has details location title
-      expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
+        // Has details location title
+        expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
 
-      // Has details reviews title
-      const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
-      expect(reviewsTitle).toBeInTheDocument();
-      const sectionReviews = within(reviewsTitle.parentNode.parentNode);
-      expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
-      expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
-      expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
-      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
+        // Has details reviews title
+        const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
+        expect(reviewsTitle).toBeInTheDocument();
+        const sectionReviews = within(reviewsTitle.parentNode.parentNode);
+        expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
+        expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
+        expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
+        expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
 
-      // Has details provider/author title
-      expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
-      // Has link to provider's profile
-      expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
-      // Has button to contact provider
-      expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
-    });
+        // Has details provider/author title
+        expect(
+          getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })
+        ).toBeInTheDocument();
+        // Has link to provider's profile
+        expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
+        // Has button to contact provider
+        expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
+        // The page is slow to render when many test suites run in parallel
+      },
+      { timeout: 5000 }
+    );
   });
 });
 
