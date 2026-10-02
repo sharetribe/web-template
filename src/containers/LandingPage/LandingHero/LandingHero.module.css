@@ -123,8 +123,7 @@
 }
 
 .searchButton:focus-visible,
-.tryChip:focus-visible,
-.card:focus-visible {
+.tryChip:focus-visible {
   outline: 2px solid var(--heroGreen);
   outline-offset: 3px;
 }
@@ -167,89 +166,13 @@
   margin-top: 32px;
 }
 
-.sectionTitle {
-  margin: 56px 0 20px;
-  font-size: 24px;
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 22px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 200px;
-  padding: 22px;
-  border-radius: 16px;
-  color: var(--heroInk);
-  text-decoration: none;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  text-decoration: none;
-  transform: translateY(-3px);
-}
-
-.cardTitle {
-  font-size: 26px;
-  line-height: 1.15;
-  font-weight: 700;
-}
-
-.cardHint {
-  margin-top: 4px;
-  font-size: 14px;
-  color: var(--heroMuted);
-}
-
-/* Card colours */
-.sage {
-  background-color: #ccd5cf;
-}
-
-.blush {
-  background-color: #e3d0c7;
-}
-
-.butter {
-  background-color: #ede2bd;
-}
-
-.sand {
-  background-color: #e6dccd;
-}
-
-.discover {
-  background-color: var(--heroGreen);
-  color: #fff;
-}
-
-.discover:hover {
-  color: #fff;
-}
-
-.discover .cardHint {
-  color: rgba(255, 255, 255, 0.82);
-}
-
 /* ---------- On top of the Console hero image ---------- */
 
 .onImage {
   color: #fff;
 }
 
-.onImage .title,
-.onImage .sectionTitle {
+.onImage .title {
   color: #fff;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
@@ -280,10 +203,6 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-.onImage .card {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
 /* ---------- Mobile ---------- */
 
 @media (max-width: 600px) {
@@ -302,30 +221,11 @@
   .searchButton {
     padding: 0 18px;
   }
-
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .card {
-    height: 140px;
-    padding: 16px;
-  }
-
-  .cardTitle {
-    font-size: 20px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card,
   .searchButton,
   .tryChip {
     transition: none;
-  }
-
-  .card:hover {
-    transform: none;
   }
 }

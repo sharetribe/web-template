@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { FormattedMessage } from '../../../util/reactIntl';
+
 import { NamedLink } from '../../../components';
 
 import css from './CategoryButtons.module.css';
@@ -10,9 +12,9 @@ const CATEGORY_PARAM = 'pub_categoryLevel1';
 
 // `id` = category ID in Console. `color` = background of the icon circle.
 const CATEGORIES = [
-  { id: 'women', label: 'Women', icon: '👗', color: '#e3d0c7' },
-  { id: 'men', label: 'Men', icon: '👕', color: '#ccd5cf' },
-  { id: 'kids', label: 'Kids', icon: '🧸', color: '#ede2bd' },
+  { id: 'women', messageId: 'CategoryButtons.women', icon: '👗', color: '#e3d0c7' },
+  { id: 'men', messageId: 'CategoryButtons.men', icon: '👕', color: '#ccd5cf' },
+  { id: 'kids', messageId: 'CategoryButtons.kids', icon: '🧸', color: '#ede2bd' },
 ];
 
 const VARIANTS = {
@@ -49,7 +51,9 @@ const CategoryButtons = props => {
             >
               {category.icon}
             </span>
-            <span className={css.label}>{category.label}</span>
+            <span className={css.label}>
+              <FormattedMessage id={category.messageId} />
+            </span>
           </NamedLink>
         </li>
       ))}
@@ -58,7 +62,9 @@ const CategoryButtons = props => {
           <span className={classNames(css.icon, css.discoverIcon)} aria-hidden="true">
             ✨
           </span>
-          <span className={css.label}>Discover</span>
+          <span className={css.label}>
+            <FormattedMessage id="CategoryButtons.discover" />
+          </span>
         </NamedLink>
       </li>
     </ul>
