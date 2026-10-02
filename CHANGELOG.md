@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations.
+  [#943](https://github.com/sharetribe/web-template/pull/943)
 - [change] PageBuilder: lazy-load FieldImage and section background images. (IntersectionObserver
   with a ~1 viewport prefetch margin). First two sections still server-side render with images
   mounted. [#941](https://github.com/sharetribe/web-template/pull/941)
