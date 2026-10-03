@@ -1,5 +1,5 @@
 import { fakeIntl } from '../../util/testData';
-import SavedCardDetails from './SavedCardDetails';
+import PaymentMethodPicker from './PaymentMethodPicker';
 
 const noop = () => null;
 const defaultProps = {
@@ -9,8 +9,8 @@ const defaultProps = {
   onManageDisableScrolling: noop,
 };
 
-export const SavedCardDetailsExample = {
-  component: SavedCardDetails,
+export const PaymentMethodPickerExample = {
+  component: PaymentMethodPicker,
   props: {
     ...defaultProps,
     card: {
@@ -23,8 +23,8 @@ export const SavedCardDetailsExample = {
   group: 'payment',
 };
 
-export const SavedCardDetailsNoDelete = {
-  component: SavedCardDetails,
+export const PaymentMethodPickerNoDelete = {
+  component: PaymentMethodPicker,
   props: {
     ...defaultProps,
     card: {
@@ -38,8 +38,8 @@ export const SavedCardDetailsNoDelete = {
   group: 'payment',
 };
 
-export const SavedCardDetailsExpired = {
-  component: SavedCardDetails,
+export const PaymentMethodPickerExpired = {
+  component: PaymentMethodPicker,
   props: {
     ...defaultProps,
     card: {
