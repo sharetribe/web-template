@@ -21,7 +21,7 @@ import { getListingCardTranslations } from './ListingCard.helpers';
 
 import css from './ListingCard.module.css';
 
-const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
+const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { nearViewportMargin: 600 });
 
 /**
  * ListingCardImage
