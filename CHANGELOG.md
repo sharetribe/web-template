@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] ListingImageGallery: lazy load thumbnails.
+  [#946](https://github.com/sharetribe/web-template/pull/946)
 - [add] Add currently available translations.
   [#943](https://github.com/sharetribe/web-template/pull/943)
 - [change] PageBuilder: lazy-load FieldImage and section background images. (IntersectionObserver
