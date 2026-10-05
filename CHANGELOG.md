@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] ListingCard: lazy load images so that they are reacting to scroll interactions instead of
+  loadAfterInitialRendering config. [#947](https://github.com/sharetribe/web-template/pull/947)
 - [change] ListingImageGallery: lazy load thumbnails.
   [#946](https://github.com/sharetribe/web-template/pull/946)
 - [add] Add currently available translations.
