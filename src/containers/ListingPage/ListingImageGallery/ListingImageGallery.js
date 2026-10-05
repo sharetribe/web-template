@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
@@ -29,6 +29,86 @@ const MAX_LANDSCAPE_ASPECT_RATIO = 2; // 2:1
 const MAX_PORTRAIT_ASPECT_RATIO = 4 / 3;
 /** Longer side of a thumbnail inside the gallery strip (matches .thumb max-*). */
 const THUMBNAIL_MAX_SIDE = 88;
+
+/**
+ * Prefetch one thumb-width past the strip edges. Native loading="lazy" is too
+ * generous for this short horizontal overflow strip (Chrome often fetches all).
+ */
+const THUMBNAIL_LAZY_ROOT_MARGIN = `0px ${THUMBNAIL_MAX_SIDE}px`;
+const THUMBNAILS_SCROLL_ROOT_SELECTOR = '.image-gallery-thumbnails';
+
+/**
+ * Defer mounting a strip thumbnail until it nears the horizontal scrollport.
+ * Uses IntersectionObserver with the gallery thumbnails overflow container as root.
+ *
+ * @param {Object} props
+ * @param {Object} props.image
+ * @param {string} props.alt
+ * @param {Array<string>} props.variants
+ * @param {string} props.sizes
+ * @param {number} props.width
+ * @param {number} props.height
+ * @returns {JSX.Element}
+ */
+const LazyThumbnail = props => {
+  const { image, alt, variants, sizes, width, height } = props;
+  const wrapperRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (shouldLoad) {
+      return;
+    }
+
+    const element = wrapperRef.current;
+    if (!element) {
+      return;
+    }
+
+    if (typeof IntersectionObserver !== 'function') {
+      setShouldLoad(true);
+      return;
+    }
+
+    const root = element.closest(THUMBNAILS_SCROLL_ROOT_SELECTOR);
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+          setShouldLoad(true);
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        // Fall back to viewport if the gallery DOM is unexpected.
+        root: root || null,
+        rootMargin: THUMBNAIL_LAZY_ROOT_MARGIN,
+        threshold: 0,
+      }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
+
+  return (
+    <span ref={wrapperRef} className={css.thumbWrapper} style={{ width, height }}>
+      {shouldLoad ? (
+        <ResponsiveImage
+          rootClassName={css.thumb}
+          image={image}
+          alt={alt}
+          variants={variants}
+          sizes={sizes}
+          width={width}
+          height={height}
+        />
+      ) : null}
+    </span>
+  );
+};
 
 /**
  * Display size for a thumbnail that fits inside an 88px box
@@ -146,8 +226,7 @@ const ListingImageGallery = props => {
   };
   const renderThumbInner = item => {
     return (
-      <ResponsiveImage
-        rootClassName={css.thumb}
+      <LazyThumbnail
         image={item.image}
         alt={item.thumbAlt}
         variants={thumbVariants}

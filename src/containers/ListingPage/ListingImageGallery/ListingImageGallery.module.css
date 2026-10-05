@@ -129,6 +129,17 @@
   max-height: 100%;
 }
 
+.thumbWrapper {
+  /*
+   Reserve strip cell size before the image mounts (IntersectionObserver lazy load).
+   */
+  display: block;
+  width: var(--listing-thumb-display-width, 88px);
+  height: var(--listing-thumb-display-height, 88px);
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--colorGrey100);
+}
+
 .thumb {
   /*
    Rendered size matches width/height attrs (longer side = 88px). Explicit
