@@ -161,9 +161,10 @@ export const withDimensions = (Component, options = {}) => {
  * the shape `{ width: 600, height: 400}`.
  *
  * @param {React.Component} Component to be wrapped by this HOC
- * @param {Object} options pass in options like maxWidth and maxHeight. To load component after
- * initial rendering has passed or after user has interacted with the window (e.g. scrolled),
- * use`loadAfterInitialRendering: 1500` (value should be milliseconds).
+ * @param {Object} options pass in options like maxWidth, maxHeight, and nearViewportMargin
+ * (pixels outside the viewport that still count as "near"; default 50).
+ * loadAfterInitialRendering (ms) eagerly mounts off-screen instances after that delay and on
+ * any scroll/resize — avoid it when bandwidth or CDN cost matters.
  *
  * @return {Object} HOC component which knows its dimensions
  */
@@ -177,7 +178,8 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
 
   // Scrolling and other events that affect to viewport location have this safety margin
   // for lazy loading
-  const NEAR_VIEWPORT_MARGIN = 50;
+  const NEAR_VIEWPORT_MARGIN =
+    typeof options.nearViewportMargin === 'number' ? options.nearViewportMargin : 50;
 
   class LazyLoadWithDimensionsComponent extends ReactComponent {
     constructor(props) {
