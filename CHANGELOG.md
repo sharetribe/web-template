@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v12.4.0] 2026-10-06
+
 - [fix] Add responsive `sizes` for listing images on Checkout, MakeOffer, RequestQuote, and
   Transaction pages. Omit MobileListingImage from the DOM on desktop layouts.
   [#948](https://github.com/sharetribe/web-template/pull/948)
@@ -75,6 +77,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] Fix to transaction process. [#922](https://github.com/sharetribe/web-template/pull/922)
 - [fix] Fixes to Marketplace and Email texts.
   [#921](https://github.com/sharetribe/web-template/pull/921)
+
+  [v12.4.0]: https://github.com/sharetribe/web-template/compare/v12.3.0...v12.4.0
 
 ## [v12.3.0] 2026-08-31
 
