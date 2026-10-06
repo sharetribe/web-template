@@ -62,7 +62,7 @@
   "BookingTimeForm.timeSlotsError": "Beim Laden der verfügbaren Termine ist ein Fehler aufgetreten. Bitte aktualisiere die Seite.",
   "CheckoutPage.bookingTimeNotAvailableMessage": "Leider ist die gewünschte Zeit gerade gebucht.",
   "CheckoutPage.chargeDisabledMessage": "Diese Transaktion kann nicht fortgesetzt werden, da die:der Anbieter:in die Auszahlungsdetails noch nicht vervollständigt hat. Bitte wende dich an den Support.",
-  "CheckoutPage.correctQuantityInformationMissing": "In den Bestelldaten fehlen korrekte Mengenangaben",
+  "CheckoutPage.correctQuantityInformationMissing": "In den Bestelldaten fehlen korrekte Angaben zur Anzahl",
   "CheckoutPage.default-booking.orderBreakdown": "Buchungsübersicht",
   "CheckoutPage.default-booking.title": "Buchungsanfrage abschließen",
   "CheckoutPage.default-download.orderBreakdown": "Bestellübersicht",
