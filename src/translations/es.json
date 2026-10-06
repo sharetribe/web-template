@@ -741,7 +741,7 @@
   "OrderBreakdown.baseUnitNight": "{unitPrice} × {quantity, number} {quantity, plural, one {noche} other {noches}}",
   "OrderBreakdown.baseUnitNightSeats": "{unitPrice} × {quantity, number} {quantity, plural, one {noche} other {noches}} × { seats, number } { seats, plural, one {plaza} other {plazas} }",
   "OrderBreakdown.baseUnitOffer": "Precio",
-  "OrderBreakdown.baseUnitQuantity": "{quantity, plural, one {Precio por artículo} other {{unitPrice} × #}}",
+  "OrderBreakdown.baseUnitQuantity": "{quantity, plural, one {Precio unitario} other {{unitPrice} × #}}",
   "OrderBreakdown.baseUnitRequest": "Precio",
   "OrderBreakdown.bookingEnd": "Fin de la reserva",
   "OrderBreakdown.bookingStart": "Inicio de la reserva",
