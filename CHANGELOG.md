@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Add responsive `sizes` for listing images on Checkout, MakeOffer, RequestQuote, and
+  Transaction pages. Omit MobileListingImage from the DOM on desktop layouts.
+  [#948](https://github.com/sharetribe/web-template/pull/948)
 - [change] ListingCard: lazy load images so that they are reacting to scroll interactions instead of
   loadAfterInitialRendering config. [#947](https://github.com/sharetribe/web-template/pull/947)
 - [change] ListingImageGallery: lazy load thumbnails.

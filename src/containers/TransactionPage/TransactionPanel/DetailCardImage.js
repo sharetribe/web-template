@@ -32,6 +32,7 @@ const DetailCardImage = props => {
             alt={listingTitle}
             image={image}
             variants={variants}
+            sizes="(max-width: 1023px) 100vw, 409px"
           />
         </AspectRatioWrapper>
       )}

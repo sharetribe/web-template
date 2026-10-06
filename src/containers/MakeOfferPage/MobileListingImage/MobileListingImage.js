@@ -5,6 +5,9 @@ import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from '../../../comp
 
 import css from './MobileListingImage.module.css';
 
+// Matches below --viewportLarge in src/styles/customMediaQueries.css
+const MAX_MOBILE_SCREEN_WIDTH = 1023;
+
 const MobileListingImage = props => {
   const { listingTitle, author, firstImage, layoutListingImageConfig, showListingImage } = props;
 
@@ -14,9 +17,16 @@ const MobileListingImage = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
+  // Mobile-only image: skip mount from --viewportLarge up so srcset is not fetched while
+  // listingImageMobile is display:none.
+  const hasMatchMedia = typeof window !== 'undefined' && !!window?.matchMedia;
+  const isVisible = hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : true;
+
   return (
     <>
-      {showListingImage && (
+      {showListingImage && isVisible ? (
         <AspectRatioWrapper
           width={aspectWidth}
           height={aspectHeight}
@@ -27,9 +37,10 @@ const MobileListingImage = props => {
             alt={listingTitle}
             image={firstImage}
             variants={variants}
+            sizes="100vw"
           />
         </AspectRatioWrapper>
-      )}
+      ) : null}
       <div
         className={classNames(css.avatarWrapper, css.avatarMobile, {
           [css.noListingImage]: !showListingImage,

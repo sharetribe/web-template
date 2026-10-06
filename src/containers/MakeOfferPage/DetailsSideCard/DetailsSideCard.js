@@ -67,6 +67,7 @@ const DetailsSideCard = props => {
             alt={listingTitle}
             image={firstImage}
             variants={variants}
+            sizes="(max-width: 1023px) 100vw, 409px"
           />
         </AspectRatioWrapper>
       )}
