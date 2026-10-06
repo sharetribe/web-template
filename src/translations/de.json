@@ -834,7 +834,7 @@
   "PasswordRecoveryPage.actionFailedMessage": "Etwas ist schiefgelaufen. Bitte aktualisiere die Seite und versuche es erneut.",
   "PasswordRecoveryPage.actionFailedTitle": "Hoppla!",
   "PasswordRecoveryPage.emailSubmittedMessage": "Anweisungen zum Zurücksetzen deines Passworts wurden an {submittedEmailText} gesendet.",
-  "PasswordRecoveryPage.emailSubmittedTitle": "Bitte überprüfe deinen E-Mail-Posteingang.",
+  "PasswordRecoveryPage.emailSubmittedTitle": "Überprüfe deinen E-Mail-Posteingang",
   "PasswordRecoveryPage.fixEmailInfo": "Hoppla, Tippfehler in deiner E-Mail? {fixEmailLink}",
   "PasswordRecoveryPage.fixEmailLinkText": "Problem beheben.",
   "PasswordRecoveryPage.forgotPasswordMessage": "Keine Sorge! Bitte gib die E-Mail-Adresse ein, mit der du dich registriert hast. Wir senden dir dann Anweisungen zum Festlegen eines neuen Passworts.",
