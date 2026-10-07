@@ -1,3 +1,6 @@
+// Push payments (redirect): a proof-of-concept example how to handle redirect return with push payment methods.
+// Check also CheckoutPageRedirectReturn.helpers.js: resumeCheckoutAfterStripeRedirect
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';

@@ -220,6 +220,7 @@ const CheckoutPage = props => {
   const onConfirmCardPayment = useCallback(params => dispatch(confirmCardPayment(params)), [
     dispatch,
   ]);
+  // Push payments (redirect): an example how to confirm redirect payment method via Stripe SDK. Unused by default.
   const onConfirmRedirectPayment = useCallback(params => dispatch(confirmRedirectPayment(params)), [
     dispatch,
   ]);

@@ -206,6 +206,7 @@ export const confirmRedirectPaymentThunk = createAsyncThunk(
   confirmRedirectPaymentPayloadCreator
 );
 
+// Push payments (redirect): an example how to confirm redirect payment method via Stripe SDK. Unused by default.
 export const confirmRedirectPayment = params => dispatch => {
   return dispatch(confirmRedirectPaymentThunk(params)).unwrap();
 };

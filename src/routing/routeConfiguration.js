@@ -150,6 +150,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
         stripe: true,
       },
     },
+    // Push payments (redirect): an example how to handle redirect return with push payment methods. Unused by default.
     {
       path: '/l/:slug/:id/checkout/return',
       name: 'CheckoutRedirectReturnPage',

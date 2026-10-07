@@ -2,6 +2,11 @@
 
 export const PAYMENT_METHOD_CARD = 'card';
 
+// Push payments (redirect): to support push payments, start by adding a new payment method definition.
+// Note 1: Template supports only card payments. There are only some rough proof of concept flow for push payments.
+// Note 2: The transaction process needs to contain a transition with push payment action.
+// Note 3: After that, map the support through supportedPayments in the relevant transactionProcess*.js file.
+
 /**
  * Checkout payment method catalog and validation helpers.
  *

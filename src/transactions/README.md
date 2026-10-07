@@ -72,6 +72,10 @@ backend process uses `:action/stripe-create-payment-intent-push`.
   payment may be refunded instead of confirmed. Listen to Stripe webhooks (or equivalent
   reconciliation) so confirm/fail transitions can run without relying only on the return page.
 
+Integration points for push / redirect payments are marked with comments starting with
+`// Push payments (redirect)`. Search the codebase for that string to find the relevant catalog,
+checkout, Stripe, routing, and server touchpoints.
+
 ### Process module contract
 
 When you add a new process file, export:
