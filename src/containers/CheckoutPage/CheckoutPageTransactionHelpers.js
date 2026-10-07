@@ -171,6 +171,7 @@ export const persistTransaction = (order, pageData, storeData, setPageData, sess
  * @returns {{ redirectStatus: string|null, paymentIntentClientSecret: string|null }}
  */
 export const getStripeRedirectReturnParams = search => {
+  // Push payments (redirect): an example how to parse Stripe return query params after bank/app redirect. Unused by default.
   const searchParams = new URLSearchParams(search);
   return {
     redirectStatus: searchParams.get('redirect_status'),
@@ -193,6 +194,7 @@ const toRedirectPaymentStatus = paymentIntentStatus => {
   return isRecoverableFailure ? paymentIntentStatus : 'pending';
 };
 
+// Push payments (redirect): an example how to get completed payment intent (or reject). Unused by default.
 export const getCompletedPaymentIntentOrReject = (paymentIntent, fallbackStatus) => {
   if (paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status)) {
     return paymentIntent;
@@ -327,7 +329,8 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   // Step 2 (push): confirm redirect payment method via Stripe SDK    //
   // Browser usually navigates away to return_url. If Stripe does not //
   // redirect (PI already past confirm), handleSubmit sends the user  //
-  // to CheckoutPageRedirectReturn to finish Marketplace confirm.      //
+  // to CheckoutPageRedirectReturn to finish Marketplace confirm.     //
+  // Push payments (redirect): a draft of the redirection flow.       //
   //////////////////////////////////////////////////////////////////////
   const fnConfirmRedirectPayment = fnParams => {
     // fnParams should be returned transaction entity
@@ -412,6 +415,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     fnSavePaymentMethod
   );
 
+  // Push payments (redirect): handle payment intent creation with push payment. Unused by default.
   // Push/redirect: only initiate + Stripe confirm with return_url.
   // Marketplace confirm-payment runs on CheckoutPageRedirectReturn after the bank redirect
   // (or after handleSubmit routes there when Stripe did not navigate away).
@@ -420,6 +424,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     fnConfirmRedirectPayment
   );
 
+  // Push payments (redirect): choose the payment method flow.
   return isStripePushPayment
     ? handlePaymentIntentCreationWithPushPayment(orderParams)
     : handlePaymentIntentCreationWithCard(orderParams);

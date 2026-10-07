@@ -170,6 +170,7 @@ const PaymentMethodPicker = props => {
   const removeCard = intl.formatMessage({ id: 'PaymentMethodPicker.removeCard' });
   const deletePaymentMethod = intl.formatMessage({ id: 'PaymentMethodPicker.deletePaymentMethod' });
 
+  // Push payments (redirect): an example how to include push payment options. Unused by default.
   const selectedAdditionalOption = additionalPaymentOptions.find(option => option.value === active);
   const isNewCardSelected = active === REPLACE_CARD || active === ONETIME_CARD_PAYMENT;
   const menuLabelContent =

@@ -450,6 +450,7 @@ export const isStripeRelatedProcessAlias = processAlias => {
   }
 };
 
+// Push payments (redirect): identify processes that support push payments.
 /**
  * Whether the given Stripe payment method is a push payment for this process.
  * Push = no preauthorization; charge on customer confirmation.

@@ -1,3 +1,5 @@
+// Push payments (redirect): an example how to validate push payment method types.
+// This is just a rough starting point.
 /**
  * Server-side validation for Stripe push payment transition params.
  *

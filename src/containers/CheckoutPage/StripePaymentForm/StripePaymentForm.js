@@ -62,6 +62,8 @@ const withPaymentMethodMessages = (intl, option) => {
   return hint ? { value: methodId, label, hint } : { value: methodId, label };
 };
 
+// Push payments (redirect): an example how to check if the process supports push payments.
+// Ensure that the process supports the given payment method.
 const isStripePushPaymentForProcess = (
   processName,
   checkoutPaymentMethod = PAYMENT_METHOD_CARD
@@ -203,6 +205,7 @@ const PaymentMethodSelector = props => {
 
   const hasDefaultPaymentMethod = !!defaultPaymentMethod?.id;
   const usesCardPayment = checkoutPaymentMethod === PAYMENT_METHOD_CARD;
+  // Push payments (redirect): an example how to include push payment options.
   const additionalPaymentOptions = checkoutPaymentOptions.filter(
     option => option.value !== PAYMENT_METHOD_CARD
   );
@@ -577,6 +580,7 @@ class StripePaymentForm extends Component {
       return;
     }
 
+    // Push payments (redirect): only card can be saved as default payment method.
     const isStripePushPayment = isStripePushPaymentForProcess(processName, checkoutPaymentMethod);
     const hasDefaultPaymentMethod = !!defaultPaymentMethod?.id;
     const selectedCardPaymentMode = getCardPaymentMode(
