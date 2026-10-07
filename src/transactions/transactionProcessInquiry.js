@@ -93,6 +93,40 @@ export const isPrivileged = transition => {
   return false;
 };
 
+// Note: default-inquiry process does not support payments
+export const supportedPayments = {};
+
+/**
+ * This process does not support checkout payments.
+ *
+ * @param {Object} params
+ * @param {string} [params.paymentProcessor]
+ * @param {string} [params.paymentMethod]
+ * @param {string} [params.unsupportedPaymentErrorMessage]
+ * @throws {Error} always — inquiry process has no payment checkout
+ */
+export const getCheckoutPaymentTransitions = ({
+  paymentProcessor,
+  paymentMethod,
+  unsupportedPaymentErrorMessage,
+}) => {
+  const paymentConfig = supportedPayments[paymentProcessor]?.[paymentMethod];
+  if (!paymentConfig) {
+    const errorMessage =
+      unsupportedPaymentErrorMessage ||
+      `Unsupported payment: processor=${paymentProcessor}, method=${paymentMethod}`;
+    throw new Error(errorMessage);
+  }
+
+  return {
+    requestPaymentTransition: null,
+    confirmPaymentTransition: null,
+  };
+};
+
+// Inquiry process has no payment checkout or expiration
+export const hasPaymentExpired = () => false;
+
 // Check when transaction is completed (booking over)
 // NOTE: this functions is added just for the sake of consistency
 export const isCompleted = transition => {

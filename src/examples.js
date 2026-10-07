@@ -83,7 +83,7 @@ import * as RangeSlider from './components/RangeSlider/RangeSlider.example';
 import * as ResponsiveImage from './components/ResponsiveImage/ResponsiveImage.example';
 import * as ReviewRating from './components/ReviewRating/ReviewRating.example';
 import * as Reviews from './components/Reviews/Reviews.example';
-import * as SavedCardDetails from './components/SavedCardDetails/SavedCardDetails.example';
+import * as PaymentMethodPicker from './components/PaymentMethodPicker/PaymentMethodPicker.example';
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
@@ -232,6 +232,7 @@ export {
   PanelHeading,
   PasswordRecoveryForm,
   PasswordResetForm,
+  PaymentMethodPicker,
   PriceFilter,
   PropertyGroup,
   RangeSlider,
@@ -239,7 +240,6 @@ export {
   ReviewForm,
   ReviewRating,
   Reviews,
-  SavedCardDetails,
   SeatsFilter,
   SelectMultipleFilter,
   SendMessageForm,
