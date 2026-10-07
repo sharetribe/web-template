@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations.
+  [#950](https://github.com/sharetribe/web-template/pull/950)
+
 ## [v12.4.0] 2026-10-06
 
 - [fix] Add responsive `sizes` for listing images on Checkout, MakeOffer, RequestQuote, and
