@@ -149,6 +149,7 @@ const getOrderParams = (
   const currency =
     pageData?.transaction?.attributes?.payinTotal?.currency ||
     pageData?.listing?.attributes?.price?.currency;
+  // Push payments (redirect): an example how to save payment method to support multiple Stripe methods.
   const checkoutPaymentMethodMaybe =
     getCheckoutPaymentOptions({ process, currency }).length > 1 ? { checkoutPaymentMethod } : {};
 
@@ -164,6 +165,7 @@ const getOrderParams = (
     },
   };
 
+  // Push payments (redirect): an example how to include paymentMethodTypes for push payment options. Unused by default.
   const pushPaymentMaybe = isStripePushPaymentMethod(process, checkoutPaymentMethod)
     ? { paymentMethodTypes: [checkoutPaymentMethod] }
     : {};
@@ -413,6 +415,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     .then(response => {
       setSubmitting(false);
 
+      // Push payments (redirect): an example how to handle redirect return with push payment method.
       // Push/redirect methods never run Marketplace confirm-payment in this submit chain —
       // only request-payment + Stripe confirmPayment(return_url). Marketplace confirm happens
       // on CheckoutPageRedirectReturn (route mode return-after-redirect).
