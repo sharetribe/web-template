@@ -77,4 +77,26 @@ describe('LRUcache', () => {
 
     expect([...memoryStore.cache.keys()]).toEqual(['x8', 'x9', 'x6', 'x10']);
   });
+
+  it('purgeExpired advances past a fresh LRU head to remove later expired entries', () => {
+    const prefilledCache = new Map();
+    const freshExpiresAt = Date.now() + 10000;
+    const expiredExpiresAt = Date.now() - 1000;
+
+    // Fresh oldest key, then expired keys behind it
+    prefilledCache.set('fresh', { data: 'f', bytes: 1, expiresAt: freshExpiresAt });
+    prefilledCache.set('expired1', { data: 'e', bytes: 1, expiresAt: expiredExpiresAt });
+    prefilledCache.set('expired2', { data: 'e', bytes: 1, expiresAt: expiredExpiresAt });
+
+    const memoryStore = { cache: prefilledCache, totalBytes: 3 };
+    const cache = createLRUCache({ memoryStore, maxBytes: 32, defaultTTL: 60 });
+
+    // [[set]] triggers purgeExpired
+    cache.newKey = 'n';
+
+    expect(memoryStore.cache.has('fresh')).toBe(true);
+    expect(memoryStore.cache.has('expired1')).toBe(false);
+    expect(memoryStore.cache.has('expired2')).toBe(false);
+    expect(memoryStore.cache.has('newKey')).toBe(true);
+  });
 });

@@ -138,13 +138,17 @@ exports.createLRUCache = ({ memoryStore, maxBytes = 10485760, defaultTTL = 10 })
 
   // Purge expired properties up to maxPurge.
   // This is done on each [[set]] call.
+  // Inspect up to maxPurge keys in LRU order so a fresh head does not block later expired entries.
   const purgeExpired = (maxPurge = MAX_PURGE_EXPIRED_PROPERTIES) => {
     const cache = store.cache;
-    const purgeExpiredUpTo = cache.size <= maxPurge ? cache.size : maxPurge;
+    let inspected = 0;
 
-    for (let i = 0; i < purgeExpiredUpTo; i++) {
-      const oldestCachedProperty = cache.keys().next().value;
-      deleteProperty(oldestCachedProperty, { onlyExpired: true });
+    for (const key of cache.keys()) {
+      if (inspected >= maxPurge) {
+        break;
+      }
+      inspected += 1;
+      deleteProperty(key, { onlyExpired: true });
     }
   };
 
