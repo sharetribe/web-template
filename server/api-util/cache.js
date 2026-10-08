@@ -159,18 +159,18 @@ exports.createLRUCache = ({ memoryStore, maxBytes = 10485760, defaultTTL = 10 })
     get(target, property, receiver) {
       const cachedValue = target.get(property);
       if (!!cachedValue) {
-        // Delete the property, if it exists already.
-        // This is done to maintain the LRU order inside the cache/Map
-        // The timeout deletion is not relevant for the [[get]] trap.
-        deleteProperty(property, { removeTimeout: false, logOnDev: false });
-
-        // If the cached data is still fresh, make it the least-reacently-used entry and return it
+        // If the cached data is still fresh, delete+reinsert to maintain LRU order
+        // and keep the existing eviction timeout (same expiresAt).
         if (Date.now() < cachedValue.expiresAt) {
+          deleteProperty(property, { removeTimeout: false, logOnDev: false });
           target.set(property, cachedValue);
           store.totalBytes = store.totalBytes + cachedValue.bytes;
 
           return cachedValue;
         }
+
+        // Expired: remove the entry and clear its eviction timeout.
+        deleteProperty(property, { logOnDev: false });
       }
       // Return null wrapped in the default entry shape for an outdated or non-existent property.
       return { ...cachedValue, data: null, bytes: 0 };

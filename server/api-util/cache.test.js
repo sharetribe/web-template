@@ -50,6 +50,25 @@ describe('LRUcache', () => {
     expect(memoryStore.cache.get('xProp')).toBeUndefined();
   });
 
+  it('clears eviction timeout when getting an expired property', () => {
+    jest.useFakeTimers();
+    const memoryStore = { cache: new Map(), totalBytes: 0 };
+    const cache = createLRUCache({ memoryStore, maxBytes: 32, defaultTTL: 1 });
+
+    cache.xProp = 'x';
+    expect(memoryStore.timeouts.has('xProp')).toBe(true);
+
+    // Advance past expiresAt (ttl * 1000) but not past the eviction timeout (ttl * 1000 + 1)
+    jest.advanceTimersByTime(1000);
+
+    const { data } = cache.xProp;
+    expect(data).toBeNull();
+    expect(memoryStore.cache.get('xProp')).toBeUndefined();
+    expect(memoryStore.timeouts.has('xProp')).toBe(false);
+
+    jest.useRealTimers();
+  });
+
   it('cache does return non-expired properties', () => {
     const prefilledCache = new Map();
     const xPropExpires = Date.now() + 10000;
