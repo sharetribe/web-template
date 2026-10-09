@@ -6,15 +6,30 @@ import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 // Generic helpers for validating config values
 
-const printErrorIfHostedAssetIsMissing = props => {
-  Object.entries(props).map(entry => {
-    const [key, value = {}] = entry || [];
-    if (Object.keys(value)?.length === 0) {
-      console.error(`Mandatory hosted asset for ${key} is missing.
+const mandatoryHostedAttributes = {
+  branding: { attribute: 'logo', isValid: branding => !!branding?.logo },
+  listingTypes: {
+    attribute: 'listingTypes',
+    isValid: listingTypes => listingTypes?.listingTypes?.length > 0,
+  },
+  listingFields: {
+    attribute: 'listingFields',
+    isValid: listingFields => !!listingFields?.listingFields,
+  },
+  transactionSize: {
+    attribute: 'listingMinimumPrice',
+    isValid: transactionSize => !!transactionSize?.listingMinimumPrice,
+  },
+};
+
+const printErrorForInvalidHostedAsset = (assetName, asset, attribute) => {
+  const isAssetEmpty = Object.keys(asset || {}).length === 0;
+  const problem = isAssetEmpty
+    ? `Mandatory hosted asset for ${assetName} is missing.`
+    : `Mandatory hosted asset for ${assetName} is missing the "${attribute}" attribute.`;
+  console.error(`${problem}
       Check that "appCdnAssets" property has valid paths in src/config/configDefault.js file,
       and that the marketplace has added content in Console`);
-    }
-  });
 };
 
 // Functions to create built-in specs for category setup.
@@ -1711,14 +1726,16 @@ const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
 
 // Check if all the mandatory info have been retrieved from hosted assets
 const hasMandatoryConfigs = hostedConfig => {
-  const { branding, listingTypes, listingFields, transactionSize } = hostedConfig;
-  printErrorIfHostedAssetIsMissing({ branding, listingTypes, listingFields, transactionSize });
+  const invalidAssetNames = Object.entries(mandatoryHostedAttributes)
+    .filter(([assetName, { isValid }]) => !isValid(hostedConfig[assetName]))
+    .map(([assetName, { attribute }]) => {
+      printErrorForInvalidHostedAsset(assetName, hostedConfig[assetName], attribute);
+      return assetName;
+    });
+
   return (
-    branding?.logo &&
-    listingTypes?.listingTypes?.length > 0 &&
-    listingFields?.listingFields &&
-    transactionSize?.listingMinimumPrice &&
-    !hasClashWithBuiltInPublicDataKey(listingFields?.listingFields)
+    invalidAssetNames.length === 0 &&
+    !hasClashWithBuiltInPublicDataKey(hostedConfig.listingFields?.listingFields)
   );
 };
 

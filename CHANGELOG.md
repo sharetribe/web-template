@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Align hasMandatoryConfigs and printErrorForInvalidHostedAsset so that they track the same
+  required assets. [#951](https://github.com/sharetribe/web-template/pull/951)
 - [add] Add currently available translations.
   [#950](https://github.com/sharetribe/web-template/pull/950)
 
