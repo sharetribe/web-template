@@ -1,4 +1,5 @@
 const sharetribeSdk = require('sharetribe-flex-sdk');
+const { assertExpectedPayinTotal } = require('../api-util/assertExpectedPayinTotal');
 const { transactionLineItems } = require('../api-util/lineItems');
 const {
   addOfferToMetadata,
@@ -151,6 +152,9 @@ module.exports = (req, res) => {
         providerCommission,
         customerCommission
       );
+
+      // If the client sends expectedPayinTotal (checkout payment flows), ensure it
+      assertExpectedPayinTotal(lineItems, orderData?.expectedPayinTotal);
 
       metadataMaybe = getUpdatedMetadata(orderData, transitionName, existingMetadata);
 
