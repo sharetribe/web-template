@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Checkout: reject privileged payment transition when the payin total no longer matches the
+  amount shown on checkout (e.g. provider changed the price after the customer opened the page).
+  [#952](https://github.com/sharetribe/web-template/pull/952)
 - [fix] Align hasMandatoryConfigs and printErrorForInvalidHostedAsset so that they track the same
   required assets. [#951](https://github.com/sharetribe/web-template/pull/951)
 - [add] Add currently available translations.
