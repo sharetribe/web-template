@@ -1,4 +1,5 @@
 const sharetribeSdk = require('sharetribe-flex-sdk');
+const { assertExpectedPayinTotal } = require('../api-util/assertExpectedPayinTotal');
 const { transactionLineItems } = require('../api-util/lineItems');
 const { isIntentionToMakeOffer } = require('../api-util/negotiation');
 const {
@@ -73,6 +74,10 @@ module.exports = (req, res) => {
         providerCommission,
         customerCommission
       );
+
+      // If the client sends expectedPayinTotal (checkout payment flows), ensure it
+      assertExpectedPayinTotal(lineItems, orderData?.expectedPayinTotal);
+
       metadataMaybe = getMetadata(orderData, transitionName);
 
       return getTrustedSdk(req, res, tokenStore);

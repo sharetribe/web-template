@@ -326,7 +326,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
 
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
-  const orderParams = getOrderParams(
+  const baseOrderParams = getOrderParams(
     pageData,
     shippingDetails,
     optionalPaymentParams,
@@ -334,6 +334,23 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     transactionFieldsProtectedData,
     message
   );
+
+  // Guard against listing price (or shipping/commission) changing between the
+  // speculated breakdown and the real payment request.
+  const breakdownTx =
+    pageData?.transaction?.attributes?.lineItems?.length > 0
+      ? pageData.transaction
+      : speculatedTransaction;
+  const payinTotal = breakdownTx?.attributes?.payinTotal;
+  const expectedPayinTotalMaybe =
+    typeof payinTotal?.amount === 'number' && payinTotal?.currency
+      ? { expectedPayinTotal: { amount: payinTotal.amount, currency: payinTotal.currency } }
+      : {};
+
+  const orderParams = {
+    ...baseOrderParams,
+    ...expectedPayinTotalMaybe,
+  };
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
