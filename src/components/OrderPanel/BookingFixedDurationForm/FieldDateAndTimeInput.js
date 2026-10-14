@@ -20,7 +20,7 @@ import {
 import { propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
 import { bookingDateRequired } from '../../../util/validators';
-import { FieldSingleDatePicker, FieldSelect } from '../../../components';
+import { FieldSingleDatePicker, FieldSelectPopup } from '../../../components';
 
 import {
   TODAY,
@@ -729,6 +729,13 @@ const FieldDateAndTimeInput = props => {
 
   let placeholderTime = getPlaceholder('08:00', timeZone, intl);
 
+  // FieldSelectPopup's `option.value === input.value` check doesn't coerce types, unlike a native
+  // <select>'s DOM value, which is always a string. p.timestamp is a number, so it's stringified
+  // here to match the string values Final Form already stores for these fields.
+  const startTimeOptions = bookingStartDate
+    ? availableStartTimes.map(p => ({ value: String(p.timestamp), label: p.timeOfDay }))
+    : [{ value: '', label: placeholderTime, disabled: true }];
+
   const startOfToday = getStartOf(TODAY, 'day', timeZone);
   return (
     <div className={classes}>
@@ -785,7 +792,7 @@ const FieldDateAndTimeInput = props => {
         </div>
 
         <div className={classNames(css.field, css.startTime)}>
-          <FieldSelect
+          <FieldSelectPopup
             name="bookingStartTime"
             id={formId ? `${formId}.bookingStartTime` : 'bookingStartTime'}
             className={bookingStartDate ? css.fieldSelect : css.fieldSelectDisabled}
@@ -794,17 +801,8 @@ const FieldDateAndTimeInput = props => {
             disabled={!bookingStartDate}
             showLabelAsDisabled={!bookingStartDate}
             onChange={onBookingStartTimeChange(props)}
-          >
-            {bookingStartDate ? (
-              availableStartTimes.map(p => (
-                <option key={p.timestamp} value={p.timestamp}>
-                  {p.timeOfDay}
-                </option>
-              ))
-            ) : (
-              <option>{placeholderTime}</option>
-            )}
-          </FieldSelect>
+            options={startTimeOptions}
+          />
           <FieldHidden name="bookingEndTime" value={bookingEndTime} />
         </div>
       </div>
