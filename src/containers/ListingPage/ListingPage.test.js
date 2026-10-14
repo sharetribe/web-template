@@ -27,7 +27,12 @@ import {
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
-import reducer, { showListing, loadData, setInitialValues } from './ListingPage.duck';
+import reducer, {
+  showListing,
+  loadData,
+  setInitialValues,
+  getShowListingImageParams,
+} from './ListingPage.duck';
 
 import ActionBar from './Notifications/ActionBar';
 
@@ -464,6 +469,58 @@ describe('Duck', () => {
     });
   });
 
+  describe('getShowListingImageParams', () => {
+    const listingImageConfig = { variantPrefix: 'listing-card', aspectRatio: 1 };
+
+    it('returns a lean SSR set: two images, LCP/social/schema + base thumb crop', () => {
+      const params = getShowListingImageParams(listingImageConfig, false);
+
+      expect(params['limit.images']).toBe(2);
+      expect(params['fields.image']).toEqual([
+        'variants.scaled-small',
+        'variants.scaled-medium',
+        'variants.scaled-large',
+        'variants.scaled-xlarge',
+        'variants.listing-card',
+        'variants.listing-card-2x',
+        'variants.facebook',
+        'variants.twitter',
+        'variants.square-small',
+        'variants.square-small2x',
+      ]);
+      expect(params['imageVariant.listing-card']).toBe('w:400;h:400;fit:crop');
+      expect(params['imageVariant.listing-card-2x']).toBe('w:800;h:800;fit:crop');
+      expect(params).not.toHaveProperty('imageVariant.listing-card-4x');
+      expect(params).not.toHaveProperty('imageVariant.listing-card-6x');
+      expect(params['fields.image']).not.toContain('variants.listing-card-4x');
+      expect(params['fields.image']).not.toContain('variants.listing-card-6x');
+    });
+
+    it('returns the full browser set with all gallery crops', () => {
+      const params = getShowListingImageParams(listingImageConfig, true);
+
+      expect(params).not.toHaveProperty('limit.images');
+      expect(params['fields.image']).toEqual([
+        'variants.scaled-small',
+        'variants.scaled-medium',
+        'variants.scaled-large',
+        'variants.scaled-xlarge',
+        'variants.listing-card',
+        'variants.listing-card-2x',
+        'variants.listing-card-4x',
+        'variants.listing-card-6x',
+        'variants.facebook',
+        'variants.twitter',
+        'variants.square-small',
+        'variants.square-small2x',
+      ]);
+      expect(params['imageVariant.listing-card']).toBe('w:400;h:400;fit:crop');
+      expect(params['imageVariant.listing-card-2x']).toBe('w:800;h:800;fit:crop');
+      expect(params['imageVariant.listing-card-4x']).toBe('w:1600;h:1600;fit:crop');
+      expect(params['imageVariant.listing-card-6x']).toBe('w:2400;h:2400;fit:crop');
+    });
+  });
+
   describe('showListing thunk', () => {
     it('should dispatch success and fetch current user', () => {
       const id = new UUID('00000000-0000-0000-0000-000000000000');
@@ -483,16 +540,20 @@ describe('Duck', () => {
       const getState = store.getState;
 
       return showListing(id, config)(dispatch, getState, sdk).then(data => {
+        // Jest runs in jsdom (browser), so showListing uses the full image set.
         expect(sdk.listings.show.mock.calls).toEqual([
           [
             expect.objectContaining({
               id,
               'imageVariant.listing-card': 'w:400;h:400;fit:crop',
               'imageVariant.listing-card-2x': 'w:800;h:800;fit:crop',
+              'imageVariant.listing-card-4x': 'w:1600;h:1600;fit:crop',
+              'imageVariant.listing-card-6x': 'w:2400;h:2400;fit:crop',
               include: ['author', 'author.profileImage', 'images', 'currentStock'],
             }),
           ],
         ]);
+        expect(sdk.listings.show.mock.calls[0][0]).not.toHaveProperty('limit.images');
 
         const relevantActions = actions.filter(
           action => !action.type.startsWith('user/fetchCurrentUser/')
