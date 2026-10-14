@@ -223,9 +223,15 @@ const ListingImageGallery = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed by gallery composition
     [imagesKey, thumbVariantsKey, intl]
   );
+  // Match ListingPage product layout: full bleed <768; 24px side padding until
+  // two-column at 1024; then subtract 36px*2 padding + (312 order column + 48 gap).
+  // Caps at 696px once the wrapper hits contentMaxWidth+72 (1128).
   const imageSizesMaybe = isFullscreen
     ? {}
-    : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
+    : {
+        sizes:
+          '(max-width: 767px) 100vw, (max-width: 1023px) calc(100vw - 48px), (max-width: 1127px) calc(100vw - 432px), 696px',
+      };
   const firstImageId = images[0]?.id?.uuid;
   const renderItem = item => {
     const isLcpImage = !!firstImageId && item.image?.id?.uuid === firstImageId;
