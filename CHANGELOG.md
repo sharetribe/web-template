@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] robots.txt: disallow some AI training bots from causing server load and fetching resources.
+  [#953](https://github.com/sharetribe/web-template/pull/953)
 - [fix] Checkout: reject privileged payment transition when the payin total no longer matches the
   amount shown on checkout (e.g. provider changed the price after the customer opened the page).
   [#952](https://github.com/sharetribe/web-template/pull/952)
