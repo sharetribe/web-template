@@ -2,6 +2,15 @@
 # Hello bot! There are some routes that need authentication. You should avoid them :)
 #
 
+# AI training bots
+User-agent: CCBot
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Meta-ExternalAgent
+User-agent: Applebot-Extended
+Disallow: /
+
 User-agent: *
 Allow: /sitemap
 Disallow: /s
