@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v12.5.0] 2026-10-14
+
 - [add] Set availability in 15 min increments and add custom select component 
  [#896](https://github.com/sharetribe/web-template/pull/896)
 - [add] robots.txt: disallow some AI training bots from causing server load and fetching resources.
@@ -25,6 +27,8 @@ way to update this template, but currently, we follow a pattern:
   required assets. [#951](https://github.com/sharetribe/web-template/pull/951)
 - [add] Add currently available translations.
   [#950](https://github.com/sharetribe/web-template/pull/950)
+
+  [v12.5.0]: https://github.com/sharetribe/web-template/compare/v12.4.0...v12.5.0
 
 ## [v12.4.0] 2026-10-06
 
