@@ -628,6 +628,7 @@
   "ListingPage.loadingListingMessage": "Loading listing…",
   "ListingPage.loadingListingTitle": "Loading listing…",
   "ListingPage.locationTitle": "Location",
+  "ListingPage.screenreader.showMap": "Show interactive map",
   "ListingPage.orderTitle": "{title}",
   "ListingPage.ownClosedListing": "Your listing has been closed. It's no longer visible on the marketplace.",
   "ListingPage.ownListing": "This is your own listing.",
