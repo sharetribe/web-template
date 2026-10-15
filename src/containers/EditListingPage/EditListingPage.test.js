@@ -221,7 +221,12 @@ const listingFieldsBooking = [
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
+      listingTypeIds: [
+        'rent-bicycles-daily',
+        'rent-bicycles-nightly',
+        'rent-bicycles-hourly',
+        'rent-bicycles-fixed',
+      ],
     },
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
