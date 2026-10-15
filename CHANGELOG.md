@@ -14,10 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] ListingPage: fetch max 2 images on SSR. CSR will fetch the rest. This also improves the
+  "sizes" attribute for the carousel slide images.
+  [#955](https://github.com/sharetribe/web-template/pull/955)
+
 ## [v12.5.0] 2026-10-14
 
-- [add] Set availability in 15 min increments and add custom select component 
- [#896](https://github.com/sharetribe/web-template/pull/896)
+- [add] Set availability in 15 min increments and add custom select component
+  [#896](https://github.com/sharetribe/web-template/pull/896)
 - [add] robots.txt: disallow some AI training bots from causing server load and fetching resources.
   [#953](https://github.com/sharetribe/web-template/pull/953)
 - [fix] Checkout: reject privileged payment transition when the payin total no longer matches the
