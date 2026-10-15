@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
@@ -182,26 +182,56 @@ const ListingImageGallery = props => {
     listingImageAspectWidth,
     listingImageAspectHeight
   );
-  const items = images.map((img, i) => {
-    return {
-      // We will only use the image resource, but react-image-gallery
-      // requires the `original` key from each item.
-      original: '',
-      alt: intl.formatMessage(
-        { id: 'ListingImageGallery.imageAltText' },
-        { index: i + 1, count: images.length }
-      ),
-      thumbAlt: intl.formatMessage(
-        { id: 'ListingImageGallery.imageThumbnailAltText' },
-        { index: i + 1, count: images.length }
-      ),
-      thumbnail: img.attributes?.variants?.[thumbVariants[0]],
-      image: img,
-    };
-  });
+  // Stabilize items by image id + variant set so react-image-gallery's items-sync
+  // effect does not reset the slide index on every parent re-render (new .map() array),
+  // while still rebuilding when CSR expands/enriches the gallery.
+  const imagesKey = images
+    .map(img => {
+      const id = img.id?.uuid || '';
+      const variantNames = Object.keys(img.attributes?.variants || {})
+        .sort()
+        .join(',');
+      return `${id}:${variantNames}`;
+    })
+    .join('|');
+  const thumbVariantsKey = thumbVariants.join(',');
+  const items = useMemo(
+    () =>
+      images.map((img, i) => {
+        const variants = img.attributes?.variants || {};
+        // Library only mounts the thumb strip when `thumbnail` is truthy. Prefer the
+        // configured thumb variants; fall back so a lean SSR payload still reserves strip height.
+        const thumbnail =
+          thumbVariants.map(name => variants[name]).find(Boolean) || (img.id ? { url: '' } : null);
+        return {
+          // We will only use the image resource, but react-image-gallery
+          // requires the `original` key from each item.
+          original: '',
+          alt: intl.formatMessage(
+            { id: 'ListingImageGallery.imageAltText' },
+            { index: i + 1, count: images.length }
+          ),
+          thumbAlt: intl.formatMessage(
+            { id: 'ListingImageGallery.imageThumbnailAltText' },
+            { index: i + 1, count: images.length }
+          ),
+          thumbnail,
+          image: img,
+        };
+      }),
+    // images / thumbVariants are read from the render that changed these keys.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed by gallery composition
+    [imagesKey, thumbVariantsKey, intl]
+  );
+  // Match ListingPage product layout: full bleed <768; 24px side padding until
+  // two-column at 1024; then subtract 36px*2 padding + (312 order column + 48 gap).
+  // Caps at 696px once the wrapper hits contentMaxWidth+72 (1128).
   const imageSizesMaybe = isFullscreen
     ? {}
-    : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
+    : {
+        sizes:
+          '(max-width: 767px) 100vw, (max-width: 1023px) calc(100vw - 48px), (max-width: 1127px) calc(100vw - 432px), 696px',
+      };
   const firstImageId = images[0]?.id?.uuid;
   const renderItem = item => {
     const isLcpImage = !!firstImageId && item.image?.id?.uuid === firstImageId;
