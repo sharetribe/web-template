@@ -316,6 +316,7 @@
   "EditListingPhotosForm.imageTypes": ".JPG or .PNG. Max. 20 MB",
   "EditListingPhotosForm.imageUploadFailed.uploadFailed": "Failed to upload photo. Please check that the image file wasn't too big and try again.",
   "EditListingPhotosForm.imageUploadFailed.uploadOverLimit": "The maximum file size is 20 MB. Please try again.",
+  "EditListingPhotosForm.maxImagesExceeded": "Max {maxImages} images allowed. Please remove additional images to save changes.",
   "EditListingPhotosForm.publishListingFailed": "Publishing a new listing failed.",
   "EditListingPhotosForm.savedImageAltText": "Saved listing photo",
   "EditListingPhotosForm.showListingFailed": "Fetching listing data failed.",
