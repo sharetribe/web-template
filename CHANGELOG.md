@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations.
+  [#961](https://github.com/sharetribe/web-template/pull/961)
 - [fix] EditListingPage.test.js: add missing id from listingTypeIds.
   [#959](https://github.com/sharetribe/web-template/pull/959)
 - [change] ListingPage: fetch max 2 images on SSR. CSR will fetch the rest. This also improves the
