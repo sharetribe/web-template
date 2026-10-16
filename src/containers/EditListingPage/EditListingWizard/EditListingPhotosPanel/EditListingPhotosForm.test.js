@@ -1,37 +1,64 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { Form as FinalForm, Field } from 'react-final-form';
+import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 
-import { fakeIntl } from '../../../../util/testData';
+import { createImage, fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../../../util/testHelpers';
 
 import EditListingPhotosForm, { FieldAddImage } from './EditListingPhotosForm';
 
-const { screen, userEvent, waitFor, act } = testingLibrary;
+const { screen, userEvent, act } = testingLibrary;
 
 const noop = () => null;
 
-describe('EditListingDeliveryForm', () => {
+const listingImageConfig = { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' };
+
+const createListingCardImage = id => {
+  const image = createImage(id);
+  return {
+    ...image,
+    attributes: {
+      ...image.attributes,
+      variants: {
+        ...image.attributes.variants,
+        'listing-card': {
+          name: 'listing-card',
+          width: 400,
+          height: 400,
+          url: 'https://picsum.photos/400/400/',
+        },
+        'listing-card-2x': {
+          name: 'listing-card-2x',
+          width: 800,
+          height: 800,
+          url: 'https://picsum.photos/800/800/',
+        },
+      },
+    },
+  };
+};
+
+const defaultFormProps = {
+  intl: fakeIntl,
+  dispatch: noop,
+  onImageUpload: v => Promise.reject(v),
+  onSubmit: v => v,
+  saveActionMsg: 'Save photos',
+  stripeConnected: false,
+  updated: false,
+  ready: false,
+  updateInProgress: false,
+  disabled: false,
+  onRemoveImage: noop,
+  listingImageConfig,
+  allFilesUploadedAndVerified: true,
+};
+
+describe('EditListingPhotosForm', () => {
   it('matches snapshot', () => {
-    const saveActionMsg = 'Save photos';
     const tree = render(
-      <EditListingPhotosForm
-        initialValues={{ country: 'US', images: [] }}
-        intl={fakeIntl}
-        dispatch={noop}
-        onImageUpload={v => Promise.reject(v)}
-        onSubmit={v => v}
-        saveActionMsg={saveActionMsg}
-        stripeConnected={false}
-        updated={false}
-        ready={false}
-        updateInProgress={false}
-        disabled={false}
-        onRemoveImage={noop}
-        listingImageConfig={{ aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }}
-        allFilesUploadedAndVerified={true}
-      />
+      <EditListingPhotosForm initialValues={{ country: 'US', images: [] }} {...defaultFormProps} />
     );
     expect(tree.asFragment()).toMatchSnapshot();
   });
@@ -41,7 +68,7 @@ describe('EditListingDeliveryForm', () => {
   it('Check that FieldAddImage works', async () => {
     const user = userEvent.setup();
     const ACCEPT_IMAGES = 'image/*';
-    const tree = render(
+    render(
       <FinalForm
         onSubmit={noop}
         mutators={{ ...arrayMutators }}
@@ -79,5 +106,38 @@ describe('EditListingDeliveryForm', () => {
     expect(input.files[0]).toBe(file);
     expect(input.files.item(0)).toBe(file);
     expect(input.files).toHaveLength(1);
+  });
+
+  it('hides add image control when at maxImages limit', async () => {
+    // Sortable is loaded via @loadable when there is more than one image.
+    // Wrap render in act so that async loadable update does not warn.
+    const images = [createListingCardImage('img1'), createListingCardImage('img2')];
+    await act(async () => {
+      render(
+        <EditListingPhotosForm {...defaultFormProps} initialValues={{ images }} maxImages={2} />
+      );
+    });
+
+    expect(screen.queryByText('EditListingPhotosForm.chooseImage')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save photos' })).toBeEnabled();
+  });
+
+  it('disables save and shows error when over maxImages limit', async () => {
+    // Sortable is loaded via @loadable when there is more than one image.
+    // Wrap render in act so that async loadable update does not warn.
+    const images = [
+      createListingCardImage('img1'),
+      createListingCardImage('img2'),
+      createListingCardImage('img3'),
+    ];
+    await act(async () => {
+      render(
+        <EditListingPhotosForm {...defaultFormProps} initialValues={{ images }} maxImages={2} />
+      );
+    });
+
+    expect(screen.queryByText('EditListingPhotosForm.chooseImage')).not.toBeInTheDocument();
+    expect(screen.getByText('EditListingPhotosForm.maxImagesExceeded')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save photos' })).toBeDisabled();
   });
 });
