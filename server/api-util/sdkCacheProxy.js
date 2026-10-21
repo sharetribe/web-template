@@ -37,7 +37,6 @@ const CACHEABLE_SDK_ENDPOINTS = [
 
 const memoryStore = {
   cache: new Map(),
-  expirations: new Map(),
   totalBytes: 0,
 };
 

@@ -138,13 +138,17 @@ exports.createLRUCache = ({ memoryStore, maxBytes = 10485760, defaultTTL = 10 })
 
   // Purge expired properties up to maxPurge.
   // This is done on each [[set]] call.
+  // Inspect up to maxPurge keys in LRU order so a fresh head does not block later expired entries.
   const purgeExpired = (maxPurge = MAX_PURGE_EXPIRED_PROPERTIES) => {
     const cache = store.cache;
-    const purgeExpiredUpTo = cache.size <= maxPurge ? cache.size : maxPurge;
+    let inspected = 0;
 
-    for (let i = 0; i < purgeExpiredUpTo; i++) {
-      const oldestCachedProperty = cache.keys().next().value;
-      deleteProperty(oldestCachedProperty, { onlyExpired: true });
+    for (const key of cache.keys()) {
+      if (inspected >= maxPurge) {
+        break;
+      }
+      inspected += 1;
+      deleteProperty(key, { onlyExpired: true });
     }
   };
 
@@ -155,18 +159,18 @@ exports.createLRUCache = ({ memoryStore, maxBytes = 10485760, defaultTTL = 10 })
     get(target, property, receiver) {
       const cachedValue = target.get(property);
       if (!!cachedValue) {
-        // Delete the property, if it exists already.
-        // This is done to maintain the LRU order inside the cache/Map
-        // The timeout deletion is not relevant for the [[get]] trap.
-        deleteProperty(property, { removeTimeout: false, logOnDev: false });
-
-        // If the cached data is still fresh, make it the least-reacently-used entry and return it
+        // If the cached data is still fresh, delete+reinsert to maintain LRU order
+        // and keep the existing eviction timeout (same expiresAt).
         if (Date.now() < cachedValue.expiresAt) {
+          deleteProperty(property, { removeTimeout: false, logOnDev: false });
           target.set(property, cachedValue);
           store.totalBytes = store.totalBytes + cachedValue.bytes;
 
           return cachedValue;
         }
+
+        // Expired: remove the entry and clear its eviction timeout.
+        deleteProperty(property, { logOnDev: false });
       }
       // Return null wrapped in the default entry shape for an outdated or non-existent property.
       return { ...cachedValue, data: null, bytes: 0 };
