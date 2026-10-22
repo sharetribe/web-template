@@ -6039,10 +6039,10 @@ filelist@^1.0.1:
   dependencies:
     minimatch "^5.0.1"
 
-filesize@^11.0.19:
-  version "11.0.19"
-  resolved "https://registry.npmjs.org/filesize/-/filesize-11.0.19.tgz"
-  integrity sha512-9Q2itINBvCHwFw9v5X7czZm855yAiFIYlnugrh7+8tYO4ITHZMzV91m35q2FngL9hoZwwjSTQACFF/W52OzJZQ==
+filesize@^11.0.28:
+  version "11.0.28"
+  resolved "https://registry.yarnpkg.com/filesize/-/filesize-11.0.28.tgz#f66cee138759b53259dad34a9f20d616767f514d"
+  integrity sha512-tsZcwUmhL0WQpsxe9Oua6FBjb0aBTRkXobZBhQdkoII0pYgy9h+cXm5tp13Fsr8dSwp1+UVDxNwAFULDpxkXaw==
 
 fill-range@^7.0.1:
   version "7.0.1"
