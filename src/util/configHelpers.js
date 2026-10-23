@@ -1628,9 +1628,14 @@ const mergeSearchConfig = (
       }
     : listingFieldsConfig
     ? {
-        // here we pass null since in this scenario no hosted search configuration exists
-        sortConfig: mergeSortConfig(null, defaultSearchConfig.sortConfig, listingFieldsConfig),
         ...defaultSearchConfig,
+        // here we pass null since in this scenario no hosted search configuration exists
+        sortConfig: mergeSortConfig(
+          null,
+          defaultSearchConfig.sortConfig,
+          false,
+          listingFieldsConfig
+        ),
       }
     : defaultSearchConfig;
 
