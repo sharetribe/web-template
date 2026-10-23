@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] configHelpers: pass all four arguments to mergeSortConfig when there is no hosted search
+  config. Listing fields without saved search settings made every server-side render fail.
+  [#965](https://github.com/sharetribe/web-template/pull/965)
 - [change] Update several dependencies (mostly patches, minors and simple majors).
   [#963](https://github.com/sharetribe/web-template/pull/963)
 - [fix] Fix a bug with cache eviction on each [[set]] call.
