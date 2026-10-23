@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update several dependencies (mostly patches, minors and simple majors).
+  [#963](https://github.com/sharetribe/web-template/pull/963)
 - [fix] Fix a bug with cache eviction on each [[set]] call.
   [#962](https://github.com/sharetribe/web-template/pull/962)
 - [add] Add currently available translations.
