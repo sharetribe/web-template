@@ -609,6 +609,8 @@
   "ListingImageGallery.closeModalTitle": "Close modal",
   "ListingImageGallery.imageAltText": "listing photo {index}/{count}",
   "ListingImageGallery.imageThumbnailAltText": "listing photo thumbnail {index}/{count}",
+  "ListingImageGallery.screenreader.nextImage": "Next image",
+  "ListingImageGallery.screenreader.previousImage": "Previous image",
   "ListingImageGallery.viewImagesButton": "View large photos ({count})",
   "ListingPage.aboutProviderTitle": "About the listing author",
   "ListingPage.addPayoutDetails": "Add payout details",
