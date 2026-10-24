@@ -29,12 +29,13 @@ template so we can keep pulling in official Sharetribe updates.
 
 This repository tracks two remotes:
 
-- **origin** — `https://github.com/AleksaButterfly/web-template.git` (this Butterfly fork)
+- **origin** — `https://github.com/butterfly-studio-hq/butterfly-web-template.git` (this Butterfly fork)
 - **upstream** — `https://github.com/sharetribe/web-template.git` (official Sharetribe template)
 
 To pull the latest official Sharetribe changes into this fork:
 
 ```sh
+git remote add upstream https://github.com/sharetribe/web-template.git  # once, after cloning
 git fetch upstream                 # fetch the latest official changes
 git checkout main                  # switch to the main branch
 git merge upstream/main            # bring upstream changes into local main
@@ -51,11 +52,11 @@ If you just want to get the app running quickly to test it out, first install
 [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/), and follow along:
 
 ```sh
-git clone git@github.com:AleksaButterfly/web-template.git  # clone this repository
-cd web-template/                                           # change to the cloned directory
-yarn install                                               # install dependencies
-yarn run config                                            # add the mandatory env vars to your local config
-yarn run dev                                               # start the dev server, this will open a browser in localhost:3000
+git clone git@github.com:butterfly-studio-hq/butterfly-web-template.git  # clone this repository
+cd butterfly-web-template/                                               # change to the cloned directory
+yarn install                                                             # install dependencies
+yarn run config                                                          # add the mandatory env vars to your local config
+yarn run dev                                                             # start the dev server, this will open a browser in localhost:3000
 ```
 
 > **Note**: If you already have the NODE_ENV environment variable set to "production", you should
