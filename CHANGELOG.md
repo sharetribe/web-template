@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Limit the number of attached images per listing (through listing type config).
+  [#960](https://github.com/sharetribe/web-template/pull/960)
 - [fix] configHelpers: pass all four arguments to mergeSortConfig when there is no hosted search
   config. Listing fields without saved search settings made every server-side render fail.
   [#965](https://github.com/sharetribe/web-template/pull/965)
