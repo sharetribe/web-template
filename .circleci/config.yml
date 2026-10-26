@@ -33,7 +33,7 @@ commands:
 jobs:
   format:
     docker:
-      - image: cimg/node:22.22
+      - image: cimg/node:24.22
     steps:
       - checkout
       - install_dependencies
@@ -42,7 +42,7 @@ jobs:
           command: yarn run format-ci
   test:
     docker:
-      - image: cimg/node:22.22
+      - image: cimg/node:24.22
     steps:
       - checkout
       - install_dependencies
@@ -51,7 +51,7 @@ jobs:
           command: yarn run test-ci
   build:
     docker:
-      - image: cimg/node:22.22
+      - image: cimg/node:24.22
     steps:
       - checkout
       - install_dependencies
