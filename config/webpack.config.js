@@ -464,7 +464,9 @@ module.exports = function(webpackEnv, target = 'web') {
             // Unlike the application JS, we only compile the standard ES features.
             {
               test: /\.(js|mjs)$/,
-              exclude: /@babel(?:\/|\\{1,2})runtime|webpack-dev-server/,
+              // Exclude WDS client runtime (lives in webpack-dev-middleware since v6.1).
+              // Babelizing those ESM↔CJS imports breaks named exports like `Logger`.
+              exclude: /@babel(?:\/|\\{1,2})runtime|webpack-dev-server|webpack-dev-middleware/,
               loader: require.resolve('babel-loader'),
               options: {
                 babelrc: false,
@@ -534,7 +536,9 @@ module.exports = function(webpackEnv, target = 'web') {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              // Exclude `.cjs` so webpack-dev-middleware's client logger
+              // (CommonJS) is not treated as an asset URL export.
+              exclude: [/^$/, /\.(js|mjs|cjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               type: 'asset/resource',
             },
             // ** STOP ** Are you adding a new loader?
