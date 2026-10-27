@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update webpack and webpack-dev-server.
+  [#969](https://github.com/sharetribe/web-template/pull/969)
+
 ## [v12.6.0] 2026-10-26
 
 - [add] Limit the number of attached images per listing (through listing type config).
