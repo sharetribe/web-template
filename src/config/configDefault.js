@@ -7,6 +7,7 @@ import * as layout from './layout/defaultLayout';
 import * as analytics from './analytics/defaultAnalytics';
 import * as googleSearchConsole from './googleSearchConsole/defaultGoogleSearchConsole';
 import * as accessControl from './accessControl/defaultAccessControl';
+import * as localization from './localization/defaultLocalization';
 import * as user from './user/defaultUser';
 import * as categoryConfiguration from './categoryConfiguration/defaultCategoryConfiguration';
 
@@ -19,10 +20,11 @@ const defaultConfig = {
   marketplaceRootURL: process.env.REACT_APP_MARKETPLACE_ROOT_URL,
 
   // Marketplace currency.
-  // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
-  // It should match one of the currencies listed in currencySettings.js
+  // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, etc.
+  // It must be a key in settingsCurrency.subUnitDivisors.
   // Note: The currency comes from localization asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeCurrency func)
+  //       I.e. this setting is not in use anymore.
+  // (see localization/localization.js).
   currency: 'USD',
 
   // Listing minimum price in currency sub units, e.g. cents.
@@ -75,27 +77,17 @@ const defaultConfig = {
   // (private marketplace, file upload/download disabled)
   accessControl,
 
+  // Modify localization in hosted asset (or built-in defaults in localization/defaultLocalization.js)
+  // (locale, firstDayOfWeek)
+  // Note: The currency elevates to top-level config.currency
+  localization,
+
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
   // Currently it is unset, but you can read more about fb:app_id from
   // https://developers.facebook.com/docs/sharing/webmasters#basic
   // You should create one to track social sharing in Facebook
   facebookAppId: process.env.REACT_APP_FACEBOOK_APP_ID,
-
-  // If you want to change the language, remember to also change the
-  // locale data and the messages in the app.js file.
-  // Note: The localization comes from localization asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLocalizations func)
-  localization: {
-    locale: 'en-US',
-    // First day of week
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#return_value
-    // 1: Monday
-    // ...
-    // 6: Saturday
-    // 7: Sunday
-    firstDayOfWeek: 1,
-  },
 
   // CDN assets for the app. Configurable through Sharetribe Console.
   // Note 1: The path must match the path defined in Asset Delivery API

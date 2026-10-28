@@ -46,6 +46,10 @@ Some of the content is splitted to separate files:
   - marketplace.private / fileUploadAndDownloadDisabled defaults (both false)
   - Hosted merge: [accessControl/accessControl.js](./accessControl/accessControl.js)
     (`config.accessControl`)
+- **[localization/defaultLocalization.js](./localization/defaultLocalization.js)**
+  - locale / firstDayOfWeek defaults
+  - Hosted merge: [localization/localization.js](./localization/localization.js)
+    (`config.localization`); top-level `currency` elevated in `mergeConfig`
 - **[user/defaultUser.js](./user/defaultUser.js)**
   - user types and fields defaults
   - Hosted merge: [user/user.js](./user/user.js) (`config.user`)

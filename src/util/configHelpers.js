@@ -2,24 +2,11 @@ import { subUnitDivisors } from '../config/settingsCurrency';
 import { buildAppConfig } from '../config/buildAppConfig';
 import { configHandlers } from '../config/configRegistry';
 import { getListingMinimumPriceSubUnits } from '../config/transaction/transaction';
+import { getMarketplaceCurrency } from '../config/localization/localization';
 
 /////////////////////////
 // Merge localizations //
 /////////////////////////
-
-const mergeCurrency = (hostedCurrency, defaultCurrency) => {
-  const currency = hostedCurrency || defaultCurrency;
-  const supportedCurrencies = Object.keys(subUnitDivisors);
-  if (supportedCurrencies.includes(currency)) {
-    return currency;
-  } else {
-    console.error(
-      `The given currency (${currency}) is not supported.
-      There's a missing entry on subUnitDivisors`
-    );
-    return null;
-  }
-};
 
 const validateStripeCurrency = stripe => {
   const supportedCountries = stripe.supportedCountries || [];
@@ -37,15 +24,6 @@ const validateStripeCurrency = stripe => {
     return isSupported;
   });
   return { ...stripe, supportedCountries: validSupportedCountries };
-};
-
-const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
-  // This defaults to 'en', if no locale is set.
-  const locale = hostedLocalization?.locale || defaultLocalization.locale || 'en';
-  // NOTE: We use this with DatePicker and moment, the range should be 0 - 6 instead of 1-7.
-  const firstDay = hostedLocalization?.firstDayOfWeek || defaultLocalization.firstDayOfWeek || 1;
-  const firstDayInMomentRange = firstDay % 7;
-  return { locale, firstDayOfWeek: firstDayInMomentRange };
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -170,6 +148,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     defaultConfigs.listingMinimumPriceSubUnits
   );
 
+  // Elevated from config.localization.currency (derived property for existing call sites).
+  const currency = getMarketplaceCurrency(appConfigs.localization, defaultConfigs.currency);
+
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
@@ -179,14 +160,11 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Elevated from config.transaction.listingMinimumPrice (derived property for existing call sites).
     listingMinimumPriceSubUnits,
 
-    // Localization: currency is first-level config atm.
-    currency: mergeCurrency(configAsset.localization?.currency, defaultConfigs.currency),
+    // Elevated from config.localization.currency.
+    currency,
 
     // Stripe config currently comes from defaultConfigs atm.
     stripe: validateStripeCurrency(defaultConfigs.stripe),
-
-    // Localization (locale, first day of week)
-    localization: mergeLocalizations(configAsset.localization, defaultConfigs.localization),
 
     // The top-bar.json asset contains logo link and custom links
     // - The logo link can be used to link logo to another domain
