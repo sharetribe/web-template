@@ -41,6 +41,9 @@ Some of the content is splitted to separate files:
 - **[user/defaultUser.js](./user/defaultUser.js)**
   - user types and fields defaults
   - Hosted merge: [user/user.js](./user/user.js) (`config.user`)
+- **[transaction/transaction.js](./transaction/transaction.js)**
+  - Hosted: `minimumTransactionSize` → `config.transaction.listingMinimumPrice`
+  - Top-level `listingMinimumPriceSubUnits` is derived in `mergeConfig`
 
 ### Hosted app configs
 
