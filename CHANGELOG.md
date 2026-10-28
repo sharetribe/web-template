@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] OrderPanel: silence the error added on 971 on tests.
+  [#972](https://github.com/sharetribe/web-template/pull/972)
 - [fix] OrderPanel: display a more helpful error message when the provider commission is bigger than
   the listing price. [#971](https://github.com/sharetribe/web-template/pull/971)
 - [change] Update concurrently to v10.0.6.
