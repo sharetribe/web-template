@@ -14,6 +14,7 @@ const getConfig = () => {
       listingTypes: [
         {
           id: 'free-inquiry',
+          label: 'Free inquiry',
           transactionProcess: {
             name: 'default-inquiry',
             alias: 'default-inquiry/release-1',
