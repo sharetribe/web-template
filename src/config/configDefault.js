@@ -5,6 +5,7 @@ import * as maps from './maps/defaultMaps';
 import * as branding from './branding/defaultBranding';
 import * as layout from './layout/defaultLayout';
 import * as analytics from './analytics/defaultAnalytics';
+import * as googleSearchConsole from './googleSearchConsole/defaultGoogleSearchConsole';
 import * as user from './user/defaultUser';
 import * as categoryConfiguration from './categoryConfiguration/defaultCategoryConfiguration';
 
@@ -65,6 +66,10 @@ const defaultConfig = {
   // Hosted listing-categories.json takes priority when present.
   categoryConfiguration,
 
+  // Modify Google Search Console configs in hosted asset
+  // or built-in defaults in googleSearchConsole/defaultGoogleSearchConsole.js
+  googleSearchConsole,
+
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
   // Currently it is unset, but you can read more about fb:app_id from
@@ -120,16 +125,6 @@ const defaultConfig = {
   siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
   siteTwitterHandle: null, // e.g. '@sharetribe',
-
-  // Optional
-  // This creates meta tag for Google Search Console verification
-  // I.e. <meta name=“google-site-verification” content=“GOOGLE_SITE_VERIFICATION_TOKEN”/>
-  // Note: The googleSearchConsole comes from googleSearchConsole asset nowadays by default.
-  //       To use this built-in configuration, omit/ignore the hosted asset
-  //       (see googleSearchConsole/googleSearchConsole.js).
-  googleSearchConsole: {
-    googleSiteVerification: null, // Add google-site-verification token as a string
-  },
 
   // Optional
   // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
