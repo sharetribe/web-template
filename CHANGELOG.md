@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
-- [add] ListingPage:Add accessible names for next and previous buttons in the carousel.
+- [add] ListingPage: Add accessible name for the static-to-interactive button.
+  [#958](https://github.com/sharetribe/web-template/pull/958)
+- [add] ListingPage: Add accessible names for next and previous buttons in the carousel.
   [#957](https://github.com/sharetribe/web-template/pull/957)
 - [fix] OrderPanel: silence the error added on 971 on tests.
   [#972](https://github.com/sharetribe/web-template/pull/972)
