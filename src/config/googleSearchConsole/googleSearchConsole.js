@@ -13,7 +13,7 @@ const isUsableSiteVerificationToken = token =>
  * Prefer hosted googleSiteVerification when present; otherwise built-in defaults.
  *
  * @param {Object} hostedGscConfig normalized hosted slice (GoogleSearchConsole asset)
- * @param {Object} defaultGscConfig built-in defaults from configDefault.js
+ * @param {Object} defaultGscConfig built-in defaults from defaultGoogleSearchConsole.js
  * @returns {Object} { googleSiteVerification }
  */
 export const mergeGoogleSearchConsoleConfig = (hostedGscConfig, defaultGscConfig = {}) => {
