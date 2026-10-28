@@ -5,6 +5,7 @@ import { categoryConfigurationConfig } from './categoryConfiguration/categoryCon
 import { googleSearchConsoleConfig } from './googleSearchConsole/googleSearchConsole';
 import { layoutConfig } from './layout/layout';
 import { listingConfig } from './listing/listing';
+import { localizationConfig } from './localization/localization';
 import { mapsConfig } from './maps/maps';
 import { searchConfig } from './search/search';
 import { transactionConfig } from './transaction/transaction';
@@ -26,6 +27,7 @@ export const configHandlers = [
   mapsConfig,
   googleSearchConsoleConfig,
   accessControlConfig,
+  localizationConfig,
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,
