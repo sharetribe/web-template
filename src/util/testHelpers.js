@@ -8,10 +8,10 @@ import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { IntlProvider } from './reactIntl';
-import { mergeConfig } from './configHelpers';
 
 import configureStore from '../store';
 import defaultConfig from '../config/configDefault';
+import { mergeConfig } from '../config/mergeConfig';
 import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
 import routeConfiguration from '../routing/routeConfiguration';

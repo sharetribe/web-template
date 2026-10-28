@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 
 // Configs and store setup
 import defaultConfig from './config/configDefault';
+import { mergeConfig } from './config/mergeConfig';
 import appSettings from './config/settings';
 import configureStore from './store';
 
@@ -13,7 +14,6 @@ import { RouteConfigurationProvider } from './context/routeConfigurationContext'
 import { ConfigurationProvider } from './context/configurationContext';
 import { parse } from './util/urlHelpers';
 import { difference, isEmpty } from './util/common';
-import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import {
   clearReferralDataIfExpired,
