@@ -2,6 +2,7 @@ import { accessControlConfig } from './accessControl/accessControl';
 import { analyticsConfig } from './analytics/analytics';
 import { brandingConfig } from './branding/branding';
 import { categoryConfigurationConfig } from './categoryConfiguration/categoryConfiguration';
+import { footerConfig } from './footer/footer';
 import { googleSearchConsoleConfig } from './googleSearchConsole/googleSearchConsole';
 import { layoutConfig } from './layout/layout';
 import { listingConfig } from './listing/listing';
@@ -30,6 +31,7 @@ export const configHandlers = [
   accessControlConfig,
   localizationConfig,
   topbarConfig,
+  footerConfig,
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,
