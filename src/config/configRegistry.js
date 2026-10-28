@@ -1,6 +1,7 @@
 import { analyticsConfig } from './analytics/analytics';
 import { brandingConfig } from './branding/branding';
 import { categoryConfigurationConfig } from './categoryConfiguration/categoryConfiguration';
+import { googleSearchConsoleConfig } from './googleSearchConsole/googleSearchConsole';
 import { layoutConfig } from './layout/layout';
 import { listingConfig } from './listing/listing';
 import { mapsConfig } from './maps/maps';
@@ -22,6 +23,7 @@ export const configHandlers = [
   brandingConfig,
   layoutConfig,
   mapsConfig,
+  googleSearchConsoleConfig,
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,
