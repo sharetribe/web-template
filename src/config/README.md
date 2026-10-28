@@ -1,158 +1,114 @@
 # Configuration options
 
-The 2 main files here are **configDefault.js** and **settings.js**.
+Marketplace config comes from three places:
 
-## [configDefault.js](./configDefault.js)
+1. **Hosted assets** — fetched from the Asset Delivery API on full page load
+2. **Built-in defaults** — [`configDefault.js`](./configDefault.js) and the `default*.js` files in
+   each domain folder (fill gaps or stand in when hosted data is missing)
+3. **Build-time settings** — [`settings.js`](./settings.js) (and currency helpers), baked in at
+   build
 
-These configurations are saved to React Context and therefore they could be overwritten through
-configs received from Asset Delivery API. The merging of hosted configs and these defaults happen in
-_src/util/configHelpers.js_
+Hosted values and defaults are merged in [`mergeConfig.js`](./mergeConfig.js) (`mergeConfig`), which
+runs handlers from [`configRegistry.js`](./configRegistry.js) via [`buildAppConfig.js`](./buildAppConfig.js).
+Most domains use `normalize` → `validate` → `resolve`. Details for each domain live in that folder’s
+README.
 
-Some of the content is splitted to separate files:
+Listing-type UI helpers such as `displayDescription` and `requireListingFiles` live in
+[`src/util/configHelpers.js`](../util/configHelpers.js) (used by listing cards, edit wizard, etc.).
 
-- **[branding/defaultBranding.js](./branding/defaultBranding.js)**
-  - marketplaceColor, logo, etc.
-- **[layout/defaultLayout.js](./layout/defaultLayout.js)**
-  - layout for search and listing page
-- **[listing/defaultListing.js](./listing/defaultListing.js)**
-  - Extended data config (also used for enabling search filters)
-  - Listing type (listingType) config
-  - Hosted merge: [listing/listing.js](./listing/listing.js) (`config.listing`)
-  - Besides custom extended data fields, listing's extended data can also contain other extra data.
-  - Most notable ones are:
-    - listingType
-    - transactionProcessAlias
-    - unitType
-- **[search/defaultSearch.js](./search/defaultSearch.js)**
-  - mainSearchType, default filters, sort, etc.
-  - Hosted merge: [search/search.js](./search/search.js) (`config.search`)
-- **[maps/defaultMaps.js](./maps/defaultMaps.js)**
-  - mapProvider config, location search config (also in maps/defaultLocationSearches.js)
-  - Hosted merge: [maps/maps.js](./maps/maps.js) (`config.maps`)
-- **[categoryConfiguration/defaultCategoryConfiguration.js](./categoryConfiguration/defaultCategoryConfiguration.js)**
-  - Optional built-in category tree (empty by default)
-  - Hosted merge:
-    [categoryConfiguration/categoryConfiguration.js](./categoryConfiguration/categoryConfiguration.js)
-    (`config.categoryConfiguration`)
-- **[stripe/defaultStripe.js](./stripe/defaultStripe.js)**
-  - Stripe publishable key, day count available for booking, default merchant categry code
-- **[analytics/defaultAnalytics.js](./analytics/defaultAnalytics.js)**
-  - analytics defaults
-- **[googleSearchConsole/defaultGoogleSearchConsole.js](./googleSearchConsole/defaultGoogleSearchConsole.js)**
-  - googleSiteVerification default (often null)
-  - Hosted merge: [googleSearchConsole/googleSearchConsole.js](./googleSearchConsole/googleSearchConsole.js)
-    (`config.googleSearchConsole`)
-- **[accessControl/defaultAccessControl.js](./accessControl/defaultAccessControl.js)**
-  - marketplace.private / fileUploadAndDownloadDisabled defaults (both false)
-  - Hosted merge: [accessControl/accessControl.js](./accessControl/accessControl.js)
-    (`config.accessControl`)
-- **[localization/defaultLocalization.js](./localization/defaultLocalization.js)**
-  - locale / firstDayOfWeek defaults
-  - Hosted merge: [localization/localization.js](./localization/localization.js)
-    (`config.localization`); top-level `currency` elevated in `mergeConfig`
-- **[topbar/topbar.js](./topbar/topbar.js)**
-  - Hosted only (`config.topbar`); no local built-in fallbacks
-- **[user/defaultUser.js](./user/defaultUser.js)**
-  - user types and fields defaults
-  - Hosted merge: [user/user.js](./user/user.js) (`config.user`)
-- **[transaction/transaction.js](./transaction/transaction.js)**
-  - Hosted: `minimumTransactionSize` → `config.transaction.listingMinimumPrice`
-  - Top-level `listingMinimumPriceSubUnits` is derived in `mergeConfig`
+## Domain folders
 
-### Hosted app configs
+- [branding/](./branding/README.md) — marketplace colors, logos, favicon, social images
+  (`config.branding`)
+- [layout/](./layout/README.md) — Search/Listing page variants and listing-card image aspect ratio
+  (`config.layout`)
+- [listing/](./listing/README.md) — listing types and custom listing fields (`config.listing`)
+- [search/](./search/README.md) — main search type, default filters, and sort options
+  (`config.search`)
+- [maps/](./maps/README.md) — map provider, API tokens, and location-search defaults (`config.maps`)
+- [categoryConfiguration/](./categoryConfiguration/README.md) — listing category tree
+  (`config.categoryConfiguration`)
+- [analytics/](./analytics/README.md) — Google Analytics 4 and/or Plausible (`config.analytics`)
+- [googleSearchConsole/](./googleSearchConsole/README.md) — optional site-verification meta tag
+  (`config.googleSearchConsole`)
+- [accessControl/](./accessControl/README.md) — private marketplace, file upload, and permission
+  flags (`config.accessControl`)
+- [localization/](./localization/README.md) — locale and first day of week (`config.localization`);
+  marketplace currency elevated to top-level `config.currency`
+- [topbar/](./topbar/README.md) — optional logo link, custom links, search visibility, post-listing
+  CTA (`config.topbar`)
+- [footer/](./footer/README.md) — optional marketplace footer (links, slogan, social)
+  (`config.footer`)
+- [user/](./user/README.md) — user types and custom user fields (`config.user`)
+- [transaction/](./transaction/README.md) — minimum listing price (`config.transaction`); elevated
+  to top-level `listingMinimumPriceSubUnits`
+- [stripe/](./stripe/README.md) — Stripe publishable key, booking horizon, Connect countries
+  (`config.stripe`; built-in/env only, no hosted asset)
 
-This template assumes that certain configurations are set through Console. Those configs are then
-retrieved through Asset Delivery API. The _configDefault.js_ has a property called **appCdnAssets**,
-which defines those app-wide configs. It's taken into use in 2 places: _src/index.js_ (CSR) and
-_server/dataLoader.js_ (SSR).
+Transaction _processes_ (booking, purchase, etc.) are separate from these configs — see
+[`src/transactions/`](../transactions/).
 
-The data loading sequence works like this:
+## Hosted assets
 
-1. Fetch app-wide configs
-   1. Extract translations and other configs
-   2. Pass those as hostedTranslations and hostedConfig to the App
-   3. src/app.js then saves those to the correct React Contexts
-2. Page-specific data loading calls
-3. Render the App
+`configDefault.js` lists app-wide assets under **`appCdnAssets`**. They are fetched from
+`src/index.js` (client) and `server/dataLoader.js` (SSR), then passed into the app as hosted config
+and translations.
 
-Server-side Rendering (SSR) makes the Asset Delivery API call with the "latest" alias. The version
-of the retrieved assets is saved to the Redux store. Then client-side rendering (CSR) uses that
-specific version instead of the alias. (The `yarn run dev` script uses the "latest" alias as it
-doesn't run SSR.)
+Typical load order:
 
-Provider commission is separately fetched when line-items are created for custom pricing. There are
-3 server routes that use those:
+1. Fetch app-wide configs and translations
+2. Merge into React Context via `src/app.js`
+3. Load page-specific data
+4. Render
 
-- _/api/transaction-line-items_
-- _/api/initiate-privileged_
-- _/api/transition-privileged_
+SSR fetches with the `"latest"` alias and stores the asset version in Redux. The client then loads
+that same version (so SSR and CSR stay in sync). `yarn run dev` skips SSR and always uses
+`"latest"`.
 
-### Default listing field: **_listingType_**
+Provider commission is fetched separately when line-items are created for custom pricing
+(`/api/transaction-line-items`, `/api/initiate-privileged`, `/api/transition-privileged`).
 
-Listing type is a custom set of configurations related to listing. It includes _type_, _label_,
-_showStock_, and _transactionType_. Transaction type is a similar concept. It defines which process,
-alias, unit type, etc. are releavant for each transaction entity. The **type** string of listing
-type is saved to the listing's public data together with the **transaction process alias**, and
-**unit type**. In addition, _transactionType_ data is saved to transaction's protected data. In the
-future, we are going to allow marketplace operators to define listing type presets through Console.
+## Listing type, process alias, and unit type
 
-### Default listing field: **_transactionProcessAlias_**
+Listing types (configured under [listing/](./listing/README.md)) tie a listing to a transaction
+process. The listing’s public data stores:
 
-The transaction is initiated with _transactionProcessAlias_, which is a string with the format:
-`process-name/alias`.
+- **`listingType`** — id of the listing type
+- **`transactionProcessAlias`** — `process-name/alias` (e.g. how the transaction is started)
+- **`unitType`** — pricing unit for that process
 
-Essentially, transactionProcessAlias is a contract between _listing_, existing processes in the
-_marketplace environment_, and the _client app_. If the client app supports process name and alias
-saved to the listing's extended data (_src/util/transaction.js_), it assumes that its own codebase
-is capable to render transaction-related UIs for that listing - and it expects that process with the
-same name is also created in connected marketplace environment on Sharetribe backend.
+Those three must stay in sync with:
 
-A developer/customizer is therefore responsible for keeping these 3 things in sync. If a process is
-added/discarded/edited on the Sharetribe backend, the client app also needs to be updated and
-listings might need to be updated (which can be made with Integration API).
+1. What hosted listing config defines
+2. Processes that exist in the marketplace environment (Sharetribe backend)
+3. What this client app supports (`src/transactions/`, formerly also referenced from
+   `src/util/transaction.js`)
 
-### Default listing field: **_unitType_**
+If you add, remove, or change a process on the backend, update the client and possibly existing
+listings (you can use the Integration API to do this).
 
-The unit type's main functionality is to work as a pricing unit. Changing unit type should always
-also mean that pricing needs to be updated.
+**Unit type** is mainly a pricing unit — changing it usually means pricing must change too. Prefer
+not reusing the same unit type across different processes. Defaults in this template:
 
-Some processes could support multiple unit types. E.g. booking process supports _day_, _night_,
-_hour_, and _fixed_.
+- default-purchase: `item`
+- default-booking: `day`, `night`, `hour`, `fixed`
+- default-negotiation: `request`, `offer`
+- default-inquiry: `inquiry`
+- default-download: `file`
 
-We recommend that you don't use the same unit types with different processes. By default, the
-_"item"_ is for the product selling process (default-purchase); and _"day"_, _"night"_, _"hour"_,
-and _"fixed"_ are for the default-booking process. Then _"request"_ and _"offer"_ are for the
-default-negotiation process and _"inquiry"_ is for the default-inquiry process.
+## Enforce valid listing types in search
 
-### [src/util/configHelpers.js](../util/configHelpers.js)
+SearchPage can restrict results to listings whose `listingType` is in the configured listing types.
+That only works if you have an `enum` search schema on public data field **`listingType`**. You can
+extend the same idea to `transactionProcessAlias` and `unitType`, then set `enforceValidListingType`
+in [`listing/defaultListing.js`](./listing/defaultListing.js).
 
-The src/util/configHelpers.js contains functions that validate some of the configurations. The most
-important function there is **mergeConfig**, which is used on _src/app.js_ to merge hosted config
-assets and defaultConfigs.js
-
-## [settings.js](./settings.js)
-
-These contain variables that are baked into the app on build time. This one imports currencySettings
-too.
-
-## Search only listings that are supported by listing type
-
-SearchPage can restrict search results to listings with valid listingType. Validity is defined by
-listingTypes array in _listing/defaultListing.js_.
-
-However, it only works if you have set 'enum' type search schema for the following public data
-field: **_listingType_**.
-
-You could even extend that validation to
-
-- transactionProcessAlias
-- unitType
-
-If you have set the search schema for those public data fields, you can turn
-`enforceValidListingType` config to true in [listing/defaultListing.js](./listing/defaultListing.js)
-file.
-
-Read More:
+More:
 
 - [Manage search schemas with Flex CLI](https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas)
-- [SearchPage.duck.js](../containers/SearchPage/SearchPage.duck.js)
+- [`SearchPage.duck.js`](../containers/SearchPage/SearchPage.duck.js)
+
+## Build-time settings
+
+[`settings.js`](./settings.js) holds values baked in at build time (including currency subunit
+helpers from `settingsCurrency.js`). These are not overridden by hosted assets.
