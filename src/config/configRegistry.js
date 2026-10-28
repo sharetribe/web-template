@@ -8,6 +8,7 @@ import { listingConfig } from './listing/listing';
 import { localizationConfig } from './localization/localization';
 import { mapsConfig } from './maps/maps';
 import { searchConfig } from './search/search';
+import { topbarConfig } from './topbar/topbar';
 import { transactionConfig } from './transaction/transaction';
 import { userConfig } from './user/user';
 
@@ -28,6 +29,7 @@ export const configHandlers = [
   googleSearchConsoleConfig,
   accessControlConfig,
   localizationConfig,
+  topbarConfig,
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,

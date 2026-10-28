@@ -50,6 +50,8 @@ Some of the content is splitted to separate files:
   - locale / firstDayOfWeek defaults
   - Hosted merge: [localization/localization.js](./localization/localization.js)
     (`config.localization`); top-level `currency` elevated in `mergeConfig`
+- **[topbar/topbar.js](./topbar/topbar.js)**
+  - Hosted only (`config.topbar`); no local built-in fallbacks
 - **[user/defaultUser.js](./user/defaultUser.js)**
   - user types and fields defaults
   - Hosted merge: [user/user.js](./user/user.js) (`config.user`)
