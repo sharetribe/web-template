@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] ListingPage:Add accessible names for next and previous buttons in the carousel.
+  [#957](https://github.com/sharetribe/web-template/pull/957)
 - [fix] OrderPanel: silence the error added on 971 on tests.
   [#972](https://github.com/sharetribe/web-template/pull/972)
 - [fix] OrderPanel: display a more helpful error message when the provider commission is bigger than
