@@ -1,30 +1,7 @@
-import { subUnitDivisors } from '../config/settingsCurrency';
 import { buildAppConfig } from '../config/buildAppConfig';
 import { configHandlers } from '../config/configRegistry';
 import { getListingMinimumPriceSubUnits } from '../config/transaction/transaction';
 import { getMarketplaceCurrency } from '../config/localization/localization';
-
-/////////////////////////
-// Merge localizations //
-/////////////////////////
-
-const validateStripeCurrency = stripe => {
-  const supportedCountries = stripe.supportedCountries || [];
-  const supportedCurrencies = Object.keys(subUnitDivisors);
-  const validSupportedCountries = supportedCountries.filter(country => {
-    const isSupported = supportedCurrencies.includes(country.currency);
-
-    if (!isSupported) {
-      console.error(
-        `Stripe configuration contained currency that was not supported by the client app.
-        There's a missing entry on subUnitDivisors for ${country.currency}.`
-      );
-    }
-
-    return isSupported;
-  });
-  return { ...stripe, supportedCountries: validSupportedCountries };
-};
 
 ///////////////////////////////////////////////////////////////////////////
 // Config handlers (ported)                                              //
@@ -162,9 +139,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Elevated from config.localization.currency.
     currency,
-
-    // Stripe config currently comes from defaultConfigs atm.
-    stripe: validateStripeCurrency(defaultConfigs.stripe),
 
     // Check if all the mandatory info have been retrieved from hosted assets
     hasMandatoryConfigurations: hasMandatoryConfigs(configAsset),

@@ -9,6 +9,7 @@ import { listingConfig } from './listing/listing';
 import { localizationConfig } from './localization/localization';
 import { mapsConfig } from './maps/maps';
 import { searchConfig } from './search/search';
+import { stripeConfig } from './stripe/stripe';
 import { topbarConfig } from './topbar/topbar';
 import { transactionConfig } from './transaction/transaction';
 import { userConfig } from './user/user';
@@ -32,6 +33,7 @@ export const configHandlers = [
   localizationConfig,
   topbarConfig,
   footerConfig,
+  stripeConfig,
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,
