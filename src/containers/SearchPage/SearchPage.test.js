@@ -30,6 +30,7 @@ const noop = () => null;
 const listingTypes = [
   {
     id: 'rent-bicycles-daily',
+    label: 'Rent bicycles daily',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -38,6 +39,7 @@ const listingTypes = [
   },
   {
     id: 'rent-bicycles-nightly',
+    label: 'Rent bicycles nightly',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -46,6 +48,7 @@ const listingTypes = [
   },
   {
     id: 'rent-bicycles-hourly',
+    label: 'Rent bicycles hourly',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -54,6 +57,7 @@ const listingTypes = [
   },
   {
     id: 'sell-bicycles',
+    label: 'Sell bicycles',
     transactionProcess: {
       name: 'default-purchase',
       alias: 'default-purchase/release-1',
@@ -86,6 +90,7 @@ const listingFields = [
   {
     // Formerly used for category, but now there's dedicated category setup
     key: 'cat',
+    label: 'Cat',
     scope: 'public',
     categoryConfig: {
       limitToCategoryIds: true,
@@ -106,7 +111,8 @@ const listingFields = [
     },
   },
   {
-    key: 'boat ',
+    key: 'boat',
+    label: 'Boat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -128,6 +134,7 @@ const listingFields = [
   },
   {
     key: 'singleSelectTest',
+    label: 'Single Select Test',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
@@ -146,6 +153,7 @@ const listingFields = [
   },
   {
     key: 'amenities',
+    label: 'Amenities',
     scope: 'public',
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
