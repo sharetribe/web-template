@@ -166,13 +166,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Stripe config currently comes from defaultConfigs atm.
     stripe: validateStripeCurrency(defaultConfigs.stripe),
 
-    // The top-bar.json asset contains logo link and custom links
-    // - The logo link can be used to link logo to another domain
-    // - Custom links are links specified by marketplace operator (both internal and external)
-    //   - Topbar tries to fit primary links to the visible space,
-    //     but secondary links are always behind dropdown menu.
-    topbar: configAsset.topbar, // defaultConfigs.topbar,
-
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.
     footer: configAsset.footer,
