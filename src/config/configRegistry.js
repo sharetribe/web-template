@@ -5,6 +5,7 @@ import { layoutConfig } from './layout/layout';
 import { listingConfig } from './listing/listing';
 import { mapsConfig } from './maps/maps';
 import { searchConfig } from './search/search';
+import { transactionConfig } from './transaction/transaction';
 import { userConfig } from './user/user';
 
 /**
@@ -25,4 +26,5 @@ export const configHandlers = [
   listingConfig,
   searchConfig,
   userConfig,
+  transactionConfig,
 ];

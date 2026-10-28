@@ -673,7 +673,7 @@ export const getHostedConfiguration = () => {
         searchType: 'location',
       },
     },
-    transactionSize: {
+    minimumTransactionSize: {
       listingMinimumPrice: {
         amount: 500,
         type: 'subunit',

@@ -24,7 +24,7 @@ const defaultConfig = {
   currency: 'USD',
 
   // Listing minimum price in currency sub units, e.g. cents.
-  // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
+  // Derived in mergeConfig from config.transaction.listingMinimumPrice (minimumTransactionSize asset).
   // - If there is no value, we use the value set on this file for listingMinimumPriceSubUnits
   // - If the value is 0, we use the value set on this file for listingMinimumPriceSubUnits
   //   This is due to backward compatibility
@@ -105,7 +105,7 @@ const defaultConfig = {
     listingTypes: '/listings/listing-types.json',
     listingFields: '/listings/listing-fields.json',
     search: '/listings/listing-search.json',
-    transactionSize: '/transactions/minimum-transaction-size.json',
+    minimumTransactionSize: '/transactions/minimum-transaction-size.json',
     analytics: '/integrations/analytics.json',
     googleSearchConsole: '/integrations/google-search-console.json',
     maps: '/integrations/map.json',

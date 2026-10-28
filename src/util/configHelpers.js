@@ -1,34 +1,9 @@
 import { subUnitDivisors } from '../config/settingsCurrency';
 import { buildAppConfig } from '../config/buildAppConfig';
 import { configHandlers } from '../config/configRegistry';
+import { getListingMinimumPriceSubUnits } from '../config/transaction/transaction';
 
 // Generic helpers for validating config values
-
-const mandatoryHostedAttributes = {
-  branding: { attribute: 'logo', isValid: branding => !!branding?.logo },
-  listingTypes: {
-    attribute: 'listingTypes',
-    isValid: listingTypes => listingTypes?.listingTypes?.length > 0,
-  },
-  listingFields: {
-    attribute: 'listingFields',
-    isValid: listingFields => !!listingFields?.listingFields,
-  },
-  transactionSize: {
-    attribute: 'listingMinimumPrice',
-    isValid: transactionSize => !!transactionSize?.listingMinimumPrice,
-  },
-};
-
-const printErrorForInvalidHostedAsset = (assetName, asset, attribute) => {
-  const isAssetEmpty = Object.keys(asset || {}).length === 0;
-  const problem = isAssetEmpty
-    ? `Mandatory hosted asset for ${assetName} is missing.`
-    : `Mandatory hosted asset for ${assetName} is missing the "${attribute}" attribute.`;
-  console.error(`${problem}
-      Check that "appCdnAssets" property has valid paths in src/config/configDefault.js file,
-      and that the marketplace has added content in Console`);
-};
 
 /**
  * This ensures that accessControl config has private marketplace flag in place.
@@ -169,15 +144,6 @@ export const allowProviderUpdateOffer = listingTypeConfig => {
   return listingTypeConfig?.negotiationOptions?.providerUpdateOffer === true;
 };
 
-//////////////////////////////////
-// Validate transaction configs //
-//////////////////////////////////
-
-const getListingMinimumPrice = transactionSize => {
-  const { listingMinimumPrice } = transactionSize || {};
-  return listingMinimumPrice?.type === 'subunit' ? listingMinimumPrice.amount : 0;
-};
-
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
@@ -203,16 +169,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   const cleanedRootURL =
     typeof marketplaceRootURL === 'string' ? marketplaceRootURL.replace(/\/$/, '') : '';
 
-  // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
-  // - If there is no value, we use the defaultConfigs.listingMinimumPriceSubUnits
-  // - If the value is 0 (aka _falsy_), we use the defaultConfigs.listingMinimumPriceSubUnits
-  //   (The latter is mainly due to backward compatibility atm, since Console won't allow saving 0 anymore.)
-  // Note: It might make sense that 0 handling is different for default-inquiry process.
-  //       With the built-in code flow, you can only remove price altogether from listing type using default-inquiries.
-  const listingMinimumPriceSubUnits =
-    getListingMinimumPrice(configAsset.transactionSize) ||
-    defaultConfigs.listingMinimumPriceSubUnits;
-
   // App-config slices from registered handlers (normalize -> validate -> resolve).
   // Keys match handler.id (e.g. analytics). Hosted inputs come from handler.assetKeys.
   // Hosted configs win when usable; built-in defaults fill gaps.
@@ -221,6 +177,15 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     defaults: defaultConfigs,
     handlers: configHandlers,
   });
+
+  // Derived top-level convenience from config.transaction (not a handler id).
+  // - Prefer hosted listingMinimumPrice.amount when usable
+  // - If missing or 0, use defaultConfigs.listingMinimumPriceSubUnits
+  //   (The latter is mainly due to backward compatibility atm, since Console won't allow saving 0 anymore.)
+  const listingMinimumPriceSubUnits = getListingMinimumPriceSubUnits(
+    appConfigs.transaction,
+    defaultConfigs.listingMinimumPriceSubUnits
+  );
 
   return {
     // Use default configs as a starting point for app config.
@@ -231,7 +196,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // AccessControl config contains a flag whether the marketplace is private.
     accessControl: validAccessControl(configAsset.accessControl),
 
-    // Overwrite default configs if hosted config is available
+    // Elevated from config.transaction.listingMinimumPrice (derived property for existing call sites).
     listingMinimumPriceSubUnits,
 
     // Localization: currency is first-level config atm.
