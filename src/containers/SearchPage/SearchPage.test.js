@@ -204,18 +204,16 @@ const defaultFiltersConfig = [
   },
 ];
 
-const sortConfig = {
-  active: true,
-  queryParamName: 'sort',
-  relevanceKey: 'relevance',
-  conflictingFilters: [],
-  options: [
-    { key: 'createdAt', label: 'Newest' },
-    { key: '-createdAt', label: 'Oldest' },
-    { key: '-price', label: 'Lowest price' },
-    { key: 'price', label: 'Highest price' },
-    { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
-  ],
+// Hosted listing-search asset exposes sorting toggles, not sortConfig labels.
+// App sort option copy comes from built-in labelTranslationKey (SortBy.*) via SortBy.js.
+const hostedSorting = {
+  defaultSortingOptions: {
+    newest: true,
+    oldest: true,
+    lowestPrice: true,
+    highestPrice: true,
+    relevance: true,
+  },
 };
 
 const getConfig = (variantType, customListingFields) => {
@@ -235,7 +233,7 @@ const getConfig = (variantType, customListingFields) => {
         searchType: 'location',
       },
       defaultFilters: defaultFiltersConfig,
-      sortConfig: sortConfig,
+      sorting: hostedSorting,
     },
     layout: {
       ...hostedConfig.layout,
@@ -353,10 +351,10 @@ describe('SearchPage', () => {
       // Does not have search map container
       expect(screen.queryByTestId('searchMapContainer')).not.toBeInTheDocument();
 
-      // Has SortBy component
+      // Has SortBy component (built-in options use SortBy.* translation keys)
       expect(getByText('MainPanelHeader.sortBy')).toBeInTheDocument();
-      expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
-      expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
+      expect(getAllByText('SortBy.newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
+      expect(getAllByText('SortBy.oldest')).toHaveLength(2); // desktop and mobile dropdowns
 
       // Has no Cat filter (primary filter tied to 'Cats' category)
       expect(queryByText('Cat')).not.toBeInTheDocument();
@@ -445,10 +443,10 @@ describe('SearchPage', () => {
       // Has search map container
       expect(screen.getByTestId('searchMapContainer')).toBeInTheDocument();
 
-      // Has SortBy component
+      // Has SortBy component (built-in options use SortBy.* translation keys)
       expect(getByText('MainPanelHeader.sortBy')).toBeInTheDocument();
-      expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
-      expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
+      expect(getAllByText('SortBy.newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
+      expect(getAllByText('SortBy.oldest')).toHaveLength(2); // desktop and mobile dropdowns
 
       // Has no Cat filter (primary filter tied to 'Cats' category)
       expect(queryByText('Cat')).not.toBeInTheDocument();
