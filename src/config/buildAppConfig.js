@@ -6,10 +6,12 @@
  * built-in defaults fill gaps.
  *
  * - `id` — key written onto `resolved` (the app-config property for that domain)
- * - `assetKeys` — hosted-assets keys this handler consumes (required, even for one key)
+ * - `assetKeys` — hosted-assets keys this handler consumes (array; may be empty for
+ *   built-in/env-only domains such as stripe)
  *
  * Missing hosted keys yield `undefined` entries in the slices object; the handler
- * should fall back to built-in defaults in resolve.
+ * should fall back to built-in defaults in resolve. Empty `assetKeys` → normalize
+ * receives `{}`.
  *
  * Fetching hosted assets stays outside this builder: pass an already-loaded
  * `hosted` object so the same handlers can run for Sharetribe or other hosts.
@@ -29,14 +31,13 @@ export const buildAppConfig = ({ hosted = {}, defaults = {}, handlers = [] } = {
 
   handlers.forEach(handler => {
     const assetKeys = handler?.assetKeys;
-    const hasAssetKeys = Array.isArray(assetKeys) && assetKeys.length > 0;
 
-    if (!handler?.id || !hasAssetKeys || typeof handler.resolve !== 'function') {
+    if (!handler?.id || !Array.isArray(assetKeys) || typeof handler.resolve !== 'function') {
       configIssues.push({
         level: 'error',
         configId: handler?.id || 'unknown',
         code: 'INVALID_CONFIG_HANDLER',
-        message: 'Config handler must define id, assetKeys (non-empty array), and resolve()',
+        message: 'Config handler must define id, assetKeys (array, may be empty), and resolve()',
       });
       return;
     }
