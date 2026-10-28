@@ -24,12 +24,12 @@ import './styles/marketplaceDefaults.css';
 // Configs and store setup
 import appSettings from './config/settings';
 import defaultConfig from './config/configDefault';
+import { mergeConfig } from './config/mergeConfig';
 import { LoggingAnalyticsHandler, GoogleAnalyticsHandler } from './analytics/handlers';
 import configureStore from './store';
 
 // Utils
 import { createInstance, types as sdkTypes } from './util/sdkLoader';
-import { mergeConfig } from './util/configHelpers';
 import { matchPathname } from './util/routes';
 import * as apiUtils from './util/api';
 import * as log from './util/log';

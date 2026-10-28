@@ -19,7 +19,7 @@ import { userConfig } from './user/user';
  *
  * Each entry owns one config domain (normalize → validate → resolve).
  * Handlers declare `id` (app-config key) and `assetKeys` (hosted-asset keys).
- * Add handlers here as domains are ported out of mergeConfig.
+ * Add new domain handlers here (and a default*.js when needed).
  * Interdependent handlers must follow their dependencies
  * (e.g. categoryConfiguration before listing; listing before search).
  */
