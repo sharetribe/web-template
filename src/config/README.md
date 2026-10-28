@@ -38,6 +38,8 @@ Some of the content is splitted to separate files:
   - Stripe publishable key, day count available for booking, default merchant categry code
 - **[analytics/defaultAnalytics.js](./analytics/defaultAnalytics.js)**
   - analytics defaults
+- **[googleSearchConsole/googleSearchConsole.js](./googleSearchConsole/googleSearchConsole.js)**
+  - Hosted: `googleSiteVerification` → `config.googleSearchConsole` (default in `configDefault.js`)
 - **[user/defaultUser.js](./user/defaultUser.js)**
   - user types and fields defaults
   - Hosted merge: [user/user.js](./user/user.js) (`config.user`)

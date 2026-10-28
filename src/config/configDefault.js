@@ -125,7 +125,8 @@ const defaultConfig = {
   // This creates meta tag for Google Search Console verification
   // I.e. <meta name=“google-site-verification” content=“GOOGLE_SITE_VERIFICATION_TOKEN”/>
   // Note: The googleSearchConsole comes from googleSearchConsole asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
+  //       To use this built-in configuration, omit/ignore the hosted asset
+  //       (see googleSearchConsole/googleSearchConsole.js).
   googleSearchConsole: {
     googleSiteVerification: null, // Add google-site-verification token as a string
   },
