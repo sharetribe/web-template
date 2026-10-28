@@ -1,3 +1,4 @@
+import { accessControlConfig } from './accessControl/accessControl';
 import { analyticsConfig } from './analytics/analytics';
 import { brandingConfig } from './branding/branding';
 import { categoryConfigurationConfig } from './categoryConfiguration/categoryConfiguration';
@@ -24,6 +25,7 @@ export const configHandlers = [
   layoutConfig,
   mapsConfig,
   googleSearchConsoleConfig,
+  accessControlConfig,
   categoryConfigurationConfig,
   listingConfig,
   searchConfig,

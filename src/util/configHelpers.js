@@ -3,23 +3,6 @@ import { buildAppConfig } from '../config/buildAppConfig';
 import { configHandlers } from '../config/configRegistry';
 import { getListingMinimumPriceSubUnits } from '../config/transaction/transaction';
 
-// Generic helpers for validating config values
-
-/**
- * This ensures that accessControl config has private marketplace flag in place.
- *
- * @param {Object} accessControlConfig (returned by access-control.json)
- * @returns {Object} accessControl config
- */
-const validAccessControl = accessControlConfig => {
-  const accessControl = accessControlConfig || {};
-  const marketplace = accessControl?.marketplace || {};
-  return {
-    ...accessControl,
-    marketplace: { private: false, fileUploadAndDownloadDisabled: false, ...marketplace },
-  };
-};
-
 /////////////////////////
 // Merge localizations //
 /////////////////////////
@@ -192,9 +175,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     ...defaultConfigs,
 
     marketplaceRootURL: cleanedRootURL,
-
-    // AccessControl config contains a flag whether the marketplace is private.
-    accessControl: validAccessControl(configAsset.accessControl),
 
     // Elevated from config.transaction.listingMinimumPrice (derived property for existing call sites).
     listingMinimumPriceSubUnits,

@@ -6,6 +6,7 @@ import * as branding from './branding/defaultBranding';
 import * as layout from './layout/defaultLayout';
 import * as analytics from './analytics/defaultAnalytics';
 import * as googleSearchConsole from './googleSearchConsole/defaultGoogleSearchConsole';
+import * as accessControl from './accessControl/defaultAccessControl';
 import * as user from './user/defaultUser';
 import * as categoryConfiguration from './categoryConfiguration/defaultCategoryConfiguration';
 
@@ -69,6 +70,10 @@ const defaultConfig = {
   // Modify Google Search Console configs in hosted asset
   // or built-in defaults in googleSearchConsole/defaultGoogleSearchConsole.js
   googleSearchConsole,
+
+  // Modify access control in hosted asset or accessControl/defaultAccessControl.js
+  // (private marketplace, file upload/download disabled)
+  accessControl,
 
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
