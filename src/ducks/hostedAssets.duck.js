@@ -217,9 +217,8 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
 const hostedAssetsSlice = createSlice({
   name: 'hostedAssets',
   initialState: {
-    // List of app-wide assets that should be fetched and their path in Asset API.
-    // appAssets: { assetName: 'path/to/asset.json' }
-    appAssets: {},
+    // App-wide asset payloads are returned from fetchAppAssets for mergeConfig / translations;
+    // they are not kept in Redux (avoids duplicating them in SSR __PRELOADED_STATE__).
     pageAssetsData: null,
     currentPageAssets: [],
     // Current version of the saved asset.
@@ -241,7 +240,7 @@ const hostedAssetsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAppAssetsThunk.fulfilled, (state, action) => {
-        state.appAssets = action.payload.assets;
+        // Keep version + GA id only; callers use the thunk return value for asset data.
         state.version = state.version || action.payload.version;
         state.googleAnalyticsId = action.payload.googleAnalyticsId;
         state.inProgress = false;
