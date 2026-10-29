@@ -124,7 +124,7 @@ describe('user config', () => {
       expect(issues.map(i => i.code)).toContain('USER_FIELD_UNSUPPORTED');
     });
 
-    it('clears userType limits when limited ids are not among user types in use', () => {
+    it('warns with unknown user type ids when userTypeConfig limit has no matches', () => {
       const { value, issues } = userConfig.validate({
         userTypes: [{ userType: 'seller', label: 'Seller' }],
         userFields: [
@@ -134,11 +134,18 @@ describe('user config', () => {
             schemaType: 'text',
             showConfig: { label: 'Cuisine' },
             saveConfig: { label: 'Cuisine', isRequired: false },
-            userTypeConfig: { limitToUserTypeIds: true, userTypeIds: ['missing'] },
+            userTypeConfig: {
+              limitToUserTypeIds: true,
+              userTypeIds: ['missing-one', 'missing-two'],
+            },
           },
         ],
       });
-      expect(issues.map(i => i.code)).toContain('USER_FIELD_UNSUPPORTED');
+      const unsupported = issues.filter(i => i.code === 'USER_FIELD_UNSUPPORTED');
+      expect(unsupported).toHaveLength(1);
+      expect(unsupported[0].message).toContain('userTypeConfig');
+      expect(unsupported[0].message).toContain('"missing-one"');
+      expect(unsupported[0].message).toContain('"missing-two"');
       expect(value.userFields).toEqual([]);
     });
 

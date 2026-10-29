@@ -248,6 +248,36 @@ describe('listing config', () => {
       });
     });
 
+    it('warns with unknown category ids when categoryConfig limit has no matches', () => {
+      const normalized = listingConfig.normalize({
+        listingTypes: { listingTypes: [sampleListingType] },
+        listingFields: {
+          listingFields: [
+            {
+              ...sampleListingField,
+              categoryConfig: {
+                limitToCategoryIds: true,
+                categoryIds: ['missing-one', 'missing-two'],
+              },
+            },
+          ],
+        },
+      });
+      const { value, issues } = listingConfig.validate(normalized, {
+        resolved: {
+          categoryConfiguration: {
+            categories: [{ id: 'sneakers', name: 'Sneakers', subcategories: [] }],
+          },
+        },
+      });
+      const unsupported = issues.filter(i => i.code === 'LISTING_FIELD_UNSUPPORTED');
+      expect(unsupported).toHaveLength(1);
+      expect(unsupported[0].message).toContain('categoryConfig');
+      expect(unsupported[0].message).toContain('"missing-one"');
+      expect(unsupported[0].message).toContain('"missing-two"');
+      expect(value.listingFields).toEqual([]);
+    });
+
     it('warns and drops listing fields with invalid key, empty label, missing schemaType, or duplicates', () => {
       const { value, issues } = listingConfig.validate({
         hasListingTypesAsset: true,
