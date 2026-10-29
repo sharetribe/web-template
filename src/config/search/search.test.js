@@ -4,8 +4,7 @@ import {
   mergeSortConfig,
   getSortOptionsFromListingFields,
 } from './search';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('search config', () => {
   const defaultSortConfig = {
@@ -400,8 +399,8 @@ describe('search config', () => {
       expect(issues.map(i => i.code)).toContain('SEARCH_INVALID_MAIN_SEARCH_TYPE');
     });
 
-    it('buildAppConfig produces search after listing', () => {
-      const { resolved } = buildAppConfig({
+    it('applyConfigHandlers produces search after listing', () => {
+      const { resolved } = applyConfigHandlers({
         hosted: {
           search: {
             mainSearch: { searchType: 'keywords' },

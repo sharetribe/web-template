@@ -1,6 +1,5 @@
 import { mergeAccessControlConfig, accessControlConfig } from './accessControl';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('accessControl config', () => {
   const defaults = {
@@ -125,10 +124,10 @@ describe('accessControl config', () => {
       expect(issues.filter(i => i.code === 'ACCESS_CONTROL_INVALID_CTA')).toHaveLength(2);
     });
 
-    it('is registered and resolves via buildAppConfig', () => {
+    it('is registered and resolves via applyConfigHandlers', () => {
       expect(configHandlers).toContain(accessControlConfig);
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           accessControl: {
             marketplace: { private: true },

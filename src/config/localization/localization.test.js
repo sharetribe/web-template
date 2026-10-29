@@ -3,8 +3,7 @@ import {
   getMarketplaceCurrency,
   localizationConfig,
 } from './localization';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('localization config', () => {
   const defaults = { locale: 'en-US', firstDayOfWeek: 1 };
@@ -83,10 +82,10 @@ describe('localization config', () => {
       expect(empty.issues.map(i => i.code)).toContain('LOCALIZATION_INVALID_CURRENCY');
     });
 
-    it('is registered and resolves via buildAppConfig', () => {
+    it('is registered and resolves via applyConfigHandlers', () => {
       expect(configHandlers).toContain(localizationConfig);
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           localization: { locale: 'fi-FI', currency: 'EUR', firstDayOfWeek: 1 },
         },

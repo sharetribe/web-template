@@ -5,8 +5,7 @@ import {
   isValidCategoryId,
   isValidCategoryName,
 } from './categoryConfiguration';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('categoryConfiguration config', () => {
   const sampleTree = [
@@ -206,8 +205,8 @@ describe('categoryConfiguration config', () => {
       ]);
     });
 
-    it('resolves via buildAppConfig from registry using hosted categories', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('resolves via applyConfigHandlers from registry using hosted categories', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
           categories: { categories: sampleTree },
@@ -226,7 +225,7 @@ describe('categoryConfiguration config', () => {
 
     it('falls back to built-in categories when hosted categories are omitted', () => {
       const builtIn = [{ name: 'Built-in', id: 'built-in', subcategories: [] }];
-      const { resolved } = buildAppConfig({
+      const { resolved } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
         },
@@ -238,7 +237,7 @@ describe('categoryConfiguration config', () => {
     });
 
     it('keeps an explicit empty hosted categories array (does not use built-ins)', () => {
-      const { resolved } = buildAppConfig({
+      const { resolved } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
           categories: { categories: [] },

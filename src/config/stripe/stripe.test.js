@@ -1,6 +1,5 @@
 import { filterSupportedCountriesByCurrency, stripeConfig } from './stripe';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 const stripeDefaults = {
   publishableKey: 'pk_test_x',
@@ -34,10 +33,10 @@ describe('stripe config', () => {
       expect(stripeConfig.normalize({})).toEqual({});
     });
 
-    it('is registered and resolves via buildAppConfig from defaults', () => {
+    it('is registered and resolves via applyConfigHandlers from defaults', () => {
       expect(configHandlers).toContain(stripeConfig);
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {},
         defaults: { stripe: stripeDefaults },
         handlers: [stripeConfig],

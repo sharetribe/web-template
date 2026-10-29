@@ -1,6 +1,5 @@
 import { mergeLayoutConfig, layoutConfig, parseAspectRatio, resolveVariantConfig } from './layout';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('layout config', () => {
   const defaults = {
@@ -129,8 +128,8 @@ describe('layout config', () => {
       ]);
     });
 
-    it('resolves via buildAppConfig from registry', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('resolves via applyConfigHandlers from registry', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
           layout: {

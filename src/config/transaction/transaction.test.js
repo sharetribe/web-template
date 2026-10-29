@@ -1,6 +1,5 @@
 import { getListingMinimumPriceSubUnits, transactionConfig } from './transaction';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('transaction config', () => {
   describe('getListingMinimumPriceSubUnits', () => {
@@ -72,7 +71,7 @@ describe('transaction config', () => {
     it('is registered and resolves listingMinimumPrice onto config.transaction', () => {
       expect(configHandlers).toContain(transactionConfig);
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           minimumTransactionSize: {
             listingMinimumPrice: { type: 'subunit', amount: 900 },

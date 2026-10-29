@@ -4,8 +4,7 @@ import {
   isValidMapboxAccessToken,
   isValidGoogleMapsApiKey,
 } from './maps';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('maps config', () => {
   const validMapboxToken = 'pk.abc123.def456';
@@ -146,8 +145,8 @@ describe('maps config', () => {
       expect(issues.map(i => i.code)).toEqual(['MAPS_INVALID_GOOGLE_MAPS_API_KEY']);
     });
 
-    it('resolves via buildAppConfig from registry', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('resolves via applyConfigHandlers from registry', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
           maps: {
@@ -166,7 +165,7 @@ describe('maps config', () => {
     });
 
     it('falls back to built-in token when hosted Mapbox token is invalid', () => {
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
           maps: {
@@ -183,7 +182,7 @@ describe('maps config', () => {
     });
 
     it('keeps hosted provider and fills built-in token when pairing token is missing', () => {
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: { logo: { type: 'imageAsset', id: 'logo' }, favicon: { type: 'imageAsset' } },
           maps: {

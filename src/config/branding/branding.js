@@ -322,7 +322,7 @@ const resolve = (validated, defaults) => mergeBrandingConfig(validated, defaults
  * - mandatory: true — this domain contributes MaintenanceMode gates via
  *   validate() errors (specifically branding.logo / BRANDING_MISSING_LOGO)
  *
- * Pipeline: normalize → validate → resolve (via buildAppConfig).
+ * Pipeline: normalize → validate → resolve (via applyConfigHandlers).
  * Hosted config takes priority; built-in defaults fill gaps for color, logos,
  * and social images. brandImage comes only from hosted loginBackgroundImage.
  */

@@ -873,7 +873,7 @@ const normalize = hostedSlices => {
  * Uses category tree from ctx.resolved.categoryConfiguration when available.
  *
  * @param {Object} normalized output of normalize
- * @param {Object} ctx buildAppConfig context ({ resolved, ... })
+ * @param {Object} ctx applyConfigHandlers context ({ resolved, ... })
  * @returns {{ value: Object, issues: Array }}
  */
 const validate = (normalized, ctx = {}) => {

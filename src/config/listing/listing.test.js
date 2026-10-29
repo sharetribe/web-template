@@ -7,8 +7,7 @@ import {
   isValidListingTypeLabel,
   isValidTransactionFieldKey,
 } from './listing';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('listing config', () => {
   const sampleListingType = {
@@ -546,8 +545,8 @@ describe('listing config', () => {
       expect(issues.map(i => i.code)).toContain('LISTING_TYPE_UNSUPPORTED');
     });
 
-    it('resolves via buildAppConfig from registry', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('resolves via applyConfigHandlers from registry', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: brandingHosted,
           listingTypes: { listingTypes: [sampleListingType] },
