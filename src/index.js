@@ -25,6 +25,7 @@ import './styles/marketplaceDefaults.css';
 import appSettings from './config/settings';
 import defaultConfig from './config/configDefault';
 import { mergeConfig } from './config/mergeConfig';
+import appCdnAssets from './config/appCdnAssets';
 import { LoggingAnalyticsHandler, GoogleAnalyticsHandler } from './analytics/handlers';
 import configureStore from './store';
 
@@ -59,7 +60,7 @@ const render = (store, shouldHydrate) => {
       // and fetch hosted assets in parallel before initializing the ClientApp
       return Promise.all([
         loadableReady(),
-        store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
+        store.dispatch(fetchAppAssets(appCdnAssets, cdnAssetsVersion)),
         store.dispatch(fetchCurrentUser()),
       ]);
     })

@@ -53,10 +53,10 @@ React 18 + Redux Toolkit + Final Form + Express.js + Server-Side Rendering
 ## Hosted configurations and assets
 
 The app fetches translations and configuration files on full page load from Sharetribe SDK with
-`sdk.asset*` commands. View the list in `src/config/configDefault.js` under `appCdnAssets`. These
-"hosted assets" are created in Sharetribe Console by a human marketplace admin and override local
-configurations in `src/config`. Prefer using hosted configurations wherever possible, and only
-create local configurations when Console does not allow the necessary pattern. See
+`sdk.asset*` commands. View the list in `src/config/appCdnAssets.js`. These "hosted assets" are
+created in Sharetribe Console by a human marketplace admin and override local configurations in
+`src/config`. Prefer using hosted configurations wherever possible, and only create local
+configurations when Console does not allow the necessary pattern. See
 `https://www.sharetribe.com/docs/how-to/listings/extend-listing-data-in-template/` for an example of
 extending listing data.
 
