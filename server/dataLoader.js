@@ -16,14 +16,16 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     matchPathname,
     configureStore,
     routeConfiguration,
-    defaultConfig,
-    mergeConfig,
+    appCdnAssets,
+    loadAppConfig,
     fetchAppAssets,
   } = appInfo;
   const { pathname, search } = new URL(`${getRootURL()}${requestUrl}`);
 
   let translations = {};
   let hostedConfig = {};
+  let defaultConfig = null;
+  let mergeConfig = null;
 
   const store = configureStore({ initialState: {}, sdk });
 
@@ -50,13 +52,18 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     }, []);
   };
 
-  // First fetch app-wide assets
-  // Then make loadData calls
-  // And return object containing preloaded state and translations
+  // Load app-config modules (defaults + merge) in parallel with hosted assets,
+  // then make loadData calls. Returning preloaded state and translations.
   // This order supports other asset (in the future) that should be fetched before data calls.
-  return store
-    .dispatch(fetchAppAssets(defaultConfig.appCdnAssets))
-    .then(fetchedAppAssets => {
+  return Promise.all([
+    loadAppConfig().then(modules => {
+      defaultConfig = modules.defaultConfig;
+      mergeConfig = modules.mergeConfig;
+      return modules;
+    }),
+    store.dispatch(fetchAppAssets(appCdnAssets)),
+  ])
+    .then(([, fetchedAppAssets]) => {
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
 
       // We'll handle translations as a separate data.
@@ -73,7 +80,8 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
     })
     .catch(e => {
       // Listing entity pages often fail for missing/closed listings; skip Sentry noise.
-      const matchedRoutes = matchPathname(pathname, routeConfiguration(defaultConfig.layout));
+      const layout = defaultConfig?.layout;
+      const matchedRoutes = layout ? matchPathname(pathname, routeConfiguration(layout)) : [];
       const isListingPage = matchedRoutes.some(
         ({ route }) => route.name === 'ListingPage' || route.name === 'ListingPageCanonical'
       );

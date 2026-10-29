@@ -4,9 +4,8 @@ import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 // Configs and store setup
-import defaultConfig from './config/configDefault';
-import { mergeConfig } from './config/mergeConfig';
 import appSettings from './config/settings';
+import { loadAppConfig } from './config/loadAppConfig';
 import configureStore from './store';
 
 // utils
@@ -154,12 +153,11 @@ const EnvironmentVariableWarning = props => {
  * @param {Object} props
  * @param {Object} props.store
  * @param {Object} props.hostedTranslations
- * @param {Object} props.hostedConfig
+ * @param {Object} props.appConfig merged hosted + built-in config
  * @returns {JSX.Element}
  */
 export const ClientApp = props => {
-  const { store, hostedTranslations = {}, hostedConfig = {} } = props;
-  const appConfig = mergeConfig(hostedConfig, defaultConfig);
+  const { store, hostedTranslations = {}, appConfig } = props;
 
   useEffect(() => {
     // Clear referral data from session storage the expiration time has passed
@@ -241,12 +239,11 @@ export const ClientApp = props => {
  * @param {Object} props.helmetContext
  * @param {Object} props.store
  * @param {Object} props.hostedTranslations
- * @param {Object} props.hostedConfig
+ * @param {Object} props.appConfig merged hosted + built-in config
  * @returns {JSX.Element}
  */
 export const ServerApp = props => {
-  const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
-  const appConfig = mergeConfig(hostedConfig, defaultConfig);
+  const { url, context, helmetContext, store, hostedTranslations = {}, appConfig } = props;
   HelmetProvider.canUseDOM = false;
 
   // Show MaintenanceMode if the mandatory configurations are not available
@@ -306,25 +303,30 @@ export const renderApp = (
 
   const helmetContext = {};
 
-  // When rendering the app on server, we wrap the app with webExtractor.collectChunks
-  // This is needed to figure out correct chunks/scripts to be included to server-rendered page.
-  // https://loadable-components.com/docs/server-side-rendering/#3-setup-chunkextractor-server-side
-  const WithChunks = collectChunks(
-    <ServerApp
-      url={url}
-      context={serverContext}
-      helmetContext={helmetContext}
-      store={store}
-      hostedTranslations={hostedTranslations}
-      hostedConfig={hostedConfig}
-    />
-  );
+  // Load defaults + mergeConfig (same async chunk as CSR), then collectChunks so
+  // the appConfig chunk is included in the SSR HTML script tags.
+  return loadAppConfig().then(({ defaultConfig, mergeConfig }) => {
+    const appConfig = mergeConfig(hostedConfig, defaultConfig);
+    // When rendering the app on server, we wrap the app with webExtractor.collectChunks
+    // This is needed to figure out correct chunks/scripts to be included to server-rendered page.
+    // https://loadable-components.com/docs/server-side-rendering/#3-setup-chunkextractor-server-side
+    const WithChunks = collectChunks(
+      <ServerApp
+        url={url}
+        context={serverContext}
+        helmetContext={helmetContext}
+        store={store}
+        hostedTranslations={hostedTranslations}
+        appConfig={appConfig}
+      />
+    );
 
-  // Let's keep react-dom/server out of the main code-chunk.
-  return import('react-dom/server').then(mod => {
-    const { default: ReactDOMServer } = mod;
-    const body = ReactDOMServer.renderToString(WithChunks);
-    const { helmet: head } = helmetContext;
-    return { head, body };
+    // Let's keep react-dom/server out of the main code-chunk.
+    return import('react-dom/server').then(mod => {
+      const { default: ReactDOMServer } = mod;
+      const body = ReactDOMServer.renderToString(WithChunks);
+      const { helmet: head } = helmetContext;
+      return { head, body };
+    });
   });
 };
