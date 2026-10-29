@@ -1,3 +1,4 @@
+import appCdnAssets from './appCdnAssets';
 import * as stripe from './stripe/defaultStripe';
 import * as listing from './listing/defaultListing';
 import * as search from './search/defaultSearch';
@@ -89,30 +90,8 @@ const defaultConfig = {
   // You should create one to track social sharing in Facebook
   facebookAppId: process.env.REACT_APP_FACEBOOK_APP_ID,
 
-  // CDN assets for the app. Configurable through Sharetribe Console.
-  // Note 1: The path must match the path defined in Asset Delivery API
-  // Note 2: If you customize the app and rely on custom code instead of a config assets,
-  //         you should remove the unnecessary config asset from this list.
-  appCdnAssets: {
-    translations: '/content/translations.json',
-    footer: '/content/footer.json',
-    topbar: '/content/top-bar.json',
-    branding: '/design/branding.json',
-    layout: '/design/layout.json',
-    localization: '/general/localization.json',
-    accessControl: '/general/access-control.json',
-    userTypes: '/users/user-types.json',
-    userFields: '/users/user-fields.json',
-    categories: '/listings/listing-categories.json',
-    listingTypes: '/listings/listing-types.json',
-    listingFields: '/listings/listing-fields.json',
-    search: '/listings/listing-search.json',
-    minimumTransactionSize: '/transactions/minimum-transaction-size.json',
-    analytics: '/integrations/analytics.json',
-    googleSearchConsole: '/integrations/google-search-console.json',
-    maps: '/integrations/map.json',
-    // NOTE: we don't fetch commission configuration here but on the server-side
-  },
+  // CDN asset paths — edit appCdnAssets.js to add/remove hosted assets
+  appCdnAssets,
 
   // Optional
   // Online presence of the same organization:

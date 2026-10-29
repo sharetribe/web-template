@@ -3,7 +3,7 @@ import { denormalizeAssetData, limitListingsSections } from '../util/data';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
 
-// Pick paths from entries of appCdnAssets config (in configDefault.js)
+// Pick paths from entries of appCdnAssets config (in config/appCdnAssets.js)
 const pickHostedConfigPaths = (assetEntries, excludeAssetNames) => {
   // E.g. allPaths = ['any/foo.json', 'any/bar.json']
   return assetEntries.reduce((pickedPaths, [name, path]) => {
