@@ -60,8 +60,8 @@ create local configurations when Console does not allow the necessary pattern. S
 `https://www.sharetribe.com/docs/how-to/listings/extend-listing-data-in-template/` for an example of
 extending listing data.
 
-Configurations are merged in `src/config/mergeConfig.js` (`mergeConfig`, via `buildAppConfig` and
-registered handlers). Access in components via `useConfiguration()` hook.
+Configurations are merged in `src/config/mergeConfig.js` (`mergeConfig`, via `applyConfigHandlers`
+and the registered handlers in that file). Access in components via `useConfiguration()` hook.
 
 If key assets are missing, the app shows a MaintenanceModeError (see `src/app.js` ClientApp for
 details).
