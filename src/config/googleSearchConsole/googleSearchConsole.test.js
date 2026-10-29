@@ -1,6 +1,5 @@
 import { mergeGoogleSearchConsoleConfig, googleSearchConsoleConfig } from './googleSearchConsole';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('googleSearchConsole config', () => {
   const defaults = { googleSiteVerification: null };
@@ -62,10 +61,10 @@ describe('googleSearchConsole config', () => {
       expect(issues.map(i => i.code)).toContain('GSC_INVALID_SITE_VERIFICATION');
     });
 
-    it('is registered and resolves via buildAppConfig', () => {
+    it('is registered and resolves via applyConfigHandlers', () => {
       expect(configHandlers).toContain(googleSearchConsoleConfig);
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           googleSearchConsole: { googleSiteVerification: 'token-hosted' },
         },

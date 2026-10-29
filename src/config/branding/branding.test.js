@@ -5,8 +5,7 @@ import {
   isValidLogoSettings,
   hexToCssHsl,
 } from './branding';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('branding config', () => {
   const defaults = {
@@ -189,8 +188,8 @@ describe('branding config', () => {
       expect(issues.map(i => i.code)).toContain('BRANDING_INVALID_LOGO_SETTINGS');
     });
 
-    it('resolves via buildAppConfig from registry', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('resolves via applyConfigHandlers from registry', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: {
             logo: { type: 'imageAsset', id: 'logo' },
@@ -208,7 +207,7 @@ describe('branding config', () => {
     });
 
     it('falls back to built-in color when hosted mainColor is invalid', () => {
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           branding: {
             logo: { type: 'imageAsset', id: 'logo' },
@@ -222,8 +221,8 @@ describe('branding config', () => {
       expect(configIssues.map(i => i.code)).toContain('BRANDING_INVALID_MAIN_COLOR');
     });
 
-    it('reports missing logo as an error through buildAppConfig', () => {
-      const { configIssues } = buildAppConfig({
+    it('reports missing logo as an error through applyConfigHandlers', () => {
+      const { configIssues } = applyConfigHandlers({
         hosted: {
           branding: { marketplaceColors: { mainColor: '#112233' } },
         },

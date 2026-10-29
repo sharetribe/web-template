@@ -21,7 +21,7 @@ export const isPlainObject = value =>
 export const isNonEmptyString = value => typeof value === 'string' && value.length > 0;
 
 /**
- * Structured config issue for buildAppConfig / handler validate().
+ * Structured config issue for applyConfigHandlers / handler validate().
  * @param {Object} params
  * @param {'error' | 'warn'} params.level
  * @param {string} params.code

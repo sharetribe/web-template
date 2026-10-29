@@ -1,6 +1,5 @@
 import { topbarConfig } from './topbar';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('topbar config', () => {
   describe('topbarConfig contract', () => {
@@ -49,7 +48,7 @@ describe('topbar config', () => {
       );
     });
 
-    it('is registered and resolves via buildAppConfig', () => {
+    it('is registered and resolves via applyConfigHandlers', () => {
       expect(configHandlers).toContain(topbarConfig);
 
       const hosted = {
@@ -59,7 +58,7 @@ describe('topbar config', () => {
         postListingsLink: { showToUnauthenticatedUsers: true },
       };
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: { topbar: hosted },
         defaults: {},
         handlers: [topbarConfig],

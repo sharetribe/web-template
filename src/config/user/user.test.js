@@ -1,6 +1,5 @@
 import { userConfig, isValidUserTypeId, isValidUserTypeLabel } from './user';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('user config', () => {
   const sampleUserType = {
@@ -157,8 +156,8 @@ describe('user config', () => {
       expect(resolved.userFields).toEqual([]);
     });
 
-    it('buildAppConfig produces user from hosted assets', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('applyConfigHandlers produces user from hosted assets', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           userTypes: { userTypes: [sampleUserType] },
           userFields: { userFields: [sampleUserField] },

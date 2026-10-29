@@ -166,7 +166,7 @@ const resolve = (validated, defaults) => mergeAnalyticsConfig(validated, default
  * - id: key on the resolved app config (`config.analytics`)
  * - assetKeys: hosted-asset / appCdnAssets keys this handler reads
  *
- * Pipeline: normalize → validate → resolve (via buildAppConfig).
+ * Pipeline: normalize → validate → resolve (via applyConfigHandlers).
  * Hosted config takes priority; built-in defaults fill gaps (e.g. GA id when
  * hosted GA is off or invalid; Plausible also unions hosted + built-in domains).
  */

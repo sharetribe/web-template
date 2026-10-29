@@ -1,6 +1,5 @@
 import { footerConfig } from './footer';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('footer config', () => {
   describe('footerConfig contract', () => {
@@ -28,15 +27,17 @@ describe('footer config', () => {
       expect(issues).toEqual([]);
     });
 
-    it('is registered and resolves via buildAppConfig', () => {
+    it('is registered and resolves via applyConfigHandlers', () => {
       expect(configHandlers).toContain(footerConfig);
 
       const hosted = {
         numberOfColumns: 3,
-        socialMediaLinks: [{ fieldType: 'socialMediaLink', platform: 'facebook', url: 'https://fb.example' }],
+        socialMediaLinks: [
+          { fieldType: 'socialMediaLink', platform: 'facebook', url: 'https://fb.example' },
+        ],
       };
 
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: { footer: hosted },
         defaults: {},
         handlers: [footerConfig],
@@ -47,7 +48,7 @@ describe('footer config', () => {
     });
 
     it('resolves to empty object when the hosted asset is missing', () => {
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {},
         defaults: {},
         handlers: [footerConfig],

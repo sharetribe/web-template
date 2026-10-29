@@ -4,8 +4,7 @@ import {
   isValidGoogleAnalyticsMeasurementId,
   isValidPlausibleDomain,
 } from './analytics';
-import { buildAppConfig } from '../buildAppConfig';
-import { configHandlers } from '../configRegistry';
+import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('analytics config', () => {
   const defaults = {
@@ -127,8 +126,8 @@ describe('analytics config', () => {
       });
     });
 
-    it('resolves via buildAppConfig from registry', () => {
-      const { resolved, configIssues } = buildAppConfig({
+    it('resolves via applyConfigHandlers from registry', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           analytics: { googleAnalytics: { enabled: true, measurementId: 'G-HOSTED' } },
           branding: { logo: { type: 'imageAsset', id: 'logo' } },
@@ -144,7 +143,7 @@ describe('analytics config', () => {
     });
 
     it('falls back to built-in when hosted GA id is invalid', () => {
-      const { resolved, configIssues } = buildAppConfig({
+      const { resolved, configIssues } = applyConfigHandlers({
         hosted: {
           analytics: { googleAnalytics: { enabled: true, measurementId: 'UA-123' } },
           branding: { logo: { type: 'imageAsset', id: 'logo' } },
