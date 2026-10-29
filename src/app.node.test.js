@@ -5,6 +5,8 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { getHostedConfiguration } from './util/testHelpers';
+import defaultConfig from './config/configDefault';
+import { mergeConfig } from './config/mergeConfig';
 import { ServerApp } from './app';
 import configureStore from './store';
 
@@ -19,7 +21,7 @@ const render = (url, context) => {
       context={context}
       helmetContext={helmetContext}
       store={store}
-      hostedConfig={getHostedConfiguration()}
+      appConfig={mergeConfig(getHostedConfiguration(), defaultConfig)}
     />
   );
 
