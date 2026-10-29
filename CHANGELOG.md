@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] en.json: sort translation keys alphabetically.
+  [#973](https://github.com/sharetribe/web-template/pull/973)
 - [add] ListingPage: Add accessible name for the static-to-interactive button.
   [#958](https://github.com/sharetribe/web-template/pull/958)
 - [add] ListingPage: Add accessible names for next and previous buttons in the carousel.
