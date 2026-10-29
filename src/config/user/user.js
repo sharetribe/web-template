@@ -39,12 +39,24 @@ export const isValidUserTypeLabel = label => typeof label === 'string' && label.
 // Validate user fields config //
 ////////////////////////////////
 
+const quoteIds = ids => (ids || []).map(id => `"${id}"`).join(', ');
+
+const unknownIdsReason = (label, ids) => {
+  if (!Array.isArray(ids)) {
+    return `${label} must be an array`;
+  }
+  if (ids.length === 0) {
+    return `${label} is empty`;
+  }
+  return `unknown ${label}: ${quoteIds(ids)}`;
+};
+
 /**
  * Validate userTypeConfig against user types currently in use.
  * When no types are passed (null/undefined), limits are cleared.
  * @param {Object} userTypeConfig
  * @param {Array|null} [userTypesInUse]
- * @returns {[boolean, Object]}
+ * @returns {[boolean, Object, string|undefined]}
  */
 const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
   const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
@@ -63,6 +75,9 @@ const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
 
   const isArray = Array.isArray(userTypeIds);
   const validatedUserTypes = isArray ? userTypeIds.filter(ut => userTypesInUse?.includes(ut)) : [];
+  const unknownUserTypeIds = isArray
+    ? userTypeIds.filter(ut => !userTypesInUse?.includes(ut))
+    : [];
 
   // If a field is limited to user type ids, it has to have at least one valid type
   const hasValidUserTypes = validatedUserTypes.length > 0;
@@ -80,7 +95,10 @@ const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
           limitToUserTypeIds: false,
         },
       };
-  return [isValid, validValue];
+  const reason = isValid
+    ? undefined
+    : unknownIdsReason('user type id(s)', isArray ? unknownUserTypeIds : userTypeIds);
+  return [isValid, validValue, reason];
 };
 
 const validUserShowConfig = config => {
@@ -224,7 +242,7 @@ const validUserFields = (userFields, userTypesInUse, issues) => {
       (innerAcc, entry) => {
         const [name, value] = entry;
 
-        const [isValid, prop] =
+        const [isValid, prop, reason] =
           name === 'key'
             ? validKey(value, keys)
             : name === 'label'
@@ -249,11 +267,12 @@ const validUserFields = (userFields, userTypesInUse, issues) => {
 
         const hasFoundValid = !(innerAcc.isValid === false || isValid === false);
         if (isValid === false) {
+          const reasonMaybe = reason ? `: ${reason}` : '';
           issues.push(
             configIssue({
               level: 'warn',
               code: 'USER_FIELD_UNSUPPORTED',
-              message: `User field "${data.key}" has an unsupported configuration (${name}). This field was dropped.`,
+              message: `User field "${data.key}" has an unsupported configuration (${name})${reasonMaybe}. This field was dropped.`,
             })
           );
         }

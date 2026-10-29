@@ -239,6 +239,18 @@ const validListingTypesForBuiltInSetup = (includeForListingTypes, listingTypesIn
   return [isValid, validValue];
 };
 
+const quoteIds = ids => (ids || []).map(id => `"${id}"`).join(', ');
+
+const unknownIdsReason = (label, ids) => {
+  if (!Array.isArray(ids)) {
+    return `${label} must be an array`;
+  }
+  if (ids.length === 0) {
+    return `${label} is empty`;
+  }
+  return `unknown ${label}: ${quoteIds(ids)}`;
+};
+
 const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesInUse) => {
   const { limitToListingTypeIds, listingTypeIds } = listingTypeConfig || {};
 
@@ -257,6 +269,9 @@ const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesIn
   const validatedListingTypeIds = isArray
     ? listingTypeIds.filter(c => listingTypesInUse?.includes(c))
     : [];
+  const unknownListingTypeIds = isArray
+    ? listingTypeIds.filter(c => !listingTypesInUse?.includes(c))
+    : [];
 
   const hasValidListingTypeIds = validatedListingTypeIds.length > 0;
   const isValid = hasValidListingTypeIds || !limitToListingTypeIds;
@@ -269,7 +284,10 @@ const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesIn
         },
       }
     : { listingTypeConfig: { limitToListingTypeIds: false } };
-  return [isValid, validValue];
+  const reason = isValid
+    ? undefined
+    : unknownIdsReason('listing type id(s)', isArray ? unknownListingTypeIds : listingTypeIds);
+  return [isValid, validValue, reason];
 };
 
 const getCategoryIds = categories => {
@@ -303,6 +321,7 @@ const validListingTypesForCategoryConfig = (categoryConfig, categoriesInUse) => 
   const validatedCategoryIds = isArray
     ? categoryIds.filter(c => validCategoryIds?.includes(c))
     : [];
+  const unknownCategoryIds = isArray ? categoryIds.filter(c => !validCategoryIds?.includes(c)) : [];
 
   const hasValidCategoryIds = validatedCategoryIds.length > 0;
   const isValid = hasValidCategoryIds || !limitToCategoryIds;
@@ -315,7 +334,10 @@ const validListingTypesForCategoryConfig = (categoryConfig, categoriesInUse) => 
         },
       }
     : { categoryConfig: { limitToCategoryIds: false } };
-  return [isValid, validValue];
+  const reason = isValid
+    ? undefined
+    : unknownIdsReason('category id(s)', isArray ? unknownCategoryIds : categoryIds);
+  return [isValid, validValue, reason];
 };
 
 const filterTypes = ['SelectSingleFilter', 'SelectMultipleFilter'];
@@ -534,7 +556,7 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse, i
       (innerAcc, entry) => {
         const [name, value] = entry;
 
-        const [isValid, prop] =
+        const [isValid, prop, reason] =
           name === 'key'
             ? [true, { key }]
             : name === 'label'
@@ -565,11 +587,12 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse, i
 
         const hasFoundValid = !(innerAcc.isValid === false || isValid === false);
         if (isValid === false) {
+          const reasonMaybe = reason ? `: ${reason}` : '';
           issues.push(
             configIssue({
               level: 'warn',
               code: 'LISTING_FIELD_UNSUPPORTED',
-              message: `Listing field "${key}" has an unsupported configuration (${name}). This field was dropped.`,
+              message: `Listing field "${key}" has an unsupported configuration (${name})${reasonMaybe}. This field was dropped.`,
             })
           );
         }
