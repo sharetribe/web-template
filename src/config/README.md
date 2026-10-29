@@ -8,10 +8,23 @@ Marketplace config comes from three places:
 3. **Build-time settings** — [`settings.js`](./settings.js) (and currency helpers), baked in at
    build
 
-Hosted values and defaults are merged in [`mergeConfig.js`](./mergeConfig.js) (`mergeConfig`), which
-runs handlers from [`configRegistry.js`](./configRegistry.js) via [`buildAppConfig.js`](./buildAppConfig.js).
-Most domains use `normalize` → `validate` → `resolve`. Details for each domain live in that folder’s
-README.
+## Top-level files (what to open)
+
+**Start here (customize):**
+
+- Domain folders (`listing/`, `search/`, …) — per-domain defaults + handlers
+- [`appCdnAssets.js`](./appCdnAssets.js) — which hosted assets this app fetches
+- [`settings.js`](./settings.js) — build-time env (SDK, currency helpers, …)
+- [`configDefault.js`](./configDefault.js) — assembles defaults + top-level marketplace fields
+
+**Usually leave alone:**
+
+- [`mergeConfig.js`](./mergeConfig.js) — combines hosted config (from assets) with built-in defaults
+  into the final `appConfig` the app uses
+- [`loadAppConfig.js`](./loadAppConfig.js) — async-loads defaults and `mergeConfig` (for bundle
+  splitting only)
+
+Details for each domain live in that folder’s README.
 
 Listing-type UI helpers such as `displayDescription` and `requireListingFiles` live in
 [`src/util/configHelpers.js`](../util/configHelpers.js) (used by listing cards, edit wizard, etc.).
@@ -50,9 +63,11 @@ Transaction _processes_ (booking, purchase, etc.) are separate from these config
 
 ## Hosted assets
 
-`configDefault.js` lists app-wide assets under **`appCdnAssets`**. They are fetched from
-`src/index.js` (client) and `server/dataLoader.js` (SSR), then passed into the app as hosted config
-and translations.
+[`appCdnAssets.js`](./appCdnAssets.js) lists app-wide asset paths (also on
+`defaultConfig.appCdnAssets`). They are fetched from `src/index.js` (client) and
+`server/dataLoader.js` (SSR), then passed into the app as hosted config and translations.
+[`loadAppConfig.js`](./loadAppConfig.js) loads built-in defaults + `mergeConfig` in parallel with
+that fetch (bundle-splitting only).
 
 Typical load order:
 
