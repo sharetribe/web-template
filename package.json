@@ -208,6 +208,7 @@
   },
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",
+    "check-translations-sorted": "node scripts/check-translations-sorted.js",
     "clean": "rm -rf build/*",
     "config": "node scripts/config.js",
     "config-check": "node scripts/config.js --check",

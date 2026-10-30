@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add a CircleCI job to check that translations are sorted alphabetically.
+  [#974](https://github.com/sharetribe/web-template/pull/974)
 - [change] en.json: sort translation keys alphabetically.
   [#973](https://github.com/sharetribe/web-template/pull/973)
 - [add] ListingPage: Add accessible name for the static-to-interactive button.
