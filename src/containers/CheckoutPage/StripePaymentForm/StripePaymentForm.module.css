@@ -157,3 +157,10 @@
 .missingStripeKey {
   color: var(--colorFail);
 }
+
+.paymentMethodHint {
+  composes: p from global;
+  color: var(--colorGrey600);
+  margin: 8px 0 0 0;
+  font-size: 14px;
+}

@@ -186,6 +186,11 @@
   margin: 0 10px 0 4px;
 }
 
+.additionalPaymentOptionLabel {
+  display: inline-block;
+  padding-left: 4px;
+}
+
 .menuDivider {
   composes: h5 from global;
   color: var(--colorGrey600);
