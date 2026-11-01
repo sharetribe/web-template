@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add currently available translations.
+  [#975](https://github.com/sharetribe/web-template/pull/975)
 - [add] Add a CircleCI job to check that translations are sorted alphabetically.
   [#974](https://github.com/sharetribe/web-template/pull/974)
 - [change] en.json: sort translation keys alphabetically.
