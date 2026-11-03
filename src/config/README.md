@@ -83,6 +83,67 @@ that same version (so SSR and CSR stay in sync). `yarn run dev` skips SSR and al
 Provider commission is fetched separately when line-items are created for custom pricing
 (`/api/transaction-line-items`, `/api/initiate-privileged`, `/api/transition-privileged`).
 
+## How hosted assets become `appConfig`
+
+[`mergeConfig.js`](./mergeConfig.js) turns the fetched hosted object plus built-in defaults into the
+final `appConfig`. It does that by running an ordered list of **config handlers**
+(`configHandlers`), one per domain (branding, listing, search, …).
+
+Each handler declares:
+
+- **`id`** — key written onto `appConfig` (e.g. `listing` → `config.listing`)
+- **`assetKeys`** — which hosted-asset keys it reads (may be `[]` for built-in/env-only domains such
+  as Stripe)
+- **`normalize` / `validate` / `resolve`** — the per-domain pipeline (see below)
+
+`mergeConfig` then:
+
+1. Starts from built-in `defaultConfigs` (marketplace name, root URL, and other non-handler fields)
+2. Overlays each handler’s resolved slice (hosted values win when usable; defaults fill gaps)
+3. Elevates a few derived top-level keys (`currency`, `listingMinimumPriceSubUnits`)
+4. Sets `hasMandatoryConfigurations` from error-level handler issues (false → MaintenanceMode)
+
+Prefer changing a domain’s `default*.js` or its handler under that folder. Add new domains by adding
+a handler and registering it in `configHandlers` (order matters when domains depend on each other —
+e.g. categories before listing, listing before search).
+
+### Normalize → validate → resolve
+
+For each handler, [`applyConfigHandlers`](./mergeConfig.js) runs:
+
+1. **Collect** — build `{ [assetKey]: hosted[assetKey] }` from `assetKeys` (missing keys are
+   `undefined`; empty `assetKeys` → `{}`)
+2. **Normalize** — reshape the hosted slice into the shape this app expects (rename fields, unwrap
+   nested Console shapes, coerce types). Does not decide final fallbacks.
+3. **Validate** — check the normalized hosted data only. Drop or omit invalid pieces and return
+   `{ value, issues }`. `issues` with `level: 'error'` can gate boot; `warn` is logged and ignored
+   for MaintenanceMode.
+4. **Resolve** — build the final domain slice: prefer the validated hosted `value`, fill gaps from
+   `defaults`, and (when needed) read earlier domains via `ctx.resolved`. May push more issues onto
+   `ctx.issues` (e.g. search merge warns, Stripe country-currency filtering).
+
+Handlers receive **`ctx`**: `{ hosted, defaults, resolved, issues }`. `issues` is a fresh array per
+handler for resolve-time findings; validate’s `issues` and `ctx.issues` are both folded into
+`configIssues`. Later handlers can depend on earlier ones through `ctx.resolved` (search uses
+listing fields and categories; listing checks category limits).
+
+### MaintenanceMode (mandatory config)
+
+Some hosted values are required for the marketplace to run. If those are missing or invalid, the
+app shows MaintenanceMode instead of loading normally. That decision comes from error-level issues
+returned by handlers (`hasMandatoryConfigurations` on the merged config). Warnings are logged but
+do not block the app.
+
+Today, these cases trigger MaintenanceMode:
+
+- [branding](./branding/README.md): missing logo
+- [listing](./listing/README.md): missing listing types, missing listing-fields asset, or a
+  reserved public-data key clash
+- [transaction](./transaction/README.md): missing/invalid `listingMinimumPrice`
+
+Everything else either falls back to built-ins or drops the bad entry. Domain READMEs list the
+exact failure modes.
+
 ## Listing type, process alias, and unit type
 
 Listing types (configured under [listing/](./listing/README.md)) tie a listing to a transaction
@@ -120,7 +181,7 @@ in [`listing/defaultListing.js`](./listing/defaultListing.js).
 
 More:
 
-- [Manage search schemas with Flex CLI](https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas)
+- [Manage search schemas with Sharetribe CLI](https://www.sharetribe.com/docs/how-to/search/manage-search-schemas-with-sharetribe-cli/#adding-listing-search-schemas)
 - [`SearchPage.duck.js`](../containers/SearchPage/SearchPage.duck.js)
 
 ## Build-time settings
