@@ -72,7 +72,7 @@ export const configHandlers = [
  * @param {Array<Object>} params.handlers ordered config handlers (see configHandlers)
  * @returns {{ resolved: Object, configIssues: Array }}
  *   resolved — `{ [handler.id]: value }` ready to merge into the app config
- *   configIssues — structured issues from validate / invalid handlers
+ *   configIssues — structured issues from validate, resolve (`ctx.issues`), and invalid handlers
  */
 export const applyConfigHandlers = ({ hosted = {}, defaults = {}, handlers = [] } = {}) => {
   const configIssues = [];
@@ -99,15 +99,18 @@ export const applyConfigHandlers = ({ hosted = {}, defaults = {}, handlers = [] 
       typeof handler.normalize === 'function' ? handler.normalize(hostedSlices, ctx) : hostedSlices;
 
     // 2. Validate the incoming configuration to ensure it's not missing any required fields.
-    const { value, issues = [] } =
+    const { value, issues: validateIssues = [] } =
       typeof handler.validate === 'function'
         ? handler.validate(normalized, ctx)
         : { value: normalized, issues: [] };
 
-    configIssues.push(...issues.map(issue => ({ configId: handler.id, ...issue })));
-
     // 3. Resolve the finalized configuration by also incorporating the built-in defaults when necessary.
-    resolved[handler.id] = handler.resolve(value, defaults, ctx);
+    // Resolve may push additional issues onto ctx.issues (e.g. search merge warns).
+    const resolveIssues = [];
+    resolved[handler.id] = handler.resolve(value, defaults, { ...ctx, issues: resolveIssues });
+
+    const tag = issue => ({ configId: handler.id, ...issue });
+    configIssues.push(...validateIssues.map(tag), ...resolveIssues.map(tag));
   });
 
   return { resolved, configIssues };
