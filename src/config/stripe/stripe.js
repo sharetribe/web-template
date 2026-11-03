@@ -53,29 +53,35 @@ export const filterSupportedCountriesByCurrency = stripe => {
 const normalize = () => ({});
 
 /**
- * Soft-filter built-in stripe countries against subUnitDivisors.
+ * Nothing hosted to soft-check. Built-in filtering happens in resolve.
  *
- * @param {Object} _normalized
- * @param {Object} ctx
  * @returns {{ value: Object, issues: Array }}
  */
-const validate = (_normalized, ctx) => filterSupportedCountriesByCurrency(ctx?.defaults?.stripe);
+const validate = () => ({ value: {}, issues: [] });
 
 /**
- * @param {Object} validated filtered stripe from validate
- * @param {Object} defaults full defaultConfigs
- * @returns {Object}
+ * Build `config.stripe` from built-in defaults: filter supportedCountries against
+ * subUnitDivisors. Pushes warns onto `ctx.issues` when present.
+ *
+ * @param {Object} _validated unused (no hosted stripe slice)
+ * @param {Object} defaults full defaultConfigs (uses `defaults.stripe`)
+ * @param {Object} ctx builder context (optional `issues`)
+ * @returns {Object} app-config stripe object
  */
-const resolve = (validated, defaults) =>
-  isPlainObject(validated) && Object.keys(validated).length > 0
-    ? validated
-    : defaults?.stripe || {};
+const resolve = (_validated, defaults, ctx = {}) => {
+  const { value, issues } = filterSupportedCountriesByCurrency(defaults?.stripe);
+  if (Array.isArray(ctx.issues)) {
+    ctx.issues.push(...issues);
+  }
+  return value;
+};
 
 /**
  * Config handler for the `stripe` app-config key.
  *
  * - id: `stripe`
  * - assetKeys: `[]` — no Console asset; publishable key and countries come from defaultStripe.js
+ * - Pipeline: normalize → validate (noop) → resolve (filter defaults)
  */
 export const stripeConfig = {
   id: 'stripe',
