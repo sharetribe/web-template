@@ -419,76 +419,65 @@ const normalize = hostedSlices => {
 };
 
 /**
- * Soft-check hosted mainSearch.searchType; merge with defaults + resolved
- * categoryConfiguration / listing (sort options, default filters).
+ * Soft-check the normalized hosted search slice only — does not read or merge built-ins.
+ * Drops invalid mainSearch.searchType (resolve falls back). Filter incompatibilities
+ * (keywords/seats/price) are warned from mergeSearchConfig via ctx.issues in resolve.
  *
  * @param {Object} normalized output of normalize
- * @param {Object} ctx builder context
- * @returns {{ value: Object, issues: Array }}
+ * @returns {{ value: Object, issues: Array }} sanitized hosted slice + configIssues
  */
-const validate = (normalized, ctx = {}) => {
+const validate = normalized => {
   const issues = [];
+  const value = isPlainObject(normalized) ? { ...normalized } : {};
 
-  if (
-    normalized?.mainSearch &&
-    typeof normalized.mainSearch === 'object' &&
-    normalized.mainSearch.searchType != null &&
-    !MAIN_SEARCH_TYPES.includes(normalized.mainSearch.searchType)
-  ) {
+  const hostedSearchType = value.mainSearch?.searchType;
+  const hasInvalidSearchType =
+    value.mainSearch &&
+    typeof value.mainSearch === 'object' &&
+    hostedSearchType != null &&
+    !MAIN_SEARCH_TYPES.includes(hostedSearchType);
+
+  if (hasInvalidSearchType) {
     issues.push(
       configIssue({
         level: 'warn',
         code: 'SEARCH_INVALID_MAIN_SEARCH_TYPE',
-        message: `Main search type "${normalized.mainSearch.searchType}" is not supported. Use "location" or "keywords". Falling back to the built-in default.`,
+        message: `Main search type "${hostedSearchType}" is not supported. Use "location" or "keywords". Falling back to the built-in default.`,
       })
     );
+    value.mainSearch = { ...value.mainSearch };
+    delete value.mainSearch.searchType;
   }
-
-  const categoryConfiguration = ctx?.resolved?.categoryConfiguration || emptyCategoryConfiguration;
-  const listingTypes = ctx?.resolved?.listing?.listingTypes || [];
-  const listingFields = ctx?.resolved?.listing?.listingFields || [];
-  const defaultSearchConfig = ctx?.defaults?.search || {};
-
-  const value = mergeSearchConfig(
-    normalized,
-    defaultSearchConfig,
-    categoryConfiguration,
-    listingTypes,
-    listingFields,
-    issues
-  );
 
   return { value, issues };
 };
 
 /**
- * Prefer the merged search value from validate. If validate was skipped, merge again.
+ * Build final `config.search`: merge validated hosted slice with built-in defaults and
+ * earlier handler output. Pushes merge-time warns onto `ctx.issues` when present
+ * (applyConfigHandlers collects them into configIssues).
  *
- * `ctx` is required on the fallback path because search depends on earlier handlers:
+ * `ctx` is required because search depends on:
  * - `ctx.resolved.categoryConfiguration` — whether to include the category filter and its
  *   nested `categoryLevel*` keys
  * - `ctx.resolved.listing.listingTypes` — options for the listing-type filter
  * - `ctx.resolved.listing.listingFields` — numeric fields with `showSorting` become extra
  *   sort options
  *
- * @param {Object} validated merged search object from validate (`value`)
+ * @param {Object} validated sanitized hosted slice from validate (`value`)
  * @param {Object} defaults full defaultConfigs (uses `defaults.search`)
- * @param {Object} ctx builder context (`resolved.categoryConfiguration`, `resolved.listing`)
+ * @param {Object} ctx builder context (`resolved…`, optional `issues`)
  * @returns {Object} app-config search object
  */
-const resolve = (validated, defaults, ctx = {}) => {
-  if (validated?.mainSearch && Array.isArray(validated?.defaultFilters) && validated?.sortConfig) {
-    return validated;
-  }
-
-  return mergeSearchConfig(
+const resolve = (validated, defaults, ctx = {}) =>
+  mergeSearchConfig(
     validated,
     defaults?.search || {},
     ctx?.resolved?.categoryConfiguration || emptyCategoryConfiguration,
     ctx?.resolved?.listing?.listingTypes || [],
-    ctx?.resolved?.listing?.listingFields || []
+    ctx?.resolved?.listing?.listingFields || [],
+    Array.isArray(ctx?.issues) ? ctx.issues : []
   );
-};
 
 /**
  * Config handler for the `search` app-config key.
@@ -496,6 +485,7 @@ const resolve = (validated, defaults, ctx = {}) => {
  * - id: `search`
  * - assetKeys: `search`
  * - Depends on `ctx.resolved.categoryConfiguration` and `ctx.resolved.listing`
+ * - Pipeline: normalize → validate (hosted only) → resolve (mergeSearchConfig)
  */
 export const searchConfig = {
   id: 'search',
