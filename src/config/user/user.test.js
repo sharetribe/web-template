@@ -1,4 +1,10 @@
-import { userConfig, isValidUserTypeId, isValidUserTypeLabel } from './user';
+import {
+  userConfig,
+  isValidUserTypeId,
+  isValidUserTypeLabel,
+  isValidUserFieldKey,
+  isReservedUserFieldKey,
+} from './user';
 import { applyConfigHandlers, configHandlers } from '../mergeConfig';
 
 describe('user config', () => {
@@ -35,6 +41,25 @@ describe('user config', () => {
       expect(isValidUserTypeLabel('')).toBe(false);
       expect(isValidUserTypeLabel('   ')).toBe(false);
       expect(isValidUserTypeLabel(undefined)).toBe(false);
+    });
+
+    it('validates user field key pattern', () => {
+      expect(isValidUserFieldKey('cuisine')).toBe(true);
+      expect(isValidUserFieldKey('Level_1')).toBe(true);
+      expect(isValidUserFieldKey('user-type')).toBe(false);
+      expect(isValidUserFieldKey('1startsWithNumber')).toBe(false);
+      expect(isValidUserFieldKey('has space')).toBe(false);
+      expect(isValidUserFieldKey('')).toBe(false);
+      expect(isValidUserFieldKey(undefined)).toBe(false);
+    });
+
+    it('detects reserved user field keys', () => {
+      expect(isReservedUserFieldKey('userType')).toBe(true);
+      expect(isReservedUserFieldKey('phoneNumber')).toBe(true);
+      expect(isReservedUserFieldKey('terms')).toBe(true);
+      expect(isReservedUserFieldKey('referralSource_partner')).toBe(true);
+      expect(isReservedUserFieldKey('cuisine')).toBe(false);
+      expect(isReservedUserFieldKey('referralSources')).toBe(false);
     });
   });
 
@@ -96,6 +121,69 @@ describe('user config', () => {
         'USER_TYPE_MISSING_OR_EMPTY_LABEL',
         'USER_TYPE_MISSING_OR_EMPTY_LABEL',
         'USER_TYPE_DUPLICATE_ID',
+      ]);
+    });
+
+    it('warns and drops user fields with invalid, reserved, or duplicate keys', () => {
+      const { value, issues } = userConfig.validate({
+        userTypes: [{ userType: 'seller', label: 'Seller' }],
+        userFields: [
+          {
+            key: 'bad-key',
+            scope: 'public',
+            schemaType: 'text',
+            showConfig: { label: 'Bad key' },
+            saveConfig: { label: 'Bad key', isRequired: false },
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+          {
+            key: 'phoneNumber',
+            scope: 'public',
+            schemaType: 'text',
+            showConfig: { label: 'Reserved' },
+            saveConfig: { label: 'Reserved', isRequired: false },
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+          {
+            key: 'referralSource_partner',
+            scope: 'private',
+            schemaType: 'text',
+            showConfig: { label: 'Reserved prefix' },
+            saveConfig: { label: 'Reserved prefix', isRequired: false },
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+          {
+            key: 'cuisine',
+            scope: 'public',
+            schemaType: 'text',
+            showConfig: { label: 'First' },
+            saveConfig: { label: 'First', isRequired: false },
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+          {
+            key: 'cuisine',
+            scope: 'public',
+            schemaType: 'text',
+            showConfig: { label: 'Duplicate' },
+            saveConfig: { label: 'Duplicate', isRequired: false },
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+          {
+            key: 'bioExtra',
+            scope: 'public',
+            schemaType: 'text',
+            showConfig: { label: 'Good' },
+            saveConfig: { label: 'Good', isRequired: false },
+            userTypeConfig: { limitToUserTypeIds: false },
+          },
+        ],
+      });
+      expect(value.userFields.map(f => f.key)).toEqual(['cuisine', 'bioExtra']);
+      expect(issues.map(i => i.code)).toEqual([
+        'USER_FIELD_INVALID_KEY',
+        'USER_FIELD_RESERVED_KEY',
+        'USER_FIELD_RESERVED_KEY',
+        'USER_FIELD_DUPLICATE_KEY',
       ]);
     });
 

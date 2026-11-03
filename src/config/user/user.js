@@ -7,7 +7,6 @@ import {
   validBoolean,
   validEnumString,
   validHelpText,
-  validKey,
   validLabel,
   validNumberConfig,
   validPlaceholderMessage,
@@ -20,6 +19,13 @@ import { EXTENDED_DATA_SCHEMA_TYPES } from '../../util/types';
 
 // Letters, numbers, dashes, underscores — no spaces (hosted userTypes asset id pattern).
 const USER_TYPE_ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
+// User field keys: must start with a letter; letters, numbers, underscores only (no dashes).
+// Keep in sync with Console user-fields.json key pattern.
+const USER_FIELD_KEY_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+
+// Built-in / reserved keys Console forbids (and referralSource_* prefix for referral params).
+const RESERVED_USER_FIELD_KEYS = ['userType', 'phoneNumber', 'terms'];
 
 /**
  * Whether a user type id matches the hosted userTypes asset pattern.
@@ -34,6 +40,23 @@ export const isValidUserTypeId = id => typeof id === 'string' && USER_TYPE_ID_PA
  * @returns {boolean}
  */
 export const isValidUserTypeLabel = label => typeof label === 'string' && label.trim().length >= 1;
+
+/**
+ * Whether a user field key matches the hosted userFields asset pattern.
+ * @param {*} key
+ * @returns {boolean}
+ */
+export const isValidUserFieldKey = key =>
+  typeof key === 'string' && USER_FIELD_KEY_PATTERN.test(key);
+
+/**
+ * Whether a user field key is reserved (exact built-in keys or `referralSource_` prefix).
+ * @param {string} key
+ * @returns {boolean}
+ */
+export const isReservedUserFieldKey = key =>
+  typeof key === 'string' &&
+  (RESERVED_USER_FIELD_KEYS.includes(key) || key.startsWith('referralSource_'));
 
 ////////////////////////////////
 // Validate user fields config //
@@ -75,9 +98,7 @@ const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
 
   const isArray = Array.isArray(userTypeIds);
   const validatedUserTypes = isArray ? userTypeIds.filter(ut => userTypesInUse?.includes(ut)) : [];
-  const unknownUserTypeIds = isArray
-    ? userTypeIds.filter(ut => !userTypesInUse?.includes(ut))
-    : [];
+  const unknownUserTypeIds = isArray ? userTypeIds.filter(ut => !userTypesInUse?.includes(ut)) : [];
 
   // If a field is limited to user type ids, it has to have at least one valid type
   const hasValidUserTypes = validatedUserTypes.length > 0;
@@ -232,11 +253,44 @@ const validUserTypes = (userTypes, issues) => {
  */
 const validUserFields = (userFields, userTypesInUse, issues) => {
   const fields = (userFields || []).filter(Boolean);
-  const keys = fields.map(d => d.key);
+  const seenKeys = new Set();
   const scopeOptions = ['public', 'private', 'protected', 'metadata'];
 
   return fields.reduce((acc, data) => {
-    const schemaType = data.schemaType;
+    const { key, schemaType } = data;
+
+    if (!isValidUserFieldKey(key)) {
+      issues.push(
+        configIssue({
+          level: 'warn',
+          code: 'USER_FIELD_INVALID_KEY',
+          message: `User field key "${key}" is invalid. Keys must start with a letter and use only letters, numbers, or underscores. This field was dropped.`,
+        })
+      );
+      return acc;
+    }
+
+    if (isReservedUserFieldKey(key)) {
+      issues.push(
+        configIssue({
+          level: 'warn',
+          code: 'USER_FIELD_RESERVED_KEY',
+          message: `User field key "${key}" conflicts with a built-in or reserved key (userType, phoneNumber, terms, or referralSource_*). This field was dropped.`,
+        })
+      );
+      return acc;
+    }
+
+    if (seenKeys.has(key)) {
+      issues.push(
+        configIssue({
+          level: 'warn',
+          code: 'USER_FIELD_DUPLICATE_KEY',
+          message: `User field key "${key}" is used more than once. This duplicate field was dropped.`,
+        })
+      );
+      return acc;
+    }
 
     const validationData = Object.entries(data).reduce(
       (innerAcc, entry) => {
@@ -244,7 +298,7 @@ const validUserFields = (userFields, userTypesInUse, issues) => {
 
         const [isValid, prop, reason] =
           name === 'key'
-            ? validKey(value, keys)
+            ? [true, { key }]
             : name === 'label'
             ? validLabel(value)
             : name === 'scope'
@@ -272,7 +326,7 @@ const validUserFields = (userFields, userTypesInUse, issues) => {
             configIssue({
               level: 'warn',
               code: 'USER_FIELD_UNSUPPORTED',
-              message: `User field "${data.key}" has an unsupported configuration (${name})${reasonMaybe}. This field was dropped.`,
+              message: `User field "${key}" has an unsupported configuration (${name})${reasonMaybe}. This field was dropped.`,
             })
           );
         }
@@ -282,7 +336,11 @@ const validUserFields = (userFields, userTypesInUse, issues) => {
       { config: {}, isValid: true }
     );
 
-    return validationData.isValid ? [...acc, validationData.config] : acc;
+    if (validationData.isValid) {
+      seenKeys.add(key);
+      return [...acc, validationData.config];
+    }
+    return acc;
   }, []);
 };
 
