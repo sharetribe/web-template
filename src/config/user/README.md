@@ -1,11 +1,11 @@
 # User config
 
-User types and custom user fields. Console edits live in `users/user-types.json` and
-`users/user-fields.json` and land on `config.user`.
+User types and custom user fields. Hosted assets `/users/user-types.json` and
+`/users/user-fields.json` map to `config.user`.
 
-By default, hosted assets replace built-ins entirely — empty hosted data means empty `userTypes` /
-`userFields`, not a fallback to [`defaultUser.js`](./defaultUser.js). Built-ins are only mixed in
-when debugging merge is on (`mergeDefaultTypesAndFieldsForDebugging`).
+By default, hosted assets replace built-ins in [`defaultUser.js`](./defaultUser.js) entirely — empty
+hosted data means empty `userTypes` / `userFields`, not a fallback to those built-ins. Built-ins are
+only mixed in when debugging merge is on (`mergeDefaultTypesAndFieldsForDebugging`).
 
 ## `config.user` shape
 
@@ -26,9 +26,9 @@ when debugging merge is on (`mergeDefaultTypesAndFieldsForDebugging`).
   ],
   userFields: [
     {
-      key,
+      key, // /^[a-zA-Z][a-zA-Z0-9_]*$/; not userType|phoneNumber|terms|referralSource_*
       scope, // 'public' | 'private' | 'protected' | 'metadata' (default 'public')
-      schemaType, // 'enum' | 'multi-enum' | 'text' | 'long' | 'boolean'
+      schemaType, // 'enum' | 'multi-enum' | 'text' | 'long' | 'boolean' | 'shortText' | 'youtubeVideoUrl'
       enumOptions?, // [{ option, label }] for enum / multi-enum
       numberConfig?, // { minimum, maximum } for long
       showConfig: {
@@ -57,5 +57,6 @@ when debugging merge is on (`mergeDefaultTypesAndFieldsForDebugging`).
 ## When something is wrong
 
 Invalid user types are dropped (missing label, bad id, duplicates). Invalid user fields are dropped
-too (bad key/scope/schemaType, enum options, show/save config, or `userTypeConfig` limited to
-unknown types). Does not trigger MaintenanceMode.
+too (bad/reserved/duplicate key, bad scope/schemaType, enum options, show/save config, or
+`userTypeConfig` limited to unknown types). Reserved field keys: `userType`, `phoneNumber`, `terms`,
+and any `referralSource_*` prefix. Does not trigger MaintenanceMode.

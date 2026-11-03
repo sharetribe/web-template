@@ -29,9 +29,7 @@
  *   - displayInSignUp (optional):    Can be used to show field input on sign up page.
  *                                    Default value: true.
  * - userTypeConfig:                Configuration for limiting user field to specific user types.
- *   - limitToUserTypeIds:            Can be used to determine whether to limit the field to certain user types. The
- *                                    Console based asset configurations do not yet support user types, so in hosted configurations
- *                                    the default value for this is 'false'.
+ *   - limitToUserTypeIds:            Can be used to determine whether to limit the field to certain user types.
  *   - userTypeIds:                   An array of user types for which the extended
  *   (optional)                       data is relevant and should be added.
  */
