@@ -365,38 +365,43 @@ describe('search config', () => {
       expect(searchConfig.normalize({ search: null })).toEqual({});
     });
 
-    it('validate merges with defaults and ctx.resolved listing/categories', () => {
-      const { value, issues } = searchConfig.validate(
-        {
-          mainSearch: { searchType: 'keywords' },
-          dateRangeFilter: defaultSearchConfig.dateRangeFilter,
-          priceFilter: defaultSearchConfig.priceFilter,
-        },
-        {
-          defaults: { search: defaultSearchConfig },
-          resolved: {
-            categoryConfiguration: emptyCategories,
-            listing: { listingTypes: [], listingFields: [] },
-          },
-        }
-      );
+    it('validate keeps hosted shape and does not merge defaults', () => {
+      const hosted = {
+        mainSearch: { searchType: 'keywords' },
+        dateRangeFilter: defaultSearchConfig.dateRangeFilter,
+        priceFilter: defaultSearchConfig.priceFilter,
+      };
+      const { value, issues } = searchConfig.validate(hosted);
       expect(issues).toEqual([]);
-      expect(value.mainSearch).toEqual({ searchType: 'keywords' });
-      expect(value.defaultFilters.map(f => f.schemaType)).toEqual(['dates', 'price']);
+      expect(value).toEqual(hosted);
+      expect(value.defaultFilters).toBeUndefined();
+      expect(value.sortConfig).toBeUndefined();
     });
 
-    it('warns on invalid hosted mainSearch.searchType', () => {
-      const { issues } = searchConfig.validate(
-        { mainSearch: { searchType: 'bad' } },
+    it('warns on invalid hosted mainSearch.searchType and drops it', () => {
+      const { value, issues } = searchConfig.validate({ mainSearch: { searchType: 'bad' } });
+      expect(issues.map(i => i.code)).toContain('SEARCH_INVALID_MAIN_SEARCH_TYPE');
+      expect(value.mainSearch.searchType).toBeUndefined();
+    });
+
+    it('resolve merges with defaults and ctx.resolved listing/categories', () => {
+      const validated = {
+        mainSearch: { searchType: 'keywords' },
+        dateRangeFilter: defaultSearchConfig.dateRangeFilter,
+        priceFilter: defaultSearchConfig.priceFilter,
+      };
+      const resolved = searchConfig.resolve(
+        validated,
+        { search: defaultSearchConfig },
         {
-          defaults: { search: defaultSearchConfig },
           resolved: {
             categoryConfiguration: emptyCategories,
             listing: { listingTypes: [], listingFields: [] },
           },
         }
       );
-      expect(issues.map(i => i.code)).toContain('SEARCH_INVALID_MAIN_SEARCH_TYPE');
+      expect(resolved.mainSearch).toEqual({ searchType: 'keywords' });
+      expect(resolved.defaultFilters.map(f => f.schemaType)).toEqual(['dates', 'price']);
     });
 
     it('applyConfigHandlers produces search after listing', () => {
@@ -437,7 +442,41 @@ describe('search config', () => {
         ),
       });
       expect(resolved.search.mainSearch).toEqual({ searchType: 'keywords' });
+      expect(resolved.search.defaultFilters.map(f => f.schemaType)).toEqual(['dates', 'price']);
       expect(resolved.listing.listingTypes[0].listingType).toBe('sell');
+    });
+
+    it('applyConfigHandlers collects validate and resolve/merge issues', () => {
+      const { resolved, configIssues } = applyConfigHandlers({
+        hosted: {
+          search: {
+            mainSearch: { searchType: 'bad' },
+            keywordsFilter: { enabled: true },
+            dateRangeFilter: { schemaType: 'dates', enabled: false },
+            seatsFilter: { schemaType: 'seats', enabled: true },
+            priceFilter: { schemaType: 'price', min: 100, max: 50, step: 5 },
+          },
+          listingTypes: { listingTypes: [] },
+          listingFields: { listingFields: [] },
+          categories: { categories: [] },
+        },
+        defaults: {
+          search: defaultSearchConfig,
+          listing: { listingTypes: [], listingFields: [], enforceValidListingType: false },
+          categoryConfiguration: { categories: [] },
+        },
+        handlers: configHandlers.filter(h =>
+          ['categoryConfiguration', 'listing', 'search'].includes(h.id)
+        ),
+      });
+
+      const codes = configIssues.filter(i => i.configId === 'search').map(i => i.code);
+      expect(codes).toContain('SEARCH_INVALID_MAIN_SEARCH_TYPE');
+      expect(codes).toContain('SEARCH_KEYWORDS_FILTER_DISABLED_FOR_KEYWORDS_SEARCH');
+      expect(codes).toContain('SEARCH_SEATS_FILTER_DISABLED_WITHOUT_DATES');
+      expect(codes).toContain('SEARCH_PRICE_FILTER_INVALID_RANGE');
+      expect(resolved.search.mainSearch).toEqual({ searchType: 'keywords' });
+      expect(resolved.search.defaultFilters.some(f => f.schemaType === 'price')).toBe(false);
     });
   });
 });
