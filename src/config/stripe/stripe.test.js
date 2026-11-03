@@ -33,6 +33,22 @@ describe('stripe config', () => {
       expect(stripeConfig.normalize({})).toEqual({});
     });
 
+    it('validate does not apply built-ins', () => {
+      const { value, issues } = stripeConfig.validate({}, { defaults: { stripe: stripeDefaults } });
+      expect(value).toEqual({});
+      expect(issues).toEqual([]);
+    });
+
+    it('resolve filters defaults and pushes currency warns onto ctx.issues', () => {
+      const issues = [];
+      const resolved = stripeConfig.resolve({}, { stripe: stripeDefaults }, { issues });
+      expect(resolved.publishableKey).toBe('pk_test_x');
+      expect(resolved.supportedCountries).toEqual([
+        { code: 'US', currency: 'USD', accountConfig: { routingNumber: true } },
+      ]);
+      expect(issues.map(i => i.code)).toEqual(['STRIPE_UNSUPPORTED_COUNTRY_CURRENCY']);
+    });
+
     it('is registered and resolves via applyConfigHandlers from defaults', () => {
       expect(configHandlers).toContain(stripeConfig);
 
