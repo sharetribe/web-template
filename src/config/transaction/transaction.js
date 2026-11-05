@@ -89,7 +89,7 @@ const resolve = validated => ({
  *
  * - id: `transaction`
  * - assetKeys: `minimumTransactionSize` (minimum-transaction-size.json); more keys later
- * - mandatory: true — missing/invalid listingMinimumPrice → MaintenanceMode
+ * - This asset is mandatory: missing/invalid listingMinimumPrice → MaintenanceMode
  *
  * Top-level `listingMinimumPriceSubUnits` is derived in mergeConfig via
  * getListingMinimumPriceSubUnits (not written by this handler).
@@ -97,7 +97,6 @@ const resolve = validated => ({
 export const transactionConfig = {
   id: 'transaction',
   assetKeys: ['minimumTransactionSize'],
-  mandatory: true,
   normalize,
   validate,
   resolve,

@@ -6,7 +6,6 @@ describe('topbar config', () => {
     it('declares topbar id and asset key', () => {
       expect(topbarConfig.id).toBe('topbar');
       expect(topbarConfig.assetKeys).toEqual(['topbar']);
-      expect(topbarConfig.mandatory).toBe(false);
     });
 
     it('normalizes known topbar keys only', () => {

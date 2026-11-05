@@ -86,7 +86,6 @@ const resolve = (_validated, defaults, ctx = {}) => {
 export const stripeConfig = {
   id: 'stripe',
   assetKeys: [],
-  mandatory: false,
   normalize,
   validate,
   resolve,

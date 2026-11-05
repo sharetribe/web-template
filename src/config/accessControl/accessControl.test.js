@@ -37,7 +37,6 @@ describe('accessControl config', () => {
     it('declares accessControl id and asset key', () => {
       expect(accessControlConfig.id).toBe('accessControl');
       expect(accessControlConfig.assetKeys).toEqual(['accessControl']);
-      expect(accessControlConfig.mandatory).toBe(false);
     });
 
     it('normalizes known marketplace / users / listings keys only', () => {

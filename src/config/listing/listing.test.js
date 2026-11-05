@@ -90,7 +90,6 @@ describe('listing config', () => {
     it('declares app-config id and hosted asset keys', () => {
       expect(listingConfig.id).toBe('listing');
       expect(listingConfig.assetKeys).toEqual(['listingTypes', 'listingFields']);
-      expect(listingConfig.mandatory).toBe(true);
     });
 
     it('normalizes hosted listingTypes and listingFields', () => {

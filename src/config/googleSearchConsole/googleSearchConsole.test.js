@@ -28,7 +28,6 @@ describe('googleSearchConsole config', () => {
     it('declares googleSearchConsole id and asset key', () => {
       expect(googleSearchConsoleConfig.id).toBe('googleSearchConsole');
       expect(googleSearchConsoleConfig.assetKeys).toEqual(['googleSearchConsole']);
-      expect(googleSearchConsoleConfig.mandatory).toBe(false);
     });
 
     it('normalizes googleSiteVerification string only', () => {

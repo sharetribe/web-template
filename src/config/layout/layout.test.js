@@ -94,7 +94,6 @@ describe('layout config', () => {
     it('declares app-config id and hosted asset keys', () => {
       expect(layoutConfig.id).toBe('layout');
       expect(layoutConfig.assetKeys).toEqual(['layout']);
-      expect(layoutConfig.mandatory).toBe(false);
     });
 
     it('normalizes to known layout keys only', () => {

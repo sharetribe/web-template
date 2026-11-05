@@ -79,7 +79,6 @@ describe('categoryConfiguration config', () => {
     it('declares app-config id and hosted asset keys', () => {
       expect(categoryConfigurationConfig.id).toBe('categoryConfiguration');
       expect(categoryConfigurationConfig.assetKeys).toEqual(['categories']);
-      expect(categoryConfigurationConfig.mandatory).toBe(false);
     });
 
     it('normalizes hosted categories array only', () => {

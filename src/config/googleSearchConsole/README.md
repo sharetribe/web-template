@@ -17,3 +17,5 @@ is rendered.
 ```
 
 Used by `src/util/seo.js` to render: `<meta name="google-site-verification" content="…" />`.
+
+Missing or invalid tokens fall back to the built-in. Does not trigger MaintenanceMode.

@@ -54,7 +54,7 @@ empty or missing, `limitToCategoryIds` is cleared and the field is kept.
 
 ## When something is wrong
 
-**MaintenanceMode** if:
+**MaintenanceMode** is shown if:
 
 - No listing types (at least one is required).
 - The listing-fields asset is missing (an empty `[]` is fine).

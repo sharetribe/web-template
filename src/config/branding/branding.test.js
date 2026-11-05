@@ -101,7 +101,6 @@ describe('branding config', () => {
     it('declares app-config id and hosted asset keys', () => {
       expect(brandingConfig.id).toBe('branding');
       expect(brandingConfig.assetKeys).toEqual(['branding']);
-      expect(brandingConfig.mandatory).toBe(true);
     });
 
     it('normalizes missing or non-object branding asset to empty object', () => {

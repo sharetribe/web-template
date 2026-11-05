@@ -173,7 +173,6 @@ const resolve = (validated, defaults) => mergeAnalyticsConfig(validated, default
 export const analyticsConfig = {
   id: 'analytics',
   assetKeys: ['analytics'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

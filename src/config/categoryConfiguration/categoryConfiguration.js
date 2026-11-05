@@ -217,7 +217,6 @@ const resolve = (validated, defaults) => {
 export const categoryConfigurationConfig = {
   id: 'categoryConfiguration',
   assetKeys: ['categories'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

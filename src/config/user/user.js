@@ -470,7 +470,6 @@ const resolve = (validated, defaults) => {
 export const userConfig = {
   id: 'user',
   assetKeys: ['userTypes', 'userFields'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

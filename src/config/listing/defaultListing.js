@@ -465,5 +465,5 @@ export const listingTypes = [
 //   - unitType
 //
 // Read More:
-// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+// https://www.sharetribe.com/docs/how-to/search/manage-search-schemas-with-sharetribe-cli/#adding-listing-search-schemas
 export const enforceValidListingType = false;

@@ -78,7 +78,6 @@ describe('maps config', () => {
     it('declares app-config id and hosted asset keys', () => {
       expect(mapsConfig.id).toBe('maps');
       expect(mapsConfig.assetKeys).toEqual(['maps']);
-      expect(mapsConfig.mandatory).toBe(false);
     });
 
     it('normalizes to known maps keys only', () => {
