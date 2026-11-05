@@ -319,8 +319,7 @@ const resolve = (validated, defaults) => mergeBrandingConfig(validated, defaults
  *
  * - id: key on the resolved app config (`config.branding`)
  * - assetKeys: hosted-asset / appCdnAssets keys this handler reads
- * - mandatory: true — this domain contributes MaintenanceMode gates via
- *   validate() errors (specifically branding.logo / BRANDING_MISSING_LOGO)
+ * - This asset is mandatory: missing logo → MaintenanceMode (BRANDING_MISSING_LOGO)
  *
  * Pipeline: normalize → validate → resolve (via applyConfigHandlers).
  * Hosted config takes priority; built-in defaults fill gaps for color, logos,
@@ -329,7 +328,6 @@ const resolve = (validated, defaults) => mergeBrandingConfig(validated, defaults
 export const brandingConfig = {
   id: 'branding',
   assetKeys: ['branding'],
-  mandatory: true,
   normalize,
   validate,
   resolve,

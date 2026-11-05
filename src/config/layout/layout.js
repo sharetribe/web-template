@@ -235,7 +235,6 @@ const resolve = (validated, defaults) => mergeLayoutConfig(validated, defaults?.
 export const layoutConfig = {
   id: 'layout',
   assetKeys: ['layout'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

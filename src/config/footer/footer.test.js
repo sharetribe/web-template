@@ -6,7 +6,6 @@ describe('footer config', () => {
     it('declares footer id and asset key', () => {
       expect(footerConfig.id).toBe('footer');
       expect(footerConfig.assetKeys).toEqual(['footer']);
-      expect(footerConfig.mandatory).toBe(false);
     });
 
     it('normalizes a hosted footer object as-is', () => {

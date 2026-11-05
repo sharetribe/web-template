@@ -151,7 +151,6 @@ const resolve = validated => validated || {};
 export const topbarConfig = {
   id: 'topbar',
   assetKeys: ['topbar'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

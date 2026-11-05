@@ -55,7 +55,6 @@ describe('localization config', () => {
     it('declares localization id and asset key', () => {
       expect(localizationConfig.id).toBe('localization');
       expect(localizationConfig.assetKeys).toEqual(['localization']);
-      expect(localizationConfig.mandatory).toBe(false);
     });
 
     it('normalizes locale, currency, and firstDayOfWeek', () => {

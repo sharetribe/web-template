@@ -173,7 +173,6 @@ const resolve = (validated, defaults) => mergeMapsConfig(validated, defaults?.ma
 export const mapsConfig = {
   id: 'maps',
   assetKeys: ['maps'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

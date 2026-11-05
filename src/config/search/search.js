@@ -490,7 +490,6 @@ const resolve = (validated, defaults, ctx = {}) =>
 export const searchConfig = {
   id: 'search',
   assetKeys: ['search'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

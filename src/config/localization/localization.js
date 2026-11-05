@@ -143,7 +143,6 @@ const resolve = (validated, defaults) =>
 export const localizationConfig = {
   id: 'localization',
   assetKeys: ['localization'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

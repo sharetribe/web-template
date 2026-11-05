@@ -56,7 +56,6 @@ const resolve = validated => validated || {};
 export const footerConfig = {
   id: 'footer',
   assetKeys: ['footer'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

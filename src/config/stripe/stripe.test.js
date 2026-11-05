@@ -26,7 +26,6 @@ describe('stripe config', () => {
     it('declares stripe id and empty assetKeys', () => {
       expect(stripeConfig.id).toBe('stripe');
       expect(stripeConfig.assetKeys).toEqual([]);
-      expect(stripeConfig.mandatory).toBe(false);
     });
 
     it('normalizes to empty (no hosted asset)', () => {

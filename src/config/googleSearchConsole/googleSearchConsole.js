@@ -93,7 +93,6 @@ const resolve = (validated, defaults) =>
 export const googleSearchConsoleConfig = {
   id: 'googleSearchConsole',
   assetKeys: ['googleSearchConsole'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

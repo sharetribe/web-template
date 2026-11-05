@@ -25,7 +25,6 @@ describe('transaction config', () => {
     it('declares transaction id and minimumTransactionSize asset key', () => {
       expect(transactionConfig.id).toBe('transaction');
       expect(transactionConfig.assetKeys).toEqual(['minimumTransactionSize']);
-      expect(transactionConfig.mandatory).toBe(true);
     });
 
     it('normalizes listingMinimumPrice from minimumTransactionSize', () => {

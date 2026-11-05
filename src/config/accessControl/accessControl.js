@@ -279,7 +279,6 @@ const resolve = (validated, defaults) =>
 export const accessControlConfig = {
   id: 'accessControl',
   assetKeys: ['accessControl'],
-  mandatory: false,
   normalize,
   validate,
   resolve,

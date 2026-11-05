@@ -1010,12 +1010,11 @@ const resolve = (validated, defaults) => {
  *
  * - id: `listing`
  * - assetKeys: `listingTypes`, `listingFields`
- * - mandatory: true — missing types/fields or public-data key clash → MaintenanceMode
+ * - These assets are mandatory: missing types/fields or public-data key clash → MaintenanceMode
  */
 export const listingConfig = {
   id: 'listing',
   assetKeys: ['listingTypes', 'listingFields'],
-  mandatory: true,
   normalize,
   validate,
   resolve,
