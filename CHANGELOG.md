@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update README
+  [#977](https://github.com/sharetribe/web-template/pull/977)
 - [add] Add currently available translations.
   [#975](https://github.com/sharetribe/web-template/pull/975)
 - [add] Add a CircleCI job to check that translations are sorted alphabetically.
