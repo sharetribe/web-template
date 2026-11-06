@@ -84,7 +84,12 @@ describe('CheckoutPage', () => {
   ];
   const commonProps = {
     dispatch: noop,
-    history: { push: noop, action: 'PUSH' },
+    history: {
+      push: noop,
+      replace: noop,
+      action: 'PUSH',
+      location: { search: '', pathname: '/' },
+    },
     intl: fakeIntl,
     currentUser: createCurrentUser('currentUser'),
     params: { id: 'listing1', slug: 'listing1' },

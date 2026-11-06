@@ -6,15 +6,16 @@ submitted.
 
 ## Different processes
 
-This Sharetribe Web Template supports 3 processes:
+Payment checkout uses listing types whose process declares Stripe methods
+(`supportedPayments.stripe`). Built-ins with payments:
 
 - **_default-booking_**
 - **_default-purchase_**
+- **_default-download_**
 - **_default-negotiation_**
-- **_default-inquiry_**
 
-The first 3 transaction processes include Stripe payments, but the last one (**_default-inquiry_**)
-does not.
+**_default-inquiry_** has no payments. Which methods appear at checkout comes from the process — see
+[src/transactions/README.md](../../transactions/README.md#payment-methods-and-transaction-processes).
 
 ## How customers navigate to CheckoutPage
 
@@ -27,13 +28,14 @@ On both of those pages, there's a component called OrderPanel, which shows a cor
 order data. The order data and listing entity are then passed to the CheckoutPage as initial data
 for the page.
 
-In addition, _default-booking_, _default-purchase_, and _default-negotiation_ processes have a
-separate inquiry state at the beginning of the process graph (to enable discussion between customer
-and provider). If the transaction entity has been created with inquire transition, the transaction
-exists already and it is also passed along with order data and listing entity for the CheckoutPage.
-In this scenario, the customer navigates to CheckoutPage from TransactionPage. With the negotiation
-process, a negotiation phase always precedes payment, so the transaction always exists when the
-customer initiates payment, and the customer always navigates to CheckoutPage from TransactionPage."
+In addition, _default-booking_, _default-purchase_, _default-download_, and _default-negotiation_
+processes have a separate inquiry state at the beginning of the process graph (to enable discussion
+between customer and provider). If the transaction entity has been created with inquire transition,
+the transaction exists already and it is also passed along with order data and listing entity for
+the CheckoutPage. In this scenario, the customer navigates to CheckoutPage from TransactionPage.
+With the negotiation process, a negotiation phase always precedes payment, so the transaction always
+exists when the customer initiates payment, and the customer always navigates to CheckoutPage from
+TransactionPage.
 
 ## Order data and session storage
 
@@ -43,12 +45,12 @@ if the customer makes a full page load on the checkout page. Relevant files for 
 handling:
 
 - [CheckoutPageSessionHelpers.js](./CheckoutPageSessionHelpers.js)
-- [CheckoutPage.js](https://github.com/sharetribe/web-template/blob/inquiry-process/src/containers/CheckoutPage/CheckoutPage.js)
+- [CheckoutPage.js](./CheckoutPage.js)
 
 ### Transactions with payments
 
-When page data contains a listing with a listing type that uses _default-booking_ and
-_default-purchase_ processes, the page uses a sub-component called **CheckoutPageWithPayment**.
+When page data contains a listing whose process is Stripe-related, the page uses a sub-component
+called **CheckoutPageWithPayment**.
 
 First, the checkout page calls `loadInitialDataForStripePayments` for these Stripe-related
 processes, which calls `fetchSpeculatedTransaction` if the transaction has not made any transition
@@ -58,6 +60,19 @@ purposes:
 - it checks if Marketplace API can execute the transition without errors
 - it gets **_line items_** from the client app's server - so that the order breakdown can be shown
   correctly.
+
+Checkout asks the process for methods and transitions (`getCheckoutPaymentOptions`,
+`getCheckoutPaymentTransitions`).
+
+Three payment-related ids (easy to confuse):
+
+- `checkoutPaymentMethod` — catalog id (`card`, `ideal`, …)
+- `cardPaymentMode` — card UX (`defaultCard` | `replaceCard` | `onetimeCardPayment`)
+- `orderParams.paymentMethod` — saved Stripe PM id (`pm_…`), card only
+
+If more than one method is offered, the selected `checkoutPaymentMethod` is stored in
+`protectedData`. Changing method re-speculates. Card speculation may send a placeholder `cardToken`;
+push uses `paymentMethodTypes` and omits `cardToken`.
 
 With the speculative transaction, the job of the _CheckoutPageWithPayment_ component is to show the
 order breakdown and _StripePaymentForm_, which then asks for billing details and a potential
@@ -75,19 +90,28 @@ In addition, there's actually a sequence of XHR calls that the app needs to make
    - Note: the negotiation process does not use proxied call since it doesn't use privileged
      transition. The line-items have been added to the transaction entity already by the time the
      customer navigates to CheckoutPage.
-2. Then there's potentially 3D security verification that Stripe might show.  
-   It's shown if the card issuer enforces it for the current payment intent.
-3. If the Stripe verification succeeded, the payment needs to be confirmed against Marketplace API
-4. If the initial message was added, that needs to be
-   [sent separately](https://www.sharetribe.com/api-reference/marketplace.html#send-message)
-5. If payment card details need to be saved as the default payment method, the last step is to do
-   that.
+2. Confirm the PaymentIntent with Stripe:
+   - card: in-page confirm (e.g. 3DS via `confirmCardPayment`)
+   - push: checkout only runs request-payment + `confirmPayment` with `return_url` to
+     `/l/:slug/:id/checkout/return`. Marketplace confirm runs on
+     [CheckoutPageRedirectReturn](./CheckoutPageRedirectReturn/CheckoutPageRedirectReturn.js)
+     (CheckoutPage with `mode: return-after-redirect`). Success → OrderDetailsPage. Recoverable
+     payment failures (`failed` / `canceled` / `requires_payment_method`) → CheckoutPage to pay
+     again. Other confirm failures stay on the return page with a retry control. That path is not
+     exercised by default card-only processes.
+3. Confirm payment against Marketplace API (transition from the process)
+   - card: in the same checkout submit sequence
+   - push: on CheckoutPageRedirectReturn only
+4. Optional: save default card only when the flow is card + save
 
 Read more:
 
-- [getOrderParams](./CheckoutPageWithPayment.js#L69)
-- **processCheckoutWithPayment** function in
+- [getOrderParams](./CheckoutPageWithPayment.js#L121)
+- **processCheckoutWithPayment** in
   [CheckoutPageTransactionHelpers.js](./CheckoutPageTransactionHelpers.js)
+- Redirect resume:
+  [CheckoutPageRedirectReturn.js](./CheckoutPageRedirectReturn/CheckoutPageRedirectReturn.js) (not
+  used by the default card-only processes)
 - [The aforementioned call sequence explained in the Docs](https://www.sharetribe.com/docs/how-to/enable-payment-intents/#3-checkoutpage-add-new-api-calls-and-call-them-in-sequence)  
   (This article is for devs who don't use Sharetribe Web Template - since the steps are already
   implemented in this codebase.)
