@@ -1,11 +1,16 @@
-import * as stripe from './configStripe';
-import * as listing from './configListing';
-import * as search from './configSearch';
-import * as maps from './configMaps';
-import * as branding from './configBranding';
-import * as layout from './configLayout';
-import * as analytics from './configAnalytics';
-import * as user from './configUser';
+import appCdnAssets from './appCdnAssets';
+import * as stripe from './stripe/defaultStripe';
+import * as listing from './listing/defaultListing';
+import * as search from './search/defaultSearch';
+import * as maps from './maps/defaultMaps';
+import * as branding from './branding/defaultBranding';
+import * as layout from './layout/defaultLayout';
+import * as analytics from './analytics/defaultAnalytics';
+import * as googleSearchConsole from './googleSearchConsole/defaultGoogleSearchConsole';
+import * as accessControl from './accessControl/defaultAccessControl';
+import * as localization from './localization/defaultLocalization';
+import * as user from './user/defaultUser';
+import * as categoryConfiguration from './categoryConfiguration/defaultCategoryConfiguration';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -16,26 +21,28 @@ const defaultConfig = {
   marketplaceRootURL: process.env.REACT_APP_MARKETPLACE_ROOT_URL,
 
   // Marketplace currency.
-  // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
-  // It should match one of the currencies listed in currencySettings.js
+  // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, etc.
+  // It must be a key in settingsCurrency.subUnitDivisors.
   // Note: The currency comes from localization asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeCurrency func)
+  //       I.e. this setting is not in use anymore.
+  // (see localization/localization.js).
   currency: 'USD',
 
   // Listing minimum price in currency sub units, e.g. cents.
-  // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
+  // Derived in mergeConfig from config.transaction.listingMinimumPrice (minimumTransactionSize asset).
   // - If there is no value, we use the value set on this file for listingMinimumPriceSubUnits
   // - If the value is 0, we use the value set on this file for listingMinimumPriceSubUnits
   //   This is due to backward compatibility
   // Note 1: 0 means no restriction to the price (Currently, Console won't show it.)
-  // Note 2: To use only this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
+  // Note 2: To use only this built-in configuration, omit/ignore the hosted minimumTransactionSize asset
+  //         (see transaction/transaction.js + getListingMinimumPriceSubUnits in mergeConfig).
   // Note 3: Stripe does have a minimum fee that depends on country, currency, etc!
   listingMinimumPriceSubUnits: 500,
 
   // Marketplace name is needed for microcopy (aka marketplace texts) and in meta tags (bots and social media sharing reads those)
   marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || '[Marketplace Name]',
 
-  // Modify Stripe configuration in configStripe.js
+  // Modify Stripe configuration in stripe/defaultStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
   // - dayCountAvailableForBooking: Stripe can hold payments only limited time on Connect Account
   //                                This adds some restriction for bookings (payouts vs long bookings)
@@ -43,22 +50,38 @@ const defaultConfig = {
   // - supportedCountries
   stripe,
 
-  // Modify listing extended data and listing type in configListing.js
+  // Modify listing extended data and listing type in listing/defaultListing.js
   listing,
 
   user,
-  // Modify search settings data in configSearch.js
+  // Modify search settings data in search/defaultSearch.js
   search,
-  // Modify settings for map providers in configMaps.js
+  // Modify settings for map providers in maps/defaultMaps.js
   // This includes also default locations for location search
   maps,
-  // Modify branding configs in configBranding.js
+  // Modify branding configs in branding/defaultBranding.js
   branding,
-  // Modify layout configs in configLayout.js
+  // Modify layout configs in layout/defaultLayout.js
   layout,
-  // Modify analytics configs in configAnalytics.js
+  // Modify analytics configs in analytics/defaultAnalytics.js
   // By default, it doesn't add anything.
   analytics,
+  // Modify category tree in categoryConfiguration/defaultCategoryConfiguration.js
+  // Hosted listing-categories.json takes priority when present.
+  categoryConfiguration,
+
+  // Modify Google Search Console configs in hosted asset
+  // or built-in defaults in googleSearchConsole/defaultGoogleSearchConsole.js
+  googleSearchConsole,
+
+  // Modify access control in hosted asset or accessControl/defaultAccessControl.js
+  // (private marketplace, file upload/download disabled)
+  accessControl,
+
+  // Modify localization in hosted asset (or built-in defaults in localization/defaultLocalization.js)
+  // (locale, firstDayOfWeek)
+  // Note: The currency elevates to top-level config.currency
+  localization,
 
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
@@ -67,45 +90,8 @@ const defaultConfig = {
   // You should create one to track social sharing in Facebook
   facebookAppId: process.env.REACT_APP_FACEBOOK_APP_ID,
 
-  // If you want to change the language, remember to also change the
-  // locale data and the messages in the app.js file.
-  // Note: The localization comes from localization asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLocalizations func)
-  localization: {
-    locale: 'en-US',
-    // First day of week
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#return_value
-    // 1: Monday
-    // ...
-    // 6: Saturday
-    // 7: Sunday
-    firstDayOfWeek: 1,
-  },
-
-  // CDN assets for the app. Configurable through Sharetribe Console.
-  // Note 1: The path must match the path defined in Asset Delivery API
-  // Note 2: If you customize the app and rely on custom code instead of a config assets,
-  //         you should remove the unnecessary config asset from this list.
-  appCdnAssets: {
-    translations: '/content/translations.json',
-    footer: '/content/footer.json',
-    topbar: '/content/top-bar.json',
-    branding: '/design/branding.json',
-    layout: '/design/layout.json',
-    localization: '/general/localization.json',
-    accessControl: '/general/access-control.json',
-    userTypes: '/users/user-types.json',
-    userFields: '/users/user-fields.json',
-    categories: '/listings/listing-categories.json',
-    listingTypes: '/listings/listing-types.json',
-    listingFields: '/listings/listing-fields.json',
-    search: '/listings/listing-search.json',
-    transactionSize: '/transactions/minimum-transaction-size.json',
-    analytics: '/integrations/analytics.json',
-    googleSearchConsole: '/integrations/google-search-console.json',
-    maps: '/integrations/map.json',
-    // NOTE: we don't fetch commission configuration here but on the server-side
-  },
+  // CDN asset paths — edit appCdnAssets.js to add/remove hosted assets
+  appCdnAssets,
 
   // Optional
   // Online presence of the same organization:
@@ -115,15 +101,6 @@ const defaultConfig = {
   siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
   siteTwitterHandle: null, // e.g. '@sharetribe',
-
-  // Optional
-  // This creates meta tag for Google Search Console verification
-  // I.e. <meta name=“google-site-verification” content=“GOOGLE_SITE_VERIFICATION_TOKEN”/>
-  // Note: The googleSearchConsole comes from googleSearchConsole asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
-  googleSearchConsole: {
-    googleSiteVerification: null, // Add google-site-verification token as a string
-  },
 
   // Optional
   // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
