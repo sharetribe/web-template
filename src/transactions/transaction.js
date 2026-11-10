@@ -432,9 +432,9 @@ export const isDownloadProcessAlias = processAlias => {
 /**
  * Whether the process declares Stripe checkout payment methods.
  * Uses process.supportedPayments.stripe as the source of truth (includes
- * default-booking, default-purchase, negotiation, download, test-payments, etc.).
+ * default-booking, default-purchase, negotiation, download, etc.).
  *
- * @param {String} processAlias e.g. 'test-payments/release-1'
+ * @param {String} processAlias e.g. 'default-booking/release-1'
  * @returns {boolean}
  */
 export const isStripeRelatedProcessAlias = processAlias => {

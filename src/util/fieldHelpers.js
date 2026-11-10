@@ -227,7 +227,7 @@ export const isValidCurrencyForTransactionProcess = (
   listingCurrency,
   paymentProcessor = null
 ) => {
-  // Processes with Stripe checkout methods (booking, purchase, negotiation, download, test-payments, …)
+  // Processes with Stripe checkout methods (booking, purchase, negotiation, download, …)
   const isStripeRelatedProcess = isStripeRelatedProcessAlias(transactionProcessAlias);
 
   // Determine if the listing currency is supported by Stripe
