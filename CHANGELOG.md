@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
-- [change] Refactor checkout process.
+## [v12.7.0] 2026-11-10
+
+- [change] Refactor checkout flow.
 
   - Move payment-related transaction info closer to transaction process. (transactionProcess\*.js
     files must export supportedPayments info.)
@@ -45,6 +47,8 @@ way to update this template, but currently, we follow a pattern:
   [#970](https://github.com/sharetribe/web-template/pull/970)
 - [change] Update webpack and webpack-dev-server.
   [#969](https://github.com/sharetribe/web-template/pull/969)
+
+  [v12.7.0]: https://github.com/sharetribe/web-template/compare/v12.6.0...v12.7.0
 
 ## [v12.6.0] 2026-10-26
 
