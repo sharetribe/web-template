@@ -134,9 +134,8 @@ Without webhooks (or equivalent polling), push checkout is incomplete for produc
 
 ### 6. Translations for this return page
 
-These strings are **not** in the template’s `en.json` (or other locale files). Add them to
-**hosted translations** in Console (preferred), and/or to your local
-`src/translations/en.json` fallbacks:
+These strings are **not** in the template’s `en.json` (or other locale files). Add them to **hosted
+translations** in Console (preferred), and/or to your local `src/translations/en.json` fallbacks:
 
 ```json
 "CheckoutPage.redirectReturn.title": "Confirming payment",
