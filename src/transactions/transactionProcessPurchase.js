@@ -257,8 +257,7 @@ export const isPrivileged = transition => {
  *
  * This does not create Stripe/Sharetribe support by itself. Support depends on the
  * transaction process saved to the Sharetribe backend (CLI): transitions and their
- * Stripe actions. Only declare methods your backend process is built for
- * (see default card flow vs push-payment alternatives in test-payments).
+ * Stripe actions. Only declare methods your backend process is built for.
  *
  * paymentDirection:
  * - 'pull' — card-style: authorize now, capture later (e.g. when the provider accepts)
