@@ -42,6 +42,7 @@ const noop = () => null;
 const listingTypesBookingDay = [
   {
     id: 'rent-bicycles-daily',
+    label: 'rent-bicycles-daily',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -56,6 +57,7 @@ const listingTypesBookingDay = [
 const listingTypesBookingDayWithSeats = [
   {
     id: 'rent-bicycles-daily',
+    label: 'rent-bicycles-daily',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -70,6 +72,7 @@ const listingTypesBookingDayWithSeats = [
 const listingTypesBookingNightly = [
   {
     id: 'rent-bicycles-nightly',
+    label: 'rent-bicycles-nightly',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -84,6 +87,7 @@ const listingTypesBookingNightly = [
 const listingTypesBookingHourly = [
   {
     id: 'rent-bicycles-hourly',
+    label: 'rent-bicycles-hourly',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -98,6 +102,7 @@ const listingTypesBookingHourly = [
 const listingTypesBookingFixed = [
   {
     id: 'rent-bicycles-fixed',
+    label: 'rent-bicycles-fixed',
     transactionProcess: {
       name: 'default-booking',
       alias: 'default-booking/release-1',
@@ -112,6 +117,7 @@ const listingTypesBookingFixed = [
 const listingTypesPurchase = [
   {
     id: 'sell-bicycles',
+    label: 'sell-bicycles',
     transactionProcess: {
       name: 'default-purchase',
       alias: 'default-purchase/release-1',
@@ -166,6 +172,7 @@ const listingTypesNegotiation = [
 const listingFieldsInquiry = [
   {
     key: 'cat',
+    label: 'Cat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -190,6 +197,7 @@ const listingFieldsInquiry = [
 const listingFieldsPurchase = [
   {
     key: 'cat',
+    label: 'Cat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -218,6 +226,7 @@ const listingFieldsPurchase = [
 const listingFieldsBooking = [
   {
     key: 'amenities',
+    label: 'Amenities',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,

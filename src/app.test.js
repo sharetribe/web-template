@@ -1,6 +1,8 @@
 import React, { act } from 'react';
 import ReactDOMClient from 'react-dom/client';
 import { getHostedConfiguration } from './util/testHelpers';
+import defaultConfig from './config/configDefault';
+import { mergeConfig } from './config/mergeConfig';
 import { ClientApp } from './app';
 import configureStore from './store';
 
@@ -35,7 +37,9 @@ describe('Application - JSDOM environment', () => {
     const root = ReactDOMClient.createRoot(div);
 
     await act(async () => {
-      root.render(<ClientApp store={store} hostedConfig={getHostedConfiguration()} />);
+      root.render(
+        <ClientApp store={store} appConfig={mergeConfig(getHostedConfiguration(), defaultConfig)} />
+      );
     });
     delete window.google;
   });

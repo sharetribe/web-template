@@ -165,7 +165,7 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
 };
 
 /**
- * Validate listing fields (in extended data) that are included through configListing.js
+ * Validate listing fields (in extended data) that are included through listing/defaultListing.js
  * This is used to check if listing creation flow can show the "next" tab as active.
  *
  * @param {Object} publicData
