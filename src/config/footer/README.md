@@ -21,7 +21,9 @@ appearance. The handler passes that object through; it does not re-validate ever
 
 ## `config.footer` shape
 
-Roughly (hosted asset keys may vary):
+The footer handler does not normalize field-by-field. The hosted configuration becomes
+`config.footer` as-is. `FooterContainer` then routes it through `SectionBuilder` to `SectionFooter`,
+which reads the props it understands. Typical keys:
 
 ```js
 {
