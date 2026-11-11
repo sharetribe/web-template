@@ -719,9 +719,9 @@ const validTransactionFields = (transactionFields, issues) => {
 /**
  * Keep listing types that use a supported transaction process. Drop others with warnings.
  *
- * Also strips process-specific fields that no longer belong after a process change
- * (e.g. availabilityType left on a purchase type). unitType must match the current
- * process, not merely any supported process.
+ * Also strips redundant attributes that do not relate to the selected transaction process
+ * (e.g. availabilityType on a purchase type). unitType must match the current process, not
+ * merely any supported process.
  *
  * @param {Array} listingTypes
  * @param {Array} issues
@@ -865,8 +865,9 @@ const validListingTypes = (listingTypes, issues) => {
 };
 
 /**
- * Shape hosted listingTypes + listingFields assets (not built-in defaults).
- * Restructures asset shape => app config shape. Omits keys when the hosted array is missing.
+ * Shape the hosted assets only (not built-ins): listingTypes and listingFields.
+ * Restructures each asset array into app config shape and sets has*Asset flags.
+ * Omits a key when that hosted array is missing (not an array).
  *
  * @param {Object} hostedSlices values keyed by listingConfig.assetKeys
  * @returns {Object} partial hosted input for validate
