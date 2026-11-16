@@ -843,22 +843,23 @@
   margin-bottom: 24px;
 }
 
-/* === ESTILOS DE PRUEBA: CAJETILLAS BLANCAS ISLAFIX === */
+/* === CAJETILLA ÚNICA ESTILO "CÓMO FUNCIONA ISLAFIX" === */
 
-/* Cajetilla izquierda: Foto, descripción, detalles y reseñas */
-.mainColumn {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px 32px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  margin-bottom: 24px;
+/* Fondo temporal gris suave detrás para que distingas la caja blanca antes de poner tu foto */
+.root {
+  background-color: #f3f4f6;
+  min-height: 100vh;
 }
 
-/* Cajetilla derecha: Título, autor y botón de solicitar presupuesto */
-.orderColumn {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  height: fit-content;
+/* La gran cajetilla blanca que envuelve TODO (imagen, textos y columna derecha) */
+.contentWrapper {
+  background-color: #ffffff !important;
+  border-radius: 16px;
+  padding: 32px 40px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  margin-top: 24px !important;
+  margin-bottom: 48px !important;
+  max-width: 1120px;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
