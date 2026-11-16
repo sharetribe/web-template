@@ -846,13 +846,13 @@
 /* === CAJETILLA ÚNICA ESTILO "CÓMO FUNCIONA ISLAFIX" === */
 
 /* Fondo temporal gris suave detrás para que distingas la caja blanca antes de poner tu foto */
-.root {
-  background-color: #f3f4f6;
+.root, .pageRoot {
+  background-color: #f3f4f6 !important;
   min-height: 100vh;
 }
 
 /* La gran cajetilla blanca que envuelve TODO (imagen, textos y columna derecha) */
-.contentWrapper {
+.contentWrapper, .contentWrapperForProductLayout {
   background-color: #ffffff !important;
   border-radius: 16px;
   padding: 32px 40px !important;
