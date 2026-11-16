@@ -847,7 +847,7 @@
 
 /* Fondo temporal gris suave detrás para que distingas la caja blanca antes de poner tu foto */
 .root, .pageRoot {
-  background-image: url('~assets/fondo-pueblo.jpg') !important;
+  background-image: url('../../assets/fondo-pueblo.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
