@@ -843,3 +843,22 @@
   margin-bottom: 24px;
 }
 
+/* === ESTILOS DE PRUEBA: CAJETILLAS BLANCAS ISLAFIX === */
+
+/* Cajetilla izquierda: Foto, descripción, detalles y reseñas */
+.mainColumn {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+/* Cajetilla derecha: Título, autor y botón de solicitar presupuesto */
+.orderColumn {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  height: fit-content;
+}
