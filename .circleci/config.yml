@@ -33,16 +33,24 @@ commands:
 jobs:
   format:
     docker:
-      - image: cimg/node:22.22
+      - image: cimg/node:24.22
     steps:
       - checkout
       - install_dependencies
       - run:
           name: Check code formatting
           command: yarn run format-ci
+  translations-sorted:
+    docker:
+      - image: cimg/node:24.22
+    steps:
+      - checkout
+      - run:
+          name: Check en.json keys are sorted alphabetically (case-sensitive)
+          command: node scripts/check-translations-sorted.js
   test:
     docker:
-      - image: cimg/node:22.22
+      - image: cimg/node:24.22
     steps:
       - checkout
       - install_dependencies
@@ -51,7 +59,7 @@ jobs:
           command: yarn run test-ci
   build:
     docker:
-      - image: cimg/node:22.22
+      - image: cimg/node:24.22
     steps:
       - checkout
       - install_dependencies
@@ -62,5 +70,6 @@ workflows:
   format_test_build_audit:
     jobs:
       - format
+      - translations-sorted
       - test
       - build

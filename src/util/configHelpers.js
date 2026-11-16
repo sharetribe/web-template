@@ -1119,6 +1119,28 @@ export const requireListingImage = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.images !== false;
 };
 
+/**
+ * Returns the max number of listing images allowed for a listing type, or null if unlimited.
+ * Hosted listing-types may include imageSettings:
+ * - missing / { limitImages: false } => unlimited (null)
+ * - { limitImages: true, maxImages: N } => N
+ *
+ * @param {Object} listingTypeConfig
+ * @returns {number|null}
+ */
+export const getListingImageMaxCount = listingTypeConfig => {
+  const imageSettings = listingTypeConfig?.imageSettings;
+  if (!imageSettings || imageSettings.limitImages !== true) {
+    return null;
+  }
+  const { maxImages } = imageSettings;
+  const hasValidMax = typeof maxImages === 'number' && Number.isFinite(maxImages) && maxImages >= 1;
+  if (hasValidMax) {
+    return maxImages;
+  }
+  return null;
+};
+
 export const requirePayoutDetails = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.payoutDetails !== false;
 };
@@ -1628,9 +1650,14 @@ const mergeSearchConfig = (
       }
     : listingFieldsConfig
     ? {
-        // here we pass null since in this scenario no hosted search configuration exists
-        sortConfig: mergeSortConfig(null, defaultSearchConfig.sortConfig, listingFieldsConfig),
         ...defaultSearchConfig,
+        // here we pass null since in this scenario no hosted search configuration exists
+        sortConfig: mergeSortConfig(
+          null,
+          defaultSearchConfig.sortConfig,
+          false,
+          listingFieldsConfig
+        ),
       }
     : defaultSearchConfig;
 

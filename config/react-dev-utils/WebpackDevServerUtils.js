@@ -321,7 +321,6 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
   return [
     {
       target,
-      logLevel: 'silent',
       // For single page apps, we generally want to fallback to /index.html.
       // However we also want to respect `proxy` for API calls.
       // So if `proxy` is specified as a string, we need to decide which fallback to use.
@@ -332,7 +331,8 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
       // Modern browsers include text/html into `accept` header when navigating.
       // However API calls like `fetch()` won't generally accept text/html.
       // If this heuristic doesn't work well for you, use `src/setupProxy.js`.
-      context: function(pathname, req) {
+      // http-proxy-middleware v3+: `context` renamed to `pathFilter`.
+      pathFilter: function(pathname, req) {
         return (
           req.method !== 'GET' ||
           (mayProxy(pathname) &&
@@ -340,15 +340,18 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
             req.headers.accept.indexOf('text/html') === -1)
         );
       },
-      onProxyReq: proxyReq => {
-        // Browsers may send Origin headers even with same-origin
-        // requests. To prevent CORS issues, we have to change
-        // the Origin to match the target URL.
-        if (proxyReq.getHeader('origin')) {
-          proxyReq.setHeader('origin', target);
-        }
+      // http-proxy-middleware v3+: event callbacks moved under `on`.
+      on: {
+        proxyReq: proxyReq => {
+          // Browsers may send Origin headers even with same-origin
+          // requests. To prevent CORS issues, we have to change
+          // the Origin to match the target URL.
+          if (proxyReq.getHeader('origin')) {
+            proxyReq.setHeader('origin', target);
+          }
+        },
+        error: onProxyError(target),
       },
-      onError: onProxyError(target),
       secure: false,
       changeOrigin: true,
       ws: true,

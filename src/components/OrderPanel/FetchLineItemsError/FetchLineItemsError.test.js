@@ -33,6 +33,9 @@ describe('FetchLineItemsError', () => {
   });
 
   it('renders provider commission is bigger than minimum commission error message with correctly formed error object', () => {
+    // Suppress expected console.error from FetchLineItemsError useEffect
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
     const error = {
       status: 400,
       statusText: 'Minimum commission amount is greater than the amount of money paid in',
@@ -42,5 +45,8 @@ describe('FetchLineItemsError', () => {
       'FetchLineItemsError.providerCommissionBiggerThanMinPrice'
     );
     expect(providerCommissionBiggerThanMinPriceText).toBeInTheDocument();
+    expect(console.error).toHaveBeenCalledWith(error.statusText);
+
+    console.error.mockRestore();
   });
 });

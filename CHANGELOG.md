@@ -14,6 +14,58 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+## [v12.7.0] 2026-11-10
+
+- [change] Refactor checkout flow.
+
+  - Move payment-related transaction info closer to transaction process. (transactionProcess\*.js
+    files must export supportedPayments info.)
+  - Move transitions needed on the checkout page to the process files
+  - hasPaymentExpired function was moved to the process files
+  - Rename: SavedCardDetails => PaymentMethodPicker
+  - Make it easier to add support for additional payment methods, but this does not enable any push
+    methods. This drafts a partial flow to make it easier to add support.
+
+  [#904](https://github.com/sharetribe/web-template/pull/904)
+
+- [change] Update README [#977](https://github.com/sharetribe/web-template/pull/977)
+- [add] Add currently available translations.
+  [#975](https://github.com/sharetribe/web-template/pull/975)
+- [add] Add a CircleCI job to check that translations are sorted alphabetically.
+  [#974](https://github.com/sharetribe/web-template/pull/974)
+- [change] en.json: sort translation keys alphabetically.
+  [#973](https://github.com/sharetribe/web-template/pull/973)
+- [add] ListingPage: Add accessible name for the static-to-interactive button.
+  [#958](https://github.com/sharetribe/web-template/pull/958)
+- [add] ListingPage: Add accessible names for next and previous buttons in the carousel.
+  [#957](https://github.com/sharetribe/web-template/pull/957)
+- [fix] OrderPanel: silence the error added on 971 on tests.
+  [#972](https://github.com/sharetribe/web-template/pull/972)
+- [fix] OrderPanel: display a more helpful error message when the provider commission is bigger than
+  the listing price. [#971](https://github.com/sharetribe/web-template/pull/971)
+- [change] Update concurrently to v10.0.6.
+  [#970](https://github.com/sharetribe/web-template/pull/970)
+- [change] Update webpack and webpack-dev-server.
+  [#969](https://github.com/sharetribe/web-template/pull/969)
+
+  [v12.7.0]: https://github.com/sharetribe/web-template/compare/v12.6.0...v12.7.0
+
+## [v12.6.0] 2026-10-26
+
+- [add] Limit the number of attached images per listing (through listing type config).
+  [#960](https://github.com/sharetribe/web-template/pull/960)
+- [change] Update Node.js to v24.22.1
+
+  - Next LTS version from v22
+  - Important security fixes on v24.22.1
+
+  [#967](https://github.com/sharetribe/web-template/pull/967)
+
+- [fix] configHelpers: pass all four arguments to mergeSortConfig when there is no hosted search
+  config. Listing fields without saved search settings made every server-side render fail.
+  [#965](https://github.com/sharetribe/web-template/pull/965)
+- [change] Update several dependencies (mostly patches, minors and simple majors).
+  [#963](https://github.com/sharetribe/web-template/pull/963)
 - [fix] Fix a bug with cache eviction on each [[set]] call.
   [#962](https://github.com/sharetribe/web-template/pull/962)
 - [add] Add currently available translations.
@@ -23,6 +75,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] ListingPage: fetch max 2 images on SSR. CSR will fetch the rest. This also improves the
   "sizes" attribute for the carousel slide images.
   [#955](https://github.com/sharetribe/web-template/pull/955)
+
+  [v12.6.0]: https://github.com/sharetribe/web-template/compare/v12.5.0...v12.6.0
 
 ## [v12.5.0] 2026-10-14
 

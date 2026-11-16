@@ -64,10 +64,10 @@ guide in Developer Docs for more information.
 
 See the Sharetribe Developer Docs: [sharetribe.com/docs/](https://www.sharetribe.com/docs/)
 
-## Get help – join Sharetribe Developer Slack channel
+## Get help – join the Sharetribe Community
 
-If you have any questions about development, the best place to ask them is the Developer Slack
-channel at https://www.sharetribe.com/dev-slack
+If you have any questions about development, the best place to ask them is the Sharetribe Community
+at [https://community.sharetribe.com](https://community.sharetribe.com/c/building-with-custom-code).
 
 If you need help with development, you can hire a verified software developer with Sharetribe
 experience from the [Expert Network](https://www.sharetribe.com/experts/).

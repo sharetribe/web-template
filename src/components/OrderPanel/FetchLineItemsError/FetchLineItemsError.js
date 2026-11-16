@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import { isProviderCommissionBiggerThanMinPrice } from '../../../util/errors';
@@ -16,8 +16,16 @@ import css from './FetchLineItemsError.module.css';
 const FetchLineItemsError = props => {
   const { error } = props;
   const hasError = !!error;
+  const isCommissionTooBig = hasError && isProviderCommissionBiggerThanMinPrice(error);
 
-  return hasError && isProviderCommissionBiggerThanMinPrice(error) ? (
+  useEffect(() => {
+    if (isCommissionTooBig) {
+      // eslint-disable-next-line no-console
+      console.error(error.statusText);
+    }
+  }, [error, isCommissionTooBig]);
+
+  return isCommissionTooBig ? (
     <span className={css.error}>
       <FormattedMessage id="FetchLineItemsError.providerCommissionBiggerThanMinPrice" />
     </span>
