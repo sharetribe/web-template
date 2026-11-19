@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [fix] Remove unnecessary console.error from missing translations on
+  CheckoutPageRedirectReturn.test.js [#983](https://github.com/sharetribe/web-template/pull/983)
+
 ## [v12.8.0] 2026-11-19
 
 - [change] Refactor configHelpers.js.
@@ -23,7 +26,7 @@ way to update this template, but currently, we follow a pattern:
   - Create a registry of handlers for different config domains.
   - configHelpers.js now only keeps listing-type UI helpers
 
-  [#976](https://github.com/sharetribe/web-template/pull/976)  
+  [#976](https://github.com/sharetribe/web-template/pull/976)
 
   [v12.8.0]: https://github.com/sharetribe/web-template/compare/v12.7.0...v12.8.0
 
