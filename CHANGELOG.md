@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Refactor configHelpers.js.
+
+  - Move asset validation and merging to src/config/
+  - Defaults (e.g. configListing.js) moved into domain folders (e.g. listing/defaultListing.js)
+  - Create a registry of handlers for different config domains.
+  - configHelpers.js now only keeps listing-type UI helpers
+
+  [#976](https://github.com/sharetribe/web-template/pull/976)  
+
 ## [v12.7.0] 2026-11-10
 
 - [change] Refactor checkout flow.

@@ -49,6 +49,7 @@ describe('ManageListingCard', () => {
     const config = getConfig([
       {
         id: 'free-inquiry',
+        label: 'Free inquiry',
         transactionProcess: {
           name: 'default-inquiry',
           alias: 'default-inquiry/release-1',
@@ -108,6 +109,7 @@ describe('ManageListingCard', () => {
     const config = getConfig([
       {
         id: 'free-inquiry',
+        label: 'Free inquiry',
         transactionProcess: {
           name: 'default-inquiry',
           alias: 'default-inquiry/release-1',

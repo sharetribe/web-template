@@ -1,17 +1,17 @@
-import defaultLocationSearches from './configDefaultLocationSearches';
+import defaultLocationSearches from './defaultLocationSearches';
 
 //////////////////////////////////////////////////////
 // Configurations related to maps and map providers //
 //////////////////////////////////////////////////////
 
 // Note: The mapboxAccessToken & googleMapsAPIKey come from map asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeMapConfig func)
+//       To use this built-in configuration, you need to remove the overwrite from maps/maps.js (mergeMapsConfig)
 export const mapboxAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 export const googleMapsAPIKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 // Choose map provider: 'mapbox', 'googleMaps'
 // Note: The mapProvider comes from map asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeMapConfig func)
+//       To use this built-in configuration, you need to remove the overwrite from maps/maps.js (mergeMapsConfig)
 export const mapProvider = 'mapbox';
 
 // The location search input can be configured to show default
@@ -30,7 +30,7 @@ export const search = {
 
   // This affects location search.
   // These "default locations" can be edited in the
-  // `configDefaultLocationSearches.js` file.
+  // `defaultLocationSearches.js` file.
   // NOTE: these are highly recommended, since they
   //       1) help customers to find relevant locations, and
   //       2) reduce the cost of using map providers geocoding API
@@ -38,10 +38,10 @@ export const search = {
 
   // Should search results be ordered by distance to origin.
   // NOTE 1: This doesn't affect if the main search type is 'keywords'
-  // NOTE 2: If this is set to true add parameter 'origin' to every location in configDefaultLocationSearches.js
+  // NOTE 2: If this is set to true add parameter 'origin' to every location in defaultLocationSearches.js
   //         Without the 'origin' parameter, search will not work correctly
   // NOTE 3: Keyword search and ordering search results by distance can't be used at the same time.
-  //         You should check that keyword filter is not used in configSearch.js
+  //         You should check that keyword filter is not used in search/defaultSearch.js
   sortSearchByDistance: false,
 
   // Limit location autocomplete to a one or more countries

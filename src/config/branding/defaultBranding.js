@@ -1,8 +1,8 @@
-import logoImageDesktop from '../assets/biketribe-logo-desktop.png';
-import logoImageMobile from '../assets/biketribe-logo-mobile.png';
-import brandImage from '../assets/biketribe-brandImage-1500.jpg';
-import facebookImage from '../assets/biketribe-facebook-sharing-1200x630.jpg';
-import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
+import logoImageDesktop from '../../assets/biketribe-logo-desktop.png';
+import logoImageMobile from '../../assets/biketribe-logo-mobile.png';
+import brandImage from '../../assets/biketribe-brandImage-1500.jpg';
+import facebookImage from '../../assets/biketribe-facebook-sharing-1200x630.jpg';
+import twitterImage from '../../assets/biketribe-twitter-sharing-600x314.jpg';
 
 /////////////////////////////////////////////////////////
 // This file contains configs that affect branding     //
@@ -12,7 +12,8 @@ import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
 /////////////////////////////////////////////////////////
 
 // Note: These come from the branding asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeBranding func)
+//       To use this built-in configuration, you need to remove the overwrite
+//       from branding/branding.js (mergeBrandingConfig).
 
 // Marketplace color.
 // This is saved as CSS Property: --marketplaceColor in src/app.js

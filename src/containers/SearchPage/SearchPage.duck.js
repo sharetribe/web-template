@@ -44,7 +44,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   //       Same setup could be expanded to 2 other extended data fields:
   //       - transactionProcessAlias
   //       - unitType
-  //       ...and then turned enforceValidListingType config to true in configListing.js
+  //       ...and then turned enforceValidListingType config to true in listing/defaultListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
   const searchValidListingTypes = (listingTypes, listingTypePathParam, isListingTypeVariant) => {

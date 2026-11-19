@@ -1,9 +1,10 @@
-////////////////////////////////////////////////////////////////////
-// This file contains configs that add analytics integrations     //
-////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// Built-in analytics defaults (env fallbacks) //
+/////////////////////////////////////////////////
 
-// Note: These come from the analytics asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeAnalyticsConfig func)
+// Note: Hosted analytics asset values take priority via mergeAnalyticsConfig.
+// Keep these env vars if you want local/built-in fallbacks when hosted GA/Plausible
+// is disabled or invalid.
 
 // Optional
 // Note that Google Analytics might need advanced opt-out option / cookie consent

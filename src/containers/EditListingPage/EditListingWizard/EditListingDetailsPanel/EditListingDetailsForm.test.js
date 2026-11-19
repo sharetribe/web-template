@@ -27,6 +27,7 @@ describe('EditListingDetailsForm', () => {
     const listingFieldsConfig = [
       {
         key: 'clothing',
+        label: 'Clothing',
         scope: 'public',
         listingTypeConfig: {
           limitToListingTypeIds: true,
@@ -52,6 +53,7 @@ describe('EditListingDetailsForm', () => {
       },
       {
         key: 'amenities',
+        label: 'Amenities',
         scope: 'public',
         listingTypeConfig: {
           limitToListingTypeIds: true,

@@ -5,7 +5,8 @@
 ///////////////////////////////////////////////////////
 
 // Note: These come from the layout asset nowadays by default.
-//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLayouts func)
+//       To use this built-in configuration, you need to remove the overwrite
+//       from layout/layout.js (mergeLayoutConfig).
 
 // There are 2 SearchPage variants that can be used:
 // 'map' & 'grid'

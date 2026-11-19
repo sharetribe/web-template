@@ -4,8 +4,8 @@
 /////////////////////////////////////////////////////////
 
 // Note: The listingFields come from listingFields asset nowadays by default.
-//       To use this built-in configuration, you need to change the overwrite from configHelper.js
-//       (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
+//       To use this built-in configuration, you need to change the overwrite from
+//       listing/listing.js (e.g. use mergeDefaultTypesAndFieldsForDebugging).
 
 /**
  * Configuration options for listing fields (custom extended data fields):
@@ -465,5 +465,5 @@ export const listingTypes = [
 //   - unitType
 //
 // Read More:
-// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+// https://www.sharetribe.com/docs/how-to/search/manage-search-schemas-with-sharetribe-cli/#adding-listing-search-schemas
 export const enforceValidListingType = false;
