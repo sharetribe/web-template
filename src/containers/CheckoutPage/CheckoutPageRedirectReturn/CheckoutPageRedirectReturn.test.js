@@ -70,6 +70,14 @@ const defaultReturnProps = {
   scrollingDisabled: false,
 };
 
+// These keys live in hosted translations when the redirect flow is enabled; they are
+// intentionally absent from local en.json. Stub them here so tests stay quiet.
+const redirectReturnMessages = {
+  'CheckoutPage.redirectReturn.title': 'CheckoutPage.redirectReturn.title',
+  'CheckoutPage.redirectReturn.resumeFailed': 'CheckoutPage.redirectReturn.resumeFailed',
+  'CheckoutPage.redirectReturn.retry': 'CheckoutPage.redirectReturn.retry',
+};
+
 describe('CheckoutPageRedirectReturn.helpers', () => {
   afterEach(() => {
     delete window.Stripe;
@@ -177,6 +185,7 @@ describe('CheckoutPageRedirectReturn', () => {
     const { container } = render(<CheckoutPageRedirectReturn {...defaultReturnProps} />, {
       config: getDefaultConfiguration(),
       routeConfiguration,
+      messages: redirectReturnMessages,
       initialState: {
         ui: { disableScrollRequests: [] },
         user: { currentUser: null },
@@ -192,6 +201,7 @@ describe('CheckoutPageRedirectReturn', () => {
     render(<CheckoutPageRedirectReturn {...defaultReturnProps} />, {
       config: getDefaultConfiguration(),
       routeConfiguration,
+      messages: redirectReturnMessages,
       initialState: {
         ui: { disableScrollRequests: [] },
         user: { currentUser: null },
@@ -236,6 +246,7 @@ describe('CheckoutPageRedirectReturn', () => {
       {
         config: getDefaultConfiguration(),
         routeConfiguration,
+        messages: redirectReturnMessages,
         initialState: {
           ui: { disableScrollRequests: [] },
           user: { currentUser: null },
@@ -262,6 +273,7 @@ describe('CheckoutPageRedirectReturn', () => {
     render(<CheckoutPageRedirectReturn {...defaultReturnProps} />, {
       config: getDefaultConfiguration(),
       routeConfiguration,
+      messages: redirectReturnMessages,
       initialState: {
         ui: { disableScrollRequests: [] },
         user: { currentUser: null },
