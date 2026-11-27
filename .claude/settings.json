@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "sharetribe-docs": {
+      "type": "http",
+      "url": "https://sharetribe.mcp.kapa.ai"
+    }
+  }
+}

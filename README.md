@@ -64,6 +64,13 @@ guide in Developer Docs for more information.
 
 See the Sharetribe Developer Docs: [sharetribe.com/docs/](https://www.sharetribe.com/docs/)
 
+### AI-assisted development
+
+This repository includes a [Sharetribe documentation MCP server](https://sharetribe.mcp.kapa.ai)
+that gives AI coding tools inline access to Sharetribe docs. It is pre-configured for
+[Claude Code](https://claude.ai/code) and [Cursor](https://cursor.com). For other MCP-compatible
+tools, add `https://sharetribe.mcp.kapa.ai` as an HTTP MCP server.
+
 ## Get help – join the Sharetribe Community
 
 If you have any questions about development, the best place to ask them is the Sharetribe Community
